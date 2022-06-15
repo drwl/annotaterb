@@ -6,8 +6,6 @@ gem 'activerecord', require: false
 gem 'rake', require: false
 
 group :development do
-  gem 'bump'
-  gem 'mg', require: false
   platforms :mri, :mingw do
     gem 'yard', require: false
   end
