@@ -81,7 +81,7 @@ RSpec.describe AnnotateModels do
 
   describe '.quote' do
     subject do
-      AnnotateModels.quote(value)
+      described_class.quote(value)
     end
 
     context 'when the argument is nil' do

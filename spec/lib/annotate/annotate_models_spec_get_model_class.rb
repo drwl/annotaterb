@@ -81,7 +81,7 @@ RSpec.describe AnnotateModels do
 
   describe '.get_model_class' do
     before :all do
-      AnnotateModels.model_dir = Dir.mktmpdir('annotate_models')
+      described_class.model_dir = Dir.mktmpdir('annotate_models')
     end
 
     # TODO: use 'files' gem instead
@@ -99,7 +99,7 @@ RSpec.describe AnnotateModels do
     end
 
     let :klass do
-      AnnotateModels.get_model_class(File.join(AnnotateModels.model_dir[0], filename))
+      described_class.get_model_class(File.join(described_class.model_dir[0], filename))
     end
 
     context 'when class Foo is defined in "foo.rb"' do
@@ -314,7 +314,7 @@ RSpec.describe AnnotateModels do
         end
 
         before do
-          path = File.expand_path(filename, AnnotateModels.model_dir[0])
+          path = File.expand_path(filename, described_class.model_dir[0])
           Kernel.load(path)
           expect(Kernel).not_to receive(:require)
         end
@@ -329,9 +329,9 @@ RSpec.describe AnnotateModels do
 
         context "when class SubdirLoadedClass is defined in \"#{dir}/subdir_loaded_class.rb\"" do
           before do
-            $LOAD_PATH.unshift(File.join(AnnotateModels.model_dir[0], dir))
+            $LOAD_PATH.unshift(File.join(described_class.model_dir[0], dir))
 
-            path = File.expand_path(filename, AnnotateModels.model_dir[0])
+            path = File.expand_path(filename, described_class.model_dir[0])
             Kernel.load(path)
             expect(Kernel).not_to receive(:require)
           end
@@ -384,7 +384,7 @@ RSpec.describe AnnotateModels do
         end
 
         let :klass_2 do
-          AnnotateModels.get_model_class(File.join(AnnotateModels.model_dir[0], filename_2))
+          described_class.get_model_class(File.join(described_class.model_dir[0], filename_2))
         end
 
         it 'finds valid model' do
@@ -417,7 +417,7 @@ RSpec.describe AnnotateModels do
         end
 
         let :klass_2 do
-          AnnotateModels.get_model_class(File.join(AnnotateModels.model_dir[0], filename_2))
+          described_class.get_model_class(File.join(described_class.model_dir[0], filename_2))
         end
 
         it 'finds valid model' do
@@ -426,18 +426,18 @@ RSpec.describe AnnotateModels do
         end
 
         it 'attempts to load the model path without expanding if skip_subdirectory_model_load is false' do
-          allow(AnnotateModels).to receive(:skip_subdirectory_model_load).and_return(false)
-          full_path = File.join(AnnotateModels.model_dir[0], filename_2)
+          allow(described_class).to receive(:skip_subdirectory_model_load).and_return(false)
+          full_path = File.join(described_class.model_dir[0], filename_2)
           expect(File).not_to receive(:expand_path).with(full_path)
-          AnnotateModels.get_model_class(full_path)
+          described_class.get_model_class(full_path)
         end
 
         it 'does not attempt to load the model path without expanding if skip_subdirectory_model_load is true' do
-          $LOAD_PATH.unshift(AnnotateModels.model_dir[0])
-          allow(AnnotateModels).to receive(:skip_subdirectory_model_load).and_return(true)
-          full_path = File.join(AnnotateModels.model_dir[0], filename_2)
+          $LOAD_PATH.unshift(described_class.model_dir[0])
+          allow(described_class).to receive(:skip_subdirectory_model_load).and_return(true)
+          full_path = File.join(described_class.model_dir[0], filename_2)
           expect(File).to receive(:expand_path).with(full_path).and_call_original
-          AnnotateModels.get_model_class(full_path)
+          described_class.get_model_class(full_path)
         end
       end
 
@@ -467,7 +467,7 @@ RSpec.describe AnnotateModels do
         end
 
         let :klass_2 do
-          AnnotateModels.get_model_class(File.join(AnnotateModels.model_dir[0], filename_2))
+          described_class.get_model_class(File.join(described_class.model_dir[0], filename_2))
         end
 
         it 'finds valid model' do

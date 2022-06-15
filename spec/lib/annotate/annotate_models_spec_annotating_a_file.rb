@@ -93,7 +93,7 @@ RSpec.describe AnnotateModels do
                             mock_column(:id, :integer),
                             mock_column(:name, :string, limit: 50)
                           ])
-      @schema_info = AnnotateModels.get_schema_info(@klass, '== Schema Info')
+      @schema_info = described_class.get_schema_info(@klass, '== Schema Info')
       Annotate::Helpers.reset_options(Annotate::Constants::ALL_ANNOTATE_OPTIONS)
     end
 
@@ -156,7 +156,7 @@ RSpec.describe AnnotateModels do
                                                 'id',
                                                 on_delete: :cascade)
                              ])
-          @schema_info = AnnotateModels.get_schema_info(klass, '== Schema Info', show_foreign_keys: true)
+          @schema_info = described_class.get_schema_info(klass, '== Schema Info', show_foreign_keys: true)
           annotate_one_file
         end
 
@@ -175,7 +175,7 @@ RSpec.describe AnnotateModels do
                                                 'id',
                                                 on_delete: :restrict)
                              ])
-          @schema_info = AnnotateModels.get_schema_info(klass, '== Schema Info', show_foreign_keys: true)
+          @schema_info = described_class.get_schema_info(klass, '== Schema Info', show_foreign_keys: true)
           annotate_one_file
           expect(File.read(@model_file_name)).to eq("#{@schema_info}#{@file_content}")
         end
@@ -185,7 +185,7 @@ RSpec.describe AnnotateModels do
     describe 'with existing annotation => :before' do
       before do
         annotate_one_file position: :before
-        another_schema_info = AnnotateModels.get_schema_info(mock_class(:users, :id, [mock_column(:id, :integer)]), '== Schema Info')
+        another_schema_info = described_class.get_schema_info(mock_class(:users, :id, [mock_column(:id, :integer)]), '== Schema Info')
         @schema_info = another_schema_info
       end
 
@@ -208,7 +208,7 @@ RSpec.describe AnnotateModels do
     describe 'with existing annotation => :after' do
       before do
         annotate_one_file position: :after
-        another_schema_info = AnnotateModels.get_schema_info(mock_class(:users, :id, [mock_column(:id, :integer)]), '== Schema Info')
+        another_schema_info = described_class.get_schema_info(mock_class(:users, :id, [mock_column(:id, :integer)]), '== Schema Info')
         @schema_info = another_schema_info
       end
 
@@ -229,8 +229,8 @@ RSpec.describe AnnotateModels do
     end
 
     it 'skips columns with option[:ignore_columns] set' do
-      output = AnnotateModels.get_schema_info(@klass, '== Schema Info',
-                                              ignore_columns: '(id|updated_at|created_at)')
+      output = described_class.get_schema_info(@klass, '== Schema Info',
+                                               ignore_columns: '(id|updated_at|created_at)')
       expect(output.match(/id/)).to be_nil
     end
 
@@ -246,8 +246,8 @@ RSpec.describe AnnotateModels do
                            mock_column(:id, :integer),
                            mock_column(:name, :string, limit: 50)
                          ])
-      schema_info = AnnotateModels.get_schema_info(klass, '== Schema Info')
-      AnnotateModels.annotate_one_file(model_file_name, schema_info, position: :before)
+      schema_info = described_class.get_schema_info(klass, '== Schema Info')
+      described_class.annotate_one_file(model_file_name, schema_info, position: :before)
       expect(File.read(model_file_name)).to eq("#{schema_info}#{file_content}")
     end
 
@@ -276,7 +276,7 @@ RSpec.describe AnnotateModels do
         model_file_name, = write_model 'user.rb', "#{magic_comment}\n#{content}"
 
         annotate_one_file position: :before
-        schema_info = AnnotateModels.get_schema_info(@klass, '== Schema Info')
+        schema_info = described_class.get_schema_info(@klass, '== Schema Info')
 
         expect(File.read(model_file_name)).to eq("#{magic_comment}\n\n#{schema_info}#{content}")
       end
@@ -285,7 +285,7 @@ RSpec.describe AnnotateModels do
     it 'only keeps a single empty line around the annotation (position :before)' do
       content = "class User < ActiveRecord::Base\nend\n"
       MAGIC_COMMENTS.each do |magic_comment|
-        schema_info = AnnotateModels.get_schema_info(@klass, '== Schema Info')
+        schema_info = described_class.get_schema_info(@klass, '== Schema Info')
         model_file_name, = write_model 'user.rb', "#{magic_comment}\n\n\n\n#{content}"
 
         annotate_one_file position: :before
@@ -300,7 +300,7 @@ RSpec.describe AnnotateModels do
         model_file_name, = write_model 'user.rb', "#{magic_comment}\n#{content}"
 
         annotate_one_file position: :after
-        schema_info = AnnotateModels.get_schema_info(@klass, '== Schema Info')
+        schema_info = described_class.get_schema_info(@klass, '== Schema Info')
 
         expect(File.read(model_file_name)).to eq("#{magic_comment}\n#{content}\n#{schema_info}")
       end
@@ -308,7 +308,7 @@ RSpec.describe AnnotateModels do
 
     describe "if a file can't be annotated" do
       before do
-        allow(AnnotateModels).to receive(:get_loaded_model_by_path).with('user').and_return(nil)
+        allow(described_class).to receive(:get_loaded_model_by_path).with('user').and_return(nil)
 
         write_model('user.rb', <<~EOS)
           class User < ActiveRecord::Base
@@ -318,19 +318,19 @@ RSpec.describe AnnotateModels do
       end
 
       it 'displays just the error message with trace disabled (default)' do
-        expect { AnnotateModels.do_annotations model_dir: @model_dir, is_rake: true }.to output(a_string_including("Unable to annotate #{@model_dir}/user.rb: oops")).to_stderr
-        expect { AnnotateModels.do_annotations model_dir: @model_dir, is_rake: true }.not_to output(a_string_including('/spec/annotate/annotate_models_spec.rb:')).to_stderr
+        expect { described_class.do_annotations model_dir: @model_dir, is_rake: true }.to output(a_string_including("Unable to annotate #{@model_dir}/user.rb: oops")).to_stderr
+        expect { described_class.do_annotations model_dir: @model_dir, is_rake: true }.not_to output(a_string_including('/spec/annotate/annotate_models_spec.rb:')).to_stderr
       end
 
       it 'displays the error message and stacktrace with trace enabled' do
-        expect { AnnotateModels.do_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including("Unable to annotate #{@model_dir}/user.rb: oops")).to_stderr
-        expect { AnnotateModels.do_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including('/spec/lib/annotate/annotate_models_spec.rb:')).to_stderr
+        expect { described_class.do_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including("Unable to annotate #{@model_dir}/user.rb: oops")).to_stderr
+        expect { described_class.do_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including('/spec/lib/annotate/annotate_models_spec.rb:')).to_stderr
       end
     end
 
     describe "if a file can't be deannotated" do
       before do
-        allow(AnnotateModels).to receive(:get_loaded_model_by_path).with('user').and_return(nil)
+        allow(described_class).to receive(:get_loaded_model_by_path).with('user').and_return(nil)
 
         write_model('user.rb', <<~EOS)
           class User < ActiveRecord::Base
@@ -340,13 +340,13 @@ RSpec.describe AnnotateModels do
       end
 
       it 'displays just the error message with trace disabled (default)' do
-        expect { AnnotateModels.remove_annotations model_dir: @model_dir, is_rake: true }.to output(a_string_including("Unable to deannotate #{@model_dir}/user.rb: oops")).to_stderr
-        expect { AnnotateModels.remove_annotations model_dir: @model_dir, is_rake: true }.not_to output(a_string_including("/user.rb:2:in `<class:User>'")).to_stderr
+        expect { described_class.remove_annotations model_dir: @model_dir, is_rake: true }.to output(a_string_including("Unable to deannotate #{@model_dir}/user.rb: oops")).to_stderr
+        expect { described_class.remove_annotations model_dir: @model_dir, is_rake: true }.not_to output(a_string_including("/user.rb:2:in `<class:User>'")).to_stderr
       end
 
       it 'displays the error message and stacktrace with trace enabled' do
-        expect { AnnotateModels.remove_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including("Unable to deannotate #{@model_dir}/user.rb: oops")).to_stderr
-        expect { AnnotateModels.remove_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including("/user.rb:2:in `<class:User>'")).to_stderr
+        expect { described_class.remove_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including("Unable to deannotate #{@model_dir}/user.rb: oops")).to_stderr
+        expect { described_class.remove_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including("/user.rb:2:in `<class:User>'")).to_stderr
       end
     end
 
@@ -357,7 +357,7 @@ RSpec.describe AnnotateModels do
 
       it 'aborts with different annotation when frozen: true' do
         annotate_one_file
-        another_schema_info = AnnotateModels.get_schema_info(mock_class(:users, :id, [mock_column(:id, :integer)]), '== Schema Info')
+        another_schema_info = described_class.get_schema_info(mock_class(:users, :id, [mock_column(:id, :integer)]), '== Schema Info')
         @schema_info = another_schema_info
 
         expect { annotate_one_file frozen: true }.to raise_error SystemExit, /user.rb needs to be updated, but annotate was run with `--frozen`./

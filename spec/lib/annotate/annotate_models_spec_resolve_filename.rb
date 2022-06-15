@@ -81,7 +81,7 @@ RSpec.describe AnnotateModels do
 
   describe '.resolve_filename' do
     subject do
-      AnnotateModels.resolve_filename(filename_template, model_name, table_name)
+      described_class.resolve_filename(filename_template, model_name, table_name)
     end
 
     context 'When model_name is "example_model" and table_name is "example_models"' do

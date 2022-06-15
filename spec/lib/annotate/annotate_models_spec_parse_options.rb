@@ -89,12 +89,12 @@ RSpec.describe AnnotateModels do
     end
 
     before do
-      AnnotateModels.send(:parse_options, options)
+      described_class.send(:parse_options, options)
     end
 
     describe '@root_dir' do
       subject do
-        AnnotateModels.instance_variable_get(:@root_dir)
+        described_class.instance_variable_get(:@root_dir)
       end
 
       it 'sets @root_dir' do
@@ -104,7 +104,7 @@ RSpec.describe AnnotateModels do
 
     describe '@model_dir' do
       subject do
-        AnnotateModels.instance_variable_get(:@model_dir)
+        described_class.instance_variable_get(:@model_dir)
       end
 
       it 'separates option "model_dir" with commas and sets @model_dir as an array of string' do
@@ -114,7 +114,7 @@ RSpec.describe AnnotateModels do
 
     describe '@skip_subdirectory_model_load' do
       subject do
-        AnnotateModels.instance_variable_get(:@skip_subdirectory_model_load)
+        described_class.instance_variable_get(:@skip_subdirectory_model_load)
       end
 
       context 'option is set to true' do

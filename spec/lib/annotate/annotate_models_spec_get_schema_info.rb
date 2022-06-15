@@ -81,7 +81,7 @@ RSpec.describe AnnotateModels do
 
   describe '.get_schema_info' do
     subject do
-      AnnotateModels.get_schema_info(klass, header, **options)
+      described_class.get_schema_info(klass, header, **options)
     end
 
     let :klass do

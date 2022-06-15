@@ -81,12 +81,12 @@ RSpec.describe AnnotateModels do
 
   describe '.annotate_model_file' do
     subject do
-      AnnotateModels.annotate_model_file([], 'foo.rb', nil, {})
+      described_class.annotate_model_file([], 'foo.rb', nil, {})
     end
 
     before do
       class Foo < ActiveRecord::Base; end
-      allow(AnnotateModels).to receive(:get_model_class).with('foo.rb').and_return(Foo)
+      allow(described_class).to receive(:get_model_class).with('foo.rb').and_return(Foo)
       allow(Foo).to receive(:table_exists?).and_return(false)
     end
 
@@ -99,7 +99,7 @@ RSpec.describe AnnotateModels do
     context 'with a non-class' do
       before do
         NotAClass = 'foo'.freeze # rubocop:disable Naming/ConstantName
-        allow(AnnotateModels).to receive(:get_model_class).with('foo.rb').and_return(NotAClass)
+        allow(described_class).to receive(:get_model_class).with('foo.rb').and_return(NotAClass)
       end
 
       after { Object.send :remove_const, 'NotAClass' }

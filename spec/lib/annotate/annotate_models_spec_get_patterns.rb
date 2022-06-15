@@ -80,7 +80,7 @@ RSpec.describe AnnotateModels do
   end
 
   describe '.get_patterns' do
-    subject { AnnotateModels.get_patterns(options, pattern_type) }
+    subject { described_class.get_patterns(options, pattern_type) }
 
     context 'when pattern_type is "additional_file_patterns"' do
       let(:pattern_type) { 'additional_file_patterns' }

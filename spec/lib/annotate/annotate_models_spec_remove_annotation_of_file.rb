@@ -81,7 +81,7 @@ RSpec.describe AnnotateModels do
 
   describe '.remove_annotation_of_file' do
     subject do
-      AnnotateModels.remove_annotation_of_file(path)
+      described_class.remove_annotation_of_file(path)
     end
 
     let :tmpdir do
@@ -161,7 +161,7 @@ RSpec.describe AnnotateModels do
 
     context 'when annotation is before main content and with opening wrapper' do
       subject do
-        AnnotateModels.remove_annotation_of_file(path, wrapper_open: 'wrapper')
+        described_class.remove_annotation_of_file(path, wrapper_open: 'wrapper')
       end
 
       let :filename do
@@ -192,7 +192,7 @@ RSpec.describe AnnotateModels do
 
     context 'when annotation is before main content and with opening wrapper' do
       subject do
-        AnnotateModels.remove_annotation_of_file(path, wrapper_open: 'wrapper')
+        described_class.remove_annotation_of_file(path, wrapper_open: 'wrapper')
       end
 
       let :filename do
@@ -249,7 +249,7 @@ RSpec.describe AnnotateModels do
 
     context 'when annotation is after main content and with closing wrapper' do
       subject do
-        AnnotateModels.remove_annotation_of_file(path, wrapper_close: 'wrapper')
+        described_class.remove_annotation_of_file(path, wrapper_close: 'wrapper')
       end
 
       let :filename do
