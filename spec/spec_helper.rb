@@ -1,19 +1,3 @@
-if ENV['COVERAGE']
-  require 'coveralls'
-  require 'codeclimate-test-reporter'
-  require 'simplecov'
-
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(
-    [
-      Coveralls::SimpleCov::Formatter,
-      SimpleCov::Formatter::HTMLFormatter,
-      CodeClimate::TestReporter::Formatter
-    ]
-  )
-
-  SimpleCov.start
-end
-
 require 'rubygems'
 require 'bundler'
 Bundler.setup
