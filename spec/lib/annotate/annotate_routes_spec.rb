@@ -1,7 +1,4 @@
-require_relative '../../spec_helper'
-require 'annotate/annotate_routes'
-
-describe AnnotateRoutes do
+RSpec.describe AnnotateRoutes do
   ROUTE_FILE = 'config/routes.rb'.freeze
 
   MESSAGE_ANNOTATED = "#{ROUTE_FILE} was annotated.".freeze

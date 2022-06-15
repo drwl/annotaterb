@@ -1,12 +1,11 @@
 # encoding: utf-8
-require_relative '../../spec_helper'
 require 'annotate/annotate_models'
 require 'annotate/active_record_patch'
 require 'active_support/core_ext/string'
 require 'files'
 require 'tmpdir'
 
-describe AnnotateModels do
+RSpec.describe AnnotateModels do
   MAGIC_COMMENTS = [
     '# encoding: UTF-8',
     '# coding: UTF-8',

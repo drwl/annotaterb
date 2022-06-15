@@ -1,5 +1,3 @@
-require_relative '../../spec_helper'
-
 RSpec.describe Annotate::Helpers do
   describe '.skip_on_migration?' do
     subject { described_class.skip_on_migration? }
