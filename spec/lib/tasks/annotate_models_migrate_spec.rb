@@ -1,6 +1,4 @@
-require_relative '../../spec_helper'
-
-describe 'ActiveRecord migration rake task hooks' do
+RSpec.describe 'ActiveRecord migration rake task hooks' do
   before do
     Rake.application = Rake::Application.new
 

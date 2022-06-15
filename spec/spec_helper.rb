@@ -1,29 +1,5 @@
-if ENV['COVERAGE']
-  require 'coveralls'
-  require 'codeclimate-test-reporter'
-  require 'simplecov'
-
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(
-    [
-      Coveralls::SimpleCov::Formatter,
-      SimpleCov::Formatter::HTMLFormatter,
-      CodeClimate::TestReporter::Formatter
-    ]
-  )
-
-  SimpleCov.start
-end
-
-require 'rubygems'
-require 'bundler'
-Bundler.setup
-
+require 'bundler/setup'
 require 'rake'
-require 'rspec'
-
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '../lib'))
-$LOAD_PATH.unshift(File.dirname(__FILE__))
-
 require 'active_support'
 require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/class/subclasses'
@@ -33,3 +9,17 @@ require 'annotate/parser'
 require 'annotate/helpers'
 require 'annotate/constants'
 require 'byebug'
+
+RSpec.configure do |config|
+  # Enable flags like --only-failures and --next-failure
+  config.example_status_persistence_file_path = '.rspec_status'
+
+  # Disable RSpec exposing methods globally on `Module` and `main`
+  config.disable_monkey_patching!
+
+  config.expect_with :rspec do |c|
+    c.syntax = :expect
+  end
+
+  # config.order = :random
+end

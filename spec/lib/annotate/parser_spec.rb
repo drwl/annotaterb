@@ -1,7 +1,5 @@
-require_relative '../../spec_helper'
-
 module Annotate # rubocop:disable Metrics/ModuleLength
-  describe Parser do
+  RSpec.describe Parser do
     before(:example) do
       ENV.clear
     end

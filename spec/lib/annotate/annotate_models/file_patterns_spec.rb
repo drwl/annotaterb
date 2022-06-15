@@ -1,7 +1,4 @@
-require_relative '../../../spec_helper'
-require 'annotate/annotate_models'
-
-describe AnnotateModels::FilePatterns do
+RSpec.describe AnnotateModels::FilePatterns do
   describe '.by_pattern' do
     subject { AnnotateModels::FilePatterns.generate(root_directory, pattern_type, options) }
 
