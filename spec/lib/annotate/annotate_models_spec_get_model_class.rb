@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'annotate/annotate_models'
 require 'annotate/active_record_patch'
 require 'active_support/core_ext/string'
@@ -6,56 +5,58 @@ require 'files'
 require 'tmpdir'
 
 RSpec.describe AnnotateModels do
-  MAGIC_COMMENTS = [
-    '# encoding: UTF-8',
-    '# coding: UTF-8',
-    '# -*- coding: UTF-8 -*-',
-    '#encoding: utf-8',
-    '# encoding: utf-8',
-    '# -*- encoding : utf-8 -*-',
-    "# encoding: utf-8\n# frozen_string_literal: true",
-    "# frozen_string_literal: true\n# encoding: utf-8",
-    '# frozen_string_literal: true',
-    '#frozen_string_literal: false',
-    '# -*- frozen_string_literal : true -*-'
-  ].freeze unless const_defined?(:MAGIC_COMMENTS)
+  unless const_defined?(:MAGIC_COMMENTS)
+    MAGIC_COMMENTS = [
+      '# encoding: UTF-8',
+      '# coding: UTF-8',
+      '# -*- coding: UTF-8 -*-',
+      '#encoding: utf-8',
+      '# encoding: utf-8',
+      '# -*- encoding : utf-8 -*-',
+      "# encoding: utf-8\n# frozen_string_literal: true",
+      "# frozen_string_literal: true\n# encoding: utf-8",
+      '# frozen_string_literal: true',
+      '#frozen_string_literal: false',
+      '# -*- frozen_string_literal : true -*-'
+    ].freeze
+  end
 
   def mock_index(name, params = {})
     double('IndexKeyDefinition',
-           name:          name,
-           columns:       params[:columns] || [],
-           unique:        params[:unique] || false,
-           orders:        params[:orders] || {},
-           where:         params[:where],
-           using:         params[:using])
+           name: name,
+           columns: params[:columns] || [],
+           unique: params[:unique] || false,
+           orders: params[:orders] || {},
+           where: params[:where],
+           using: params[:using])
   end
 
   def mock_foreign_key(name, from_column, to_table, to_column = 'id', constraints = {})
     double('ForeignKeyDefinition',
-           name:         name,
-           column:       from_column,
-           to_table:     to_table,
-           primary_key:  to_column,
-           on_delete:    constraints[:on_delete],
-           on_update:    constraints[:on_update])
+           name: name,
+           column: from_column,
+           to_table: to_table,
+           primary_key: to_column,
+           on_delete: constraints[:on_delete],
+           on_update: constraints[:on_update])
   end
 
   def mock_connection(indexes = [], foreign_keys = [])
     double('Conn',
-           indexes:      indexes,
+           indexes: indexes,
            foreign_keys: foreign_keys,
            supports_foreign_keys?: true)
   end
 
   def mock_class(table_name, primary_key, columns, indexes = [], foreign_keys = [])
     options = {
-      connection:       mock_connection(indexes, foreign_keys),
-      table_exists?:    true,
-      table_name:       table_name,
-      primary_key:      primary_key,
-      column_names:     columns.map { |col| col.name.to_s },
-      columns:          columns,
-      column_defaults:  Hash[columns.map { |col| [col.name, col.default] }],
+      connection: mock_connection(indexes, foreign_keys),
+      table_exists?: true,
+      table_name: table_name,
+      primary_key: primary_key,
+      column_names: columns.map { |col| col.name.to_s },
+      columns: columns,
+      column_defaults: columns.map { |col| [col.name, col.default] }.to_h,
       table_name_prefix: ''
     }
 
@@ -93,7 +94,7 @@ RSpec.describe AnnotateModels do
       end
     end
 
-    before :each do
+    before do
       create(filename, file_content)
     end
 
@@ -312,7 +313,7 @@ RSpec.describe AnnotateModels do
           EOS
         end
 
-        before :each do
+        before do
           path = File.expand_path(filename, AnnotateModels.model_dir[0])
           Kernel.load(path)
           expect(Kernel).not_to receive(:require)
@@ -327,7 +328,7 @@ RSpec.describe AnnotateModels do
         dir = Array.new(8) { (0..9).to_a.sample(random: Random.new) }.join
 
         context "when class SubdirLoadedClass is defined in \"#{dir}/subdir_loaded_class.rb\"" do
-          before :each do
+          before do
             $LOAD_PATH.unshift(File.join(AnnotateModels.model_dir[0], dir))
 
             path = File.expand_path(filename, AnnotateModels.model_dir[0])
@@ -355,7 +356,7 @@ RSpec.describe AnnotateModels do
     end
 
     context 'when two class exist' do
-      before :each do
+      before do
         create(filename_2, file_content_2)
       end
 
@@ -427,7 +428,7 @@ RSpec.describe AnnotateModels do
         it 'attempts to load the model path without expanding if skip_subdirectory_model_load is false' do
           allow(AnnotateModels).to receive(:skip_subdirectory_model_load).and_return(false)
           full_path = File.join(AnnotateModels.model_dir[0], filename_2)
-          expect(File).to_not receive(:expand_path).with(full_path)
+          expect(File).not_to receive(:expand_path).with(full_path)
           AnnotateModels.get_model_class(full_path)
         end
 

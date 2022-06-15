@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'annotate/annotate_models'
 require 'annotate/active_record_patch'
 require 'active_support/core_ext/string'
@@ -6,56 +5,58 @@ require 'files'
 require 'tmpdir'
 
 RSpec.describe AnnotateModels do
-  MAGIC_COMMENTS = [
-    '# encoding: UTF-8',
-    '# coding: UTF-8',
-    '# -*- coding: UTF-8 -*-',
-    '#encoding: utf-8',
-    '# encoding: utf-8',
-    '# -*- encoding : utf-8 -*-',
-    "# encoding: utf-8\n# frozen_string_literal: true",
-    "# frozen_string_literal: true\n# encoding: utf-8",
-    '# frozen_string_literal: true',
-    '#frozen_string_literal: false',
-    '# -*- frozen_string_literal : true -*-'
-  ].freeze unless const_defined?(:MAGIC_COMMENTS)
+  unless const_defined?(:MAGIC_COMMENTS)
+    MAGIC_COMMENTS = [
+      '# encoding: UTF-8',
+      '# coding: UTF-8',
+      '# -*- coding: UTF-8 -*-',
+      '#encoding: utf-8',
+      '# encoding: utf-8',
+      '# -*- encoding : utf-8 -*-',
+      "# encoding: utf-8\n# frozen_string_literal: true",
+      "# frozen_string_literal: true\n# encoding: utf-8",
+      '# frozen_string_literal: true',
+      '#frozen_string_literal: false',
+      '# -*- frozen_string_literal : true -*-'
+    ].freeze
+  end
 
   def mock_index(name, params = {})
     double('IndexKeyDefinition',
-           name:          name,
-           columns:       params[:columns] || [],
-           unique:        params[:unique] || false,
-           orders:        params[:orders] || {},
-           where:         params[:where],
-           using:         params[:using])
+           name: name,
+           columns: params[:columns] || [],
+           unique: params[:unique] || false,
+           orders: params[:orders] || {},
+           where: params[:where],
+           using: params[:using])
   end
 
   def mock_foreign_key(name, from_column, to_table, to_column = 'id', constraints = {})
     double('ForeignKeyDefinition',
-           name:         name,
-           column:       from_column,
-           to_table:     to_table,
-           primary_key:  to_column,
-           on_delete:    constraints[:on_delete],
-           on_update:    constraints[:on_update])
+           name: name,
+           column: from_column,
+           to_table: to_table,
+           primary_key: to_column,
+           on_delete: constraints[:on_delete],
+           on_update: constraints[:on_update])
   end
 
   def mock_connection(indexes = [], foreign_keys = [])
     double('Conn',
-           indexes:      indexes,
+           indexes: indexes,
            foreign_keys: foreign_keys,
            supports_foreign_keys?: true)
   end
 
   def mock_class(table_name, primary_key, columns, indexes = [], foreign_keys = [])
     options = {
-      connection:       mock_connection(indexes, foreign_keys),
-      table_exists?:    true,
-      table_name:       table_name,
-      primary_key:      primary_key,
-      column_names:     columns.map { |col| col.name.to_s },
-      columns:          columns,
-      column_defaults:  Hash[columns.map { |col| [col.name, col.default] }],
+      connection: mock_connection(indexes, foreign_keys),
+      table_exists?: true,
+      table_name: table_name,
+      primary_key: primary_key,
+      column_names: columns.map { |col| col.name.to_s },
+      columns: columns,
+      column_defaults: columns.map { |col| [col.name, col.default] }.to_h,
       table_name_prefix: ''
     }
 
@@ -131,7 +132,7 @@ RSpec.describe AnnotateModels do
             end
 
             it 'returns schema info' do
-              is_expected.to eq(expected_result)
+              expect(subject).to eq(expected_result)
             end
           end
 
@@ -156,7 +157,7 @@ RSpec.describe AnnotateModels do
             end
 
             it 'returns schema info' do
-              is_expected.to eq(expected_result)
+              expect(subject).to eq(expected_result)
             end
           end
 
@@ -168,7 +169,7 @@ RSpec.describe AnnotateModels do
                 mock_column(:bigint,  :integer, unsigned?: true, bigint?: true),
                 mock_column(:bigint,  :bigint,  unsigned?: true),
                 mock_column(:float,   :float,   unsigned?: true),
-                mock_column(:decimal, :decimal, unsigned?: true, precision: 10, scale: 2),
+                mock_column(:decimal, :decimal, unsigned?: true, precision: 10, scale: 2)
               ]
             end
 
@@ -189,7 +190,7 @@ RSpec.describe AnnotateModels do
             end
 
             it 'returns schema info' do
-              is_expected.to eq(expected_result)
+              expect(subject).to eq(expected_result)
             end
           end
         end
@@ -223,7 +224,7 @@ RSpec.describe AnnotateModels do
               end
 
               it 'returns schema info' do
-                is_expected.to eq(expected_result)
+                expect(subject).to eq(expected_result)
               end
             end
 
@@ -250,7 +251,7 @@ RSpec.describe AnnotateModels do
               end
 
               it 'returns schema info with default values' do
-                is_expected.to eq(expected_result)
+                expect(subject).to eq(expected_result)
               end
             end
 
@@ -262,7 +263,7 @@ RSpec.describe AnnotateModels do
                          mock_column(:id, :integer, limit: 8),
                          mock_column(:post_id, :integer, limit: 8),
                          mock_column(:locale, :string, limit: 50),
-                         mock_column(:title, :string, limit: 50),
+                         mock_column(:title, :string, limit: 50)
                        ])
               end
 
@@ -275,7 +276,7 @@ RSpec.describe AnnotateModels do
               let :columns do
                 [
                   mock_column(:id, :integer, limit: 8),
-                  mock_column(:author_name, :string, limit: 50),
+                  mock_column(:author_name, :string, limit: 50)
                 ]
               end
 
@@ -293,7 +294,7 @@ RSpec.describe AnnotateModels do
               end
 
               it 'returns schema info' do
-                is_expected.to eq expected_result
+                expect(subject).to eq expected_result
               end
             end
           end
@@ -325,7 +326,7 @@ RSpec.describe AnnotateModels do
             end
 
             it 'returns schema info' do
-              is_expected.to eq(expected_result)
+              expect(subject).to eq(expected_result)
             end
           end
         end
@@ -383,17 +384,17 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'returns schema info with index information' do
-                    is_expected.to eq expected_result
+                    expect(subject).to eq expected_result
                   end
                 end
 
                 context 'when one of indexes includes orderd index key' do
                   let :columns do
                     [
-                      mock_column("id", :integer),
-                      mock_column("firstname", :string),
-                      mock_column("surname", :string),
-                      mock_column("value", :string)
+                      mock_column('id', :integer),
+                      mock_column('firstname', :string),
+                      mock_column('surname', :string),
+                      mock_column('value', :string)
                     ]
                   end
 
@@ -401,7 +402,7 @@ RSpec.describe AnnotateModels do
                     [
                       mock_index('index_rails_02e851e3b7', columns: ['id']),
                       mock_index('index_rails_02e851e3b8',
-                                 columns: %w(firstname surname value),
+                                 columns: %w[firstname surname value],
                                  orders: { 'surname' => :asc, 'value' => :desc })
                     ]
                   end
@@ -426,17 +427,17 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'returns schema info with index information' do
-                    is_expected.to eq expected_result
+                    expect(subject).to eq expected_result
                   end
                 end
 
                 context 'when one of indexes includes "where" clause' do
                   let :columns do
                     [
-                      mock_column("id", :integer),
-                      mock_column("firstname", :string),
-                      mock_column("surname", :string),
-                      mock_column("value", :string)
+                      mock_column('id', :integer),
+                      mock_column('firstname', :string),
+                      mock_column('surname', :string),
+                      mock_column('value', :string)
                     ]
                   end
 
@@ -444,7 +445,7 @@ RSpec.describe AnnotateModels do
                     [
                       mock_index('index_rails_02e851e3b7', columns: ['id']),
                       mock_index('index_rails_02e851e3b8',
-                                 columns: %w(firstname surname),
+                                 columns: %w[firstname surname],
                                  where: 'value IS NOT NULL')
                     ]
                   end
@@ -469,17 +470,17 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'returns schema info with index information' do
-                    is_expected.to eq expected_result
+                    expect(subject).to eq expected_result
                   end
                 end
 
                 context 'when one of indexes includes "using" clause other than "btree"' do
                   let :columns do
                     [
-                      mock_column("id", :integer),
-                      mock_column("firstname", :string),
-                      mock_column("surname", :string),
-                      mock_column("value", :string)
+                      mock_column('id', :integer),
+                      mock_column('firstname', :string),
+                      mock_column('surname', :string),
+                      mock_column('value', :string)
                     ]
                   end
 
@@ -487,7 +488,7 @@ RSpec.describe AnnotateModels do
                     [
                       mock_index('index_rails_02e851e3b7', columns: ['id']),
                       mock_index('index_rails_02e851e3b8',
-                                 columns: %w(firstname surname),
+                                 columns: %w[firstname surname],
                                  using: 'hash')
                     ]
                   end
@@ -512,7 +513,7 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'returns schema info with index information' do
-                    is_expected.to eq expected_result
+                    expect(subject).to eq expected_result
                   end
                 end
 
@@ -541,7 +542,7 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'returns schema info without index information' do
-                    is_expected.to eq expected_result
+                    expect(subject).to eq expected_result
                   end
                 end
               end
@@ -581,15 +582,15 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'returns schema info with index information' do
-                    is_expected.to eq expected_result
+                    expect(subject).to eq expected_result
                   end
                 end
 
                 context 'when one of indexes is in string form' do
                   let :columns do
                     [
-                      mock_column("id", :integer),
-                      mock_column("name", :string)
+                      mock_column('id', :integer),
+                      mock_column('name', :string)
                     ]
                   end
 
@@ -613,7 +614,7 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'returns schema info with index information' do
-                    is_expected.to eq expected_result
+                    expect(subject).to eq expected_result
                   end
                 end
               end
@@ -660,7 +661,7 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'returns schema info with foreign keys' do
-                    is_expected.to eq(expected_result)
+                    expect(subject).to eq(expected_result)
                   end
                 end
 
@@ -693,7 +694,7 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'returns schema info with foreign keys' do
-                    is_expected.to eq(expected_result)
+                    expect(subject).to eq(expected_result)
                   end
                 end
               end
@@ -722,7 +723,7 @@ RSpec.describe AnnotateModels do
                 end
 
                 it 'returns schema info with foreign keys' do
-                  is_expected.to eq(expected_result)
+                  expect(subject).to eq(expected_result)
                 end
               end
             end
@@ -757,7 +758,7 @@ RSpec.describe AnnotateModels do
                 end
 
                 it 'works with option "hide_limit_column_types"' do
-                  is_expected.to eq expected_result
+                  expect(subject).to eq expected_result
                 end
               end
 
@@ -781,7 +782,7 @@ RSpec.describe AnnotateModels do
                 end
 
                 it 'works with option "hide_limit_column_types"' do
-                  is_expected.to eq expected_result
+                  expect(subject).to eq expected_result
                 end
               end
 
@@ -805,7 +806,7 @@ RSpec.describe AnnotateModels do
                 end
 
                 it 'works with option "hide_limit_column_types"' do
-                  is_expected.to eq expected_result
+                  expect(subject).to eq expected_result
                 end
               end
             end
@@ -838,7 +839,7 @@ RSpec.describe AnnotateModels do
                 end
 
                 it 'works with option "hide_default_column_types"' do
-                  is_expected.to eq expected_result
+                  expect(subject).to eq expected_result
                 end
               end
 
@@ -861,7 +862,7 @@ RSpec.describe AnnotateModels do
                 end
 
                 it 'works with option "hide_default_column_types"' do
-                  is_expected.to eq expected_result
+                  expect(subject).to eq expected_result
                 end
               end
 
@@ -884,7 +885,7 @@ RSpec.describe AnnotateModels do
                 end
 
                 it 'works with option "hide_limit_column_types"' do
-                  is_expected.to eq expected_result
+                  expect(subject).to eq expected_result
                 end
               end
             end
@@ -917,7 +918,7 @@ RSpec.describe AnnotateModels do
                 end
 
                 it 'works with option "classified_sort"' do
-                  is_expected.to eq expected_result
+                  expect(subject).to eq expected_result
                 end
               end
             end
@@ -955,7 +956,7 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'works with option "with_comment"' do
-                    is_expected.to eq expected_result
+                    expect(subject).to eq expected_result
                   end
                 end
 
@@ -994,7 +995,7 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'works with option "with_comment"' do
-                    is_expected.to eq expected_result
+                    expect(subject).to eq expected_result
                   end
                 end
 
@@ -1021,7 +1022,7 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'works with option "with_comment"' do
-                    is_expected.to eq expected_result
+                    expect(subject).to eq expected_result
                   end
                 end
 
@@ -1058,7 +1059,7 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'works with option "with_comment"' do
-                    is_expected.to eq expected_result
+                    expect(subject).to eq expected_result
                   end
                 end
               end
@@ -1105,7 +1106,7 @@ RSpec.describe AnnotateModels do
               end
 
               it 'returns schema info in RDoc format' do
-                is_expected.to eq(expected_result)
+                expect(subject).to eq(expected_result)
               end
             end
 
@@ -1129,7 +1130,7 @@ RSpec.describe AnnotateModels do
               end
 
               it 'returns schema info in YARD format' do
-                is_expected.to eq(expected_result)
+                expect(subject).to eq(expected_result)
               end
             end
 
@@ -1156,7 +1157,7 @@ RSpec.describe AnnotateModels do
                 end
 
                 it 'returns schema info in Markdown format' do
-                  is_expected.to eq(expected_result)
+                  expect(subject).to eq(expected_result)
                 end
               end
 
@@ -1197,7 +1198,7 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'returns schema info with index information in Markdown format' do
-                    is_expected.to eq expected_result
+                    expect(subject).to eq expected_result
                   end
                 end
 
@@ -1235,7 +1236,7 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'returns schema info with index information in Markdown format' do
-                    is_expected.to eq expected_result
+                    expect(subject).to eq expected_result
                   end
                 end
 
@@ -1273,7 +1274,7 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'returns schema info with index information in Markdown format' do
-                    is_expected.to eq expected_result
+                    expect(subject).to eq expected_result
                   end
                 end
 
@@ -1312,7 +1313,7 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'returns schema info with index information in Markdown format' do
-                    is_expected.to eq expected_result
+                    expect(subject).to eq expected_result
                   end
                 end
 
@@ -1350,7 +1351,7 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'returns schema info with index information in Markdown format' do
-                    is_expected.to eq expected_result
+                    expect(subject).to eq expected_result
                   end
                 end
               end
@@ -1401,7 +1402,7 @@ RSpec.describe AnnotateModels do
                   end
 
                   it 'returns schema info with foreign_keys in Markdown format' do
-                    is_expected.to eq(expected_result)
+                    expect(subject).to eq(expected_result)
                   end
                 end
               end
@@ -1435,7 +1436,7 @@ RSpec.describe AnnotateModels do
                 end
 
                 it 'returns schema info in RDoc format' do
-                  is_expected.to eq expected_result
+                  expect(subject).to eq expected_result
                 end
               end
             end
@@ -1470,7 +1471,7 @@ RSpec.describe AnnotateModels do
                 end
 
                 it 'returns schema info in Markdown format' do
-                  is_expected.to eq expected_result
+                  expect(subject).to eq expected_result
                 end
               end
 
@@ -1499,7 +1500,7 @@ RSpec.describe AnnotateModels do
                 end
 
                 it 'returns schema info in Markdown format' do
-                  is_expected.to eq expected_result
+                  expect(subject).to eq expected_result
                 end
               end
             end

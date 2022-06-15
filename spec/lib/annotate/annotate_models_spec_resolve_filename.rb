@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'annotate/annotate_models'
 require 'annotate/active_record_patch'
 require 'active_support/core_ext/string'
@@ -6,56 +5,58 @@ require 'files'
 require 'tmpdir'
 
 RSpec.describe AnnotateModels do
-  MAGIC_COMMENTS = [
-    '# encoding: UTF-8',
-    '# coding: UTF-8',
-    '# -*- coding: UTF-8 -*-',
-    '#encoding: utf-8',
-    '# encoding: utf-8',
-    '# -*- encoding : utf-8 -*-',
-    "# encoding: utf-8\n# frozen_string_literal: true",
-    "# frozen_string_literal: true\n# encoding: utf-8",
-    '# frozen_string_literal: true',
-    '#frozen_string_literal: false',
-    '# -*- frozen_string_literal : true -*-'
-  ].freeze unless const_defined?(:MAGIC_COMMENTS)
+  unless const_defined?(:MAGIC_COMMENTS)
+    MAGIC_COMMENTS = [
+      '# encoding: UTF-8',
+      '# coding: UTF-8',
+      '# -*- coding: UTF-8 -*-',
+      '#encoding: utf-8',
+      '# encoding: utf-8',
+      '# -*- encoding : utf-8 -*-',
+      "# encoding: utf-8\n# frozen_string_literal: true",
+      "# frozen_string_literal: true\n# encoding: utf-8",
+      '# frozen_string_literal: true',
+      '#frozen_string_literal: false',
+      '# -*- frozen_string_literal : true -*-'
+    ].freeze
+  end
 
   def mock_index(name, params = {})
     double('IndexKeyDefinition',
-           name:          name,
-           columns:       params[:columns] || [],
-           unique:        params[:unique] || false,
-           orders:        params[:orders] || {},
-           where:         params[:where],
-           using:         params[:using])
+           name: name,
+           columns: params[:columns] || [],
+           unique: params[:unique] || false,
+           orders: params[:orders] || {},
+           where: params[:where],
+           using: params[:using])
   end
 
   def mock_foreign_key(name, from_column, to_table, to_column = 'id', constraints = {})
     double('ForeignKeyDefinition',
-           name:         name,
-           column:       from_column,
-           to_table:     to_table,
-           primary_key:  to_column,
-           on_delete:    constraints[:on_delete],
-           on_update:    constraints[:on_update])
+           name: name,
+           column: from_column,
+           to_table: to_table,
+           primary_key: to_column,
+           on_delete: constraints[:on_delete],
+           on_update: constraints[:on_update])
   end
 
   def mock_connection(indexes = [], foreign_keys = [])
     double('Conn',
-           indexes:      indexes,
+           indexes: indexes,
            foreign_keys: foreign_keys,
            supports_foreign_keys?: true)
   end
 
   def mock_class(table_name, primary_key, columns, indexes = [], foreign_keys = [])
     options = {
-      connection:       mock_connection(indexes, foreign_keys),
-      table_exists?:    true,
-      table_name:       table_name,
-      primary_key:      primary_key,
-      column_names:     columns.map { |col| col.name.to_s },
-      columns:          columns,
-      column_defaults:  Hash[columns.map { |col| [col.name, col.default] }],
+      connection: mock_connection(indexes, foreign_keys),
+      table_exists?: true,
+      table_name: table_name,
+      primary_key: primary_key,
+      column_names: columns.map { |col| col.name.to_s },
+      columns: columns,
+      column_defaults: columns.map { |col| [col.name, col.default] }.to_h,
       table_name_prefix: ''
     }
 
@@ -91,7 +92,7 @@ RSpec.describe AnnotateModels do
         let(:filename_template) { 'test/unit/%MODEL_NAME%_test.rb' }
 
         it 'returns the test path for a model' do
-          is_expected.to eq 'test/unit/example_model_test.rb'
+          expect(subject).to eq 'test/unit/example_model_test.rb'
         end
       end
 
@@ -99,7 +100,7 @@ RSpec.describe AnnotateModels do
         let(:filename_template) { '/foo/bar/%MODEL_NAME%/testing.rb' }
 
         it 'returns the additional glob' do
-          is_expected.to eq '/foo/bar/example_model/testing.rb'
+          expect(subject).to eq '/foo/bar/example_model/testing.rb'
         end
       end
 
@@ -107,7 +108,7 @@ RSpec.describe AnnotateModels do
         let(:filename_template) { '/foo/bar/%PLURALIZED_MODEL_NAME%/testing.rb' }
 
         it 'returns the additional glob' do
-          is_expected.to eq '/foo/bar/example_models/testing.rb'
+          expect(subject).to eq '/foo/bar/example_models/testing.rb'
         end
       end
 
@@ -115,7 +116,7 @@ RSpec.describe AnnotateModels do
         let(:filename_template) { 'test/fixtures/%TABLE_NAME%.yml' }
 
         it 'returns the fixture path for a model' do
-          is_expected.to eq 'test/fixtures/example_models.yml'
+          expect(subject).to eq 'test/fixtures/example_models.yml'
         end
       end
     end
@@ -128,7 +129,7 @@ RSpec.describe AnnotateModels do
         let(:filename_template) { 'test/fixtures/%PLURALIZED_MODEL_NAME%.yml' }
 
         it 'returns the fixture path for a nested model' do
-          is_expected.to eq 'test/fixtures/parent/children.yml'
+          expect(subject).to eq 'test/fixtures/parent/children.yml'
         end
       end
     end

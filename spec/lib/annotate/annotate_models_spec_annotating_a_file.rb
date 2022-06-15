@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'annotate/annotate_models'
 require 'annotate/active_record_patch'
 require 'active_support/core_ext/string'
@@ -6,56 +5,58 @@ require 'files'
 require 'tmpdir'
 
 RSpec.describe AnnotateModels do
-  MAGIC_COMMENTS = [
-    '# encoding: UTF-8',
-    '# coding: UTF-8',
-    '# -*- coding: UTF-8 -*-',
-    '#encoding: utf-8',
-    '# encoding: utf-8',
-    '# -*- encoding : utf-8 -*-',
-    "# encoding: utf-8\n# frozen_string_literal: true",
-    "# frozen_string_literal: true\n# encoding: utf-8",
-    '# frozen_string_literal: true',
-    '#frozen_string_literal: false',
-    '# -*- frozen_string_literal : true -*-'
-  ].freeze unless const_defined?(:MAGIC_COMMENTS)
+  unless const_defined?(:MAGIC_COMMENTS)
+    MAGIC_COMMENTS = [
+      '# encoding: UTF-8',
+      '# coding: UTF-8',
+      '# -*- coding: UTF-8 -*-',
+      '#encoding: utf-8',
+      '# encoding: utf-8',
+      '# -*- encoding : utf-8 -*-',
+      "# encoding: utf-8\n# frozen_string_literal: true",
+      "# frozen_string_literal: true\n# encoding: utf-8",
+      '# frozen_string_literal: true',
+      '#frozen_string_literal: false',
+      '# -*- frozen_string_literal : true -*-'
+    ].freeze
+  end
 
   def mock_index(name, params = {})
     double('IndexKeyDefinition',
-           name:          name,
-           columns:       params[:columns] || [],
-           unique:        params[:unique] || false,
-           orders:        params[:orders] || {},
-           where:         params[:where],
-           using:         params[:using])
+           name: name,
+           columns: params[:columns] || [],
+           unique: params[:unique] || false,
+           orders: params[:orders] || {},
+           where: params[:where],
+           using: params[:using])
   end
 
   def mock_foreign_key(name, from_column, to_table, to_column = 'id', constraints = {})
     double('ForeignKeyDefinition',
-           name:         name,
-           column:       from_column,
-           to_table:     to_table,
-           primary_key:  to_column,
-           on_delete:    constraints[:on_delete],
-           on_update:    constraints[:on_update])
+           name: name,
+           column: from_column,
+           to_table: to_table,
+           primary_key: to_column,
+           on_delete: constraints[:on_delete],
+           on_update: constraints[:on_update])
   end
 
   def mock_connection(indexes = [], foreign_keys = [])
     double('Conn',
-           indexes:      indexes,
+           indexes: indexes,
            foreign_keys: foreign_keys,
            supports_foreign_keys?: true)
   end
 
   def mock_class(table_name, primary_key, columns, indexes = [], foreign_keys = [])
     options = {
-      connection:       mock_connection(indexes, foreign_keys),
-      table_exists?:    true,
-      table_name:       table_name,
-      primary_key:      primary_key,
-      column_names:     columns.map { |col| col.name.to_s },
-      columns:          columns,
-      column_defaults:  Hash[columns.map { |col| [col.name, col.default] }],
+      connection: mock_connection(indexes, foreign_keys),
+      table_exists?: true,
+      table_name: table_name,
+      primary_key: primary_key,
+      column_names: columns.map { |col| col.name.to_s },
+      columns: columns,
+      column_defaults: columns.map { |col| [col.name, col.default] }.to_h,
       table_name_prefix: ''
     }
 
@@ -117,7 +118,7 @@ RSpec.describe AnnotateModels do
     end
 
     ['before', :before, 'top', :top].each do |position|
-      it "should put annotation before class if :position == #{position}" do
+      it "puts annotation before class if :position == #{position}" do
         annotate_one_file position: position
         expect(File.read(@model_file_name))
           .to eq("#{@schema_info}#{@file_content}")
@@ -125,14 +126,14 @@ RSpec.describe AnnotateModels do
     end
 
     ['after', :after, 'bottom', :bottom].each do |position|
-      it "should put annotation after class if position: #{position}" do
+      it "puts annotation after class if position: #{position}" do
         annotate_one_file position: position
         expect(File.read(@model_file_name))
           .to eq("#{@file_content}\n#{@schema_info}")
       end
     end
 
-    it 'should wrap annotation if wrapper is specified' do
+    it 'wraps annotation if wrapper is specified' do
       annotate_one_file wrapper_open: 'START', wrapper_close: 'END'
       expect(File.read(@model_file_name))
         .to eq("# START\n#{@schema_info}# END\n#{@file_content}")
@@ -159,7 +160,7 @@ RSpec.describe AnnotateModels do
           annotate_one_file
         end
 
-        it 'should update foreign key constraint' do
+        it 'updates foreign key constraint' do
           klass = mock_class(:users,
                              :id,
                              [
@@ -188,17 +189,17 @@ RSpec.describe AnnotateModels do
         @schema_info = another_schema_info
       end
 
-      it 'should retain current position' do
+      it 'retains current position' do
         annotate_one_file
         expect(File.read(@model_file_name)).to eq("#{@schema_info}#{@file_content}")
       end
 
-      it 'should retain current position even when :position is changed to :after' do
+      it 'retains current position even when :position is changed to :after' do
         annotate_one_file position: :after
         expect(File.read(@model_file_name)).to eq("#{@schema_info}#{@file_content}")
       end
 
-      it 'should change position to :after when force: true' do
+      it 'changes position to :after when force: true' do
         annotate_one_file position: :after, force: true
         expect(File.read(@model_file_name)).to eq("#{@file_content}\n#{@schema_info}")
       end
@@ -211,25 +212,25 @@ RSpec.describe AnnotateModels do
         @schema_info = another_schema_info
       end
 
-      it 'should retain current position' do
+      it 'retains current position' do
         annotate_one_file
         expect(File.read(@model_file_name)).to eq("#{@file_content}\n#{@schema_info}")
       end
 
-      it 'should retain current position even when :position is changed to :before' do
+      it 'retains current position even when :position is changed to :before' do
         annotate_one_file position: :before
         expect(File.read(@model_file_name)).to eq("#{@file_content}\n#{@schema_info}")
       end
 
-      it 'should change position to :before when force: true' do
+      it 'changes position to :before when force: true' do
         annotate_one_file position: :before, force: true
         expect(File.read(@model_file_name)).to eq("#{@schema_info}#{@file_content}")
       end
     end
 
-    it 'should skip columns with option[:ignore_columns] set' do
+    it 'skips columns with option[:ignore_columns] set' do
       output = AnnotateModels.get_schema_info(@klass, '== Schema Info',
-                                              :ignore_columns => '(id|updated_at|created_at)')
+                                              ignore_columns: '(id|updated_at|created_at)')
       expect(output.match(/id/)).to be_nil
     end
 
@@ -239,7 +240,7 @@ RSpec.describe AnnotateModels do
         end
       EOS
 
-      klass = mock_class(:'foo_users',
+      klass = mock_class(:foo_users,
                          :id,
                          [
                            mock_column(:id, :integer),
@@ -250,7 +251,7 @@ RSpec.describe AnnotateModels do
       expect(File.read(model_file_name)).to eq("#{schema_info}#{file_content}")
     end
 
-    it 'should not touch magic comments' do
+    it 'does not touch magic comments' do
       MAGIC_COMMENTS.each do |magic_comment|
         write_model 'user.rb', <<~EOS
           #{magic_comment}
@@ -350,11 +351,11 @@ RSpec.describe AnnotateModels do
     end
 
     describe 'frozen option' do
-      it "should abort without existing annotation when frozen: true " do
+      it 'aborts without existing annotation when frozen: true' do
         expect { annotate_one_file frozen: true }.to raise_error SystemExit, /user.rb needs to be updated, but annotate was run with `--frozen`./
       end
 
-      it "should abort with different annotation when frozen: true " do
+      it 'aborts with different annotation when frozen: true' do
         annotate_one_file
         another_schema_info = AnnotateModels.get_schema_info(mock_class(:users, :id, [mock_column(:id, :integer)]), '== Schema Info')
         @schema_info = another_schema_info
@@ -362,7 +363,7 @@ RSpec.describe AnnotateModels do
         expect { annotate_one_file frozen: true }.to raise_error SystemExit, /user.rb needs to be updated, but annotate was run with `--frozen`./
       end
 
-      it "should NOT abort with same annotation when frozen: true " do
+      it 'does not abort with same annotation when frozen: true ' do
         annotate_one_file
         expect { annotate_one_file frozen: true }.not_to raise_error
       end
