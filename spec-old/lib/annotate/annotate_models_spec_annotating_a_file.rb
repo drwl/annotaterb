@@ -319,12 +319,12 @@ RSpec.describe AnnotateModels do
 
       it 'displays just the error message with trace disabled (default)' do
         expect { described_class.do_annotations model_dir: @model_dir, is_rake: true }.to output(a_string_including("Unable to annotate #{@model_dir}/user.rb: oops")).to_stderr
-        expect { described_class.do_annotations model_dir: @model_dir, is_rake: true }.not_to output(a_string_including('/spec/annotate/annotate_models_spec.rb:')).to_stderr
+        expect { described_class.do_annotations model_dir: @model_dir, is_rake: true }.not_to output(a_string_including('/spec-old/annotate/annotate_models_spec.rb:')).to_stderr
       end
 
       it 'displays the error message and stacktrace with trace enabled' do
         expect { described_class.do_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including("Unable to annotate #{@model_dir}/user.rb: oops")).to_stderr
-        expect { described_class.do_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including('/spec/lib/annotate/annotate_models_spec.rb:')).to_stderr
+        expect { described_class.do_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including('/spec-old/lib-old/annotate/annotate_models_spec.rb:')).to_stderr
       end
     end
 
