@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
     Annotates Rails/ActiveRecord Models, routes, fixtures, and others based on the database schema.
   DESCRIPTION
   spec.homepage      = "https://github.com/drwl/annotaterb"
-  spec.license       = "2-clause BSDL"
+  spec.license       = "BSD-2-Clause"
   spec.required_ruby_version = ">= 2.7.0"
 
   spec.metadata["homepage_uri"] = spec.homepage
