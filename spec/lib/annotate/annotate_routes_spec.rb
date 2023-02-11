@@ -46,7 +46,7 @@ RSpec.describe AnnotateRoutes do
         expect(File).to receive(:exist?).with(ROUTE_FILE).and_return(true).once
         expect(File).to receive(:read).with(ROUTE_FILE).and_return(route_file_content).once
 
-        expect(AnnotateRoutes::HeaderGenerator).to receive(:`).with('rake routes').and_return(rake_routes_result).once
+        expect(AnnotateRoutes::HeaderGenerator).to receive(:`).with('rails routes').and_return(rake_routes_result).once
       end
 
       context 'When the result of `rake routes` is present' do
