@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
-
-ruby '~> 2.7.0'
+gemspec
 
 gem 'activerecord', require: false
 gem 'rake', require: false
