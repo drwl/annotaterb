@@ -3,15 +3,6 @@ require 'optparse'
 module Annotator
   # Class for handling command line arguments
   class Parser # rubocop:disable Metrics/ClassLength
-    class Output
-      attr_reader :env, :options
-
-      def initialize(env, options)
-        @env = env
-        @options = options
-      end
-    end
-
     def self.parse(args, env = {})
       new(args, env).parse
     end
@@ -38,7 +29,9 @@ module Annotator
       # To split up because right now this method parses and commits
       parser.parse!(args)
 
-      Output.new(env, options)
+      commit
+
+      options
     end
 
     private
@@ -63,7 +56,7 @@ module Annotator
       option_parser.on('--additional-file-patterns path1,path2,path3',
                        Array,
                        "Additional file paths or globs to annotate, separated by commas (e.g. `/foo/bar/%model_name%/*.rb,/baz/%model_name%.rb`)") do |additional_file_patterns|
-        env['additional_file_patterns'] = additional_file_patterns
+        ENV['additional_file_patterns'] = additional_file_patterns
       end
 
       option_parser.on('-d',

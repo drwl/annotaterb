@@ -1,9 +1,13 @@
 RSpec.describe Annotator::Parser do
+  before(:example) do
+    ENV.clear
+  end
+
   context 'when given empty args' do
     it 'returns an options hash with defaults' do
       result = described_class.parse([])
-      expect(result.options).to be_a(Hash)
-      expect(result.options).to include(target_action: :do_annotations)
+      expect(result).to be_a(Hash)
+      expect(result).to include(target_action: :do_annotations)
     end
   end
 
@@ -11,8 +15,9 @@ RSpec.describe Annotator::Parser do
     describe option do
       it 'sets array of paths to :additional_file_patterns' do
         paths = 'foo/bar,baz'
-        result = described_class.parse([option, paths])
-        expect(result.env).to include('additional_file_patterns' => ['foo/bar', 'baz'])
+        allow(ENV).to receive(:[]=)
+        described_class.parse([option, paths])
+        expect(ENV).to have_received(:[]=).with('additional_file_patterns', ['foo/bar', 'baz'])
       end
     end
   end
@@ -21,7 +26,7 @@ RSpec.describe Annotator::Parser do
     describe option do
       it 'sets target_action to :remove_annotations' do
         result = described_class.parse([option])
-        expect(result.options).to include(target_action: :remove_annotations)
+        expect(result).to include(target_action: :remove_annotations)
       end
     end
   end
@@ -31,21 +36,24 @@ RSpec.describe Annotator::Parser do
       described_class::ANNOTATION_POSITIONS.each do |position|
         context "when specifying #{position}" do
           it "#{position} position is an option" do
+            allow(ENV).to receive(:[]=)
             described_class.parse([option, position])
             expect(described_class::ANNOTATION_POSITIONS).to include(position)
           end
 
           it "sets ENV['position'] to be position" do
-            result = described_class.parse([option, position])
+            allow(ENV).to receive(:[]=)
+            described_class.parse([option, position])
 
-            expect(result.env).to include('position' => position)
+            expect(ENV).to have_received(:[]=).with('position', position)
           end
 
           it 'sets the value in ENV for the different file types' do
-            result = described_class.parse([option, position])
+            allow(ENV).to receive(:[]=)
+            described_class.parse([option, position])
 
             described_class::FILE_TYPE_POSITIONS.each do |file_type|
-              expect(result.env).to include(file_type => position)
+              expect(ENV).to have_received(:[]=).with(file_type, position)
             end
           end
         end
@@ -60,9 +68,9 @@ RSpec.describe Annotator::Parser do
         position_command = %w[-p bottom]
         options = other_commands + position_command
 
-        result = described_class.parse(options)
-        expect(result.env).to include('position_in_class' => 'top')
-        expect(result.env).to include('position' => 'bottom')
+        described_class.parse(options)
+        expect(ENV['position_in_class']).to eq('top')
+        expect(ENV['position']).to eq('bottom')
       end
     end
   end
@@ -74,8 +82,9 @@ RSpec.describe Annotator::Parser do
       described_class::ANNOTATION_POSITIONS.each do |position|
         context "when specifying '#{position}'" do
           it "sets the ENV variable to '#{position}'" do
-            result = described_class.parse([option, position])
-            expect(result.env).to include(env_key => position)
+            allow(ENV).to receive(:[]=)
+            described_class.parse([option, position])
+            expect(ENV).to have_received(:[]=).with(env_key, position)
           end
         end
       end
@@ -89,8 +98,9 @@ RSpec.describe Annotator::Parser do
       described_class::ANNOTATION_POSITIONS.each do |position|
         context "when specifying #{position}" do
           it "sets the ENV variable to #{position}" do
-            result = described_class.parse([option, position])
-            expect(result.env).to include(env_key => position)
+            allow(ENV).to receive(:[]=)
+            described_class.parse([option, position])
+            expect(ENV).to have_received(:[]=).with(env_key, position)
           end
         end
       end
@@ -104,8 +114,9 @@ RSpec.describe Annotator::Parser do
       described_class::ANNOTATION_POSITIONS.each do |position|
         context "when specifying #{position}" do
           it "sets the ENV variable to #{position}" do
-            result = described_class.parse([option, position])
-            expect(result.env).to include(env_key => position)
+            allow(ENV).to receive(:[]=)
+            described_class.parse([option, position])
+            expect(ENV).to have_received(:[]=).with(env_key, position)
           end
         end
       end
@@ -119,8 +130,9 @@ RSpec.describe Annotator::Parser do
       described_class::ANNOTATION_POSITIONS.each do |position|
         context "when specifying #{position}" do
           it "sets the ENV variable to #{position}" do
-            result = described_class.parse([option, position])
-            expect(result.env).to include(env_key => position)
+            allow(ENV).to receive(:[]=)
+            described_class.parse([option, position])
+            expect(ENV).to have_received(:[]=).with(env_key, position)
           end
         end
       end
@@ -134,8 +146,9 @@ RSpec.describe Annotator::Parser do
       described_class::ANNOTATION_POSITIONS.each do |position|
         context "when specifying #{position}" do
           it "sets the ENV variable to #{position}" do
-            result = described_class.parse([option, position])
-            expect(result.env).to include(env_key => position)
+            allow(ENV).to receive(:[]=)
+            described_class.parse([option, position])
+            expect(ENV).to have_received(:[]=).with(env_key, position)
           end
         end
       end
@@ -149,8 +162,9 @@ RSpec.describe Annotator::Parser do
       described_class::ANNOTATION_POSITIONS.each do |position|
         context "when specifying #{position}" do
           it "sets the ENV variable to #{position}" do
-            result = described_class.parse([option, position])
-            expect(result.env).to include(env_key => position)
+            allow(ENV).to receive(:[]=)
+            described_class.parse([option, position])
+            expect(ENV).to have_received(:[]=).with(env_key, position)
           end
         end
       end
@@ -162,8 +176,8 @@ RSpec.describe Annotator::Parser do
       let(:env_key) { 'wrapper' }
       let(:set_value) { 'STR' }
       it 'sets the ENV variable' do
-        result = described_class.parse([option, set_value])
-        expect(result.env).to include(env_key => set_value)
+        expect(ENV).to receive(:[]=).with(env_key, set_value)
+        described_class.parse([option, set_value])
       end
     end
   end
@@ -173,8 +187,8 @@ RSpec.describe Annotator::Parser do
       let(:env_key) { 'wrapper_open' }
       let(:set_value) { 'STR' }
       it 'sets the ENV variable' do
-        result = described_class.parse([option, set_value])
-        expect(result.env).to include(env_key => set_value)
+        expect(ENV).to receive(:[]=).with(env_key, set_value)
+        described_class.parse([option, set_value])
       end
     end
   end
@@ -184,8 +198,8 @@ RSpec.describe Annotator::Parser do
       let(:env_key) { 'wrapper_close' }
       let(:set_value) { 'STR' }
       it 'sets the ENV variable' do
-        result = described_class.parse([option, set_value])
-        expect(result.env).to include(env_key => set_value)
+        expect(ENV).to receive(:[]=).with(env_key, set_value)
+        described_class.parse([option, set_value])
       end
     end
   end
@@ -195,8 +209,8 @@ RSpec.describe Annotator::Parser do
       let(:env_key) { 'routes' }
       let(:set_value) { 'true' }
       it 'sets the ENV variable' do
-        result = described_class.parse([option])
-        expect(result.env).to include(env_key => set_value)
+        expect(ENV).to receive(:[]=).with(env_key, set_value)
+        described_class.parse([option])
       end
     end
   end
@@ -206,8 +220,8 @@ RSpec.describe Annotator::Parser do
       let(:env_key) { 'models' }
       let(:set_value) { 'true' }
       it 'sets the ENV variable' do
-        result = described_class.parse([option])
-        expect(result.env).to include(env_key => set_value)
+        expect(ENV).to receive(:[]=).with(env_key, set_value)
+        described_class.parse([option])
       end
     end
   end
@@ -217,8 +231,8 @@ RSpec.describe Annotator::Parser do
       let(:env_key) { 'active_admin' }
       let(:set_value) { 'true' }
       it 'sets the ENV variable' do
-        result = described_class.parse([option])
-        expect(result.env).to include(env_key => set_value)
+        expect(ENV).to receive(:[]=).with(env_key, set_value)
+        described_class.parse([option])
       end
     end
   end
@@ -237,8 +251,8 @@ RSpec.describe Annotator::Parser do
       let(:env_key) { 'include_version' }
       let(:set_value) { 'yes' }
       it 'sets the ENV variable' do
-        result = described_class.parse([option])
-        expect(result.env).to include(env_key => set_value)
+        expect(ENV).to receive(:[]=).with(env_key, set_value)
+        described_class.parse([option])
       end
     end
   end
@@ -248,8 +262,8 @@ RSpec.describe Annotator::Parser do
       let(:env_key) { 'show_foreign_keys' }
       let(:set_value) { 'yes' }
       it 'sets the ENV variable' do
-        result = described_class.parse([option])
-        expect(result.env).to include(env_key => set_value)
+        expect(ENV).to receive(:[]=).with(env_key, set_value)
+        described_class.parse([option])
       end
     end
   end
@@ -257,10 +271,11 @@ RSpec.describe Annotator::Parser do
   %w[--ck --complete-foreign-keys].each do |option|
     describe option do
       it 'sets the ENV variable' do
-        result = described_class.parse([option])
+        allow(ENV).to receive(:[]=)
+        described_class.parse([option])
 
-        expect(result.env).to include('show_foreign_keys' => 'yes')
-        expect(result.env).to include('show_complete_foreign_keys' => 'yes')
+        expect(ENV).to have_received(:[]=).with('show_foreign_keys', 'yes')
+        expect(ENV).to have_received(:[]=).with('show_complete_foreign_keys', 'yes')
       end
     end
   end
@@ -270,8 +285,8 @@ RSpec.describe Annotator::Parser do
       let(:env_key) { 'show_indexes' }
       let(:set_value) { 'yes' }
       it 'sets the ENV variable' do
-        result = described_class.parse([option])
-        expect(result.env).to include(env_key => set_value)
+        expect(ENV).to receive(:[]=).with(env_key, set_value)
+        described_class.parse([option])
       end
     end
   end
@@ -281,8 +296,8 @@ RSpec.describe Annotator::Parser do
       let(:env_key) { 'simple_indexes' }
       let(:set_value) { 'yes' }
       it 'sets the ENV variable' do
-        result = described_class.parse([option])
-        expect(result.env).to include(env_key => set_value)
+        expect(ENV).to receive(:[]=).with(env_key, set_value)
+        described_class.parse([option])
       end
     end
   end
@@ -292,8 +307,8 @@ RSpec.describe Annotator::Parser do
     let(:env_key) { 'model_dir' }
     let(:set_value) { 'some_dir/' }
     it 'sets the ENV variable' do
-      result = described_class.parse([option, set_value])
-      expect(result.env).to include(env_key => set_value)
+      expect(ENV).to receive(:[]=).with(env_key, set_value)
+      described_class.parse([option, set_value])
     end
   end
 
@@ -302,8 +317,8 @@ RSpec.describe Annotator::Parser do
     let(:env_key) { 'root_dir' }
     let(:set_value) { 'some_dir/' }
     it 'sets the ENV variable' do
-      result = described_class.parse([option, set_value])
-      expect(result.env).to include(env_key => set_value)
+      expect(ENV).to receive(:[]=).with(env_key, set_value)
+      described_class.parse([option, set_value])
     end
   end
 
@@ -312,8 +327,8 @@ RSpec.describe Annotator::Parser do
     let(:env_key) { 'ignore_model_sub_dir' }
     let(:set_value) { 'yes' }
     it 'sets the ENV variable' do
-      result = described_class.parse([option])
-      expect(result.env).to include(env_key => set_value)
+      expect(ENV).to receive(:[]=).with(env_key, set_value)
+      described_class.parse([option])
     end
   end
 
@@ -322,8 +337,8 @@ RSpec.describe Annotator::Parser do
     let(:env_key) { 'sort' }
     let(:set_value) { 'yes' }
     it 'sets the ENV variable' do
-      result = described_class.parse([option])
-      expect(result.env).to include(env_key => set_value)
+      expect(ENV).to receive(:[]=).with(env_key, set_value)
+      described_class.parse([option])
     end
   end
 
@@ -332,8 +347,8 @@ RSpec.describe Annotator::Parser do
     let(:env_key) { 'classified_sort' }
     let(:set_value) { 'yes' }
     it 'sets the ENV variable' do
-      result = described_class.parse([option])
-      expect(result.env).to include(env_key => set_value)
+      expect(ENV).to receive(:[]=).with(env_key, set_value)
+      described_class.parse([option])
     end
   end
 
@@ -342,16 +357,16 @@ RSpec.describe Annotator::Parser do
       let(:env_key) { 'require' }
       let(:set_value) { 'another_dir' }
       it 'sets the ENV variable' do
-        result = described_class.parse([option, set_value])
-        expect(result.env).to include(env_key => set_value)
+        expect(ENV).to receive(:[]=).with(env_key, set_value)
+        described_class.parse([option, set_value])
       end
 
       context "when ENV['require'] is already set" do
         let(:preset_require_value) { 'some_dir/' }
         it "appends the path to ENV['require']" do
           env = { 'require' => preset_require_value }
-          result = described_class.parse([option, set_value], env)
-          expect(result.env).to include(env_key => "#{preset_require_value},#{set_value}")
+          expect(ENV).to receive(:[]=).with(env_key, "#{preset_require_value},#{set_value}")
+          described_class.parse([option, set_value], env)
         end
       end
     end
@@ -380,20 +395,21 @@ RSpec.describe Annotator::Parser do
       let(:set_value) { 'yes' }
 
       it "sets the exclusion ENV variables for 'tests', 'fixtures', 'factories', and 'serializers'" do
-        result = described_class.parse([option])
+        allow(ENV).to receive(:[]=)
+        described_class.parse([option])
 
-        expect(result.env).to include('exclude_tests' => set_value)
-        expect(result.env).to include('exclude_fixtures' => set_value)
-        expect(result.env).to include('exclude_factories' => set_value)
-        expect(result.env).to include('exclude_serializers' => set_value)
+        expect(ENV).to have_received(:[]=).with('exclude_tests', set_value)
+        expect(ENV).to have_received(:[]=).with('exclude_fixtures', set_value)
+        expect(ENV).to have_received(:[]=).with('exclude_factories', set_value)
+        expect(ENV).to have_received(:[]=).with('exclude_serializers', set_value)
       end
 
       context 'when a type is passed in' do
         let(:exclusions) { "tests" }
 
         it "sets the exclusion ENV variable for 'tests' only" do
-          result = described_class.parse([option, exclusions])
-          expect(result.env).to include('exclude_tests' => set_value)
+          expect(ENV).to receive(:[]=).with('exclude_tests', set_value)
+          described_class.parse([option, exclusions])
         end
       end
 
@@ -401,9 +417,10 @@ RSpec.describe Annotator::Parser do
         let(:exclusions) { "tests,fixtures" }
 
         it "sets the exclusion ENV variable for 'tests' and 'fixtures'" do
-          result = described_class.parse([option, exclusions])
-          expect(result.env).to include('exclude_tests' => set_value)
-          expect(result.env).to include('exclude_fixtures' => set_value)
+          allow(ENV).to receive(:[]=)
+          described_class.parse([option, exclusions])
+          expect(ENV).to have_received(:[]=).with('exclude_tests', set_value)
+          expect(ENV).to have_received(:[]=).with('exclude_fixtures', set_value)
         end
       end
     end
@@ -417,8 +434,8 @@ RSpec.describe Annotator::Parser do
           let(:set_value) { 'yes' }
 
           it 'sets the ENV variable' do
-            result = described_class.parse([option, format_type])
-            expect(result.env).to include(env_key => set_value)
+            expect(ENV).to receive(:[]=).with(env_key, set_value)
+            described_class.parse([option, format_type])
           end
         end
       end
@@ -430,8 +447,8 @@ RSpec.describe Annotator::Parser do
     let(:env_key) { 'force' }
     let(:set_value) { 'yes' }
     it 'sets the ENV variable' do
-      result = described_class.parse([option])
-      expect(result.env).to include(env_key => set_value)
+      expect(ENV).to receive(:[]=).with(env_key, set_value)
+      described_class.parse([option])
     end
   end
 
@@ -440,8 +457,8 @@ RSpec.describe Annotator::Parser do
     let(:env_key) { 'frozen' }
     let(:set_value) { 'yes' }
     it 'sets the ENV variable' do
-      result = described_class.parse([option])
-      expect(result.env).to include(env_key => set_value)
+      expect(ENV).to receive(:[]=).with(env_key, set_value)
+      described_class.parse([option])
     end
   end
 
@@ -450,8 +467,8 @@ RSpec.describe Annotator::Parser do
     let(:env_key) { 'timestamp' }
     let(:set_value) { 'true' }
     it 'sets the ENV variable' do
-      result = described_class.parse([option])
-      expect(result.env).to include(env_key => set_value)
+      expect(ENV).to receive(:[]=).with(env_key, set_value)
+      described_class.parse([option])
     end
   end
 
@@ -460,8 +477,8 @@ RSpec.describe Annotator::Parser do
     let(:env_key) { 'trace' }
     let(:set_value) { 'yes' }
     it 'sets the ENV variable' do
-      result = described_class.parse([option])
-      expect(result.env).to include(env_key => set_value)
+      expect(ENV).to receive(:[]=).with(env_key, set_value)
+      described_class.parse([option])
     end
   end
 
@@ -471,8 +488,8 @@ RSpec.describe Annotator::Parser do
       let(:regex) { '^(id|updated_at|created_at)' }
 
       it 'sets the ENV variable' do
-        result = described_class.parse([option, regex])
-        expect(result.env).to include(env_key => regex)
+        expect(ENV).to receive(:[]=).with(env_key, regex)
+        described_class.parse([option, regex])
       end
     end
   end
@@ -483,8 +500,8 @@ RSpec.describe Annotator::Parser do
     let(:regex) { '(mobile|resque|pghero)' }
 
     it 'sets the ENV variable' do
-      result = described_class.parse([option, regex])
-      expect(result.env).to include(env_key => regex)
+      expect(ENV).to receive(:[]=).with(env_key, regex)
+      described_class.parse([option, regex])
     end
   end
 
@@ -494,8 +511,8 @@ RSpec.describe Annotator::Parser do
     let(:values) { 'integer,boolean,text' }
 
     it 'sets the ENV variable' do
-      result = described_class.parse([option, values])
-      expect(result.env).to include(env_key => values)
+      expect(ENV).to receive(:[]=).with(env_key, values)
+      described_class.parse([option, values])
     end
   end
 
@@ -505,8 +522,8 @@ RSpec.describe Annotator::Parser do
     let(:values) { 'json,jsonb,hstore' }
 
     it 'sets the ENV variable' do
-      result = described_class.parse([option, values])
-      expect(result.env).to include(env_key => values)
+      expect(ENV).to receive(:[]=).with(env_key, values)
+      described_class.parse([option, values])
     end
   end
 
@@ -515,8 +532,8 @@ RSpec.describe Annotator::Parser do
     let(:env_key) { 'ignore_unknown_models' }
     let(:set_value) { 'true' }
     it 'sets the ENV variable' do
-      result = described_class.parse([option])
-      expect(result.env).to include(env_key => set_value)
+      expect(ENV).to receive(:[]=).with(env_key, set_value)
+      described_class.parse([option])
     end
   end
 
@@ -525,8 +542,8 @@ RSpec.describe Annotator::Parser do
     let(:env_key) { 'with_comment' }
     let(:set_value) { 'true' }
     it 'sets the ENV variable' do
-      result = described_class.parse([option])
-      expect(result.env).to include(env_key => set_value)
+      expect(ENV).to receive(:[]=).with(env_key, set_value)
+      described_class.parse([option])
     end
   end
 end
