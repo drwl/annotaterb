@@ -1,7 +1,6 @@
 require 'annotate/annotate_models'
 require 'annotate/active_record_patch'
 require 'active_support/core_ext/string'
-require 'files'
 require 'tmpdir'
 
 RSpec.describe AnnotateModels do

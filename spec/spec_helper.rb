@@ -8,6 +8,7 @@ require 'annotate'
 require 'annotate/parser'
 require 'annotate/helpers'
 require 'annotate/constants'
+require 'files'
 require 'byebug'
 
 RSpec.configure do |config|
