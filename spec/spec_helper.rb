@@ -11,6 +11,8 @@ require 'annotate/constants'
 require 'files'
 require 'byebug'
 
+require 'annotate_rb/annotate_rb'
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = '.rspec_status'
