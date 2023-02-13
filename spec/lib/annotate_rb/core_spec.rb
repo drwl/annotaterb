@@ -1,4 +1,4 @@
-RSpec.describe AnnotateRb do
+RSpec.describe AnnotateRb::Core do
   describe '.version' do
     subject { described_class.version }
 
