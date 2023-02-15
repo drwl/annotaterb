@@ -57,13 +57,13 @@ RSpec.describe AnnotateRb::CLI do
       let(:random_args) { ['random', 'arg'] }
 
       before do
-        allow(AnnotateRb::Commands::Annotate).to receive(:run).with(random_args)
+        allow(AnnotateRb::Runner).to receive(:run).with(random_args)
       end
 
       it 'forwards them' do
         cli.run(random_args)
 
-        expect(AnnotateRb::Commands::Annotate).to have_received(:run).with(random_args)
+        expect(AnnotateRb::Runner).to have_received(:run).with(random_args)
       end
     end
   end

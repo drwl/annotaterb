@@ -11,8 +11,7 @@ module AnnotateRb
 
     HELP_MAPPING = %w(-h -? --help).to_set
     VERSION_MAPPING = %w(-v --version).to_set
-    MODEL_MAPPING = %w(models).to_set
-    ROUTE_MAPPING = %w(routes).to_set
+
 
     def run(args = ARGV)
       _original_argv = ARGV.dup
@@ -25,7 +24,7 @@ module AnnotateRb
         Commands::Version.run
         STATUS_SUCCESS
       else
-        Commands::Annotate.run(args)
+        Runner.run(args)
       end
     end
   end
