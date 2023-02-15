@@ -19,13 +19,18 @@ require 'annotate/parser'
 
 Annotate.bootstrap_rake
 
+# Annotate::Parser.parse takes in ARGV
+# - Parses it and writes stuff to ENV
+# - Returns some in a hash as seen below, this script will exit if `:exit` is defined
 options_result = Annotate::Parser.parse(ARGV)
 
 exit if options_result[:exit]
 
+# Not sure what this does yet
 options = Annotate.setup_options(
   is_rake: ENV['is_rake'] && !ENV['is_rake'].empty?
 )
+
 Annotate.eager_load(options) if Annotate::Helpers.include_models?
 
 AnnotateModels.send(options_result[:target_action], options) if Annotate::Helpers.include_models?
