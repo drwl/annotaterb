@@ -2,6 +2,8 @@ require_relative '../../../spec_helper'
 require 'annotate/annotate_models'
 
 RSpec.describe AnnotateModels::SchemaInfo do
+  include AnnotateTestHelpers
+
   describe '.generate' do
     subject do
       AnnotateModels::SchemaInfo.generate(klass, header, **options)

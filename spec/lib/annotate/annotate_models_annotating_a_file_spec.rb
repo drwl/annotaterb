@@ -7,6 +7,8 @@ require 'files'
 require 'tmpdir'
 
 RSpec.describe AnnotateModels do
+  include AnnotateTestHelpers
+
   MAGIC_COMMENTS = [
     '# encoding: UTF-8',
     '# coding: UTF-8',
