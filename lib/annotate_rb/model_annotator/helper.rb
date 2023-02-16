@@ -2,5 +2,7 @@
 
 module AnnotateRb
   module ModelAnnotator
+    module Helper
+    end
   end
 end
