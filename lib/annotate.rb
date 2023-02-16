@@ -71,9 +71,15 @@ module Annotate
     options
   end
 
+  # Can be used by consumers, per README:
+  #
+  # To automatically annotate every time you run `db:migrate`,
+  # either run `rails g annotate:install`
+  # or add `Annotate.load_tasks` to your `Rakefile`.
   def self.load_tasks
     return if @tasks_loaded
 
+    # Loads rake tasks, not sure why yet
     Dir[File.join(File.dirname(__FILE__), 'tasks', '**/*.rake')].each do |rake|
       load rake
     end
@@ -122,6 +128,11 @@ module Annotate
     end
 
     load_tasks
+
+    # This line loads the defaults option values for Annotate
+    # Then "writes" them to ENV if a value for them doesn't already exist
+    #
+    # Calls: .set_defaults
     Rake::Task[:set_annotation_options].invoke
   end
 
