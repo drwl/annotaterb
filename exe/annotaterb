@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+$LOAD_PATH.unshift("#{__dir__}/../lib")
+
+require 'annotate_rb'
+
+cli = AnnotateRb::CLI.new
+exit_status = cli.run
+
+exit exit_status

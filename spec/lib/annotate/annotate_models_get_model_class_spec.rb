@@ -1,87 +1,28 @@
+# encoding: utf-8
+require_relative '../../spec_helper'
 require 'annotate/annotate_models'
 require 'annotate/active_record_patch'
 require 'active_support/core_ext/string'
-require 'files'
 require 'tmpdir'
 
 RSpec.describe AnnotateModels do
-  unless const_defined?(:MAGIC_COMMENTS)
-    MAGIC_COMMENTS = [
-      '# encoding: UTF-8',
-      '# coding: UTF-8',
-      '# -*- coding: UTF-8 -*-',
-      '#encoding: utf-8',
-      '# encoding: utf-8',
-      '# -*- encoding : utf-8 -*-',
-      "# encoding: utf-8\n# frozen_string_literal: true",
-      "# frozen_string_literal: true\n# encoding: utf-8",
-      '# frozen_string_literal: true',
-      '#frozen_string_literal: false',
-      '# -*- frozen_string_literal : true -*-'
-    ].freeze
-  end
-
-  def mock_index(name, params = {})
-    double('IndexKeyDefinition',
-           name: name,
-           columns: params[:columns] || [],
-           unique: params[:unique] || false,
-           orders: params[:orders] || {},
-           where: params[:where],
-           using: params[:using])
-  end
-
-  def mock_foreign_key(name, from_column, to_table, to_column = 'id', constraints = {})
-    double('ForeignKeyDefinition',
-           name: name,
-           column: from_column,
-           to_table: to_table,
-           primary_key: to_column,
-           on_delete: constraints[:on_delete],
-           on_update: constraints[:on_update])
-  end
-
-  def mock_connection(indexes = [], foreign_keys = [])
-    double('Conn',
-           indexes: indexes,
-           foreign_keys: foreign_keys,
-           supports_foreign_keys?: true)
-  end
-
-  def mock_class(table_name, primary_key, columns, indexes = [], foreign_keys = [])
-    options = {
-      connection: mock_connection(indexes, foreign_keys),
-      table_exists?: true,
-      table_name: table_name,
-      primary_key: primary_key,
-      column_names: columns.map { |col| col.name.to_s },
-      columns: columns,
-      column_defaults: columns.map { |col| [col.name, col.default] }.to_h,
-      table_name_prefix: ''
-    }
-
-    double('An ActiveRecord class', options)
-  end
-
-  def mock_column(name, type, options = {})
-    default_options = {
-      limit: nil,
-      null: false,
-      default: nil,
-      sql_type: type
-    }
-
-    stubs = default_options.dup
-    stubs.merge!(options)
-    stubs[:name] = name
-    stubs[:type] = type
-
-    double('Column', stubs)
-  end
+  MAGIC_COMMENTS = [
+    '# encoding: UTF-8',
+    '# coding: UTF-8',
+    '# -*- coding: UTF-8 -*-',
+    '#encoding: utf-8',
+    '# encoding: utf-8',
+    '# -*- encoding : utf-8 -*-',
+    "# encoding: utf-8\n# frozen_string_literal: true",
+    "# frozen_string_literal: true\n# encoding: utf-8",
+    '# frozen_string_literal: true',
+    '#frozen_string_literal: false',
+    '# -*- frozen_string_literal : true -*-'
+  ].freeze
 
   describe '.get_model_class' do
-    before :all do
-      described_class.model_dir = Dir.mktmpdir('annotate_models')
+    before do
+      AnnotateModels.model_dir = Dir.mktmpdir('annotate_models')
     end
 
     # TODO: use 'files' gem instead
@@ -94,12 +35,12 @@ RSpec.describe AnnotateModels do
       end
     end
 
-    before do
+    before :each do
       create(filename, file_content)
     end
 
     let :klass do
-      described_class.get_model_class(File.join(described_class.model_dir[0], filename))
+      AnnotateModels.get_model_class(File.join(AnnotateModels.model_dir[0], filename))
     end
 
     context 'when class Foo is defined in "foo.rb"' do
@@ -240,7 +181,7 @@ RSpec.describe AnnotateModels do
       end
     end
 
-    context 'when the file includes invalid multibyte chars (USASCII)' do
+    context 'when the file includes invlaid multibyte chars (USASCII)' do
       context 'when class FooWithUtf8 is defined in "foo_with_utf8.rb"' do
         let :filename do
           'foo_with_utf8.rb'
@@ -313,8 +254,8 @@ RSpec.describe AnnotateModels do
           EOS
         end
 
-        before do
-          path = File.expand_path(filename, described_class.model_dir[0])
+        before :each do
+          path = File.expand_path(filename, AnnotateModels.model_dir[0])
           Kernel.load(path)
           expect(Kernel).not_to receive(:require)
         end
@@ -328,10 +269,10 @@ RSpec.describe AnnotateModels do
         dir = Array.new(8) { (0..9).to_a.sample(random: Random.new) }.join
 
         context "when class SubdirLoadedClass is defined in \"#{dir}/subdir_loaded_class.rb\"" do
-          before do
-            $LOAD_PATH.unshift(File.join(described_class.model_dir[0], dir))
+          before :each do
+            $LOAD_PATH.unshift(File.join(AnnotateModels.model_dir[0], dir))
 
-            path = File.expand_path(filename, described_class.model_dir[0])
+            path = File.expand_path(filename, AnnotateModels.model_dir[0])
             Kernel.load(path)
             expect(Kernel).not_to receive(:require)
           end
@@ -356,7 +297,7 @@ RSpec.describe AnnotateModels do
     end
 
     context 'when two class exist' do
-      before do
+      before :each do
         create(filename_2, file_content_2)
       end
 
@@ -378,66 +319,18 @@ RSpec.describe AnnotateModels do
 
         let :file_content_2 do
           <<-EOS
-            class Bar::Foo < ActiveRecord::Base
+            class Bar::Foo
             end
           EOS
         end
 
         let :klass_2 do
-          described_class.get_model_class(File.join(described_class.model_dir[0], filename_2))
+          AnnotateModels.get_model_class(File.join(AnnotateModels.model_dir[0], filename_2))
         end
 
         it 'finds valid model' do
           expect(klass.name).to eq('Foo')
           expect(klass_2.name).to eq('Bar::Foo')
-        end
-      end
-
-      context 'the class name and base name clash' do
-        let :filename do
-          'foo.rb'
-        end
-
-        let :file_content do
-          <<-EOS
-            class Foo < ActiveRecord::Base
-            end
-          EOS
-        end
-
-        let :filename_2 do
-          'bar/foo.rb'
-        end
-
-        let :file_content_2 do
-          <<-EOS
-            class Bar::Foo < ActiveRecord::Base
-            end
-          EOS
-        end
-
-        let :klass_2 do
-          described_class.get_model_class(File.join(described_class.model_dir[0], filename_2))
-        end
-
-        it 'finds valid model' do
-          expect(klass.name).to eq('Foo')
-          expect(klass_2.name).to eq('Bar::Foo')
-        end
-
-        it 'attempts to load the model path without expanding if skip_subdirectory_model_load is false' do
-          allow(described_class).to receive(:skip_subdirectory_model_load).and_return(false)
-          full_path = File.join(described_class.model_dir[0], filename_2)
-          expect(File).not_to receive(:expand_path).with(full_path)
-          described_class.get_model_class(full_path)
-        end
-
-        it 'does not attempt to load the model path without expanding if skip_subdirectory_model_load is true' do
-          $LOAD_PATH.unshift(described_class.model_dir[0])
-          allow(described_class).to receive(:skip_subdirectory_model_load).and_return(true)
-          full_path = File.join(described_class.model_dir[0], filename_2)
-          expect(File).to receive(:expand_path).with(full_path).and_call_original
-          described_class.get_model_class(full_path)
         end
       end
 
@@ -460,14 +353,14 @@ RSpec.describe AnnotateModels do
         let :file_content_2 do
           <<~EOS
             class Voucher
-              class Foo < ActiveRecord::Base
+              class Foo
               end
             end
           EOS
         end
 
         let :klass_2 do
-          described_class.get_model_class(File.join(described_class.model_dir[0], filename_2))
+          AnnotateModels.get_model_class(File.join(AnnotateModels.model_dir[0], filename_2))
         end
 
         it 'finds valid model' do

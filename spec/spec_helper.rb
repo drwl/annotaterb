@@ -8,7 +8,14 @@ require 'annotate'
 require 'annotate/parser'
 require 'annotate/helpers'
 require 'annotate/constants'
+require 'files'
 require 'byebug'
+
+require 'annotate_rb'
+
+# Requires supporting files with custom matchers and macros, etc,
+# in ./support/ and its subdirectories.
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.metadata["changelog_uri"] = "https://github.com/drwl/annotaterb/blob/master/CHANGELOG.md"
   spec.metadata["bug_tracker_uri"] = "https://github.com/drwl/annotaterb/issues"
 
-  spec.files         = Dir["VERSION", "CHANGELOG.md", "LICENSE.txt", "README.md", "lib/**/*", "bin/**/*"]
+  spec.files         = Dir["VERSION", "CHANGELOG.md", "LICENSE.txt", "README.md", "lib/**/*"]
   spec.bindir        = "exe"
   spec.executables   = Dir["exe/*"].map { |exe| File.basename(exe) }
   spec.require_paths = ["lib"]

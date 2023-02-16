@@ -71,9 +71,15 @@ module Annotate
     options
   end
 
+  # Can be used by consumers, per README:
+  #
+  # To automatically annotate every time you run `db:migrate`,
+  # either run `rails g annotate:install`
+  # or add `Annotate.load_tasks` to your `Rakefile`.
   def self.load_tasks
     return if @tasks_loaded
 
+    # Loads rake tasks, not sure why yet
     Dir[File.join(File.dirname(__FILE__), 'tasks', '**/*.rake')].each do |rake|
       load rake
     end
@@ -86,17 +92,8 @@ module Annotate
     require 'annotate/active_record_patch'
 
     if defined?(Rails::Application)
-      if Rails.version.split('.').first.to_i < 3
-        Rails.configuration.eager_load_paths.each do |load_path|
-          matcher = /\A#{Regexp.escape(load_path)}(.*)\.rb\Z/
-          Dir.glob("#{load_path}/**/*.rb").sort.each do |file|
-            require_dependency file.sub(matcher, '\1')
-          end
-        end
-      else
-        klass = Rails::Application.send(:subclasses).first
-        klass.eager_load!
-      end
+      klass = Rails::Application.send(:subclasses).first
+      klass.eager_load!
     else
       options[:model_dir].each do |dir|
         FileList["#{dir}/**/*.rb"].each do |fname|
@@ -131,6 +128,11 @@ module Annotate
     end
 
     load_tasks
+
+    # This line loads the defaults option values for Annotate
+    # Then "writes" them to ENV if a value for them doesn't already exist
+    #
+    # Calls: .set_defaults
     Rake::Task[:set_annotation_options].invoke
   end
 
