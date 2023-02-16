@@ -21,21 +21,33 @@ module AnnotateRb
         if Helper.routes_file_exist?
           existing_text = File.read(Helper.routes_file)
           content, header_position = Helper.strip_annotations(existing_text)
-          new_content = annotate_routes(HeaderGenerator.generate(options), content, header_position, options)
+          new_content = annotate_routes(HeaderGenerator.generate(@options), content, header_position, @options)
           new_text = new_content.join("\n")
 
           if Helper.rewrite_contents(existing_text, new_text)
-            puts "#{routes_file} was annotated."
+            puts "#{Helper.routes_file} was annotated."
           else
-            puts "#{routes_file} was not changed."
+            puts "#{Helper.routes_file} was not changed."
           end
         else
-          puts "#{routes_file} could not be found."
+          puts "#{Helper.routes_file} could not be found."
         end
       end
 
       def remove_annotations
-
+        if Helper.routes_file_exist?
+          existing_text = File.read(Helper.routes_file)
+          content, header_position = Helper.strip_annotations(existing_text)
+          new_content = Helper.strip_on_removal(content, header_position)
+          new_text = new_content.join("\n")
+          if Helper.rewrite_contents(existing_text, new_text)
+            puts "Annotations were removed from #{Helper.routes_file}."
+          else
+            puts "#{Helper.routes_file} was not changed (Annotation did not exist)."
+          end
+        else
+          puts "#{Helper.routes_file} could not be found."
+        end
       end
 
       def annotate_routes(header, content, header_position, options = {})
