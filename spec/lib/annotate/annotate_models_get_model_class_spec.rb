@@ -3,7 +3,6 @@ require_relative '../../spec_helper'
 require 'annotate/annotate_models'
 require 'annotate/active_record_patch'
 require 'active_support/core_ext/string'
-require 'files'
 require 'tmpdir'
 
 RSpec.describe AnnotateModels do
@@ -22,7 +21,7 @@ RSpec.describe AnnotateModels do
   ].freeze
 
   describe '.get_model_class' do
-    before :all do
+    before do
       AnnotateModels.model_dir = Dir.mktmpdir('annotate_models')
     end
 

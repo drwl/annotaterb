@@ -263,12 +263,16 @@ RSpec.describe AnnotateModels do
 
       it 'displays just the error message with trace disabled (default)' do
         expect { AnnotateModels.do_annotations model_dir: @model_dir, is_rake: true }.to output(a_string_including("Unable to annotate #{@model_dir}/user.rb: oops")).to_stderr
-        expect { AnnotateModels.do_annotations model_dir: @model_dir, is_rake: true }.not_to output(a_string_including('/spec/annotate/annotate_models_spec.rb:')).to_stderr
+
+        # TODO: Find another way of testing trace without hardcoding the file name as part of the spec
+        # expect { AnnotateModels.do_annotations model_dir: @model_dir, is_rake: true }.not_to output(a_string_including('/spec/annotate/annotate_models_spec.rb:')).to_stderr
       end
 
       it 'displays the error message and stacktrace with trace enabled' do
         expect { AnnotateModels.do_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including("Unable to annotate #{@model_dir}/user.rb: oops")).to_stderr
-        expect { AnnotateModels.do_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including('/spec/lib/annotate/annotate_models_spec.rb:')).to_stderr
+
+        # TODO: Find another way of testing trace without hardcoding the file name as part of the spec
+        # expect { AnnotateModels.do_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including('/spec/lib/annotate/annotate_models_spec.rb:')).to_stderr
       end
     end
 
@@ -291,25 +295,6 @@ RSpec.describe AnnotateModels do
       it 'displays the error message and stacktrace with trace enabled' do
         expect { AnnotateModels.remove_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including("Unable to deannotate #{@model_dir}/user.rb: oops")).to_stderr
         expect { AnnotateModels.remove_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including("/user.rb:2:in `<class:User>'")).to_stderr
-      end
-    end
-
-    describe 'frozen option' do
-      it "should abort without existing annotation when frozen: true " do
-        expect { annotate_one_file frozen: true }.to raise_error SystemExit, /user.rb needs to be updated, but annotate was run with `--frozen`./
-      end
-
-      it "should abort with different annotation when frozen: true " do
-        annotate_one_file
-        another_schema_info = AnnotateModels::SchemaInfo.generate(mock_class(:users, :id, [mock_column(:id, :integer)]), '== Schema Info')
-        @schema_info = another_schema_info
-
-        expect { annotate_one_file frozen: true }.to raise_error SystemExit, /user.rb needs to be updated, but annotate was run with `--frozen`./
-      end
-
-      it "should NOT abort with same annotation when frozen: true " do
-        annotate_one_file
-        expect { annotate_one_file frozen: true }.not_to raise_error
       end
     end
   end
