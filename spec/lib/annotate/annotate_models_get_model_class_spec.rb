@@ -17,7 +17,8 @@ RSpec.describe AnnotateModels do
       end
     end
 
-    before :each do
+    before do
+      AnnotateModels.model_dir = Dir.mktmpdir('annotate_models')
       create(filename, file_content)
     end
 
@@ -279,7 +280,7 @@ RSpec.describe AnnotateModels do
     end
 
     context 'when two class exist' do
-      before :each do
+      before do
         create(filename_2, file_content_2)
       end
 
@@ -301,6 +302,7 @@ RSpec.describe AnnotateModels do
 
         let :file_content_2 do
           <<-EOS
+            module Bar; end
             class Bar::Foo
             end
           EOS
