@@ -61,16 +61,80 @@ RSpec.describe AnnotateModels do
       Annotate::Constants::PATH_OPTIONS.each { |key| ENV[key.to_s] = '' }
     end
 
-    ['before', :before, 'top', :top].each do |position|
-      it "should put annotation before class if :position == #{position}" do
+    context "with 'before'" do
+      let(:position) { 'before' }
+
+      it "should put annotation before class if :position == 'before'" do
         annotate_one_file position: position
         expect(File.read(@model_file_name))
           .to eq("#{@schema_info}#{@file_content}")
       end
     end
 
-    ['after', :after, 'bottom', :bottom].each do |position|
-      it "should put annotation after class if position: #{position}" do
+    context "with :before" do
+      let(:position) { :before }
+
+      it "should put annotation before class if :position == :before" do
+        annotate_one_file position: position
+        expect(File.read(@model_file_name))
+          .to eq("#{@schema_info}#{@file_content}")
+      end
+    end
+
+    context "with 'top'" do
+      let(:position) { 'top' }
+
+      it "should put annotation before class if :position == 'top'" do
+        annotate_one_file position: position
+        expect(File.read(@model_file_name))
+          .to eq("#{@schema_info}#{@file_content}")
+      end
+    end
+
+    context "with :top" do
+      let(:position) { :top }
+
+      it "should put annotation before class if :position == :top" do
+        annotate_one_file position: position
+        expect(File.read(@model_file_name))
+          .to eq("#{@schema_info}#{@file_content}")
+      end
+    end
+
+    context "with 'after'" do
+      let(:position) { 'after' }
+
+      it "should put annotation after class if position: 'after'" do
+        annotate_one_file position: position
+        expect(File.read(@model_file_name))
+          .to eq("#{@file_content}\n#{@schema_info}")
+      end
+    end
+
+    context "with :after" do
+      let(:position) { :after }
+
+      it "should put annotation after class if position: :after" do
+        annotate_one_file position: position
+        expect(File.read(@model_file_name))
+          .to eq("#{@file_content}\n#{@schema_info}")
+      end
+    end
+
+    context "with 'bottom'" do
+      let(:position) { 'bottom' }
+
+      it "should put annotation after class if position: 'bottom'" do
+        annotate_one_file position: position
+        expect(File.read(@model_file_name))
+          .to eq("#{@file_content}\n#{@schema_info}")
+      end
+    end
+
+    context "with :bottom" do
+      let(:position) { :bottom }
+
+      it "should put annotation after class if position: :bottom" do
         annotate_one_file position: position
         expect(File.read(@model_file_name))
           .to eq("#{@file_content}\n#{@schema_info}")
