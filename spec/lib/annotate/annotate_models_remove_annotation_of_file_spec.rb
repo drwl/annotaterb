@@ -6,8 +6,6 @@ require 'files'
 require 'tmpdir'
 
 RSpec.describe AnnotateModels do
-  include AnnotateTestConstants
-
   describe '.remove_annotation_of_file' do
     subject do
       AnnotateModels.remove_annotation_of_file(path)

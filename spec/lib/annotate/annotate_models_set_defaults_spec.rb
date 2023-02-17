@@ -6,8 +6,6 @@ require 'files'
 require 'tmpdir'
 
 RSpec.describe AnnotateModels do
-  include AnnotateTestConstants
-
   describe '.set_defaults' do
     subject do
       Annotate::Helpers.true?(ENV['show_complete_foreign_keys'])

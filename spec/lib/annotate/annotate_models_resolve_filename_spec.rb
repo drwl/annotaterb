@@ -6,8 +6,6 @@ require 'files'
 require 'tmpdir'
 
 RSpec.describe AnnotateModels do
-  include AnnotateTestConstants
-
   describe '.resolve_filename' do
     subject do
       AnnotateModels.resolve_filename(filename_template, model_name, table_name)

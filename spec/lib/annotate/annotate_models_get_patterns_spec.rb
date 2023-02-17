@@ -6,8 +6,6 @@ require 'files'
 require 'tmpdir'
 
 RSpec.describe AnnotateModels do
-  include AnnotateTestConstants
-
   describe '.get_patterns' do
     subject { AnnotateModels.get_patterns(options, pattern_type) }
 

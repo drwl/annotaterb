@@ -5,8 +5,6 @@ require 'active_support/core_ext/string'
 require 'tmpdir'
 
 RSpec.describe AnnotateModels do
-  include AnnotateTestConstants
-
   describe '.get_model_class' do
     def create(filename, file_content)
       File.join(AnnotateModels.model_dir[0], filename).tap do |path|

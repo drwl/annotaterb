@@ -6,8 +6,6 @@ require 'files'
 require 'tmpdir'
 
 RSpec.describe AnnotateModels do
-  include AnnotateTestConstants
-
   describe '.parse_options' do
     let(:options) do
       {

@@ -7,7 +7,6 @@ require 'tmpdir'
 
 RSpec.describe AnnotateModels do
   include AnnotateTestHelpers
-  include AnnotateTestConstants
 
   describe 'annotating a file' do
     before do

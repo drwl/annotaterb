@@ -246,7 +246,7 @@ RSpec.describe AnnotateModels do
     end
 
     it 'should not touch magic comments' do
-      MAGIC_COMMENTS.each do |magic_comment|
+      AnnotateTestConstants::MAGIC_COMMENTS.each do |magic_comment|
         write_model 'user.rb', <<~EOS
           #{magic_comment}
           class User < ActiveRecord::Base
@@ -266,7 +266,7 @@ RSpec.describe AnnotateModels do
 
     it 'adds an empty line between magic comments and annotation (position :before)' do
       content = "class User < ActiveRecord::Base\nend\n"
-      MAGIC_COMMENTS.each do |magic_comment|
+      AnnotateTestConstants::MAGIC_COMMENTS.each do |magic_comment|
         model_file_name, = write_model 'user.rb', "#{magic_comment}\n#{content}"
 
         annotate_one_file position: :before
@@ -278,7 +278,7 @@ RSpec.describe AnnotateModels do
 
     it 'only keeps a single empty line around the annotation (position :before)' do
       content = "class User < ActiveRecord::Base\nend\n"
-      MAGIC_COMMENTS.each do |magic_comment|
+      AnnotateTestConstants::MAGIC_COMMENTS.each do |magic_comment|
         schema_info = AnnotateModels::SchemaInfo.generate(@klass, '== Schema Info')
         model_file_name, = write_model 'user.rb', "#{magic_comment}\n\n\n\n#{content}"
 
@@ -290,7 +290,7 @@ RSpec.describe AnnotateModels do
 
     it 'does not change whitespace between magic comments and model file content (position :after)' do
       content = "class User < ActiveRecord::Base\nend\n"
-      MAGIC_COMMENTS.each do |magic_comment|
+      AnnotateTestConstants::MAGIC_COMMENTS.each do |magic_comment|
         model_file_name, = write_model 'user.rb', "#{magic_comment}\n#{content}"
 
         annotate_one_file position: :after

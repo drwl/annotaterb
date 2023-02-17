@@ -6,8 +6,6 @@ require 'files'
 require 'tmpdir'
 
 RSpec.describe AnnotateModels do
-  include AnnotateTestConstants
-
   describe '.annotate_model_file' do
     before do
       class Foo < ActiveRecord::Base; end
