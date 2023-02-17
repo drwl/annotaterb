@@ -22,13 +22,14 @@ RSpec.describe AnnotateModels do
         Annotate.set_defaults('show_complete_foreign_keys' => 'true')
       end
 
+      after do
+        Annotate.instance_variable_set('@has_set_defaults', false)
+        ENV.delete('show_complete_foreign_keys')
+      end
+
       it 'returns true' do
         is_expected.to be(true)
       end
-    end
-
-    after do
-      ENV.delete('show_complete_foreign_keys')
     end
   end
 end

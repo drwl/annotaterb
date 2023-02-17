@@ -42,9 +42,9 @@ RSpec.describe AnnotateModels do
 
       # Wipe settings so the next call will pick up new values...
       Annotate.instance_variable_set('@has_set_defaults', false)
-      Annotate::Constants::POSITION_OPTIONS.each { |key| ENV[key.to_s] = '' }
-      Annotate::Constants::FLAG_OPTIONS.each { |key| ENV[key.to_s] = '' }
-      Annotate::Constants::PATH_OPTIONS.each { |key| ENV[key.to_s] = '' }
+      Annotate::Constants::POSITION_OPTIONS.each { |key| ENV[key.to_s] = nil }
+      Annotate::Constants::FLAG_OPTIONS.each { |key| ENV[key.to_s] = nil }
+      Annotate::Constants::PATH_OPTIONS.each { |key| ENV[key.to_s] = nil }
     end
 
     context "with 'before'" do

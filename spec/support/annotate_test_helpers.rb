@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 module AnnotateTestHelpers
+
+  # This method is used to debug flakes/test pollution due to relying on ENV
+  # Can remove after the dependency on ENV is removed
+  def self.print_annotate_env_values
+    keys = Annotate::Constants::ALL_ANNOTATE_OPTIONS.flatten.map(&:to_s)
+    pp ENV.to_h.slice(*keys)
+  end
+
   def mock_index(name, params = {})
     double('IndexKeyDefinition',
            name: name,
