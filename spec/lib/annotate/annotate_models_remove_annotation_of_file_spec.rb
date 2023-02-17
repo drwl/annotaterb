@@ -6,19 +6,7 @@ require 'files'
 require 'tmpdir'
 
 RSpec.describe AnnotateModels do
-  MAGIC_COMMENTS = [
-    '# encoding: UTF-8',
-    '# coding: UTF-8',
-    '# -*- coding: UTF-8 -*-',
-    '#encoding: utf-8',
-    '# encoding: utf-8',
-    '# -*- encoding : utf-8 -*-',
-    "# encoding: utf-8\n# frozen_string_literal: true",
-    "# frozen_string_literal: true\n# encoding: utf-8",
-    '# frozen_string_literal: true',
-    '#frozen_string_literal: false',
-    '# -*- frozen_string_literal : true -*-'
-  ].freeze
+  include AnnotateTestConstants
 
   describe '.remove_annotation_of_file' do
     subject do
