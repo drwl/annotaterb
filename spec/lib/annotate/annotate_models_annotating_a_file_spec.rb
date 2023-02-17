@@ -1,5 +1,4 @@
 # encoding: utf-8
-require_relative '../../spec_helper'
 require 'annotate/annotate_models'
 require 'annotate/active_record_patch'
 require 'active_support/core_ext/string'
@@ -8,20 +7,7 @@ require 'tmpdir'
 
 RSpec.describe AnnotateModels do
   include AnnotateTestHelpers
-
-  MAGIC_COMMENTS = [
-    '# encoding: UTF-8',
-    '# coding: UTF-8',
-    '# -*- coding: UTF-8 -*-',
-    '#encoding: utf-8',
-    '# encoding: utf-8',
-    '# -*- encoding : utf-8 -*-',
-    "# encoding: utf-8\n# frozen_string_literal: true",
-    "# frozen_string_literal: true\n# encoding: utf-8",
-    '# frozen_string_literal: true',
-    '#frozen_string_literal: false',
-    '# -*- frozen_string_literal : true -*-'
-  ].freeze
+  include AnnotateTestConstants
 
   describe 'annotating a file' do
     before do
@@ -41,36 +27,80 @@ RSpec.describe AnnotateModels do
       Annotate::Helpers.reset_options(Annotate::Constants::ALL_ANNOTATE_OPTIONS)
     end
 
-    def write_model(file_name, file_content)
-      fname = File.join(@model_dir, file_name)
-      FileUtils.mkdir_p(File.dirname(fname))
-      File.open(fname, 'wb') { |f| f.write file_content }
+    context "with 'before'" do
+      let(:position) { 'before' }
 
-      [fname, file_content]
-    end
-
-    def annotate_one_file(options = {})
-      Annotate.set_defaults(options)
-      options = Annotate.setup_options(options)
-      AnnotateModels.annotate_one_file(@model_file_name, @schema_info, :position_in_class, options)
-
-      # Wipe settings so the next call will pick up new values...
-      Annotate.instance_variable_set('@has_set_defaults', false)
-      Annotate::Constants::POSITION_OPTIONS.each { |key| ENV[key.to_s] = '' }
-      Annotate::Constants::FLAG_OPTIONS.each { |key| ENV[key.to_s] = '' }
-      Annotate::Constants::PATH_OPTIONS.each { |key| ENV[key.to_s] = '' }
-    end
-
-    ['before', :before, 'top', :top].each do |position|
-      it "should put annotation before class if :position == #{position}" do
+      it "should put annotation before class if :position == 'before'" do
         annotate_one_file position: position
         expect(File.read(@model_file_name))
           .to eq("#{@schema_info}#{@file_content}")
       end
     end
 
-    ['after', :after, 'bottom', :bottom].each do |position|
-      it "should put annotation after class if position: #{position}" do
+    context "with :before" do
+      let(:position) { :before }
+
+      it "should put annotation before class if :position == :before" do
+        annotate_one_file position: position
+        expect(File.read(@model_file_name))
+          .to eq("#{@schema_info}#{@file_content}")
+      end
+    end
+
+    context "with 'top'" do
+      let(:position) { 'top' }
+
+      it "should put annotation before class if :position == 'top'" do
+        annotate_one_file position: position
+        expect(File.read(@model_file_name))
+          .to eq("#{@schema_info}#{@file_content}")
+      end
+    end
+
+    context "with :top" do
+      let(:position) { :top }
+
+      it "should put annotation before class if :position == :top" do
+        annotate_one_file position: position
+        expect(File.read(@model_file_name))
+          .to eq("#{@schema_info}#{@file_content}")
+      end
+    end
+
+    context "with 'after'" do
+      let(:position) { 'after' }
+
+      it "should put annotation after class if position: 'after'" do
+        annotate_one_file position: position
+        expect(File.read(@model_file_name))
+          .to eq("#{@file_content}\n#{@schema_info}")
+      end
+    end
+
+    context "with :after" do
+      let(:position) { :after }
+
+      it "should put annotation after class if position: :after" do
+        annotate_one_file position: position
+        expect(File.read(@model_file_name))
+          .to eq("#{@file_content}\n#{@schema_info}")
+      end
+    end
+
+    context "with 'bottom'" do
+      let(:position) { 'bottom' }
+
+      it "should put annotation after class if position: 'bottom'" do
+        annotate_one_file position: position
+        expect(File.read(@model_file_name))
+          .to eq("#{@file_content}\n#{@schema_info}")
+      end
+    end
+
+    context "with :bottom" do
+      let(:position) { :bottom }
+
+      it "should put annotation after class if position: :bottom" do
         annotate_one_file position: position
         expect(File.read(@model_file_name))
           .to eq("#{@file_content}\n#{@schema_info}")
@@ -196,7 +226,7 @@ RSpec.describe AnnotateModels do
     end
 
     it 'should not touch magic comments' do
-      MAGIC_COMMENTS.each do |magic_comment|
+      AnnotateTestConstants::MAGIC_COMMENTS.each do |magic_comment|
         write_model 'user.rb', <<~EOS
           #{magic_comment}
           class User < ActiveRecord::Base
@@ -216,7 +246,7 @@ RSpec.describe AnnotateModels do
 
     it 'adds an empty line between magic comments and annotation (position :before)' do
       content = "class User < ActiveRecord::Base\nend\n"
-      MAGIC_COMMENTS.each do |magic_comment|
+      AnnotateTestConstants::MAGIC_COMMENTS.each do |magic_comment|
         model_file_name, = write_model 'user.rb', "#{magic_comment}\n#{content}"
 
         annotate_one_file position: :before
@@ -228,7 +258,7 @@ RSpec.describe AnnotateModels do
 
     it 'only keeps a single empty line around the annotation (position :before)' do
       content = "class User < ActiveRecord::Base\nend\n"
-      MAGIC_COMMENTS.each do |magic_comment|
+      AnnotateTestConstants::MAGIC_COMMENTS.each do |magic_comment|
         schema_info = AnnotateModels::SchemaInfo.generate(@klass, '== Schema Info')
         model_file_name, = write_model 'user.rb', "#{magic_comment}\n\n\n\n#{content}"
 
@@ -240,7 +270,7 @@ RSpec.describe AnnotateModels do
 
     it 'does not change whitespace between magic comments and model file content (position :after)' do
       content = "class User < ActiveRecord::Base\nend\n"
-      MAGIC_COMMENTS.each do |magic_comment|
+      AnnotateTestConstants::MAGIC_COMMENTS.each do |magic_comment|
         model_file_name, = write_model 'user.rb', "#{magic_comment}\n#{content}"
 
         annotate_one_file position: :after

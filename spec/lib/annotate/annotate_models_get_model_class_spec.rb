@@ -1,31 +1,11 @@
 # encoding: utf-8
-require_relative '../../spec_helper'
 require 'annotate/annotate_models'
 require 'annotate/active_record_patch'
 require 'active_support/core_ext/string'
 require 'tmpdir'
 
 RSpec.describe AnnotateModels do
-  MAGIC_COMMENTS = [
-    '# encoding: UTF-8',
-    '# coding: UTF-8',
-    '# -*- coding: UTF-8 -*-',
-    '#encoding: utf-8',
-    '# encoding: utf-8',
-    '# -*- encoding : utf-8 -*-',
-    "# encoding: utf-8\n# frozen_string_literal: true",
-    "# frozen_string_literal: true\n# encoding: utf-8",
-    '# frozen_string_literal: true',
-    '#frozen_string_literal: false',
-    '# -*- frozen_string_literal : true -*-'
-  ].freeze
-
   describe '.get_model_class' do
-    before do
-      AnnotateModels.model_dir = Dir.mktmpdir('annotate_models')
-    end
-
-    # TODO: use 'files' gem instead
     def create(filename, file_content)
       File.join(AnnotateModels.model_dir[0], filename).tap do |path|
         FileUtils.mkdir_p(File.dirname(path))
@@ -35,7 +15,8 @@ RSpec.describe AnnotateModels do
       end
     end
 
-    before :each do
+    before do
+      AnnotateModels.model_dir = Dir.mktmpdir('annotate_models')
       create(filename, file_content)
     end
 
@@ -254,7 +235,7 @@ RSpec.describe AnnotateModels do
           EOS
         end
 
-        before :each do
+        before do
           path = File.expand_path(filename, AnnotateModels.model_dir[0])
           Kernel.load(path)
           expect(Kernel).not_to receive(:require)
@@ -269,7 +250,7 @@ RSpec.describe AnnotateModels do
         dir = Array.new(8) { (0..9).to_a.sample(random: Random.new) }.join
 
         context "when class SubdirLoadedClass is defined in \"#{dir}/subdir_loaded_class.rb\"" do
-          before :each do
+          before do
             $LOAD_PATH.unshift(File.join(AnnotateModels.model_dir[0], dir))
 
             path = File.expand_path(filename, AnnotateModels.model_dir[0])
@@ -297,7 +278,7 @@ RSpec.describe AnnotateModels do
     end
 
     context 'when two class exist' do
-      before :each do
+      before do
         create(filename_2, file_content_2)
       end
 
@@ -319,6 +300,7 @@ RSpec.describe AnnotateModels do
 
         let :file_content_2 do
           <<-EOS
+            module Bar; end
             class Bar::Foo
             end
           EOS

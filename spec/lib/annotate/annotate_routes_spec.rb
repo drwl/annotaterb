@@ -30,7 +30,7 @@ RSpec.describe AnnotateRoutes do
 
   describe '.do_annotations' do
     context 'When "config/routes.rb" does not exist' do
-      before :each do
+      before do
         expect(File).to receive(:exist?).with(ROUTE_FILE).and_return(false).once
       end
 
@@ -42,7 +42,7 @@ RSpec.describe AnnotateRoutes do
     end
 
     context 'When "config/routes.rb" exists' do
-      before :each do
+      before do
         expect(File).to receive(:exist?).with(ROUTE_FILE).and_return(true).once
         expect(File).to receive(:read).with(ROUTE_FILE).and_return(route_file_content).once
 
@@ -556,7 +556,7 @@ RSpec.describe AnnotateRoutes do
   end
 
   describe '.remove_annotations' do
-    before :each do
+    before do
       expect(File).to receive(:exist?).with(ROUTE_FILE).and_return(true).once
       expect(File).to receive(:read).with(ROUTE_FILE).and_return(route_file_content).once
       expect(File).to receive(:open).with(ROUTE_FILE, 'wb').and_yield(mock_file).once

@@ -12,7 +12,6 @@ module AnnotateRb
     HELP_MAPPING = %w(-h -? --help).to_set
     VERSION_MAPPING = %w(-v --version).to_set
 
-
     def run(args = ARGV)
       _original_argv = ARGV.dup
 
