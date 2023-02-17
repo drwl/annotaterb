@@ -14,7 +14,7 @@ RSpec.describe AnnotateModels do
       }
     end
 
-    before :each do
+    before do
       AnnotateModels.send(:parse_options, options)
     end
 

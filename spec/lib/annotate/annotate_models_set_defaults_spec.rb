@@ -27,7 +27,7 @@ RSpec.describe AnnotateModels do
       end
     end
 
-    after :each do
+    after do
       ENV.delete('show_complete_foreign_keys')
     end
   end

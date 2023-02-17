@@ -235,7 +235,7 @@ RSpec.describe AnnotateModels do
           EOS
         end
 
-        before :each do
+        before do
           path = File.expand_path(filename, AnnotateModels.model_dir[0])
           Kernel.load(path)
           expect(Kernel).not_to receive(:require)
@@ -250,7 +250,7 @@ RSpec.describe AnnotateModels do
         dir = Array.new(8) { (0..9).to_a.sample(random: Random.new) }.join
 
         context "when class SubdirLoadedClass is defined in \"#{dir}/subdir_loaded_class.rb\"" do
-          before :each do
+          before do
             $LOAD_PATH.unshift(File.join(AnnotateModels.model_dir[0], dir))
 
             path = File.expand_path(filename, AnnotateModels.model_dir[0])
