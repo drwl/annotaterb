@@ -19,6 +19,7 @@ RSpec.describe AnnotateModels do
 
     context 'when default value of "show_complete_foreign_keys" is set' do
       before do
+        Annotate.instance_variable_set('@has_set_defaults', false)
         Annotate.set_defaults('show_complete_foreign_keys' => 'true')
       end
 
