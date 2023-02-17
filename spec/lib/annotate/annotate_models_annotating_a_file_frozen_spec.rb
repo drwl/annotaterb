@@ -27,7 +27,7 @@ RSpec.describe AnnotateModels do
     end
 
     # TODO: Check out why this test fails due to test pollution
-    xdescribe 'frozen option' do
+    describe 'frozen option' do
       it "should abort without existing annotation when frozen: true " do
         expect { annotate_one_file frozen: true }.to raise_error SystemExit, /user.rb needs to be updated, but annotate was run with `--frozen`./
       end
