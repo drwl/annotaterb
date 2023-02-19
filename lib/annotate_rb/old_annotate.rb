@@ -79,7 +79,7 @@ module AnnotateRb
       return if @tasks_loaded
 
       # Loads rake tasks, not sure why yet
-      Dir[File.join(File.dirname(__FILE__), 'tasks', '**/*.rake')].each do |rake|
+      Dir[File.join(File.dirname(__FILE__), '..', 'tasks', '**/*.rake')].each do |rake|
         load rake
       end
 
