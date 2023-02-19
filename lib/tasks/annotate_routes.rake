@@ -10,13 +10,13 @@ task :annotate_routes => :environment do
   require "#{annotate_lib}/annotate/annotate_routes"
 
   options={}
-  val = options[:position] = Annotate::Helpers.fallback(AnnotateRb::Env.read('position'), 'before')
+  val = options[:position] = AnnotateRb::ModelAnnotator::Helper.fallback(AnnotateRb::Env.read('position'), 'before')
   Env.write('position', val)
-  options[:position_in_routes] = Annotate::Helpers.fallback(AnnotateRb::Env.read('position_in_routes'), AnnotateRb::Env.read('position'))
-  options[:ignore_routes] = Annotate::Helpers.fallback(AnnotateRb::Env.read('ignore_routes'),  nil)
+  options[:position_in_routes] = AnnotateRb::ModelAnnotator::Helper.fallback(AnnotateRb::Env.read('position_in_routes'), AnnotateRb::Env.read('position'))
+  options[:ignore_routes] = AnnotateRb::ModelAnnotator::Helper.fallback(AnnotateRb::Env.read('ignore_routes'),  nil)
   options[:require] = AnnotateRb::Env.read('require') ? AnnotateRb::Env.read('require').split(',') : []
-  options[:wrapper_open] = Annotate::Helpers.fallback(AnnotateRb::Env.read('wrapper_open'), AnnotateRb::Env.read('wrapper'))
-  options[:wrapper_close] = Annotate::Helpers.fallback(AnnotateRb::Env.read('wrapper_close'), AnnotateRb::Env.read('wrapper'))
+  options[:wrapper_open] = AnnotateRb::ModelAnnotator::Helper.fallback(AnnotateRb::Env.read('wrapper_open'), AnnotateRb::Env.read('wrapper'))
+  options[:wrapper_close] = AnnotateRb::ModelAnnotator::Helper.fallback(AnnotateRb::Env.read('wrapper_close'), AnnotateRb::Env.read('wrapper'))
   AnnotateRb::RouteAnnotator::Annotator.add_annotations(options)
 end
 
