@@ -5,15 +5,15 @@ module AnnotateRb
     module Helper
       class << self
         def skip_on_migration?
-          ENV['ANNOTATE_SKIP_ON_DB_MIGRATE'] =~ Constants::TRUE_RE || ENV['skip_on_db_migrate'] =~ Constants::TRUE_RE
+          Env.read('ANNOTATE_SKIP_ON_DB_MIGRATE') =~ Constants::TRUE_RE || Env.read('skip_on_db_migrate') =~ Constants::TRUE_RE
         end
 
         def include_routes?
-          ENV['routes'] =~ Constants::TRUE_RE
+          Env.read('routes') =~ Constants::TRUE_RE
         end
 
         def include_models?
-          ENV['models'] =~ Constants::TRUE_RE
+          Env.read('models') =~ Constants::TRUE_RE
         end
 
         def true?(val)
@@ -25,7 +25,7 @@ module AnnotateRb
         end
 
         def reset_options(options)
-          options.flatten.each { |key| ENV[key.to_s] = nil }
+          options.flatten.each { |key| Env.write(key, nil) }
         end
       end
     end
