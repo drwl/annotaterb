@@ -1,9 +1,9 @@
 name: CodeQL Analysis
 on:
-  push:
-    branches-ignore:
-      - pr/*
-      - scratch/*
+#  push:
+#    branches-ignore:
+#      - pr/*
+#      - scratch/*
   pull_request:
   schedule:
     - cron: '0 0 * * MON'
