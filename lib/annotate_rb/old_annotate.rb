@@ -28,8 +28,13 @@ module AnnotateRb
                           end
         end
 
-        default_value = ENV[key.to_s] unless ENV[key.to_s].blank?
-        ENV[key.to_s] = default_value.nil? ? nil : default_value.to_s
+        default_value = Env.read(key) unless Env.read(key).blank?
+
+        if default_value.nil?
+          Env.write(key, nil)
+        else
+          Env.write(key, default_value.to_s)
+        end
       end
     end
 
@@ -38,16 +43,16 @@ module AnnotateRb
     #
     def self.setup_options(options = {})
       ModelAnnotator::Constants::POSITION_OPTIONS.each do |key|
-        options[key] = ModelAnnotator::Helper.fallback(ENV[key.to_s], ENV['position'], 'before')
+        options[key] = ModelAnnotator::Helper.fallback(Env.read(key), Env.read('position'), 'before')
       end
       ModelAnnotator::Constants::FLAG_OPTIONS.each do |key|
-        options[key] = ModelAnnotator::Helper.true?(ENV[key.to_s])
+        options[key] = ModelAnnotator::Helper.true?(Env.read(key))
       end
       ModelAnnotator::Constants::OTHER_OPTIONS.each do |key|
-        options[key] = !ENV[key.to_s].blank? ? ENV[key.to_s] : nil
+        options[key] = !Env.read(key).blank? ? Env.read(key) : nil
       end
       ModelAnnotator::Constants::PATH_OPTIONS.each do |key|
-        options[key] = !ENV[key.to_s].blank? ? ENV[key.to_s].split(',') : []
+        options[key] = !Env.read(key).blank? ? Env.read(key).split(',') : []
       end
 
       options[:additional_file_patterns] ||= []
@@ -58,9 +63,9 @@ module AnnotateRb
       options[:wrapper_close] ||= options[:wrapper]
 
       # These were added in 2.7.0 but so this is to revert to old behavior by default
-      options[:exclude_scaffolds] = ModelAnnotator::Helper.true?(ENV.fetch('exclude_scaffolds', 'true'))
-      options[:exclude_controllers] = ModelAnnotator::Helper.true?(ENV.fetch('exclude_controllers', 'true'))
-      options[:exclude_helpers] = ModelAnnotator::Helper.true?(ENV.fetch('exclude_helpers', 'true'))
+      options[:exclude_scaffolds] = ModelAnnotator::Helper.true?(Env.fetch('exclude_scaffolds', 'true'))
+      options[:exclude_controllers] = ModelAnnotator::Helper.true?(Env.fetch('exclude_controllers', 'true'))
+      options[:exclude_helpers] = ModelAnnotator::Helper.true?(Env.fetch('exclude_helpers', 'true'))
 
       options
     end
