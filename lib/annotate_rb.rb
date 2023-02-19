@@ -7,6 +7,7 @@ require_relative 'annotate_rb/runner'
 require_relative 'annotate_rb/commands'
 require_relative 'annotate_rb/route_annotator'
 require_relative 'annotate_rb/model_annotator'
+require_relative 'annotate_rb/old_annotate'
 
 module AnnotateRb
 

@@ -1,14 +1,9 @@
 # encoding: utf-8
-require 'annotate/annotate_models'
-require 'annotate/active_record_patch'
-require 'active_support/core_ext/string'
-require 'files'
-require 'tmpdir'
 
-RSpec.describe AnnotateModels do
+RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
   describe '.remove_annotation_of_file' do
     subject do
-      AnnotateModels.remove_annotation_of_file(path)
+      described_class.remove_annotation_of_file(path)
     end
 
     let :tmpdir do
@@ -109,7 +104,7 @@ RSpec.describe AnnotateModels do
       end
 
       subject do
-        AnnotateModels.remove_annotation_of_file(path, wrapper_open: 'wrapper')
+        described_class.remove_annotation_of_file(path, wrapper_open: 'wrapper')
       end
 
       it 'removes annotation' do
@@ -139,7 +134,7 @@ RSpec.describe AnnotateModels do
       end
 
       subject do
-        AnnotateModels.remove_annotation_of_file(path, wrapper_open: 'wrapper')
+        described_class.remove_annotation_of_file(path, wrapper_open: 'wrapper')
       end
 
       it 'removes annotation' do
@@ -198,7 +193,7 @@ RSpec.describe AnnotateModels do
       end
 
       subject do
-        AnnotateModels.remove_annotation_of_file(path, wrapper_close: 'wrapper')
+        described_class.remove_annotation_of_file(path, wrapper_close: 'wrapper')
       end
 
       it 'removes annotation' do

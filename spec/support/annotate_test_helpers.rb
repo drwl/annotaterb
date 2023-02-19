@@ -10,16 +10,16 @@ module AnnotateTestHelpers
   end
 
   def annotate_one_file(options = {})
-    Annotate.instance_variable_set('@has_set_defaults', false)
-    Annotate.set_defaults(options)
-    options = Annotate.setup_options(options)
-    AnnotateModels.annotate_one_file(@model_file_name, @schema_info, :position_in_class, options)
+    AnnotateRb::OldAnnotate.instance_variable_set('@has_set_defaults', false)
+    AnnotateRb::OldAnnotate.set_defaults(options)
+    options = AnnotateRb::OldAnnotate.setup_options(options)
+    AnnotateRb::ModelAnnotator::Annotator.annotate_one_file(@model_file_name, @schema_info, :position_in_class, options)
 
     # Wipe settings so the next call will pick up new values...
-    Annotate.instance_variable_set('@has_set_defaults', false)
-    Annotate::Constants::POSITION_OPTIONS.each { |key| ENV[key.to_s] = nil }
-    Annotate::Constants::FLAG_OPTIONS.each { |key| ENV[key.to_s] = nil }
-    Annotate::Constants::PATH_OPTIONS.each { |key| ENV[key.to_s] = nil }
+    AnnotateRb::OldAnnotate.instance_variable_set('@has_set_defaults', false)
+    AnnotateRb::ModelAnnotator::Constants::POSITION_OPTIONS.each { |key| ENV[key.to_s] = nil }
+    AnnotateRb::ModelAnnotator::Constants::FLAG_OPTIONS.each { |key| ENV[key.to_s] = nil }
+    AnnotateRb::ModelAnnotator::Constants::PATH_OPTIONS.each { |key| ENV[key.to_s] = nil }
   end
 
   def write_model(file_name, file_content)

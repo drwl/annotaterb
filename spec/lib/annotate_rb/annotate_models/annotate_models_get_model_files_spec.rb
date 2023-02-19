@@ -1,11 +1,6 @@
 # encoding: utf-8
-require 'annotate/annotate_models'
-require 'annotate/active_record_patch'
-require 'active_support/core_ext/string'
-require 'files'
-require 'tmpdir'
 
-RSpec.describe AnnotateModels do
+RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
   describe '.get_model_files' do
     subject { described_class.get_model_files(options) }
 

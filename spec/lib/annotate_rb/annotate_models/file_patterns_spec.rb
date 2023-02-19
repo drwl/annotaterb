@@ -1,6 +1,6 @@
-RSpec.describe AnnotateModels::FilePatterns do
+RSpec.describe AnnotateRb::ModelAnnotator::FilePatterns do
   describe '.by_pattern' do
-    subject { AnnotateModels::FilePatterns.generate(root_directory, pattern_type, options) }
+    subject { described_class.generate(root_directory, pattern_type, options) }
 
     let(:root_directory) { '/root' }
     let(:options) { {} }

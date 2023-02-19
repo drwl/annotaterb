@@ -1,13 +1,9 @@
 # encoding: utf-8
-require 'annotate/annotate_models'
-require 'annotate/active_record_patch'
-require 'active_support/core_ext/string'
-require 'tmpdir'
 
-RSpec.describe AnnotateModels do
+RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
   describe '.get_model_class' do
     def create(filename, file_content)
-      File.join(AnnotateModels.model_dir[0], filename).tap do |path|
+      File.join(described_class.model_dir[0], filename).tap do |path|
         FileUtils.mkdir_p(File.dirname(path))
         File.open(path, 'wb') do |f|
           f.puts(file_content)
@@ -16,12 +12,12 @@ RSpec.describe AnnotateModels do
     end
 
     before do
-      AnnotateModels.model_dir = Dir.mktmpdir('annotate_models')
+      described_class.model_dir = Dir.mktmpdir('annotate_models')
       create(filename, file_content)
     end
 
     let :klass do
-      AnnotateModels.get_model_class(File.join(AnnotateModels.model_dir[0], filename))
+      described_class.get_model_class(File.join(described_class.model_dir[0], filename))
     end
 
     context 'when class Foo is defined in "foo.rb"' do
@@ -236,7 +232,7 @@ RSpec.describe AnnotateModels do
         end
 
         before do
-          path = File.expand_path(filename, AnnotateModels.model_dir[0])
+          path = File.expand_path(filename, described_class.model_dir[0])
           Kernel.load(path)
           expect(Kernel).not_to receive(:require)
         end
@@ -251,9 +247,9 @@ RSpec.describe AnnotateModels do
 
         context "when class SubdirLoadedClass is defined in \"#{dir}/subdir_loaded_class.rb\"" do
           before do
-            $LOAD_PATH.unshift(File.join(AnnotateModels.model_dir[0], dir))
+            $LOAD_PATH.unshift(File.join(described_class.model_dir[0], dir))
 
-            path = File.expand_path(filename, AnnotateModels.model_dir[0])
+            path = File.expand_path(filename, described_class.model_dir[0])
             Kernel.load(path)
             expect(Kernel).not_to receive(:require)
           end
@@ -307,7 +303,7 @@ RSpec.describe AnnotateModels do
         end
 
         let :klass_2 do
-          AnnotateModels.get_model_class(File.join(AnnotateModels.model_dir[0], filename_2))
+          described_class.get_model_class(File.join(described_class.model_dir[0], filename_2))
         end
 
         it 'finds valid model' do
@@ -342,7 +338,7 @@ RSpec.describe AnnotateModels do
         end
 
         let :klass_2 do
-          AnnotateModels.get_model_class(File.join(AnnotateModels.model_dir[0], filename_2))
+          described_class.get_model_class(File.join(described_class.model_dir[0], filename_2))
         end
 
         it 'finds valid model' do

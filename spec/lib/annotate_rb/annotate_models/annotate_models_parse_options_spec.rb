@@ -1,11 +1,6 @@
 # encoding: utf-8
-require 'annotate/annotate_models'
-require 'annotate/active_record_patch'
-require 'active_support/core_ext/string'
-require 'files'
-require 'tmpdir'
 
-RSpec.describe AnnotateModels do
+RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
   describe '.parse_options' do
     let(:options) do
       {
@@ -15,12 +10,12 @@ RSpec.describe AnnotateModels do
     end
 
     before do
-      AnnotateModels.send(:parse_options, options)
+      described_class.send(:parse_options, options)
     end
 
     describe '@root_dir' do
       subject do
-        AnnotateModels.instance_variable_get(:@root_dir)
+        described_class.instance_variable_get(:@root_dir)
       end
 
       it 'sets @root_dir' do
@@ -30,7 +25,7 @@ RSpec.describe AnnotateModels do
 
     describe '@model_dir' do
       subject do
-        AnnotateModels.instance_variable_get(:@model_dir)
+        described_class.instance_variable_get(:@model_dir)
       end
 
       it 'separates option "model_dir" with commas and sets @model_dir as an array of string' do

@@ -1,13 +1,8 @@
 # encoding: utf-8
-require 'annotate/annotate_models'
-require 'annotate/active_record_patch'
-require 'active_support/core_ext/string'
-require 'files'
-require 'tmpdir'
 
-RSpec.describe AnnotateModels do
+RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
   describe '.get_patterns' do
-    subject { AnnotateModels.get_patterns(options, pattern_type) }
+    subject { described_class.get_patterns(options, pattern_type) }
 
     context 'when pattern_type is "additional_file_patterns"' do
       let(:pattern_type) { 'additional_file_patterns' }

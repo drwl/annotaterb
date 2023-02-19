@@ -1,11 +1,9 @@
-require 'active_support/core_ext/string'
-
-RSpec.describe AnnotateModels::SchemaInfo do
+RSpec.describe AnnotateRb::ModelAnnotator::SchemaInfo do
   include AnnotateTestHelpers
 
   describe '.generate' do
     subject do
-      AnnotateModels::SchemaInfo.generate(klass, header, **options)
+      described_class.generate(klass, header, **options)
     end
 
     let :klass do
@@ -990,7 +988,7 @@ RSpec.describe AnnotateModels::SchemaInfo do
 
       context 'when header is "== Schema Information"' do
         let :header do
-          AnnotateModels::PREFIX
+          AnnotateRb::ModelAnnotator::Annotator::PREFIX
         end
 
         context 'when the primary key is specified' do
@@ -1433,7 +1431,7 @@ RSpec.describe AnnotateModels::SchemaInfo do
   describe 'private methods' do
     describe '.quote' do
       subject do
-        AnnotateModels::SchemaInfo.send(:quote, value)
+        described_class.send(:quote, value)
       end
 
       context 'when the argument is nil' do

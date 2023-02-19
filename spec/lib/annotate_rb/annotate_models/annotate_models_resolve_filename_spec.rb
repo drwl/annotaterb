@@ -1,14 +1,9 @@
 # encoding: utf-8
-require 'annotate/annotate_models'
-require 'annotate/active_record_patch'
-require 'active_support/core_ext/string'
-require 'files'
-require 'tmpdir'
 
-RSpec.describe AnnotateModels do
+RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
   describe '.resolve_filename' do
     subject do
-      AnnotateModels.resolve_filename(filename_template, model_name, table_name)
+      described_class.resolve_filename(filename_template, model_name, table_name)
     end
 
     context 'When model_name is "example_model" and table_name is "example_models"' do
