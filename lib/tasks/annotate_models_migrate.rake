@@ -26,21 +26,21 @@ migration_tasks.each do |task|
                                   'set_annotation_options'
                                 end
       Rake::Task[annotation_options_task].invoke
-      Annotate::Migration.update_annotations
+      AnnotateRb::Migration.update_annotations
     end
   end
 end
 
-module Annotate
+module AnnotateRb
   class Migration
     @@working = false
 
     def self.update_annotations
-      unless @@working || Annotate::Helpers.skip_on_migration?
+      unless @@working || AnnotateRb::ModelAnnotator::Helper.skip_on_migration?
         @@working = true
 
-        self.update_models if Annotate::Helpers.include_models?
-        self.update_routes if Annotate::Helpers.include_routes?
+        self.update_models if AnnotateRb::ModelAnnotator::Helper.include_models?
+        self.update_routes if AnnotateRb::ModelAnnotator::Helper.include_routes?
       end
     end
 
