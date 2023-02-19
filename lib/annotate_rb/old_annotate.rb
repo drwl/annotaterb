@@ -19,7 +19,7 @@ module AnnotateRb
 
       options = ActiveSupport::HashWithIndifferentAccess.new(options)
 
-      ::AnnotateRb::Options::ALL_OPTIONS.flatten.each do |key|
+      ::AnnotateRb::Options::ALL_OPTION_KEYS.flatten.each do |key|
         if options.key?(key)
           default_value = if options[key].is_a?(Array)
                             options[key].join(',')

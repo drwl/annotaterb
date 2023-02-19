@@ -12,13 +12,13 @@ module AnnotateRb
       end
     end
 
-    POSITION_OPTIONS = [
+    POSITION_OPTION_KEYS = [
       :position_in_routes, :position_in_class, :position_in_test,
       :position_in_fixture, :position_in_factory, :position,
       :position_in_serializer
     ].freeze
 
-    FLAG_OPTIONS = [
+    FLAG_OPTION_KEYS = [
       :show_indexes, :simple_indexes, :include_version, :exclude_tests,
       :exclude_fixtures, :exclude_factories, :ignore_model_sub_dir,
       :format_bare, :format_rdoc, :format_yard, :format_markdown, :sort, :force, :frozen,
@@ -28,18 +28,18 @@ module AnnotateRb
       :exclude_sti_subclasses, :ignore_unknown_models, :with_comment
     ].freeze
 
-    OTHER_OPTIONS = [
+    OTHER_OPTION_KEYS = [
       :additional_file_patterns, :ignore_columns, :skip_on_db_migrate, :wrapper_open, :wrapper_close,
       :wrapper, :routes, :models, :hide_limit_column_types, :hide_default_column_types,
       :ignore_routes, :active_admin
     ].freeze
 
-    PATH_OPTIONS = [
+    PATH_OPTION_KEYS = [
       :require, :model_dir, :root_dir
     ].freeze
 
-    ALL_OPTIONS = [
-      POSITION_OPTIONS, FLAG_OPTIONS, OTHER_OPTIONS, PATH_OPTIONS
+    ALL_OPTION_KEYS = [
+      POSITION_OPTION_KEYS, FLAG_OPTION_KEYS, OTHER_OPTION_KEYS, PATH_OPTION_KEYS
     ].freeze
 
     def initialize(options = {}, state = {})
