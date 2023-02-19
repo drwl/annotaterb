@@ -38,7 +38,13 @@ module AnnotateRb
 
     def parser
       OptionParser.new do |option_parser|
+        add_header_to_parser(option_parser)
+        add_model_options_to_parser(option_parser)
+        add_route_options_to_parser(option_parser)
+        add_wrapper_options_to_parser(option_parser)
         add_options_to_parser(option_parser)
+        add_position_options_to_parser(option_parser)
+        add_utils_to_parser(option_parser)
       end
     end
 
@@ -48,22 +54,138 @@ module AnnotateRb
       end
     end
 
-    def add_options_to_parser(option_parser) # rubocop:disable Metrics/MethodLength
-      has_set_position = {}
+    def add_wrapper_options_to_parser(option_parser)
+      option_parser.on('--w',
+                       '--wrapper STR',
+                       'Wrap annotation with the text passed as parameter.',
+                       'If --w option is used, the same text will be used as opening and closing') do |wrapper|
+        @options[:wrapper] = wrapper
+      end
 
+      option_parser.on('--wo',
+                       '--wrapper-open STR',
+                       'Annotation wrapper opening.') do |wrapper_open|
+        @options[:wrapper_open] = wrapper_open
+      end
+
+      option_parser.on('--wc',
+                       '--wrapper-close STR',
+                       'Annotation wrapper closing') do |wrapper_close|
+        @options[:wrapper_close] = wrapper_close
+      end
+    end
+
+    def add_header_to_parser(option_parser)
       option_parser.banner = 'Usage: annotate [options] [model_file]*'
+    end
 
-      option_parser.on('--additional-file-patterns path1,path2,path3',
-                       Array,
-                       "Additional file paths or globs to annotate, separated by commas (e.g. `/foo/bar/%model_name%/*.rb,/baz/%model_name%.rb`)") do |additional_file_patterns|
-        @options[:additional_file_patterns] = additional_file_patterns
+    def add_utils_to_parser(option_parser)
+      option_parser.on('--force',
+                       'Force new annotations even if there are no changes.') do
+        @options[:force] = true
       end
 
-      option_parser.on('-d',
-                       '--delete',
-                       'Remove annotations from all model files or the routes.rb file') do
-        @options[:target_action] = :remove_annotations
+      option_parser.on('--frozen',
+                       'Do not allow to change annotations. Exits non-zero if there are going to be changes to files.') do
+        @options[:frozen] = true
       end
+
+      option_parser.on('--trace',
+                       'If unable to annotate a file, print the full stack trace, not just the exception message.') do
+        @options[:trace] = true
+      end
+    end
+
+    def add_model_options_to_parser(option_parser)
+      option_parser.on('--models',
+                       "Annotate ActiveRecord models") do
+        @options[:models] = true
+      end
+
+      option_parser.on('-a',
+                       '--active-admin',
+                       'Annotate active_admin models') do
+        @options[:active_admin] = true
+      end
+
+      option_parser.on('-m',
+                       '--show-migration',
+                       'Include the migration version number in the annotation') do
+        @options[:include_version] = true
+      end
+
+      option_parser.on('-k',
+                       '--show-foreign-keys',
+                       "List the table's foreign key constraints in the annotation") do
+        @options[:show_foreign_keys] = true
+      end
+
+      option_parser.on('--ck',
+                       '--complete-foreign-keys',
+                       'Complete foreign key names in the annotation') do
+        @options[:show_foreign_keys] = true
+        @options[:show_complete_foreign_keys] = true
+      end
+
+      option_parser.on('-i',
+                       '--show-indexes',
+                       "List the table's database indexes in the annotation") do
+        @options[:show_indexes] = true
+      end
+
+      option_parser.on('-s',
+                       '--simple-indexes',
+                       "Concat the column's related indexes in the annotation") do
+        @options[:simple_indexes] = true
+      end
+
+      option_parser.on('--hide-limit-column-types VALUES',
+                       "don't show limit for given column types, separated by commas (i.e., `integer,boolean,text`)") do |values|
+        @options[:hide_limit_column_types] = values.to_s
+      end
+
+      option_parser.on('--hide-default-column-types VALUES',
+                       "don't show default for given column types, separated by commas (i.e., `json,jsonb,hstore`)") do |values|
+        @options[:hide_default_column_types] = values.to_s
+      end
+
+      option_parser.on('--ignore-unknown-models',
+                       "don't display warnings for bad model files") do
+        @options[:ignore_unknown_models] = true
+      end
+
+      option_parser.on('-I',
+                       '--ignore-columns REGEX',
+                       "don't annotate columns that match a given REGEX (i.e., `annotate -I '^(id|updated_at|created_at)'`") do |regex|
+        @options[:ignore_columns] = regex
+      end
+
+      option_parser.on('--with-comment',
+                       "include database comments in model annotations") do
+        @options[:with_comment] = true
+      end
+    end
+
+    def add_route_options_to_parser(option_parser)
+      option_parser.on('-r',
+                       '--routes',
+                       "Annotate routes.rb with the output of 'rails routes'") do
+        @options[:routes] = true
+      end
+
+      option_parser.on('--ignore-routes REGEX',
+                       "don't annotate routes that match a given REGEX (i.e., `annotate -I '(mobile|resque|pghero)'`") do |regex|
+        @options[:ignore_routes] = regex
+      end
+
+      option_parser.on('--timestamp',
+                       'Include timestamp in (routes) annotation') do
+        @options[:timestamp] = true
+      end
+    end
+
+    def add_position_options_to_parser(option_parser)
+      has_set_position = {}
 
       option_parser.on('-p',
                        '--position [before|top|after|bottom]',
@@ -123,72 +245,19 @@ module AnnotateRb
         @options[:position_in_serializer] = position_in_serializer
         has_set_position['position_in_serializer'] = true
       end
+    end
 
-      option_parser.on('--w',
-                       '--wrapper STR',
-                       'Wrap annotation with the text passed as parameter.',
-                       'If --w option is used, the same text will be used as opening and closing') do |wrapper|
-        @options[:wrapper] = wrapper
+    def add_options_to_parser(option_parser) # rubocop:disable Metrics/MethodLength
+      option_parser.on('--additional-file-patterns path1,path2,path3',
+                       Array,
+                       "Additional file paths or globs to annotate, separated by commas (e.g. `/foo/bar/%model_name%/*.rb,/baz/%model_name%.rb`)") do |additional_file_patterns|
+        @options[:additional_file_patterns] = additional_file_patterns
       end
 
-      option_parser.on('--wo',
-                       '--wrapper-open STR',
-                       'Annotation wrapper opening.') do |wrapper_open|
-        @options[:wrapper_open] = wrapper_open
-      end
-
-      option_parser.on('--wc',
-                       '--wrapper-close STR',
-                       'Annotation wrapper closing') do |wrapper_close|
-        @options[:wrapper_close] = wrapper_close
-      end
-
-      option_parser.on('-r',
-                       '--routes',
-                       "Annotate routes.rb with the output of 'rails routes'") do
-        @options[:routes] = true
-      end
-
-      option_parser.on('--models',
-                       "Annotate ActiveRecord models") do
-        @options[:models] = true
-      end
-
-      option_parser.on('-a',
-                       '--active-admin',
-                       'Annotate active_admin models') do
-        @options[:active_admin] = true
-      end
-
-      option_parser.on('-m',
-                       '--show-migration',
-                       'Include the migration version number in the annotation') do
-        @options[:include_version] = true
-      end
-
-      option_parser.on('-k',
-                       '--show-foreign-keys',
-                       "List the table's foreign key constraints in the annotation") do
-        @options[:show_foreign_keys] = true
-      end
-
-      option_parser.on('--ck',
-                       '--complete-foreign-keys',
-                       'Complete foreign key names in the annotation') do
-        @options[:show_foreign_keys] = true
-        @options[:show_complete_foreign_keys] = true
-      end
-
-      option_parser.on('-i',
-                       '--show-indexes',
-                       "List the table's database indexes in the annotation") do
-        @options[:show_indexes] = true
-      end
-
-      option_parser.on('-s',
-                       '--simple-indexes',
-                       "Concat the column's related indexes in the annotation") do
-        @options[:simple_indexes] = true
+      option_parser.on('-d',
+                       '--delete',
+                       'Remove annotations from all model files or the routes.rb file') do
+        @options[:target_action] = :remove_annotations
       end
 
       option_parser.on('--model-dir dir',
@@ -237,59 +306,8 @@ module AnnotateRb
       option_parser.on('-f',
                        '--format [bare|rdoc|yard|markdown]',
                        FORMAT_TYPES,
-                       'Render Schema Infomation as plain/RDoc/Yard/Markdown') do |format_type|
+                       'Render Schema Information as plain/RDoc/Yard/Markdown') do |format_type|
         @options["format_#{format_type}".to_sym] = true
-      end
-
-      option_parser.on('--force',
-                       'Force new annotations even if there are no changes.') do
-        @options[:force] = true
-      end
-
-      option_parser.on('--frozen',
-                       'Do not allow to change annotations. Exits non-zero if there are going to be changes to files.') do
-        @options[:frozen] = true
-      end
-
-      option_parser.on('--timestamp',
-                       'Include timestamp in (routes) annotation') do
-        @options[:timestamp] = true
-      end
-
-      option_parser.on('--trace',
-                       'If unable to annotate a file, print the full stack trace, not just the exception message.') do
-        @options[:trace] = true
-      end
-
-      option_parser.on('-I',
-                       '--ignore-columns REGEX',
-                       "don't annotate columns that match a given REGEX (i.e., `annotate -I '^(id|updated_at|created_at)'`") do |regex|
-        @options[:ignore_columns] = regex
-      end
-
-      option_parser.on('--ignore-routes REGEX',
-                       "don't annotate routes that match a given REGEX (i.e., `annotate -I '(mobile|resque|pghero)'`") do |regex|
-        @options[:ignore_routes] = regex
-      end
-
-      option_parser.on('--hide-limit-column-types VALUES',
-                       "don't show limit for given column types, separated by commas (i.e., `integer,boolean,text`)") do |values|
-        @options[:hide_limit_column_types] = values.to_s
-      end
-
-      option_parser.on('--hide-default-column-types VALUES',
-                       "don't show default for given column types, separated by commas (i.e., `json,jsonb,hstore`)") do |values|
-        @options[:hide_default_column_types] = values.to_s
-      end
-
-      option_parser.on('--ignore-unknown-models',
-                       "don't display warnings for bad model files") do
-        @options[:ignore_unknown_models] = true
-      end
-
-      option_parser.on('--with-comment',
-                       "include database comments in model annotations") do
-        @options[:with_comment] = true
       end
     end
   end
