@@ -38,5 +38,12 @@ options = AnnotateRb::OldAnnotate.setup_options(
 AnnotateRb::OldAnnotate.eager_load(options) if AnnotateRb::ModelAnnotator::Helper.include_models?
 
 # options_result[:target_action] has possible values of: [:do_annotations, :remove_annotations]
-AnnotateRb::ModelAnnotator::Annotator.send(options_result[:target_action], options) if AnnotateRb::ModelAnnotator::Helper.include_models?
-AnnotateRb::RouteAnnotator::Annotator.send(options_result[:target_action], options) if AnnotateRb::ModelAnnotator::Helper.include_routes?
+if AnnotateRb::ModelAnnotator::Helper.include_models?
+  puts "Annotating models"
+  AnnotateRb::ModelAnnotator::Annotator.send(options_result[:target_action], options)
+end
+
+if AnnotateRb::ModelAnnotator::Helper.include_routes?
+  puts "Annotating routes"
+  AnnotateRb::RouteAnnotator::Annotator.send(options_result[:target_action], options)
+end

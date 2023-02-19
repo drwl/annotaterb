@@ -29,6 +29,8 @@ module AnnotateRb
       # To split up because right now this method parses and commits
       parser.parse!(args)
 
+      commit
+
       options
     end
 
@@ -37,6 +39,12 @@ module AnnotateRb
     def parser
       OptionParser.new do |option_parser|
         add_options_to_parser(option_parser)
+      end
+    end
+
+    def commit
+      @options.each_pair do |key, value|
+        Env.write(key, value)
       end
     end
 

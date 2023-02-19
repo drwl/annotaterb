@@ -12,7 +12,7 @@ module AnnotateRb
       def write(key, value)
         key = key.to_s unless key.is_a?(String)
 
-        ENV[key] = value
+        ENV[key] = value.to_s
       end
 
       def fetch(key, default_value)

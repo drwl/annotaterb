@@ -88,7 +88,7 @@ module AnnotateRb
 
     def self.eager_load(options)
       load_requires(options)
-      require 'annotate/active_record_patch'
+      require 'annotate_rb/active_record_patch'
 
       if defined?(Rails::Application)
         klass = Rails::Application.send(:subclasses).first
