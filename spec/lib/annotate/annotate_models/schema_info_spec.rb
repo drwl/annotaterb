@@ -1,5 +1,4 @@
-require_relative '../../../spec_helper'
-require 'annotate/annotate_models'
+require 'active_support/core_ext/string'
 
 RSpec.describe AnnotateModels::SchemaInfo do
   include AnnotateTestHelpers
