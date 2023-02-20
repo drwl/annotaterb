@@ -1,6 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe AnnotateRb::Options do
+  describe '.from' do
+    subject { described_class.from(options, state) }
+
+    let(:options) { {} }
+    let(:state) { {} }
+
+    it { is_expected.to be_a(described_class) }
+  end
+
   describe '#set_state' do
     let(:instance) { described_class.new(options, state) }
     subject { instance.set_state(key, value, overwrite) }

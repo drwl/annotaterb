@@ -8,7 +8,7 @@ module AnnotateRb
 
     class << self
       def from(options = {}, state = {})
-        new(options, state)
+        new(options, state).load_defaults
       end
     end
 
@@ -53,7 +53,6 @@ module AnnotateRb
 
     OTHER_OPTIONS = {
       active_admin: false,
-      additional_file_patterns: [],
       hide_default_column_types: '<%= ::AnnotateRb::ModelAnnotator::SchemaInfo::NO_DEFAULT_COL_TYPES.join(",") %>',
       hide_limit_column_types: '<%= ::AnnotateRb::ModelAnnotator::SchemaInfo::NO_LIMIT_COL_TYPES.join(",") %>',
       ignore_columns: nil,
@@ -67,10 +66,13 @@ module AnnotateRb
     }.freeze
 
     PATH_OPTIONS = {
+      additional_file_patterns: [],
       model_dir: 'app/models',
-      require: '',
-      root_dir: '',
+      require: [],
+      root_dir: [],
     }.freeze
+
+    DEFAULT_OPTIONS = {}.merge(POSITION_OPTIONS, FLAG_OPTIONS, OTHER_OPTIONS, PATH_OPTIONS).freeze
 
     POSITION_OPTION_KEYS = POSITION_OPTIONS.keys.freeze
     FLAG_OPTION_KEYS = FLAG_OPTIONS.keys.freeze
@@ -81,6 +83,9 @@ module AnnotateRb
       POSITION_OPTION_KEYS, FLAG_OPTION_KEYS, OTHER_OPTION_KEYS, PATH_OPTION_KEYS
     ].freeze
 
+    # Want this to be read only after initializing
+    def_delegator @options, :[]
+
     def initialize(options = {}, state = {})
       @options = options
 
@@ -88,8 +93,23 @@ module AnnotateRb
       @state = state
     end
 
-    # Want this to be read only after initializing
-    def_delegator @options, :[]
+    def load_defaults
+      ALL_OPTION_KEYS.each do |key|
+        @options[key] = DEFAULT_OPTIONS[key] unless @options.key?(key)
+      end
+
+      # Unpack path options if we're passed in a String
+      PATH_OPTION_KEYS.each do |key|
+        @options[key] = @options[key].split(',') if @options[key].is_a?(String)
+      end
+
+      # Set wrapper to default to :wrapper
+      @options[:wrapper_open] ||= @options[:wrapper]
+      @options[:wrapper_close] ||= @options[:wrapper]
+
+      self
+    end
+
 
     def set_state(key, value, overwrite = false)
       if @state.key?(key) && !overwrite
