@@ -18,32 +18,17 @@ require 'annotate_rb'
 
 AnnotateRb::OldAnnotate.bootstrap_rake
 
-# Annotate::Parser.parse takes in ARGV
-# - Parses it and writes stuff to ENV
-# - Returns some in a hash as seen below, this script will exit if `:exit` is defined
-options_result = AnnotateRb::Parser.parse(ARGV)
+options = ::AnnotateRb::Options.from({}, {})
 
-exit if options_result[:exit]
+if options[:models]
+  # Eager load Models when we're annotating models
+  AnnotateRb::OldAnnotate.eager_load(options)
 
-# Not sure what this does yet
-options = AnnotateRb::OldAnnotate.setup_options(
-  # .setup_options takes in starting options. It looks like :is_rake is used later down the road so we want to capture
-  # if it was done via rake task or not.
-  #
-  # Looks like it's set in lib/tasks/annotate*.rake files
-  is_rake: AnnotateRb::Env.read('is_rake') && !AnnotateRb::Env.read('is_rake').empty?
-)
-
-# Eager load Models when we're annotating models
-AnnotateRb::OldAnnotate.eager_load(options) if AnnotateRb::ModelAnnotator::Helper.include_models?
-
-# options_result[:target_action] has possible values of: [:do_annotations, :remove_annotations]
-if AnnotateRb::ModelAnnotator::Helper.include_models?
   puts "Annotating models"
-  AnnotateRb::ModelAnnotator::Annotator.send(options_result[:target_action], options)
+  AnnotateRb::ModelAnnotator::Annotator.send(options[:target_action], options)
 end
 
-if AnnotateRb::ModelAnnotator::Helper.include_routes?
+if options[:routes]
   puts "Annotating routes"
-  AnnotateRb::RouteAnnotator::Annotator.send(options_result[:target_action], options)
+  AnnotateRb::RouteAnnotator::Annotator.send(options[:target_action], options)
 end
