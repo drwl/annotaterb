@@ -10,16 +10,11 @@ module AnnotateTestHelpers
   end
 
   def annotate_one_file(options = {})
-    AnnotateRb::OldAnnotate.instance_variable_set('@has_set_defaults', false)
-    AnnotateRb::OldAnnotate.set_defaults(options)
-    options = AnnotateRb::OldAnnotate.setup_options(options)
-    AnnotateRb::ModelAnnotator::Annotator.annotate_one_file(@model_file_name, @schema_info, :position_in_class, options)
+    opts = AnnotateRb::OldAnnotate.setup_options(options)
 
-    # Wipe settings so the next call will pick up new values...
-    AnnotateRb::OldAnnotate.instance_variable_set('@has_set_defaults', false)
-    AnnotateRb::ModelAnnotator::Constants::POSITION_OPTIONS.each { |key| ENV[key.to_s] = nil }
-    AnnotateRb::ModelAnnotator::Constants::FLAG_OPTIONS.each { |key| ENV[key.to_s] = nil }
-    AnnotateRb::ModelAnnotator::Constants::PATH_OPTIONS.each { |key| ENV[key.to_s] = nil }
+    pp opts.to_h
+
+    AnnotateRb::ModelAnnotator::Annotator.annotate_one_file(@model_file_name, @schema_info, :position_in_class, opts)
   end
 
   def write_model(file_name, file_content)

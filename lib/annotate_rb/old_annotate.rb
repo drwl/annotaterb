@@ -10,64 +10,8 @@ end
 
 module AnnotateRb
   module OldAnnotate
-    ##
-    # Set default values that can be overridden via environment variables.
-    #
-    def self.set_defaults(options = {})
-      return if @has_set_defaults
-      @has_set_defaults = true
-
-      options = ActiveSupport::HashWithIndifferentAccess.new(options)
-
-      ::AnnotateRb::Options::ALL_OPTION_KEYS.flatten.each do |key|
-        if options.key?(key)
-          default_value = if options[key].is_a?(Array)
-                            options[key].join(',')
-                          else
-                            options[key]
-                          end
-        end
-
-        default_value = Env.read(key) unless Env.read(key).blank?
-
-        if default_value.nil?
-          Env.write(key, nil)
-        else
-          Env.write(key, default_value.to_s)
-        end
-      end
-    end
-
-    ##
-    # TODO: what is the difference between this and set_defaults?
-    #
     def self.setup_options(options = {})
-      ModelAnnotator::Constants::POSITION_OPTIONS.each do |key|
-        options[key] = ModelAnnotator::Helper.fallback(Env.read(key), Env.read('position'), 'before')
-      end
-      ModelAnnotator::Constants::FLAG_OPTIONS.each do |key|
-        options[key] = ModelAnnotator::Helper.true?(Env.read(key))
-      end
-      ModelAnnotator::Constants::OTHER_OPTIONS.each do |key|
-        options[key] = !Env.read(key).blank? ? Env.read(key) : nil
-      end
-      ModelAnnotator::Constants::PATH_OPTIONS.each do |key|
-        options[key] = !Env.read(key).blank? ? Env.read(key).split(',') : []
-      end
-
-      options[:additional_file_patterns] ||= []
-      options[:additional_file_patterns] = options[:additional_file_patterns].split(',') if options[:additional_file_patterns].is_a?(String)
-      options[:model_dir] = ['app/models'] if options[:model_dir].empty?
-
-      options[:wrapper_open] ||= options[:wrapper]
-      options[:wrapper_close] ||= options[:wrapper]
-
-      # These were added in 2.7.0 but so this is to revert to old behavior by default
-      options[:exclude_scaffolds] = ModelAnnotator::Helper.true?(Env.fetch('exclude_scaffolds', 'true'))
-      options[:exclude_controllers] = ModelAnnotator::Helper.true?(Env.fetch('exclude_controllers', 'true'))
-      options[:exclude_helpers] = ModelAnnotator::Helper.true?(Env.fetch('exclude_helpers', 'true'))
-
-      options
+      _opts = ::AnnotateRb::Options.from(options)
     end
 
     # Can be used by consumers, per README:

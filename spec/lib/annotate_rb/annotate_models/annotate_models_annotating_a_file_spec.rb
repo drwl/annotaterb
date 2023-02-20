@@ -154,7 +154,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
     describe 'with existing annotation => :before' do
       before do
         annotate_one_file position: :before
-        another_schema_info = AnnotateRb::ModelAnnotator::SchemaInfo.generate(mock_class(:users, :id, [mock_column(:id, :integer)]), '== Schema Info')
+        another_schema_info = AnnotateRb::ModelAnnotator::SchemaInfo.generate(
+          mock_class(:users, :id, [mock_column(:id, :integer)]),
+          '== Schema Info'
+        )
         @schema_info = another_schema_info
       end
 

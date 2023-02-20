@@ -13,13 +13,13 @@ module AnnotateRb
     end
 
     POSITION_OPTIONS = {
-      position: 'before',
-      position_in_class: 'before',
-      position_in_factory: 'before',
-      position_in_fixture: 'before',
-      position_in_routes: 'before',
-      position_in_serializer: 'before',
-      position_in_test: 'before',
+      position: nil,
+      position_in_class: nil,
+      position_in_factory: nil,
+      position_in_fixture: nil,
+      position_in_routes: nil,
+      position_in_serializer: nil,
+      position_in_test: nil,
     }.freeze
 
     FLAG_OPTIONS = {
@@ -81,10 +81,12 @@ module AnnotateRb
 
     ALL_OPTION_KEYS = [
       POSITION_OPTION_KEYS, FLAG_OPTION_KEYS, OTHER_OPTION_KEYS, PATH_OPTION_KEYS
-    ].freeze
+    ].flatten.freeze
+
+    POSITION_DEFAULT = 'before'
 
     # Want this to be read only after initializing
-    def_delegator @options, :[]
+    def_delegator :@options, :[]
 
     def initialize(options = {}, state = {})
       @options = options
@@ -93,9 +95,23 @@ module AnnotateRb
       @state = state
     end
 
+    def to_h
+      @options.to_h
+    end
+
     def load_defaults
       ALL_OPTION_KEYS.each do |key|
         @options[key] = DEFAULT_OPTIONS[key] unless @options.key?(key)
+      end
+
+      # Set all of the position options in the following order:
+      # 1) Use the value if it's defined
+      # 2) Use value from :position if it's defined
+      # 3) Use default
+      POSITION_OPTION_KEYS.each do |key|
+        @options[key] = ModelAnnotator::Helper.fallback(
+          @options[key], @options[:position], POSITION_DEFAULT
+        )
       end
 
       # Unpack path options if we're passed in a String
@@ -109,7 +125,6 @@ module AnnotateRb
 
       self
     end
-
 
     def set_state(key, value, overwrite = false)
       if @state.key?(key) && !overwrite
