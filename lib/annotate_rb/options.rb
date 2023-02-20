@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'forwardable'
+
 module AnnotateRb
   # Used to hold all of the options when annotating models and routes.
   # Should be the source of truth for what are valid options.
