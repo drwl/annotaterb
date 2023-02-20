@@ -12,31 +12,70 @@ module AnnotateRb
       end
     end
 
-    POSITION_OPTION_KEYS = [
-      :position_in_routes, :position_in_class, :position_in_test,
-      :position_in_fixture, :position_in_factory, :position,
-      :position_in_serializer
-    ].freeze
+    POSITION_OPTIONS = {
+      position_in_routes: 'before',
+      position_in_class: 'before',
+      position_in_test: 'before',
+      position_in_fixture: 'before',
+      position_in_factory: 'before',
+      position: 'before',
+      position_in_serializer: 'before',
+    }.freeze
 
-    FLAG_OPTION_KEYS = [
-      :show_indexes, :simple_indexes, :include_version, :exclude_tests,
-      :exclude_fixtures, :exclude_factories, :ignore_model_sub_dir,
-      :format_bare, :format_rdoc, :format_yard, :format_markdown, :sort, :force, :frozen,
-      :trace, :timestamp, :exclude_serializers, :classified_sort,
-      :show_foreign_keys, :show_complete_foreign_keys,
-      :exclude_scaffolds, :exclude_controllers, :exclude_helpers,
-      :exclude_sti_subclasses, :ignore_unknown_models, :with_comment
-    ].freeze
+    FLAG_OPTIONS = {
+      show_indexes: true,
+      simple_indexes: false,
+      include_version: false,
+      exclude_tests: false,
+      exclude_fixtures: false,
+      exclude_factories: false,
+      exclude_serializers: false,
+      exclude_scaffolds: true,
+      exclude_controllers: true,
+      exclude_helpers: true,
+      exclude_sti_subclasses: false,
+      ignore_model_sub_dir: false,
+      format_bare: true,
+      format_rdoc: false,
+      format_yard: false,
+      format_markdown: false,
+      sort: false,
+      force: false,
+      frozen: false,
+      trace: false,
+      timestamp: false,
+      classified_sort: true,
+      show_foreign_keys: true,
+      show_complete_foreign_keys: false,
+      ignore_unknown_models: false,
+      with_comment: true,
+    }.freeze
 
-    OTHER_OPTION_KEYS = [
-      :additional_file_patterns, :ignore_columns, :skip_on_db_migrate, :wrapper_open, :wrapper_close,
-      :wrapper, :routes, :models, :hide_limit_column_types, :hide_default_column_types,
-      :ignore_routes, :active_admin
-    ].freeze
+    OTHER_OPTIONS = {
+      additional_file_patterns: [],
+      ignore_columns: nil,
+      skip_on_db_migrate: false,
+      wrapper_open: nil,
+      wrapper_close: nil,
+      wrapper: nil,
+      routes: false,
+      models: true,
+      hide_limit_column_types: '<%= ::AnnotateRb::ModelAnnotator::SchemaInfo::NO_LIMIT_COL_TYPES.join(",") %>',
+      hide_default_column_types: '<%= ::AnnotateRb::ModelAnnotator::SchemaInfo::NO_DEFAULT_COL_TYPES.join(",") %>',
+      ignore_routes: nil,
+      active_admin: false,
+    }.freeze
 
-    PATH_OPTION_KEYS = [
-      :require, :model_dir, :root_dir
-    ].freeze
+    PATH_OPTIONS = {
+      require: '',
+      model_dir: 'app/models',
+      root_dir: '',
+    }.freeze
+
+    POSITION_OPTION_KEYS = POSITION_OPTIONS.keys.freeze
+    FLAG_OPTION_KEYS = FLAG_OPTIONS.keys.freeze
+    OTHER_OPTION_KEYS = OTHER_OPTIONS.keys.freeze
+    PATH_OPTION_KEYS = PATH_OPTIONS.keys.freeze
 
     ALL_OPTION_KEYS = [
       POSITION_OPTION_KEYS, FLAG_OPTION_KEYS, OTHER_OPTION_KEYS, PATH_OPTION_KEYS
