@@ -189,7 +189,7 @@ module AnnotateRb
             model_file_name = File.join(file)
             annotated = []
 
-            if annotate_one_file(model_file_name, info, :position_in_class, options_with_position(options, :position_in_class))
+            if annotate_one_file(model_file_name, info, :position_in_class, options)
               annotated << model_file_name
             end
 
@@ -225,6 +225,7 @@ module AnnotateRb
 
         # position = :position_in_fixture or :position_in_class
         def options_with_position(options, position_in)
+          # This looks to overwrite the :position option with the value of `position_in` if it exists
           options.merge(position: (options[position_in] || options[:position]))
         end
 
