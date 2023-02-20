@@ -210,7 +210,7 @@ module AnnotateRb
                 .map { |f| expand_glob_into_files(f) }
                 .flatten
                 .each do |f|
-                if annotate_one_file(f, info, position_key, options_with_position(options, position_key))
+                if annotate_one_file(f, info, position_key, options)
                   annotated << f
                 end
               end
