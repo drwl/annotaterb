@@ -119,7 +119,9 @@ module AnnotateRb
 
       # Unpack path options if we're passed in a String
       PATH_OPTION_KEYS.each do |key|
-        @options[key] = @options[key].split(',') if @options[key].is_a?(String)
+        if @options[key].is_a?(String)
+          @options[key] = @options[key].split(',').map(&:strip).reject(&:empty?)
+        end
       end
 
       # Set wrapper to default to :wrapper
