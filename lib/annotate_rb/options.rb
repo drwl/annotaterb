@@ -62,6 +62,7 @@ module AnnotateRb
       models: true,
       routes: false,
       skip_on_db_migrate: false,
+      target_action: :do_annotations, # Possible values: :do_annotations, :remove_annotations
       wrapper: nil,
       wrapper_close: nil,
       wrapper_open: nil,
