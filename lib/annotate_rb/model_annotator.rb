@@ -14,5 +14,6 @@ module AnnotateRb
     autoload :AnnotationPatternGenerator, 'annotate_rb/model_annotator/annotation_pattern_generator'
     autoload :ModelClassGetter, 'annotate_rb/model_annotator/model_class_getter'
     autoload :ModelFilesGetter, 'annotate_rb/model_annotator/model_files_getter'
+    autoload :FileAnnotator, 'annotate_rb/model_annotator/file_annotator'
   end
 end

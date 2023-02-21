@@ -219,7 +219,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
                            mock_column(:name, :string, limit: 50)
                          ])
       schema_info = AnnotateRb::ModelAnnotator::SchemaInfo.generate(klass, '== Schema Info')
-      described_class.annotate_one_file(model_file_name, schema_info, position: :before)
+      AnnotateRb::ModelAnnotator::FileAnnotator.call(model_file_name, schema_info, position: :before)
       expect(File.read(model_file_name)).to eq("#{schema_info}#{file_content}")
     end
 

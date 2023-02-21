@@ -14,7 +14,7 @@ module AnnotateTestHelpers
 
     # pp opts.to_h
 
-    AnnotateRb::ModelAnnotator::Annotator.annotate_one_file(@model_file_name, @schema_info, :position_in_class, opts)
+    AnnotateRb::ModelAnnotator::FileAnnotator.call(@model_file_name, @schema_info, :position_in_class, opts)
   end
 
   def write_model(file_name, file_content)
