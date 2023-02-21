@@ -1,10 +1,8 @@
 # encoding: utf-8
 
-RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
-  describe '.remove_annotation_of_file' do
-    subject do
-      described_class.remove_annotation_of_file(path)
-    end
+RSpec.describe AnnotateRb::ModelAnnotator::FileAnnotationRemover do
+  describe '.call' do
+    subject { described_class.call(path) }
 
     let :tmpdir do
       Dir.mktmpdir('annotate_models')
@@ -103,9 +101,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         EOS
       end
 
-      subject do
-        described_class.remove_annotation_of_file(path, wrapper_open: 'wrapper')
-      end
+      subject { described_class.call(path, AnnotateRb::Options.from({ wrapper_open: 'wrapper' })) }
 
       it 'removes annotation' do
         expect(file_content_after_removal).to eq expected_result
@@ -133,9 +129,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         EOS
       end
 
-      subject do
-        described_class.remove_annotation_of_file(path, wrapper_open: 'wrapper')
-      end
+      subject { described_class.call(path, AnnotateRb::Options.from({ wrapper_open: 'wrapper' })) }
 
       it 'removes annotation' do
         expect(file_content_after_removal).to eq expected_result
@@ -192,9 +186,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         EOS
       end
 
-      subject do
-        described_class.remove_annotation_of_file(path, wrapper_close: 'wrapper')
-      end
+      subject { described_class.call(path, AnnotateRb::Options.from({ wrapper_close: 'wrapper' })) }
 
       it 'removes annotation' do
         expect(file_content_after_removal).to eq expected_result

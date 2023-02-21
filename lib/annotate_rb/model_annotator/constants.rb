@@ -15,6 +15,8 @@ module AnnotateRb
       PATH_OPTIONS = ::AnnotateRb::Options::PATH_OPTION_KEYS
 
       ALL_ANNOTATE_OPTIONS = ::AnnotateRb::Options::ALL_OPTION_KEYS
+
+      SKIP_ANNOTATION_PREFIX = '# -\*- SkipSchemaAnnotations'.freeze
     end
   end
 end

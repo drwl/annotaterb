@@ -4,23 +4,12 @@ module AnnotateRb
   module ModelAnnotator
     class Annotator
       # Annotate Models plugin use this header
-      COMPAT_PREFIX = '== Schema Info'.freeze
-      COMPAT_PREFIX_MD = '## Schema Info'.freeze
       PREFIX = '== Schema Information'.freeze
       PREFIX_MD = '## Schema Information'.freeze
-
-      SKIP_ANNOTATION_PREFIX = '# -\*- SkipSchemaAnnotations'.freeze
 
       MAGIC_COMMENT_MATCHER = Regexp.new(/(^#\s*encoding:.*(?:\n|r\n))|(^# coding:.*(?:\n|\r\n))|(^# -\*- coding:.*(?:\n|\r\n))|(^# -\*- encoding\s?:.*(?:\n|\r\n))|(^#\s*frozen_string_literal:.+(?:\n|\r\n))|(^# -\*- frozen_string_literal\s*:.+-\*-(?:\n|\r\n))/).freeze
 
       class << self
-        def annotate_pattern(options = {})
-          if options[:wrapper_open]
-            return /(?:^(\n|\r\n)?# (?:#{options[:wrapper_open]}).*(\n|\r\n)?# (?:#{COMPAT_PREFIX}|#{COMPAT_PREFIX_MD}).*?(\n|\r\n)(#.*(\n|\r\n))*(\n|\r\n)*)|^(\n|\r\n)?# (?:#{COMPAT_PREFIX}|#{COMPAT_PREFIX_MD}).*?(\n|\r\n)(#.*(\n|\r\n))*(\n|\r\n)*/
-          end
-          /^(\n|\r\n)?# (?:#{COMPAT_PREFIX}|#{COMPAT_PREFIX_MD}).*?(\n|\r\n)(#.*(\n|\r\n))*(\n|\r\n)*/
-        end
-
         def model_dir
           @model_dir.is_a?(Array) ? @model_dir : [@model_dir || 'app/models']
         end
@@ -43,7 +32,7 @@ module AnnotateRb
         def annotate_one_file(file_name, info_block, position, options = {})
           return false unless File.exist?(file_name)
           old_content = File.read(file_name)
-          return false if old_content =~ /#{SKIP_ANNOTATION_PREFIX}.*\n/
+          return false if old_content =~ /#{Constants::SKIP_ANNOTATION_PREFIX}.*\n/
 
           # Ignore the Schema version line because it changes with each migration
           header_pattern = /(^# Table name:.*?\n(#.*[\r]?\n)*[\r]?)/
@@ -63,14 +52,17 @@ module AnnotateRb
           wrapper_close = options[:wrapper_close] ? "# #{options[:wrapper_close]}\n" : ""
           wrapped_info_block = "#{wrapper_open}#{info_block}#{wrapper_close}"
 
-          old_annotation = old_content.match(annotate_pattern(options)).to_s
+          annotation_pattern = AnnotationPatternGenerator.call(options)
+          old_annotation = old_content.match(annotation_pattern).to_s
 
           # if there *was* no old schema info or :force was passed, we simply
           # need to insert it in correct position
           if old_annotation.empty? || options[:force]
             magic_comments_block = Helper.magic_comments_as_string(old_content)
             old_content.gsub!(MAGIC_COMMENT_MATCHER, '')
-            old_content.sub!(annotate_pattern(options), '')
+
+            annotation_pattern = AnnotationPatternGenerator.call(options)
+            old_content.sub!(annotation_pattern, '')
 
             new_content = if %w(after bottom).include?(options[position].to_s)
                             magic_comments_block + (old_content.rstrip + "\n\n" + wrapped_info_block)
@@ -86,27 +78,12 @@ module AnnotateRb
             space_match = old_annotation.match(/\A(?<start>\s*).*?\n(?<end>\s*)\z/m)
             new_annotation = space_match[:start] + wrapped_info_block + space_match[:end]
 
-            new_content = old_content.sub(annotate_pattern(options), new_annotation)
+            annotation_pattern = AnnotationPatternGenerator.call(options)
+            new_content = old_content.sub(annotation_pattern, new_annotation)
           end
 
           File.open(file_name, 'wb') { |f| f.puts new_content }
           true
-        end
-
-        def remove_annotation_of_file(file_name, options = {})
-          if File.exist?(file_name)
-            content = File.read(file_name)
-            return false if content =~ /#{SKIP_ANNOTATION_PREFIX}.*\n/
-
-            wrapper_open = options[:wrapper_open] ? "# #{options[:wrapper_open]}\n" : ''
-            content.sub!(/(#{wrapper_open})?#{annotate_pattern(options)}/, '')
-
-            File.open(file_name, 'wb') { |f| f.puts content }
-
-            true
-          else
-            false
-          end
         end
 
         # Given the name of an ActiveRecord class, create a schema
@@ -317,7 +294,7 @@ module AnnotateRb
 
         def annotate_model_file(annotated, file, header, options)
           begin
-            return false if /#{SKIP_ANNOTATION_PREFIX}.*/ =~ (File.exist?(file) ? File.read(file) : '')
+            return false if /#{Constants::SKIP_ANNOTATION_PREFIX}.*/ =~ (File.exist?(file) ? File.read(file) : '')
             klass = get_model_class(file)
             do_annotate = klass.is_a?(Class) &&
               klass < ActiveRecord::Base &&
@@ -350,7 +327,7 @@ module AnnotateRb
                 model_name = klass.name.underscore
                 table_name = klass.table_name
                 model_file_name = file
-                deannotated_klass = true if remove_annotation_of_file(model_file_name, options)
+                deannotated_klass = true if FileAnnotationRemover.call(model_file_name, options)
 
                 patterns = PatternGetter.call(options)
 
@@ -358,7 +335,7 @@ module AnnotateRb
                   .map { |f| Helper.resolve_filename(f, model_name, table_name) }
                   .each do |f|
                   if File.exist?(f)
-                    remove_annotation_of_file(f, options)
+                    FileAnnotationRemover.call(f, options)
                     deannotated_klass = true
                   end
                 end

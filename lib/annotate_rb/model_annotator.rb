@@ -10,5 +10,7 @@ module AnnotateRb
     autoload :PatternGetter, 'annotate_rb/model_annotator/pattern_getter'
     autoload :BadModelFileError, 'annotate_rb/model_annotator/bad_model_file_error'
     autoload :FileNameResolver, 'annotate_rb/model_annotator/file_name_resolver'
+    autoload :FileAnnotationRemover, 'annotate_rb/model_annotator/file_annotation_remover'
+    autoload :AnnotationPatternGenerator, 'annotate_rb/model_annotator/annotation_pattern_generator'
   end
 end
