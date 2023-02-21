@@ -26,6 +26,8 @@ module AnnotateRb
           end
         end
 
+        private
+
         # Retrieve loaded model class
         def get_loaded_model(model_path, file)
           loaded_model_class = get_loaded_model_by_path(model_path)
