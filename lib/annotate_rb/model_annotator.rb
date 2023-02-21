@@ -7,5 +7,6 @@ module AnnotateRb
     autoload :FilePatterns, 'annotate_rb/model_annotator/file_patterns'
     autoload :Constants, 'annotate_rb/model_annotator/constants'
     autoload :SchemaInfo, 'annotate_rb/model_annotator/schema_info'
+    autoload :PatternGetter, 'annotate_rb/model_annotator/pattern_getter'
   end
 end

@@ -30,19 +30,7 @@ module AnnotateRb
         attr_writer :model_dir
 
         def get_patterns(options, pattern_types = [])
-          current_patterns = []
-          options[:root_dir].each do |root_directory|
-            Array(pattern_types).each do |pattern_type|
-              patterns = FilePatterns.generate(root_directory, pattern_type, options)
-
-              current_patterns += if pattern_type.to_sym == :additional_file_patterns
-                                    patterns
-                                  else
-                                    patterns.map { |p| p.sub(/^[\/]*/, '') }
-                                  end
-            end
-          end
-          current_patterns
+          PatternGetter.call(options, pattern_types)
         end
 
         # Add a schema block to a file. If the file already contains
