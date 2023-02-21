@@ -4,6 +4,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
   describe '.get_patterns' do
     subject { described_class.get_patterns(options, pattern_type) }
 
+    let(:options) { AnnotateRb::Options.from(base_options) }
+
     context 'when pattern_type is "additional_file_patterns"' do
       let(:pattern_type) { 'additional_file_patterns' }
 
@@ -15,7 +17,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
           ]
         end
 
-        let(:options) { { additional_file_patterns: additional_file_patterns } }
+        let(:base_options) { { additional_file_patterns: additional_file_patterns } }
 
         it 'returns additional_file_patterns in the argument "options"' do
           is_expected.to eq(additional_file_patterns)
@@ -23,7 +25,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
       end
 
       context 'when additional_file_patterns is not specified in the options' do
-        let(:options) { {} }
+        let(:base_options) { {} }
 
         it 'returns an empty array' do
           is_expected.to eq([])

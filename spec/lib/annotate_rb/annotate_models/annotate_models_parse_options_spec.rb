@@ -2,25 +2,15 @@
 
 RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
   describe '.parse_options' do
-    let(:options) do
+    let(:base_options) do
       {
-        root_dir: '/root',
         model_dir: 'app/models,app/one,  app/two   ,,app/three'
       }
     end
+    let(:options) { AnnotateRb::Options.from(base_options) }
 
     before do
       described_class.send(:parse_options, options)
-    end
-
-    describe '@root_dir' do
-      subject do
-        described_class.instance_variable_get(:@root_dir)
-      end
-
-      it 'sets @root_dir' do
-        is_expected.to eq('/root')
-      end
     end
 
     describe '@model_dir' do

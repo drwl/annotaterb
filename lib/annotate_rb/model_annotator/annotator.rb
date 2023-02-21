@@ -29,21 +29,9 @@ module AnnotateRb
 
         attr_writer :model_dir
 
-        def root_dir
-          if @root_dir.blank?
-            ['']
-          elsif @root_dir.is_a?(String)
-            @root_dir.split(',')
-          else
-            @root_dir
-          end
-        end
-
-        attr_writer :root_dir
-
         def get_patterns(options, pattern_types = [])
           current_patterns = []
-          root_dir.each do |root_directory|
+          options[:root_dir].each do |root_directory|
             Array(pattern_types).each do |pattern_type|
               patterns = FilePatterns.generate(root_directory, pattern_type, options)
 
@@ -328,7 +316,6 @@ module AnnotateRb
 
         def parse_options(options = {})
           self.model_dir = split_model_dir(options[:model_dir]) if options[:model_dir]
-          self.root_dir = options[:root_dir] if options[:root_dir]
         end
 
         def split_model_dir(option_value)

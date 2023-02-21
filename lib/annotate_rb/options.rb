@@ -72,7 +72,9 @@ module AnnotateRb
       additional_file_patterns: [],
       model_dir: 'app/models',
       require: [],
-      root_dir: [],
+      root_dir: [''], # Old model Annotate code depends on it being empty when not provided another value
+      # `root_dir` can also be a string but should get converted into an array with that string as the sole element when
+      # that happens.
     }.freeze
 
     DEFAULT_OPTIONS = {}.merge(POSITION_OPTIONS, FLAG_OPTIONS, OTHER_OPTIONS, PATH_OPTIONS).freeze
