@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
-  describe '.get_patterns' do
-    subject { described_class.get_patterns(options, pattern_type) }
+RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
+  describe '.call' do
+    subject { described_class.call(options, pattern_type) }
 
     let(:options) { AnnotateRb::Options.from(base_options) }
 

@@ -4,10 +4,10 @@ module AnnotateRb
   module ModelAnnotator
     class Annotator
       # Annotate Models plugin use this header
-      COMPAT_PREFIX    = '== Schema Info'.freeze
+      COMPAT_PREFIX = '== Schema Info'.freeze
       COMPAT_PREFIX_MD = '## Schema Info'.freeze
-      PREFIX           = '== Schema Information'.freeze
-      PREFIX_MD        = '## Schema Information'.freeze
+      PREFIX = '== Schema Information'.freeze
+      PREFIX_MD = '## Schema Information'.freeze
 
       SKIP_ANNOTATION_PREFIX = '# -\*- SkipSchemaAnnotations'.freeze
 
@@ -28,10 +28,6 @@ module AnnotateRb
         end
 
         attr_writer :model_dir
-
-        def get_patterns(options, pattern_types = [])
-          PatternGetter.call(options, pattern_types)
-        end
 
         # Add a schema block to a file. If the file already contains
         # a schema info block (a comment starting with "== Schema Information"),
@@ -181,7 +177,9 @@ module AnnotateRb
 
               next if options[exclusion_key]
 
-              get_patterns(options, key)
+              patterns = PatternGetter.call(options, key)
+
+              patterns
                 .map { |f| resolve_filename(f, model_name, table_name) }
                 .map { |f| expand_glob_into_files(f) }
                 .flatten
@@ -249,6 +247,7 @@ module AnnotateRb
 
           model_files
         end
+
         private :list_model_files_from_argument
 
         # Retrieve the classes belonging to the model names we're asked to process
@@ -377,7 +376,9 @@ module AnnotateRb
                 model_file_name = file
                 deannotated_klass = true if remove_annotation_of_file(model_file_name, options)
 
-                get_patterns(options, matched_types(options))
+                patterns = PatternGetter.call(options)
+
+                patterns
                   .map { |f| resolve_filename(f, model_name, table_name) }
                   .each do |f|
                   if File.exist?(f)
