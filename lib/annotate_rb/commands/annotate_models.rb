@@ -5,6 +5,7 @@ module AnnotateRb
     class AnnotateModels
       def call(options)
         puts "Annotating models"
+        AnnotateRb::ModelAnnotator::Annotator.send(options[:target_action], options)
       end
     end
   end
