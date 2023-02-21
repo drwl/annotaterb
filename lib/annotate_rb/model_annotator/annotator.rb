@@ -70,7 +70,7 @@ module AnnotateRb
           # if there *was* no old schema info or :force was passed, we simply
           # need to insert it in correct position
           if old_annotation.empty? || options[:force]
-            magic_comments_block = magic_comments_as_string(old_content)
+            magic_comments_block = Helper.magic_comments_as_string(old_content)
             old_content.gsub!(MAGIC_COMMENT_MATCHER, '')
             old_content.sub!(annotate_pattern(options), '')
 
@@ -93,16 +93,6 @@ module AnnotateRb
 
           File.open(file_name, 'wb') { |f| f.puts new_content }
           true
-        end
-
-        def magic_comments_as_string(content)
-          magic_comments = content.scan(MAGIC_COMMENT_MATCHER).flatten.compact
-
-          if magic_comments.any?
-            magic_comments.join
-          else
-            ''
-          end
         end
 
         def remove_annotation_of_file(file_name, options = {})
