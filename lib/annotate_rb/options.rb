@@ -59,6 +59,7 @@ module AnnotateRb
       hide_limit_column_types: '<%= ::AnnotateRb::ModelAnnotator::SchemaInfo::NO_LIMIT_COL_TYPES.join(",") %>',
       ignore_columns: nil,
       ignore_routes: nil,
+      ignore_unknown_models: false,
       models: true,
       routes: false,
       skip_on_db_migrate: false,

@@ -6,32 +6,43 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
       described_class.annotate_model_file([], 'foo.rb', nil, options)
     end
 
-    let(:options) { AnnotateRb::Options.from({}) }
+    let(:options) { AnnotateRb::Options.from({ ignore_unknown_models: true }) }
+
+    before do
+      $stdout = StringIO.new
+      $stderr = StringIO.new
+    end
+
+    after do
+      $stdout = STDOUT
+      $stderr = STDERR
+    end
 
     context 'with a class' do
-      before do
-        class Foo < ActiveRecord::Base; end
-        allow(AnnotateRb::ModelAnnotator::ModelClassGetter).to receive(:get_model_class).with('foo.rb', options) { Foo }
-        allow(Foo).to receive(:table_exists?) { false }
+      let(:foo_class) do
+        Class.new(ActiveRecord::Base)
       end
 
-      after { Object.send :remove_const, 'Foo' }
+      before do
+        allow(AnnotateRb::ModelAnnotator::ModelFilesGetter).to receive(:call).with('foo.rb', options) { foo_class }
+        allow(foo_class).to receive(:table_exists?) { false }
+      end
 
       it 'skips attempt to annotate if no table exists for model' do
-        is_expected.to eq nil
+        expect(subject).to eq(nil)
+        expect($stderr.string).not_to include('Unable to annotate')
       end
     end
 
     context 'with a non-class' do
       before do
-        NotAClass = 'foo'.freeze # rubocop:disable Naming/ConstantName
-        allow(AnnotateRb::ModelAnnotator::ModelClassGetter).to receive(:get_model_class).with('foo.rb', options) { NotAClass }
+        stub_const('NotAClass', 'foo')
+        allow(AnnotateRb::ModelAnnotator::ModelFilesGetter).to receive(:call).with('foo.rb', options) { NotAClass }
       end
 
-      after { Object.send :remove_const, 'NotAClass' }
-
       it "doesn't output an error" do
-        expect { subject }.not_to output.to_stderr
+        subject
+        expect($stderr.string).not_to include('Unable to annotate')
       end
     end
   end

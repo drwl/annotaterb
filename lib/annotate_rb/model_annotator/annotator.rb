@@ -148,59 +148,6 @@ module AnnotateRb
           annotated
         end
 
-        # Return a list of the model files to annotate.
-        # If we have command line arguments, they're assumed to the path
-        # of model files from root dir. Otherwise we take all the model files
-        # in the model_dir directory.
-        def get_model_files(options)
-          model_files = []
-
-          model_files = list_model_files_from_argument(options) unless options[:is_rake]
-
-          return model_files unless model_files.empty?
-
-          options[:model_dir].each do |dir|
-            Dir.chdir(dir) do
-              list = if options[:ignore_model_sub_dir]
-                       Dir["*.rb"].map { |f| [dir, f] }
-                     else
-                       Dir["**/*.rb"].reject { |f| f["concerns/"] }.map { |f| [dir, f] }
-                     end
-              model_files.concat(list)
-            end
-          end
-
-          model_files
-        rescue SystemCallError
-          $stderr.puts "No models found in directory '#{options[:model_dir].join("', '")}'."
-          $stderr.puts "Either specify models on the command line, or use the --model-dir option."
-          $stderr.puts "Call 'annotate --help' for more info."
-          # exit 1 # TODO: Return exit code back to caller. Right now it messes up RSpec being able to run
-        end
-
-        def list_model_files_from_argument(options)
-          return [] if ARGV.empty?
-
-          specified_files = ARGV.map { |file| File.expand_path(file) }
-
-          model_files = options[:model_dir].flat_map do |dir|
-            absolute_dir_path = File.expand_path(dir)
-            specified_files
-              .find_all { |file| file.start_with?(absolute_dir_path) }
-              .map { |file| [dir, file.sub("#{absolute_dir_path}/", '')] }
-          end
-
-          if model_files.size != specified_files.size
-            $stderr.puts "The specified file could not be found in directory '#{options[:model_dir].join("', '")}'."
-            $stderr.puts "Call 'annotate --help' for more info."
-            # exit 1 # TODO: Return exit code back to caller. Right now it messes up RSpec being able to run
-          end
-
-          model_files
-        end
-
-        private :list_model_files_from_argument
-
         # We're passed a name of things that might be
         # ActiveRecord models. If we can find the class, and
         # if its a subclass of ActiveRecord::Base,
@@ -213,7 +160,7 @@ module AnnotateRb
           end
 
           annotated = []
-          get_model_files(options).each do |path, filename|
+          AnnotateRb::ModelAnnotator::ModelFilesGetter.call(options).each do |path, filename|
             annotate_model_file(annotated, File.join(path, filename), header, options)
           end
 
@@ -249,7 +196,7 @@ module AnnotateRb
         def remove_annotations(options = {})
           deannotated = []
           deannotated_klass = false
-          get_model_files(options).each do |file|
+          AnnotateRb::ModelAnnotator::ModelFilesGetter.call(options).each do |file|
             file = File.join(file)
             begin
               klass = AnnotateRb::ModelAnnotator::ModelClassGetter.call(file, options)

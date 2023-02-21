@@ -13,5 +13,6 @@ module AnnotateRb
     autoload :FileAnnotationRemover, 'annotate_rb/model_annotator/file_annotation_remover'
     autoload :AnnotationPatternGenerator, 'annotate_rb/model_annotator/annotation_pattern_generator'
     autoload :ModelClassGetter, 'annotate_rb/model_annotator/model_class_getter'
+    autoload :ModelFilesGetter, 'annotate_rb/model_annotator/model_files_getter'
   end
 end

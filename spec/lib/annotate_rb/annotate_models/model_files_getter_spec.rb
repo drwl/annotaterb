@@ -1,10 +1,8 @@
 # encoding: utf-8
 
-require 'pry-byebug'
-
-RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
-  describe '.get_model_files' do
-    subject { described_class.get_model_files(options) }
+RSpec.describe AnnotateRb::ModelAnnotator::ModelFilesGetter do
+  describe '.call' do
+    subject { described_class.call(options) }
 
     before do
       $stdout = StringIO.new
