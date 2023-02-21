@@ -47,7 +47,7 @@ module AnnotateRb
           @options[:command] = Commands::PrintVersion.new
         end
 
-        option_parser.on_tail('-h', '-?', '--help', "You're looking at it.") do
+        option_parser.on_tail('-h', '--help', "You're looking at it.") do
           @options[:command] = Commands::PrintHelp.new(option_parser)
         end
       end
