@@ -171,7 +171,7 @@ module AnnotateRb
 
               patterns
                 .map { |f| Helper.resolve_filename(f, model_name, table_name) }
-                .map { |f| expand_glob_into_files(f) }
+                .map { |f| Dir.glob(f) }
                 .flatten
                 .each do |f|
                 if annotate_one_file(f, info, position_key, options)
@@ -323,10 +323,6 @@ module AnnotateRb
           else
             puts "Annotated (#{annotated.length}): #{annotated.join(', ')}"
           end
-        end
-
-        def expand_glob_into_files(glob)
-          Dir.glob(glob)
         end
 
         def annotate_model_file(annotated, file, header, options)
