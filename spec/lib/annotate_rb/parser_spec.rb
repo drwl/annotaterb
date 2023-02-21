@@ -197,7 +197,7 @@ module AnnotateRb # rubocop:disable Metrics/ModuleLength
       end
     end
 
-    %w[--models].each do |option|
+    %w[-m --models].each do |option|
       describe option do
         let(:args) { [option] }
 
@@ -217,7 +217,7 @@ module AnnotateRb # rubocop:disable Metrics/ModuleLength
       end
     end
 
-    %w[-m --show-migration].each do |option|
+    %w[--show-migration].each do |option|
       describe option do
         let(:args) { [option] }
 

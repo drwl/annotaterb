@@ -5,7 +5,6 @@ $LOAD_PATH.unshift("#{__dir__}/../lib")
 
 require 'annotate_rb'
 
-cli = AnnotateRb::CLI.new
-exit_status = cli.run
+exit_status = ::AnnotateRb::Runner.run(ARGV)
 
 exit exit_status

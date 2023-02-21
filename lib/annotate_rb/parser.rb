@@ -7,7 +7,7 @@ module AnnotateRb
       new(args, existing_options).parse
     end
 
-    attr_reader :args, :options
+    BANNER_STRING = 'Usage: annotaterb [options] [model_file]*'.freeze
 
     DEFAULT_OPTIONS = {
       target_action: :do_annotations,
@@ -26,31 +26,30 @@ module AnnotateRb
     end
 
     def parse
-      # To split up because right now this method parses and commits
-      parser.parse!(args)
+      parser.parse(@args)
 
-      commit
-
-      options
+      @options
     end
 
     private
 
     def parser
       OptionParser.new do |option_parser|
-        add_header_to_parser(option_parser)
+        add_banner_to_parser(option_parser)
         add_model_options_to_parser(option_parser)
         add_route_options_to_parser(option_parser)
         add_wrapper_options_to_parser(option_parser)
         add_options_to_parser(option_parser)
         add_position_options_to_parser(option_parser)
         add_utils_to_parser(option_parser)
-      end
-    end
 
-    def commit
-      @options.each_pair do |key, value|
-        Env.write(key, value)
+        option_parser.on_tail('-v', '--version', "Display the version..") do
+          @options[:command] = Commands::PrintVersion.new
+        end
+
+        option_parser.on_tail('-h', '-?', '--help', "You're looking at it.") do
+          @options[:command] = Commands::PrintHelp.new(option_parser)
+        end
       end
     end
 
@@ -75,8 +74,8 @@ module AnnotateRb
       end
     end
 
-    def add_header_to_parser(option_parser)
-      option_parser.banner = 'Usage: annotate [options] [model_file]*'
+    def add_banner_to_parser(option_parser)
+      option_parser.banner = BANNER_STRING
     end
 
     def add_utils_to_parser(option_parser)
@@ -97,9 +96,11 @@ module AnnotateRb
     end
 
     def add_model_options_to_parser(option_parser)
-      option_parser.on('--models',
+      option_parser.on('-m',
+                       '--models',
                        "Annotate ActiveRecord models") do
         @options[:models] = true
+        @options[:command] = Commands::AnnotateModels.new
       end
 
       option_parser.on('-a',
@@ -108,8 +109,7 @@ module AnnotateRb
         @options[:active_admin] = true
       end
 
-      option_parser.on('-m',
-                       '--show-migration',
+      option_parser.on('--show-migration',
                        'Include the migration version number in the annotation') do
         @options[:include_version] = true
       end
@@ -171,6 +171,7 @@ module AnnotateRb
                        '--routes',
                        "Annotate routes.rb with the output of 'rails routes'") do
         @options[:routes] = true
+        @options[:command] = Commands::AnnotateRoutes.new
       end
 
       option_parser.on('--ignore-routes REGEX',
@@ -289,7 +290,7 @@ module AnnotateRb
                        '--require path',
                        "Additional file to require before loading models, may be used multiple times") do |path|
         @options[:require] = if @options[:require].present?
-                           "#{@options[:require]},#{path}"
+                           [@options[:require], path].join(',')
                          else
                            path
                          end

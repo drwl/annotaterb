@@ -2,7 +2,9 @@
 
 module AnnotateRb
   module Commands
-    autoload :Help, 'annotate_rb/commands/help'
-    autoload :Version, 'annotate_rb/commands/version'
+    autoload :PrintVersion, 'annotate_rb/commands/print_version'
+    autoload :PrintHelp, 'annotate_rb/commands/print_help'
+    autoload :AnnotateModels, 'annotate_rb/commands/annotate_models'
+    autoload :AnnotateRoutes, 'annotate_rb/commands/annotate_routes'
   end
 end

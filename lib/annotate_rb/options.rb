@@ -55,6 +55,7 @@ module AnnotateRb
 
     OTHER_OPTIONS = {
       active_admin: false,
+      command: nil, # Used by Runner
       hide_default_column_types: '<%= ::AnnotateRb::ModelAnnotator::SchemaInfo::NO_DEFAULT_COL_TYPES.join(",") %>',
       hide_limit_column_types: '<%= ::AnnotateRb::ModelAnnotator::SchemaInfo::NO_LIMIT_COL_TYPES.join(",") %>',
       ignore_columns: nil,
