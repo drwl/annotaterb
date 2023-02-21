@@ -28,6 +28,8 @@ module AnnotateRb
           end
         end
 
+        private
+
         # Given the name of an ActiveRecord class, create a schema
         # info block (basically a comment containing information
         # on the columns and their types) and put it at the front
