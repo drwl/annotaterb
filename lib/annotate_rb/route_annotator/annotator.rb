@@ -4,6 +4,11 @@ module AnnotateRb
   module RouteAnnotator
     class Annotator
       class << self
+        # TODO: Deprecate
+        def do_annotations(options = {})
+          add_annotations(options)
+        end
+
         def add_annotations(options = {})
           new(options).add_annotations
         end

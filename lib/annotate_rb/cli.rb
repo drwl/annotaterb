@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'set'
+
 module AnnotateRb
   class CLI
     def initialize

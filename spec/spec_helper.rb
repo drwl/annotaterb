@@ -1,15 +1,16 @@
 require 'bundler/setup'
 require 'rake'
 require 'active_support'
+require 'active_support/core_ext/string'
 require 'active_support/core_ext/object/blank'
 require 'active_support/core_ext/class/subclasses'
 require 'active_support/core_ext/string/inflections'
-require 'annotate'
-require 'annotate/parser'
-require 'annotate/helpers'
-require 'annotate/constants'
 require 'files'
 require 'byebug'
+require 'bigdecimal'
+require 'tmpdir'
+
+require 'annotate_rb/active_record_patch'
 
 require 'annotate_rb'
 
