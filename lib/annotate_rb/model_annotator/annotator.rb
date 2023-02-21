@@ -11,8 +11,6 @@ module AnnotateRb
 
       SKIP_ANNOTATION_PREFIX = '# -\*- SkipSchemaAnnotations'.freeze
 
-      MATCHED_TYPES = %w(test fixture factory serializer scaffold controller helper).freeze
-
       MAGIC_COMMENT_MATCHER = Regexp.new(/(^#\s*encoding:.*(?:\n|r\n))|(^# coding:.*(?:\n|\r\n))|(^# -\*- coding:.*(?:\n|\r\n))|(^# -\*- encoding\s?:.*(?:\n|\r\n))|(^#\s*frozen_string_literal:.+(?:\n|\r\n))|(^# -\*- frozen_string_literal\s*:.+-\*-(?:\n|\r\n))/).freeze
 
       class << self
@@ -111,14 +109,6 @@ module AnnotateRb
           end
         end
 
-        def matched_types(options)
-          types = MATCHED_TYPES.dup
-          types << 'admin' if options[:active_admin] =~ Constants::TRUE_RE && !types.include?('admin')
-          types << 'additional_file_patterns' if options[:additional_file_patterns].present?
-
-          types
-        end
-
         # Given the name of an ActiveRecord class, create a schema
         # info block (basically a comment containing information
         # on the columns and their types) and put it at the front
@@ -155,7 +145,7 @@ module AnnotateRb
               annotated << model_file_name
             end
 
-            matched_types(options).each do |key|
+            Helper.matched_types(options).each do |key|
               exclusion_key = "exclude_#{key.pluralize}".to_sym
               position_key = "position_in_#{key}".to_sym
 
