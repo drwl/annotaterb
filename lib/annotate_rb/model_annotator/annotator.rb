@@ -181,7 +181,7 @@ module AnnotateRb
           $stderr.puts "No models found in directory '#{model_dir.join("', '")}'."
           $stderr.puts "Either specify models on the command line, or use the --model-dir option."
           $stderr.puts "Call 'annotate --help' for more info."
-          exit 1
+          # exit 1 # TODO: Return exit code back to caller. Right now it messes up RSpec being able to run
         end
 
         def list_model_files_from_argument
@@ -197,9 +197,9 @@ module AnnotateRb
           end
 
           if model_files.size != specified_files.size
-            puts "The specified file could not be found in directory '#{model_dir.join("', '")}'."
-            puts "Call 'annotate --help' for more info."
-            exit 1
+            $stderr.puts "The specified file could not be found in directory '#{model_dir.join("', '")}'."
+            $stderr.puts "Call 'annotate --help' for more info."
+            # exit 1 # TODO: Return exit code back to caller. Right now it messes up RSpec being able to run
           end
 
           model_files

@@ -5,9 +5,17 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
     subject { described_class.get_model_files(options) }
 
     before do
+      $stdout = StringIO.new
+      $stderr = StringIO.new
+
       ARGV.clear
 
       described_class.model_dir = [model_dir]
+    end
+
+    after do
+      $stdout = STDOUT
+      $stderr = STDERR
     end
 
     context 'when `model_dir` is valid' do
@@ -76,13 +84,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
           end
 
           context 'when a model file outside `model_dir` directory is specified' do
-            it 'exits with the status code' do
-              begin
-                subject
-                raise
-              rescue SystemExit => e
-                expect(e.status).to eq(1)
-              end
+            it 'writes to $stderr' do
+              subject
+              expect($stderr.string).to include('The specified file could not be found in directory')
             end
           end
         end
@@ -105,13 +109,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
       let(:model_dir) { '/not_exist_path' }
       let(:options) { {} }
 
-      it 'exits with the status code' do
-        begin
-          subject
-          raise
-        rescue SystemExit => e
-          expect(e.status).to eq(1)
-        end
+      it 'writes to $stderr' do
+        subject
+        expect($stderr.string).to include('No models found in directory')
       end
     end
   end
