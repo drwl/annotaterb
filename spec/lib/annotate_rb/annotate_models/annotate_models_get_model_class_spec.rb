@@ -1,7 +1,7 @@
 # encoding: utf-8
 
-RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
-  describe '.get_model_class' do
+RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
+  describe '.call' do
     def create(filename, file_content, options)
       model_dir_path = options[:model_dir][0]
 
@@ -22,7 +22,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
     let :klass do
       model_dir_path = options[:model_dir][0]
 
-      described_class.get_model_class(File.join(model_dir_path, filename), options)
+      described_class.call(File.join(model_dir_path, filename), options)
     end
 
     context 'when class Foo is defined in "foo.rb"' do
@@ -314,7 +314,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         let :klass_2 do
           model_dir_path = options[:model_dir][0]
 
-          described_class.get_model_class(File.join(model_dir_path, filename_2), options)
+          described_class.call(File.join(model_dir_path, filename_2), options)
         end
 
         it 'finds valid model' do
@@ -351,7 +351,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         let :klass_2 do
           model_dir_path = options[:model_dir][0]
 
-          described_class.get_model_class(File.join(model_dir_path, filename_2), options)
+          described_class.call(File.join(model_dir_path, filename_2), options)
         end
 
         it 'finds valid model' do

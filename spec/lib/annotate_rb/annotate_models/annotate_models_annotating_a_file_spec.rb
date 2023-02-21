@@ -280,7 +280,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
 
     describe "if a file can't be annotated" do
       before do
-        allow(described_class).to receive(:get_loaded_model_by_path).with('user').and_return(nil)
+        allow(AnnotateRb::ModelAnnotator::ModelClassGetter).to receive(:get_loaded_model_by_path).with('user').and_return(nil)
 
         write_model('user.rb', <<~EOS)
           class User < ActiveRecord::Base
@@ -309,7 +309,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
 
     describe "if a file can't be deannotated" do
       before do
-        allow(described_class).to receive(:get_loaded_model_by_path).with('user').and_return(nil)
+        allow(AnnotateRb::ModelAnnotator::ModelClassGetter).to receive(:get_loaded_model_by_path).with('user').and_return(nil)
 
         write_model('user.rb', <<~EOS)
           class User < ActiveRecord::Base

@@ -11,7 +11,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
     context 'with a class' do
       before do
         class Foo < ActiveRecord::Base; end
-        allow(described_class).to receive(:get_model_class).with('foo.rb', options) { Foo }
+        allow(AnnotateRb::ModelAnnotator::ModelClassGetter).to receive(:get_model_class).with('foo.rb', options) { Foo }
         allow(Foo).to receive(:table_exists?) { false }
       end
 
@@ -25,7 +25,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
     context 'with a non-class' do
       before do
         NotAClass = 'foo'.freeze # rubocop:disable Naming/ConstantName
-        allow(described_class).to receive(:get_model_class).with('foo.rb', options) { NotAClass }
+        allow(AnnotateRb::ModelAnnotator::ModelClassGetter).to receive(:get_model_class).with('foo.rb', options) { NotAClass }
       end
 
       after { Object.send :remove_const, 'NotAClass' }
