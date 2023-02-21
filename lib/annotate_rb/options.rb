@@ -70,7 +70,7 @@ module AnnotateRb
 
     PATH_OPTIONS = {
       additional_file_patterns: [],
-      model_dir: 'app/models',
+      model_dir: ['app/models'],
       require: [],
       root_dir: [''], # Old model Annotate code depends on it being empty when not provided another value
       # `root_dir` can also be a string but should get converted into an array with that string as the sole element when
