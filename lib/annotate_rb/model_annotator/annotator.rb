@@ -61,7 +61,7 @@ module AnnotateRb
               patterns = PatternGetter.call(options, key)
 
               patterns
-                .map { |f| Helper.resolve_filename(f, model_name, table_name) }
+                .map { |f| FileNameResolver.call(f, model_name, table_name) }
                 .map { |f| Dir.glob(f) }
                 .flatten
                 .each do |f|
@@ -139,7 +139,7 @@ module AnnotateRb
                 patterns = PatternGetter.call(options)
 
                 patterns
-                  .map { |f| Helper.resolve_filename(f, model_name, table_name) }
+                  .map { |f| FileNameResolver.call(f, model_name, table_name) }
                   .each do |f|
                   if File.exist?(f)
                     FileAnnotationRemover.call(f, options)
