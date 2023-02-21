@@ -1,9 +1,9 @@
 # encoding: utf-8
 
-RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
-  describe '.annotate_model_file' do
+RSpec.describe AnnotateRb::ModelAnnotator::ModelFileAnnotator do
+  describe '.call' do
     subject do
-      described_class.annotate_model_file([], 'foo.rb', nil, options)
+      described_class.call([], 'foo.rb', nil, options)
     end
 
     let(:options) { AnnotateRb::Options.from({ ignore_unknown_models: true }) }
