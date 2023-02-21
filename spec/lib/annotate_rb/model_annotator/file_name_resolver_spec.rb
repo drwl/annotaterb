@@ -1,9 +1,9 @@
 # encoding: utf-8
 
-RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
-  describe '.resolve_filename' do
+RSpec.describe AnnotateRb::ModelAnnotator::FileNameResolver do
+  describe '.call' do
     subject do
-      described_class.resolve_filename(filename_template, model_name, table_name)
+      described_class.call(filename_template, model_name, table_name)
     end
 
     context 'When model_name is "example_model" and table_name is "example_models"' do

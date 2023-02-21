@@ -170,7 +170,7 @@ module AnnotateRb
               patterns = PatternGetter.call(options, key)
 
               patterns
-                .map { |f| resolve_filename(f, model_name, table_name) }
+                .map { |f| Helper.resolve_filename(f, model_name, table_name) }
                 .map { |f| expand_glob_into_files(f) }
                 .flatten
                 .each do |f|
@@ -369,7 +369,7 @@ module AnnotateRb
                 patterns = PatternGetter.call(options)
 
                 patterns
-                  .map { |f| resolve_filename(f, model_name, table_name) }
+                  .map { |f| Helper.resolve_filename(f, model_name, table_name) }
                   .each do |f|
                   if File.exist?(f)
                     remove_annotation_of_file(f, options)
@@ -384,13 +384,6 @@ module AnnotateRb
             end
           end
           puts "Removed annotations from: #{deannotated.join(', ')}"
-        end
-
-        def resolve_filename(filename_template, model_name, table_name)
-          filename_template
-            .gsub('%MODEL_NAME%', model_name)
-            .gsub('%PLURALIZED_MODEL_NAME%', model_name.pluralize)
-            .gsub('%TABLE_NAME%', table_name || model_name.pluralize)
         end
       end
     end
