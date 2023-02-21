@@ -42,7 +42,7 @@ module AnnotateRb
             model_file_name = File.join(file)
             annotated = []
 
-            if AnnotateRb::ModelAnnotator::FileAnnotator.call(model_file_name, info, :position_in_class, options)
+            if FileAnnotator.call(model_file_name, info, :position_in_class, options)
               annotated << model_file_name
             end
 
@@ -65,7 +65,7 @@ module AnnotateRb
                 .map { |f| Dir.glob(f) }
                 .flatten
                 .each do |f|
-                if AnnotateRb::ModelAnnotator::FileAnnotator.call(f, info, position_key, options)
+                if FileAnnotator.call(f, info, position_key, options)
                   annotated << f
                 end
               end
@@ -90,7 +90,7 @@ module AnnotateRb
           end
 
           annotated = []
-          AnnotateRb::ModelAnnotator::ModelFilesGetter.call(options).each do |path, filename|
+          ModelFilesGetter.call(options).each do |path, filename|
             annotate_model_file(annotated, File.join(path, filename), header, options)
           end
 
@@ -104,7 +104,7 @@ module AnnotateRb
         def annotate_model_file(annotated, file, header, options)
           begin
             return false if /#{Constants::SKIP_ANNOTATION_PREFIX}.*/ =~ (File.exist?(file) ? File.read(file) : '')
-            klass = AnnotateRb::ModelAnnotator::ModelClassGetter.call(file, options)
+            klass = ModelClassGetter.call(file, options)
             do_annotate = klass.is_a?(Class) &&
               klass < ActiveRecord::Base &&
               (!options[:exclude_sti_subclasses] || !(klass.superclass < ActiveRecord::Base && klass.table_name == klass.superclass.table_name)) &&
@@ -126,10 +126,10 @@ module AnnotateRb
         def remove_annotations(options = {})
           deannotated = []
           deannotated_klass = false
-          AnnotateRb::ModelAnnotator::ModelFilesGetter.call(options).each do |file|
+          ModelFilesGetter.call(options).each do |file|
             file = File.join(file)
             begin
-              klass = AnnotateRb::ModelAnnotator::ModelClassGetter.call(file, options)
+              klass = ModelClassGetter.call(file, options)
               if klass < ActiveRecord::Base && !klass.abstract_class?
                 model_name = klass.name.underscore
                 table_name = klass.table_name
