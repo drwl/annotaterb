@@ -393,12 +393,6 @@ module AnnotateRb
             .gsub('%TABLE_NAME%', table_name || model_name.pluralize)
         end
       end
-
-      class BadModelFileError < LoadError
-        def to_s
-          "file doesn't contain a valid model class"
-        end
-      end
     end
   end
 end
