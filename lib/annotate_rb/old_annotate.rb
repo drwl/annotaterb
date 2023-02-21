@@ -10,10 +10,6 @@ end
 
 module AnnotateRb
   module OldAnnotate
-    def self.setup_options(options = {})
-      _opts = ::AnnotateRb::Options.from(options)
-    end
-
     # Can be used by consumers, per README:
     #
     # To automatically annotate every time you run `db:migrate`,
