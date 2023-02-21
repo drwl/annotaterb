@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'pry-byebug'
+
 RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
   describe '.get_model_files' do
     subject { described_class.get_model_files(options) }
@@ -9,8 +11,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
       $stderr = StringIO.new
 
       ARGV.clear
-
-      described_class.model_dir = [model_dir]
     end
 
     after do
@@ -36,7 +36,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
 
       context 'when the model files are not specified' do
         context 'when no option is specified' do
-          let(:options) { {} }
+          let(:base_options) { { model_dir: [model_dir] } }
+          let(:options) { AnnotateRb::Options.from(base_options) }
 
           it 'returns all model files under `model_dir` directory' do
             is_expected.to contain_exactly(
@@ -48,7 +49,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         end
 
         context 'when `ignore_model_sub_dir` option is enabled' do
-          let(:options) { { ignore_model_sub_dir: true } }
+          let(:base_options) { { model_dir: [model_dir], ignore_model_sub_dir: true } }
+          let(:options) { AnnotateRb::Options.from(base_options) }
 
           it 'returns model files just below `model_dir` directory' do
             is_expected.to contain_exactly([model_dir, 'foo.rb'])
@@ -68,13 +70,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         before { ARGV.concat(model_files) }
 
         context 'when no option is specified' do
-          let(:options) { {} }
+          let(:base_options) { { model_dir: [model_dir, additional_model_dir] } }
+          let(:options) { AnnotateRb::Options.from(base_options) }
 
           context 'when all the specified files are in `model_dir` directory' do
-            before do
-              described_class.model_dir << additional_model_dir
-            end
-
             it 'returns specified files' do
               is_expected.to contain_exactly(
                                [model_dir, 'foo.rb'],
@@ -84,6 +83,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
           end
 
           context 'when a model file outside `model_dir` directory is specified' do
+            let(:base_options) { { model_dir: [model_dir] } }
+            let(:options) { AnnotateRb::Options.from(base_options) }
+
             it 'writes to $stderr' do
               subject
               expect($stderr.string).to include('The specified file could not be found in directory')
@@ -92,7 +94,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         end
 
         context 'when `is_rake` option is enabled' do
-          let(:options) { { is_rake: true } }
+          let(:base_options) { { model_dir: [model_dir], is_rake: true } }
+          let(:options) { AnnotateRb::Options.from(base_options) }
 
           it 'returns all model files under `model_dir` directory' do
             is_expected.to contain_exactly(
@@ -107,7 +110,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
 
     context 'when `model_dir` is invalid' do
       let(:model_dir) { '/not_exist_path' }
-      let(:options) { {} }
+      let(:base_options) { { model_dir: [model_dir] } }
+      let(:options) { AnnotateRb::Options.from(base_options) }
 
       it 'writes to $stderr' do
         subject

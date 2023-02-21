@@ -290,17 +290,20 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
       end
 
       it 'displays just the error message with trace disabled (default)' do
-        expect { described_class.do_annotations model_dir: @model_dir, is_rake: true }.to output(a_string_including("Unable to annotate #{@model_dir}/user.rb: oops")).to_stderr
+        options = AnnotateRb::Options.from({ model_dir: @model_dir, is_rake: true })
+
+        expect { described_class.do_annotations(options) }.to output(a_string_including("Unable to annotate #{@model_dir}/user.rb: oops")).to_stderr
 
         # TODO: Find another way of testing trace without hardcoding the file name as part of the spec
-        # expect { described_class.do_annotations model_dir: @model_dir, is_rake: true }.not_to output(a_string_including('/spec/annotate/annotate_models_spec.rb:')).to_stderr
+        # expect { described_class.do_annotations(options) }.not_to output(a_string_including('/spec/annotate/annotate_models_spec.rb:')).to_stderr
       end
 
       it 'displays the error message and stacktrace with trace enabled' do
-        expect { described_class.do_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including("Unable to annotate #{@model_dir}/user.rb: oops")).to_stderr
+        options = AnnotateRb::Options.from({ model_dir: @model_dir, is_rake: true, trace: true })
+        expect { described_class.do_annotations(options) }.to output(a_string_including("Unable to annotate #{@model_dir}/user.rb: oops")).to_stderr
 
         # TODO: Find another way of testing trace without hardcoding the file name as part of the spec
-        # expect { described_class.do_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including('/spec/lib/annotate/annotate_models_spec.rb:')).to_stderr
+        # expect { described_class.do_annotations(options) }.to output(a_string_including('/spec/lib/annotate/annotate_models_spec.rb:')).to_stderr
       end
     end
 
@@ -316,13 +319,17 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
       end
 
       it 'displays just the error message with trace disabled (default)' do
-        expect { described_class.remove_annotations model_dir: @model_dir, is_rake: true }.to output(a_string_including("Unable to deannotate #{@model_dir}/user.rb: oops")).to_stderr
-        expect { described_class.remove_annotations model_dir: @model_dir, is_rake: true }.not_to output(a_string_including("/user.rb:2:in `<class:User>'")).to_stderr
+        options = AnnotateRb::Options.from({ model_dir: @model_dir, is_rake: true })
+
+        expect { described_class.remove_annotations(options) }.to output(a_string_including("Unable to deannotate #{@model_dir}/user.rb: oops")).to_stderr
+        expect { described_class.remove_annotations(options) }.not_to output(a_string_including("/user.rb:2:in `<class:User>'")).to_stderr
       end
 
       it 'displays the error message and stacktrace with trace enabled' do
-        expect { described_class.remove_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including("Unable to deannotate #{@model_dir}/user.rb: oops")).to_stderr
-        expect { described_class.remove_annotations model_dir: @model_dir, is_rake: true, trace: true }.to output(a_string_including("/user.rb:2:in `<class:User>'")).to_stderr
+        options = AnnotateRb::Options.from({ model_dir: @model_dir, is_rake: true, trace: true })
+
+        expect { described_class.remove_annotations(options) }.to output(a_string_including("Unable to deannotate #{@model_dir}/user.rb: oops")).to_stderr
+        expect { described_class.remove_annotations(options) }.to output(a_string_including("/user.rb:2:in `<class:User>'")).to_stderr
       end
     end
   end

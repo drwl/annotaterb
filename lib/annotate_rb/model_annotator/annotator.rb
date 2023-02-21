@@ -161,11 +161,11 @@ module AnnotateRb
         def get_model_files(options)
           model_files = []
 
-          model_files = list_model_files_from_argument unless options[:is_rake]
+          model_files = list_model_files_from_argument(options) unless options[:is_rake]
 
           return model_files unless model_files.empty?
 
-          model_dir.each do |dir|
+          options[:model_dir].each do |dir|
             Dir.chdir(dir) do
               list = if options[:ignore_model_sub_dir]
                        Dir["*.rb"].map { |f| [dir, f] }
@@ -178,18 +178,18 @@ module AnnotateRb
 
           model_files
         rescue SystemCallError
-          $stderr.puts "No models found in directory '#{model_dir.join("', '")}'."
+          $stderr.puts "No models found in directory '#{options[:model_dir].join("', '")}'."
           $stderr.puts "Either specify models on the command line, or use the --model-dir option."
           $stderr.puts "Call 'annotate --help' for more info."
           # exit 1 # TODO: Return exit code back to caller. Right now it messes up RSpec being able to run
         end
 
-        def list_model_files_from_argument
+        def list_model_files_from_argument(options)
           return [] if ARGV.empty?
 
           specified_files = ARGV.map { |file| File.expand_path(file) }
 
-          model_files = model_dir.flat_map do |dir|
+          model_files = options[:model_dir].flat_map do |dir|
             absolute_dir_path = File.expand_path(dir)
             specified_files
               .find_all { |file| file.start_with?(absolute_dir_path) }
@@ -197,7 +197,7 @@ module AnnotateRb
           end
 
           if model_files.size != specified_files.size
-            $stderr.puts "The specified file could not be found in directory '#{model_dir.join("', '")}'."
+            $stderr.puts "The specified file could not be found in directory '#{options[:model_dir].join("', '")}'."
             $stderr.puts "Call 'annotate --help' for more info."
             # exit 1 # TODO: Return exit code back to caller. Right now it messes up RSpec being able to run
           end
