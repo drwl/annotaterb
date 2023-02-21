@@ -31,6 +31,20 @@ RSpec.describe AnnotateRb::Options do
         expect(subject[key]).to eq(true)
       end
     end
+
+    describe 'path options' do
+      context 'when model_dir is a string with multiple paths' do
+        let(:options) do
+          {
+            model_dir: 'app/models,app/one,  app/two   ,,app/three'
+          }
+        end
+
+        it 'separates option "model_dir" with commas into an array of strings' do
+          expect(subject[:model_dir]).to eq(['app/models', 'app/one', 'app/two', 'app/three'])
+        end
+      end
+    end
   end
 
   describe '#set_state' do

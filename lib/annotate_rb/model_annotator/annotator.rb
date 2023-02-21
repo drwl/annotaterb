@@ -10,12 +10,6 @@ module AnnotateRb
       MAGIC_COMMENT_MATCHER = Regexp.new(/(^#\s*encoding:.*(?:\n|r\n))|(^# coding:.*(?:\n|\r\n))|(^# -\*- coding:.*(?:\n|\r\n))|(^# -\*- encoding\s?:.*(?:\n|\r\n))|(^#\s*frozen_string_literal:.+(?:\n|\r\n))|(^# -\*- frozen_string_literal\s*:.+-\*-(?:\n|\r\n))/).freeze
 
       class << self
-        def model_dir
-          @model_dir.is_a?(Array) ? @model_dir : [@model_dir || 'app/models']
-        end
-
-        attr_writer :model_dir
-
         # Add a schema block to a file. If the file already contains
         # a schema info block (a comment starting with "== Schema Information"),
         # check if it matches the block that is already there. If so, leave it be.
@@ -210,9 +204,9 @@ module AnnotateRb
         # Retrieve the classes belonging to the model names we're asked to process
         # Check for namespaced models in subdirectories as well as models
         # in subdirectories without namespacing.
-        def get_model_class(file)
+        def get_model_class(file, options)
           model_path = file.gsub(/\.rb$/, '')
-          model_dir.each { |dir| model_path = model_path.gsub(/^#{dir}/, '').gsub(/^\//, '') }
+          options[:model_dir].each { |dir| model_path = model_path.gsub(/^#{dir}/, '').gsub(/^\//, '') }
           begin
             get_loaded_model(model_path, file) || raise(BadModelFileError.new)
           rescue LoadError
@@ -258,22 +252,11 @@ module AnnotateRb
           end.detect { |c| ActiveSupport::Inflector.underscore(c.to_s) == model_path }
         end
 
-        def parse_options(options = {})
-          self.model_dir = split_model_dir(options[:model_dir]) if options[:model_dir]
-        end
-
-        def split_model_dir(option_value)
-          option_value = option_value.is_a?(Array) ? option_value : option_value.split(',')
-          option_value.map(&:strip).reject(&:empty?)
-        end
-
         # We're passed a name of things that might be
         # ActiveRecord models. If we can find the class, and
         # if its a subclass of ActiveRecord::Base,
         # then pass it to the associated block
         def do_annotations(options = {})
-          parse_options(options)
-
           header = options[:format_markdown] ? PREFIX_MD.dup : PREFIX.dup
           version = ActiveRecord::Migrator.current_version rescue 0
           if options[:include_version] && version > 0
@@ -295,7 +278,7 @@ module AnnotateRb
         def annotate_model_file(annotated, file, header, options)
           begin
             return false if /#{Constants::SKIP_ANNOTATION_PREFIX}.*/ =~ (File.exist?(file) ? File.read(file) : '')
-            klass = get_model_class(file)
+            klass = get_model_class(file, options)
             do_annotate = klass.is_a?(Class) &&
               klass < ActiveRecord::Base &&
               (!options[:exclude_sti_subclasses] || !(klass.superclass < ActiveRecord::Base && klass.table_name == klass.superclass.table_name)) &&
@@ -315,14 +298,12 @@ module AnnotateRb
         end
 
         def remove_annotations(options = {})
-          parse_options(options)
-
           deannotated = []
           deannotated_klass = false
           get_model_files(options).each do |file|
             file = File.join(file)
             begin
-              klass = get_model_class(file)
+              klass = get_model_class(file, options)
               if klass < ActiveRecord::Base && !klass.abstract_class?
                 model_name = klass.name.underscore
                 table_name = klass.table_name

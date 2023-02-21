@@ -2,26 +2,30 @@
 
 RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
   describe '.annotate_model_file' do
-    before do
-      class Foo < ActiveRecord::Base; end
-      allow(described_class).to receive(:get_model_class).with('foo.rb') { Foo }
-      allow(Foo).to receive(:table_exists?) { false }
-    end
-
     subject do
-      described_class.annotate_model_file([], 'foo.rb', nil, {})
+      described_class.annotate_model_file([], 'foo.rb', nil, options)
     end
 
-    after { Object.send :remove_const, 'Foo' }
+    let(:options) { AnnotateRb::Options.from({}) }
 
-    it 'skips attempt to annotate if no table exists for model' do
-      is_expected.to eq nil
+    context 'with a class' do
+      before do
+        class Foo < ActiveRecord::Base; end
+        allow(described_class).to receive(:get_model_class).with('foo.rb', options) { Foo }
+        allow(Foo).to receive(:table_exists?) { false }
+      end
+
+      after { Object.send :remove_const, 'Foo' }
+
+      it 'skips attempt to annotate if no table exists for model' do
+        is_expected.to eq nil
+      end
     end
 
     context 'with a non-class' do
       before do
         NotAClass = 'foo'.freeze # rubocop:disable Naming/ConstantName
-        allow(described_class).to receive(:get_model_class).with('foo.rb') { NotAClass }
+        allow(described_class).to receive(:get_model_class).with('foo.rb', options) { NotAClass }
       end
 
       after { Object.send :remove_const, 'NotAClass' }

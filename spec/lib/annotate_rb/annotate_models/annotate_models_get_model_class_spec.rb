@@ -2,8 +2,10 @@
 
 RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
   describe '.get_model_class' do
-    def create(filename, file_content)
-      File.join(described_class.model_dir[0], filename).tap do |path|
+    def create(filename, file_content, options)
+      model_dir_path = options[:model_dir][0]
+
+      File.join(model_dir_path, filename).tap do |path|
         FileUtils.mkdir_p(File.dirname(path))
         File.open(path, 'wb') do |f|
           f.puts(file_content)
@@ -12,12 +14,15 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
     end
 
     before do
-      described_class.model_dir = Dir.mktmpdir('annotate_models')
-      create(filename, file_content)
+      create(filename, file_content, options)
     end
 
+    let(:options) { AnnotateRb::Options.from(base_options) }
+    let(:base_options) { { model_dir: [Dir.mktmpdir('annotate_models')] } }
     let :klass do
-      described_class.get_model_class(File.join(described_class.model_dir[0], filename))
+      model_dir_path = options[:model_dir][0]
+
+      described_class.get_model_class(File.join(model_dir_path, filename), options)
     end
 
     context 'when class Foo is defined in "foo.rb"' do
@@ -232,7 +237,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         end
 
         before do
-          path = File.expand_path(filename, described_class.model_dir[0])
+          model_dir_path = options[:model_dir][0]
+
+          path = File.expand_path(filename, model_dir_path)
           Kernel.load(path)
           expect(Kernel).not_to receive(:require)
         end
@@ -247,9 +254,11 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
 
         context "when class SubdirLoadedClass is defined in \"#{dir}/subdir_loaded_class.rb\"" do
           before do
-            $LOAD_PATH.unshift(File.join(described_class.model_dir[0], dir))
+            model_dir_path = options[:model_dir][0]
 
-            path = File.expand_path(filename, described_class.model_dir[0])
+            $LOAD_PATH.unshift(File.join(model_dir_path, dir))
+
+            path = File.expand_path(filename, model_dir_path)
             Kernel.load(path)
             expect(Kernel).not_to receive(:require)
           end
@@ -275,7 +284,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
 
     context 'when two class exist' do
       before do
-        create(filename_2, file_content_2)
+        create(filename_2, file_content_2, options)
       end
 
       context 'the base names are duplicated' do
@@ -303,7 +312,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         end
 
         let :klass_2 do
-          described_class.get_model_class(File.join(described_class.model_dir[0], filename_2))
+          model_dir_path = options[:model_dir][0]
+
+          described_class.get_model_class(File.join(model_dir_path, filename_2), options)
         end
 
         it 'finds valid model' do
@@ -338,7 +349,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         end
 
         let :klass_2 do
-          described_class.get_model_class(File.join(described_class.model_dir[0], filename_2))
+          model_dir_path = options[:model_dir][0]
+
+          described_class.get_model_class(File.join(model_dir_path, filename_2), options)
         end
 
         it 'finds valid model' do
