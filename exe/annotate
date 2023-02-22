@@ -16,13 +16,13 @@ $LOAD_PATH << "#{here}/../lib"
 
 require 'annotate_rb'
 
-AnnotateRb::OldAnnotate.bootstrap_rake
 
 options = ::AnnotateRb::Options.from({}, {})
+AnnotateRb::RakeBootstrapper.call(options)
 
 if options[:models]
   # Eager load Models when we're annotating models
-  AnnotateRb::OldAnnotate.eager_load(options)
+  AnnotateRb::EagerLoader.call(options)
 
   puts "Annotating models"
   AnnotateRb::ModelAnnotator::Annotator.send(options[:target_action], options)
