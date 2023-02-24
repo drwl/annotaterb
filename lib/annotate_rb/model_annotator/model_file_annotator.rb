@@ -9,14 +9,29 @@ module AnnotateRb
           begin
             return false if /#{Constants::SKIP_ANNOTATION_PREFIX}.*/ =~ (File.exist?(file) ? File.read(file) : '')
             klass = ModelClassGetter.call(file, options)
-            do_annotate = klass.is_a?(Class) &&
-              klass < ActiveRecord::Base &&
-              (!options[:exclude_sti_subclasses] || !(klass.superclass < ActiveRecord::Base && klass.table_name == klass.superclass.table_name)) &&
-              !klass.abstract_class? &&
-              klass.table_exists?
 
-            files_annotated = annotate(klass, file, header, options)
-            annotated.concat(files_annotated) if do_annotate
+            klass_is_a_class = klass.is_a?(Class)
+            klass_inherits_active_record_base = klass < ActiveRecord::Base
+            klass_is_not_abstract = !klass.abstract_class?
+            klass_table_exists = klass.table_exists?
+
+            not_sure_this_conditional = (!options[:exclude_sti_subclasses] || !(klass.superclass < ActiveRecord::Base && klass.table_name == klass.superclass.table_name))
+
+            annotate_conditions = [
+              klass_is_a_class,
+              klass_inherits_active_record_base,
+              not_sure_this_conditional,
+              klass_is_not_abstract,
+              klass_table_exists
+            ]
+
+            do_annotate = annotate_conditions.all?
+
+            if do_annotate
+              files_annotated = annotate(klass, file, header, options)
+              annotated.concat(files_annotated)
+            end
+
           rescue BadModelFileError => e
             unless options[:ignore_unknown_models]
               $stderr.puts "Unable to annotate #{file}: #{e.message}"

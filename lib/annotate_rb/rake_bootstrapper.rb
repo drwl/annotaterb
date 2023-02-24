@@ -27,13 +27,11 @@ module AnnotateRb
           require 'active_support/core_ext/string/inflections'
         end
 
-        AnnotateRb::RakeTaskLoader.call(options)
+        # TODO: See if we need this or it can be removed
+        # AnnotateRb::RakeTaskLoader.call(options)
 
-        # This line loads the defaults option values for Annotate
-        # Then "writes" them to ENV if a value for them doesn't already exist
-        #
-        # Calls: .set_defaults
-        Rake::Task[:set_annotation_options].invoke
+        # TODO: See if we need this or it can be removed
+        # Rake::Task[:set_annotation_options].invoke
       end
     end
   end

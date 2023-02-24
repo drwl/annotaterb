@@ -1,6 +1,17 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+unless File.exist?('./Rakefile') || File.exist?('./Gemfile')
+  abort 'Please run annotate from the root of the project.'
+end
+
+require 'rubygems'
+begin
+  require 'bundler'
+  Bundler.setup
+rescue StandardError
+end
+
 $LOAD_PATH.unshift("#{__dir__}/../lib")
 
 require 'annotate_rb'

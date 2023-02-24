@@ -22,7 +22,9 @@ module AnnotateRb
           end
 
           annotated = []
-          ModelFilesGetter.call(options).each do |path, filename|
+          model_files_to_annotate = ModelFilesGetter.call(options)
+
+          model_files_to_annotate.each do |path, filename|
             ModelFileAnnotator.call(annotated, File.join(path, filename), header, options)
           end
 

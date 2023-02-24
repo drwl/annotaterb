@@ -26,7 +26,7 @@ module AnnotateRb
     end
 
     def parse
-      parser.parse(@args)
+      parser.parse!(@args)
 
       @options
     end
@@ -82,6 +82,11 @@ module AnnotateRb
       option_parser.on('--force',
                        'Force new annotations even if there are no changes.') do
         @options[:force] = true
+      end
+
+      option_parser.on('--debug',
+                       'Prints the options and outputs messages to make it easier to debug.') do
+        @options[:debug] = true
       end
 
       option_parser.on('--frozen',

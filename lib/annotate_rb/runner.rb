@@ -20,6 +20,7 @@ module AnnotateRb
       parsed_options = Parser.parse(args)
 
       @options = Options.from(parsed_options, {})
+      AnnotateRb::RakeBootstrapper.call(@options)
 
       if @options[:command]
         @options[:command].call(@options)

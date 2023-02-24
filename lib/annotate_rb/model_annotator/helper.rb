@@ -40,8 +40,9 @@ module AnnotateRb
           val.present? && Constants::TRUE_RE.match?(val)
         end
 
+        # TODO: Find another implementation that doesn't depend on ActiveSupport
         def fallback(*args)
-          args.detect(&:present?)
+          args.compact.detect(&:present?)
         end
 
         def reset_options(options)
