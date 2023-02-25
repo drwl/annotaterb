@@ -5,7 +5,6 @@ unless File.exist?('./Rakefile') || File.exist?('./Gemfile')
   abort 'Please run annotate from the root of the project.'
 end
 
-# require 'rubygems'
 begin
   require 'bundler'
   Bundler.setup
