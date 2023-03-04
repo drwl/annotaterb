@@ -7,7 +7,15 @@ module AnnotateRb
       new(args, existing_options).parse
     end
 
-    BANNER_STRING = 'Usage: annotaterb [options] [model_file]*'.freeze
+    BANNER_STRING = <<~BANNER.freeze
+      Usage: annotaterb [command] [options]
+      
+      Commands:
+          models [options]
+          routes [options]
+          help
+          version
+    BANNER
 
     DEFAULT_OPTIONS = {
       target_action: :do_annotations,
@@ -19,37 +27,83 @@ module AnnotateRb
     EXCLUSION_LIST = %w[tests fixtures factories serializers].freeze
     FORMAT_TYPES = %w[bare rdoc yard markdown].freeze
 
+    COMMAND_MAP = {
+      'models' => :models,
+      'routes' => :routes,
+      'version' => :version,
+      'help' => :help
+    }.freeze
+
     def initialize(args, existing_options)
       @args = args
       base_options = DEFAULT_OPTIONS.dup
       @options = base_options.merge(existing_options)
+      @commands = []
+      @options[:original_args] = args.dup
     end
 
     def parse
+      parse_command(@args)
+
       parser.parse!(@args)
+
+      act_on_command
 
       @options
     end
 
     private
 
+    def parse_command(args)
+      command_arg = args.first
+      command = COMMAND_MAP[command_arg]
+
+      if command
+        args.shift
+        @commands << command
+      end
+    end
+
+    def act_on_command
+      map = {
+        models: Commands::AnnotateModels.new,
+        routes: Commands::AnnotateRoutes.new,
+        help: Commands::PrintHelp.new(@parser),
+        version: Commands::PrintVersion.new
+      }
+
+      if @commands.any?
+        @options[:command] = map[@commands.first]
+      elsif @commands.size > 1
+        # TODO: Should raise or alert user that multiple commands were selected but only 1 command will be ran
+        @options[:command] = map[@commands.first]
+      else # None
+        @options[:command] = nil
+      end
+    end
+
     def parser
-      OptionParser.new do |option_parser|
-        add_banner_to_parser(option_parser)
+      @parser ||= OptionParser.new do |option_parser|
+        option_parser.banner = BANNER_STRING
+
+        # ------------------------------------------------------------------------------------------------------------=
+        option_parser.separator('')
+        option_parser.separator('Options:')
+
+        option_parser.on('-v', '--version', "Display the version..") do
+          @commands << :version
+        end
+
+        option_parser.on('-h', '--help', "You're looking at it.") do
+          @commands << :help
+        end
+
         add_model_options_to_parser(option_parser)
         add_route_options_to_parser(option_parser)
         add_wrapper_options_to_parser(option_parser)
         add_options_to_parser(option_parser)
         add_position_options_to_parser(option_parser)
         add_utils_to_parser(option_parser)
-
-        option_parser.on_tail('-v', '--version', "Display the version..") do
-          @options[:command] = Commands::PrintVersion.new
-        end
-
-        option_parser.on_tail('-h', '--help', "You're looking at it.") do
-          @options[:command] = Commands::PrintHelp.new(option_parser)
-        end
       end
     end
 
@@ -72,10 +126,6 @@ module AnnotateRb
                        'Annotation wrapper closing') do |wrapper_close|
         @options[:wrapper_close] = wrapper_close
       end
-    end
-
-    def add_banner_to_parser(option_parser)
-      option_parser.banner = BANNER_STRING
     end
 
     def add_utils_to_parser(option_parser)
@@ -101,12 +151,17 @@ module AnnotateRb
     end
 
     def add_model_options_to_parser(option_parser)
-      option_parser.on('-m',
-                       '--models',
-                       "Annotate ActiveRecord models") do
-        @options[:models] = true
-        @options[:command] = Commands::AnnotateModels.new
-      end
+      option_parser.separator('')
+      option_parser.separator('Annotate model options:')
+      option_parser.separator(' ' * 4 + 'Usage: annotaterb models [options]')
+      option_parser.separator('')
+
+      # option_parser.on('-m',
+      #                  '--models',
+      #                  "Annotate ActiveRecord models") do
+      #   @options[:models] = true
+      #   @options[:command] = Commands::AnnotateModels.new
+      # end
 
       option_parser.on('-a',
                        '--active-admin',
@@ -172,12 +227,17 @@ module AnnotateRb
     end
 
     def add_route_options_to_parser(option_parser)
-      option_parser.on('-r',
-                       '--routes',
-                       "Annotate routes.rb with the output of 'rails routes'") do
-        @options[:routes] = true
-        @options[:command] = Commands::AnnotateRoutes.new
-      end
+      option_parser.separator('')
+      option_parser.separator('Annotate routes options:')
+      option_parser.separator(' ' * 4 + 'Usage: annotaterb routes [options]')
+      option_parser.separator('')
+
+      # option_parser.on('-r',
+      #                  '--routes',
+      #                  "Annotate routes.rb with the output of 'rails routes'") do
+      #   @options[:routes] = true
+      #   @options[:command] = Commands::AnnotateRoutes.new
+      # end
 
       option_parser.on('--ignore-routes REGEX',
                        "don't annotate routes that match a given REGEX (i.e., `annotate -I '(mobile|resque|pghero)'`") do |regex|
@@ -254,6 +314,11 @@ module AnnotateRb
     end
 
     def add_options_to_parser(option_parser) # rubocop:disable Metrics/MethodLength
+      option_parser.separator('')
+      option_parser.separator('Command options:')
+      option_parser.separator('Additional options that work for annotating models and routes')
+      option_parser.separator('')
+
       option_parser.on('--additional-file-patterns path1,path2,path3',
                        Array,
                        "Additional file paths or globs to annotate, separated by commas (e.g. `/foo/bar/%model_name%/*.rb,/baz/%model_name%.rb`)") do |additional_file_patterns|

@@ -3,6 +3,40 @@ module AnnotateRb # rubocop:disable Metrics/ModuleLength
     subject(:result) { described_class.parse(args, existing_options) }
     let(:existing_options) { {} }
 
+    describe 'commands' do
+      describe 'models' do
+        let(:args) { ['models'] }
+
+        it 'sets the command option' do
+          expect(result).to include(command: instance_of(Commands::AnnotateModels))
+        end
+      end
+
+      describe 'routes' do
+        let(:args) { ['routes'] }
+
+        it 'sets the command option' do
+          expect(result).to include(command: instance_of(Commands::AnnotateRoutes))
+        end
+      end
+
+      describe 'help' do
+        let(:args) { ['help'] }
+
+        it 'sets the command option' do
+          expect(result).to include(command: instance_of(Commands::PrintHelp))
+        end
+      end
+
+      describe 'version' do
+        let(:args) { ['version'] }
+
+        it 'sets the command option' do
+          expect(result).to include(command: instance_of(Commands::PrintVersion))
+        end
+      end
+    end
+
     context 'when given empty args' do
       let(:args) { [] }
 
@@ -183,26 +217,6 @@ module AnnotateRb # rubocop:disable Metrics/ModuleLength
 
         it 'sets the wrapper close value' do
           expect(result).to include(:wrapper_close => wrapper_text)
-        end
-      end
-    end
-
-    %w[-r --routes].each do |option|
-      describe option do
-        let(:args) { [option] }
-
-        it 'sets routes to true' do
-          expect(result).to include(routes: true)
-        end
-      end
-    end
-
-    %w[-m --models].each do |option|
-      describe option do
-        let(:args) { [option] }
-
-        it 'sets models to true' do
-          expect(result).to include(models: true)
         end
       end
     end
