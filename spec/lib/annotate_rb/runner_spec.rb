@@ -21,6 +21,14 @@ RSpec.describe AnnotateRb::Runner do
         expect($stdout.string).to include(AnnotateRb::Parser::BANNER_STRING)
       end
     end
+
+    describe 'help' do
+      it 'shows help text' do
+        runner.run(['help'])
+
+        expect($stdout.string).to include(AnnotateRb::Parser::BANNER_STRING)
+      end
+    end
   end
 
   describe 'version option' do
@@ -33,10 +41,20 @@ RSpec.describe AnnotateRb::Runner do
         expect($stdout.string).to include(version_string)
       end
     end
+
+    describe 'version' do
+      it 'shows version text' do
+        runner.run(['version'])
+
+        version_string = AnnotateRb::Core.version
+
+        expect($stdout.string).to include(version_string)
+      end
+    end
   end
 
   describe 'Annotating models' do
-    let(:args) { ['-m'] }
+    let(:args) { ['models'] }
     let(:command_double) { instance_double(AnnotateRb::Commands::AnnotateModels) }
 
     before do
@@ -52,7 +70,7 @@ RSpec.describe AnnotateRb::Runner do
   end
 
   describe 'Annotating routes' do
-    let(:args) { ['-r'] }
+    let(:args) { ['routes'] }
     let(:command_double) { instance_double(AnnotateRb::Commands::AnnotateRoutes) }
 
     before do
