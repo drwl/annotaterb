@@ -129,7 +129,12 @@ module AnnotateRb
       :wrapper_open,
     ].freeze
 
-    PATH_OPTION_KEYS = PATH_OPTIONS.keys.freeze
+    PATH_OPTION_KEYS = [
+      :additional_file_patterns,
+      :model_dir,
+      :require,
+      :root_dir,
+    ].freeze
 
     ALL_OPTION_KEYS = [
       POSITION_OPTION_KEYS, FLAG_OPTION_KEYS, OTHER_OPTION_KEYS, PATH_OPTION_KEYS
