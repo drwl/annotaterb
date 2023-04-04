@@ -111,7 +111,24 @@ module AnnotateRb
       :with_comment,
     ].freeze
 
-    OTHER_OPTION_KEYS = OTHER_OPTIONS.keys.freeze
+    OTHER_OPTION_KEYS = [
+      :active_admin,
+      :command,
+      :debug,
+      :hide_default_column_types,
+      :hide_limit_column_types,
+      :ignore_columns,
+      :ignore_routes,
+      :ignore_unknown_models,
+      :models,
+      :routes,
+      :skip_on_db_migrate,
+      :target_action,
+      :wrapper,
+      :wrapper_close,
+      :wrapper_open,
+    ].freeze
+
     PATH_OPTION_KEYS = PATH_OPTIONS.keys.freeze
 
     ALL_OPTION_KEYS = [
