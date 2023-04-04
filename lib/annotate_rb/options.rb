@@ -90,7 +90,27 @@ module AnnotateRb
       :position_in_routes,
     ].freeze
 
-    FLAG_OPTION_KEYS = FLAG_OPTIONS.keys.freeze
+    FLAG_OPTION_KEYS = [
+      :classified_sort,
+      :exclude_sti_subclasses,
+      :force,
+      :format_markdown,
+      :format_rdoc,
+      :format_yard,
+      :frozen,
+      :ignore_model_sub_dir,
+      :ignore_unknown_models,
+      :include_version,
+      :show_complete_foreign_keys,
+      :show_foreign_keys,
+      :show_indexes,
+      :simple_indexes,
+      :sort,
+      :timestamp,
+      :trace,
+      :with_comment,
+    ].freeze
+
     OTHER_OPTION_KEYS = OTHER_OPTIONS.keys.freeze
     PATH_OPTION_KEYS = PATH_OPTIONS.keys.freeze
 
