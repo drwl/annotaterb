@@ -84,7 +84,12 @@ module AnnotateRb
 
     DEFAULT_OPTIONS = {}.merge(POSITION_OPTIONS, FLAG_OPTIONS, OTHER_OPTIONS, PATH_OPTIONS).freeze
 
-    POSITION_OPTION_KEYS = POSITION_OPTIONS.keys.freeze
+    POSITION_OPTION_KEYS = [
+      :position,
+      :position_in_class,
+      :position_in_routes,
+    ].freeze
+
     FLAG_OPTION_KEYS = FLAG_OPTIONS.keys.freeze
     OTHER_OPTION_KEYS = OTHER_OPTIONS.keys.freeze
     PATH_OPTION_KEYS = PATH_OPTIONS.keys.freeze
