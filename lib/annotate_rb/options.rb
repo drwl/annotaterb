@@ -25,17 +25,17 @@ module AnnotateRb
     }.freeze
 
     FLAG_OPTIONS = {
-      classified_sort: true, # ModelAnnotator
+      classified_sort: true, # ModelAnnotator; Previously defaulted to false in `annotate_models.rake`
       exclude_controllers: true, # Unused
       exclude_factories: false, # Unused
       exclude_fixtures: false, # Unused
       exclude_helpers: true, # Unused
-      exclude_scaffolds: true, # Unused
+      exclude_scaffolds: true, # Unused; Previously defaulted to false in `annotate_models.rake`
       exclude_serializers: false, # Unused
       exclude_sti_subclasses: false, # ModelAnnotator
       exclude_tests: false, # Unused
       force: false, # ModelAnnotator, but should be used by both
-      format_bare: true, # Unused
+      format_bare: true, # Unused; Previously defaulted to false in `annotate_models.rake`
       format_markdown: false, # ModelAnnotator, RouteAnnotator
       format_rdoc: false, # ModelAnnotator
       format_yard: false, # ModelAnnotator
@@ -50,17 +50,20 @@ module AnnotateRb
       sort: false, # ModelAnnotator
       timestamp: false, # RouteAnnotator
       trace: false, # ModelAnnotator, but is part of Core
-      with_comment: true, # ModelAnnotator
+      with_comment: true, # ModelAnnotator; Previously defaulted to false in `annotate_models.rake`
     }.freeze
 
     OTHER_OPTIONS = {
       active_admin: false, # ModelAnnotator
       command: nil, # Core
       debug: false, # Core
-      # ModelAnnotator
+
+      # ModelAnnotator; Previously defaulted to '' in `annotate_models.rake`
       hide_default_column_types: '<%= ::AnnotateRb::ModelAnnotator::SchemaInfo::NO_DEFAULT_COL_TYPES.join(",") %>',
-      # ModelAnnotator
+
+      # ModelAnnotator; Previously defaulted to '' in `annotate_models.rake`
       hide_limit_column_types: '<%= ::AnnotateRb::ModelAnnotator::SchemaInfo::NO_LIMIT_COL_TYPES.join(",") %>',
+
       ignore_columns: nil, # ModelAnnotator
       ignore_routes: nil, # RouteAnnotator
       ignore_unknown_models: false, # ModelAnnotator
