@@ -6,7 +6,8 @@ module AnnotateRb
 
     class << self
       def find_project_root
-        # The user entry point is through `exe/annotaterb` so we should expect to be in the project root
+        # We should expect this method to be called from a Rails project root and returning it
+        # e.g. "/Users/drwl/personal/annotaterb/dummyapp"
         Dir.pwd
       end
 

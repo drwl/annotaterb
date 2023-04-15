@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module AnnotateRb
-  # Raised when a RuboCop configuration file is not found.
+  # Raised when a configuration file is not found.
   class ConfigNotFoundError < StandardError
   end
 
@@ -10,7 +10,11 @@ module AnnotateRb
       def load_config
         config_path = ConfigFinder.find_project_dotfile
 
-        load_yaml_configuration(config_path)
+        if config_path
+          load_yaml_configuration(config_path)
+        else
+          {}
+        end
       end
 
       # Method from Rubocop::ConfigLoader

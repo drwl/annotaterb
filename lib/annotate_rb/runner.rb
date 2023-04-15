@@ -17,9 +17,12 @@ module AnnotateRb
     def run(args)
       _original_args = args.dup
 
+      config_file_options = ConfigLoader.load_config
       parsed_options = Parser.parse(args)
 
-      @options = Options.from(parsed_options, {})
+      options = config_file_options.merge(parsed_options)
+
+      @options = Options.from(options, {})
       AnnotateRb::RakeBootstrapper.call(@options)
 
       if @options[:command]
