@@ -1,5 +1,6 @@
 annotate_lib = File.expand_path(File.dirname(File.dirname(__FILE__)))
 
+# TODO: Remove this instance; Decide what to do with this
 unless AnnotateRb::Env.read('is_cli')
   task :set_annotation_options
   task annotate_routes: :set_annotation_options
