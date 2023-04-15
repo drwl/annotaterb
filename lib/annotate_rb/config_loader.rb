@@ -51,7 +51,7 @@ module AnnotateRb
       # Method from Rubocop::ConfigLoader
       def yaml_safe_load!(yaml_code, filename)
         YAML.safe_load(
-          yaml_code, permitted_classes: [Regexp, Symbol], aliases: true, filename: filename
+          yaml_code, permitted_classes: [Regexp, Symbol], aliases: true, filename: filename, symbolize_names: true
         )
       end
     end
