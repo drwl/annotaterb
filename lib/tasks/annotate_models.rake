@@ -20,10 +20,7 @@ task remove_annotation: :environment do
   require "#{annotate_lib}/annotate/annotate_models"
   require "#{annotate_lib}/annotate/active_record_patch"
 
-  options = {is_rake: true}
-  options[:model_dir] = AnnotateRb::Env.read('model_dir')
-  options[:root_dir] = AnnotateRb::Env.read('root_dir')
-  options[:require] = AnnotateRb::Env.read('require') ? AnnotateRb::Env.read('require').split(',') : []
-  options[:trace] = AnnotateRb::ModelAnnotator::Helper.true?(AnnotateRb::Env.read('trace'))
+  options = { is_rake: true }
+
   AnnotateRb::ModelAnnotator::Annotator.remove_annotations(options)
 end
