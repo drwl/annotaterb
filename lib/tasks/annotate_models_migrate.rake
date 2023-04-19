@@ -24,38 +24,7 @@ migration_tasks.each do |task|
     task_name = Rake.application.top_level_tasks.last # The name of the task that was run, e.g. "db:migrate"
 
     Rake::Task[task_name].enhance do
-      AnnotateRb::Migration.update_annotations
-    end
-  end
-end
-
-module AnnotateRb
-  class Migration
-    @@working = false
-
-    def self.update_annotations
-      unless @@working || AnnotateRb::ModelAnnotator::Helper.skip_on_migration?
-        @@working = true
-
-        self.update_models if AnnotateRb::ModelAnnotator::Helper.include_models?
-        self.update_routes if AnnotateRb::ModelAnnotator::Helper.include_routes?
-      end
-    end
-
-    def self.update_models
-      if Rake::Task.task_defined?("annotate_models")
-        Rake::Task["annotate_models"].invoke
-      elsif Rake::Task.task_defined?("app:annotate_models")
-        Rake::Task["app:annotate_models"].invoke
-      end
-    end
-
-    def self.update_routes
-      if Rake::Task.task_defined?("annotate_routes")
-        Rake::Task["annotate_routes"].invoke
-      elsif Rake::Task.task_defined?("app:annotate_routes")
-        Rake::Task["app:annotate_routes"].invoke
-      end
+      # TODO: Add code to run model migrations
     end
   end
 end
