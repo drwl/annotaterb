@@ -3,5 +3,5 @@
 if Rails.env.development?
   require 'annotate_rb'
 
-  # TODO: Load tasks from lib/tasks/*
+  AnnotateRb::Core.load_rake_tasks
 end

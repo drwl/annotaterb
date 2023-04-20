@@ -3,7 +3,7 @@ require 'annotate_rb'
 module AnnotateRb
   module Generators
     class InstallGenerator < Rails::Generators::Base
-      desc 'Copy annotaterb rakefiles for automatic annotation of models and routes'
+      desc 'Copy annotaterb rakefiles for automatic annotation of models'
       source_root File.expand_path('templates', __dir__)
 
       def copy_tasks
