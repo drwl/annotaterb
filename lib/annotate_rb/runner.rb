@@ -2,9 +2,6 @@
 
 module AnnotateRb
   class Runner
-    MODEL_MAPPING = %w(models).to_set
-    ROUTE_MAPPING = %w(routes).to_set
-
     class << self
       def run(args)
         new.run(args)
@@ -16,29 +13,22 @@ module AnnotateRb
     end
 
     def run(args)
-      # From args, let's parse the args
-      # Decide what to run from there
-      # Want to only run 1 command at a time here, either annotate models or routes
-
       _original_args = args.dup
 
-      command = args.shift
-      @options = parse_options(args)
+      config_file_options = ConfigLoader.load_config
+      parsed_options = Parser.parse(args)
 
-      case command
-      when MODEL_MAPPING
-        puts "Model mapping"
-        @options
-      when ROUTE_MAPPING
-        puts "Route mapping"
+      options = config_file_options.merge(parsed_options)
+
+      @options = Options.from(options, {})
+      AnnotateRb::RakeBootstrapper.call(@options)
+
+      if @options[:command]
+        @options[:command].call(@options)
       else
-        puts "Invalid arguments, got: #{args}"
-        return CLI::STATUS_ERROR
+        # TODO
+        raise "Didn't specify a command"
       end
-    end
-
-    def parse_options(args)
-      Parser.parse(args)
     end
   end
 end

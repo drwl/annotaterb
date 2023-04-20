@@ -11,9 +11,9 @@ module AnnotateRb
         def call(options)
           model_files = []
 
-          model_files = list_model_files_from_argument(options) unless options[:is_rake]
+          model_files = list_model_files_from_argument(options) if !options[:is_rake]
 
-          return model_files unless model_files.empty?
+          return model_files if !model_files.empty?
 
           options[:model_dir].each do |dir|
             Dir.chdir(dir) do

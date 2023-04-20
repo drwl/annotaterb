@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe AnnotateRb::Runner do
-  subject(:runner) { described_class }
+  subject(:runner) { described_class.new }
 
   before do
     $stdout = StringIO.new
@@ -13,31 +13,75 @@ RSpec.describe AnnotateRb::Runner do
     $stderr = STDERR
   end
 
+  describe 'help option' do
+    describe '-h/-?/--help' do
+      it 'shows help text' do
+        runner.run(['-h'])
+
+        expect($stdout.string).to include(AnnotateRb::Parser::BANNER_STRING)
+      end
+    end
+
+    describe 'help' do
+      it 'shows help text' do
+        runner.run(['help'])
+
+        expect($stdout.string).to include(AnnotateRb::Parser::BANNER_STRING)
+      end
+    end
+  end
+
+  describe 'version option' do
+    describe '-v/--version' do
+      it 'shows version text' do
+        runner.run(['-v'])
+
+        version_string = AnnotateRb::Core.version
+
+        expect($stdout.string).to include(version_string)
+      end
+    end
+
+    describe 'version' do
+      it 'shows version text' do
+        runner.run(['version'])
+
+        version_string = AnnotateRb::Core.version
+
+        expect($stdout.string).to include(version_string)
+      end
+    end
+  end
+
   describe 'Annotating models' do
     let(:args) { ['models'] }
+    let(:command_double) { instance_double(AnnotateRb::Commands::AnnotateModels) }
 
-    it 'does stuff' do
+    before do
+      allow(AnnotateRb::Commands::AnnotateModels).to receive(:new).and_return(command_double)
+      allow(command_double).to receive(:call)
+    end
+
+    it 'calls the annotate models command' do
       runner.run(args)
 
-      expected_output = <<~OUTPUT
-        Model mapping
-      OUTPUT
-
-      expect($stdout.string).to eq(expected_output)
+      expect(command_double).to have_received(:call)
     end
   end
 
   describe 'Annotating routes' do
     let(:args) { ['routes'] }
+    let(:command_double) { instance_double(AnnotateRb::Commands::AnnotateRoutes) }
 
-    it 'does stuff' do
+    before do
+      allow(AnnotateRb::Commands::AnnotateRoutes).to receive(:new).and_return(command_double)
+      allow(command_double).to receive(:call)
+    end
+
+    it 'calls the annotate routes command' do
       runner.run(args)
 
-      expected_output = <<~OUTPUT
-        Route mapping
-      OUTPUT
-
-      expect($stdout.string).to eq(expected_output)
+      expect(command_double).to have_received(:call)
     end
   end
 end

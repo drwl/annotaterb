@@ -10,9 +10,7 @@ module AnnotateTestHelpers
   end
 
   def annotate_one_file(options = {})
-    opts = AnnotateRb::OldAnnotate.setup_options(options)
-
-    # pp opts.to_h
+    opts = AnnotateRb::Options.from(options)
 
     AnnotateRb::ModelAnnotator::FileAnnotator.call(@model_file_name, @schema_info, :position_in_class, opts)
   end

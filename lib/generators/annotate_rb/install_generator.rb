@@ -1,13 +1,13 @@
-require 'annotate'
+require 'annotate_rb'
 
-module Annotate
+module AnnotateRb
   module Generators
     class InstallGenerator < Rails::Generators::Base
-      desc 'Copy annotate_models rakefiles for automatic annotation'
+      desc 'Copy annotaterb rakefiles for automatic annotation of models'
       source_root File.expand_path('templates', __dir__)
 
-      # copy rake tasks
       def copy_tasks
+        # Copies the rake task into Rails project's lib/tasks directory
         template 'auto_annotate_models.rake', 'lib/tasks/auto_annotate_models.rake'
       end
     end

@@ -30,8 +30,7 @@ module AnnotateRb
         # to create a comment block containing a line for
         # each column. The line contains the column name,
         # the type (and length), and any optional attributes
-        def generate(klass, header, options = {})
-          # rubocop:disable Metrics/MethodLength
+        def generate(klass, header, options = {}) # rubocop:disable Metrics/MethodLength
           info = "# #{header}\n"
           info << get_schema_header_text(klass, options)
 
@@ -127,6 +126,7 @@ module AnnotateRb
           string.chars.inject(0) { |acc, elem| acc + (elem.bytesize == 3 ? 2 : 1) }
         end
 
+        # TODO: Memoize this since it's called multiple times with the same args
         def columns(klass, options)
           cols = klass.columns
           cols += translated_columns(klass)

@@ -15,75 +15,129 @@ module AnnotateRb
     end
 
     POSITION_OPTIONS = {
-      position: nil,
-      position_in_class: nil,
-      position_in_factory: nil,
-      position_in_fixture: nil,
-      position_in_routes: nil,
-      position_in_serializer: nil,
-      position_in_test: nil,
+      position: nil, # ModelAnnotator, RouteAnnotator
+      position_in_class: nil, # ModelAnnotator
+      position_in_factory: nil, # Unused
+      position_in_fixture: nil, # Unused
+      position_in_routes: nil, # RouteAnnotator
+      position_in_serializer: nil, # Unused
+      position_in_test: nil, # Unused
     }.freeze
 
     FLAG_OPTIONS = {
-      classified_sort: true,
-      exclude_controllers: true,
-      exclude_factories: false,
-      exclude_fixtures: false,
-      exclude_helpers: true,
-      exclude_scaffolds: true,
-      exclude_serializers: false,
-      exclude_sti_subclasses: false,
-      exclude_tests: false,
-      force: false,
-      format_bare: true,
-      format_markdown: false,
-      format_rdoc: false,
-      format_yard: false,
-      frozen: false,
-      ignore_model_sub_dir: false,
-      ignore_unknown_models: false,
-      include_version: false,
-      show_complete_foreign_keys: false,
-      show_foreign_keys: true,
-      show_indexes: true,
-      simple_indexes: false,
-      sort: false,
-      timestamp: false,
-      trace: false,
-      with_comment: true,
+      classified_sort: true, # ModelAnnotator
+      exclude_controllers: true, # Unused
+      exclude_factories: false, # Unused
+      exclude_fixtures: false, # Unused
+      exclude_helpers: true, # Unused
+      exclude_scaffolds: true, # Unused
+      exclude_serializers: false, # Unused
+      exclude_sti_subclasses: false, # ModelAnnotator
+      exclude_tests: false, # Unused
+      force: false, # ModelAnnotator, but should be used by both
+      format_bare: true, # Unused
+      format_markdown: false, # ModelAnnotator, RouteAnnotator
+      format_rdoc: false, # ModelAnnotator
+      format_yard: false, # ModelAnnotator
+      frozen: false, # ModelAnnotator, but should be used by both
+      ignore_model_sub_dir: false, # ModelAnnotator
+      ignore_unknown_models: false, # ModelAnnotator
+      include_version: false, # ModelAnnotator
+      show_complete_foreign_keys: false, # ModelAnnotator
+      show_foreign_keys: true, # ModelAnnotator
+      show_indexes: true, # ModelAnnotator
+      simple_indexes: false, # ModelAnnotator
+      sort: false, # ModelAnnotator
+      timestamp: false, # RouteAnnotator
+      trace: false, # ModelAnnotator, but is part of Core
+      with_comment: true, # ModelAnnotator
     }.freeze
 
     OTHER_OPTIONS = {
-      active_admin: false,
+      active_admin: false, # ModelAnnotator
+      command: nil, # Core
+      debug: false, # Core
+
+      # ModelAnnotator
       hide_default_column_types: '<%= ::AnnotateRb::ModelAnnotator::SchemaInfo::NO_DEFAULT_COL_TYPES.join(",") %>',
+
+      # ModelAnnotator
       hide_limit_column_types: '<%= ::AnnotateRb::ModelAnnotator::SchemaInfo::NO_LIMIT_COL_TYPES.join(",") %>',
-      ignore_columns: nil,
-      ignore_routes: nil,
-      ignore_unknown_models: false,
-      models: true,
-      routes: false,
-      skip_on_db_migrate: false,
-      target_action: :do_annotations, # Possible values: :do_annotations, :remove_annotations
-      wrapper: nil,
-      wrapper_close: nil,
-      wrapper_open: nil,
+
+      ignore_columns: nil, # ModelAnnotator
+      ignore_routes: nil, # RouteAnnotator
+      ignore_unknown_models: false, # ModelAnnotator
+      models: true, # Core
+      routes: false, # Core
+      skip_on_db_migrate: false, # Core
+      target_action: :do_annotations, # Core; Possible values: :do_annotations, :remove_annotations
+      wrapper: nil, # ModelAnnotator, RouteAnnotator
+      wrapper_close: nil, # ModelAnnotator, RouteAnnotator
+      wrapper_open: nil, # ModelAnnotator, RouteAnnotator
     }.freeze
 
     PATH_OPTIONS = {
-      additional_file_patterns: [],
-      model_dir: ['app/models'],
-      require: [],
-      root_dir: [''], # Old model Annotate code depends on it being empty when not provided another value
+      additional_file_patterns: [], # ModelAnnotator
+      model_dir: ['app/models'], # ModelAnnotator
+      require: [], # Core
+      root_dir: [''], # Core; Old model Annotate code depends on it being empty when not provided another value
       # `root_dir` can also be a string but should get converted into an array with that string as the sole element when
       # that happens.
     }.freeze
 
     DEFAULT_OPTIONS = {}.merge(POSITION_OPTIONS, FLAG_OPTIONS, OTHER_OPTIONS, PATH_OPTIONS).freeze
 
-    POSITION_OPTION_KEYS = POSITION_OPTIONS.keys.freeze
-    FLAG_OPTION_KEYS = FLAG_OPTIONS.keys.freeze
-    OTHER_OPTION_KEYS = OTHER_OPTIONS.keys.freeze
-    PATH_OPTION_KEYS = PATH_OPTIONS.keys.freeze
+    POSITION_OPTION_KEYS = [
+      :position,
+      :position_in_class,
+      :position_in_routes,
+    ].freeze
+
+    FLAG_OPTION_KEYS = [
+      :classified_sort,
+      :exclude_sti_subclasses,
+      :force,
+      :format_markdown,
+      :format_rdoc,
+      :format_yard,
+      :frozen,
+      :ignore_model_sub_dir,
+      :ignore_unknown_models,
+      :include_version,
+      :show_complete_foreign_keys,
+      :show_foreign_keys,
+      :show_indexes,
+      :simple_indexes,
+      :sort,
+      :timestamp,
+      :trace,
+      :with_comment,
+    ].freeze
+
+    OTHER_OPTION_KEYS = [
+      :active_admin,
+      :command,
+      :debug,
+      :hide_default_column_types,
+      :hide_limit_column_types,
+      :ignore_columns,
+      :ignore_routes,
+      :ignore_unknown_models,
+      :models,
+      :routes,
+      :skip_on_db_migrate,
+      :target_action,
+      :wrapper,
+      :wrapper_close,
+      :wrapper_open,
+    ].freeze
+
+    PATH_OPTION_KEYS = [
+      :additional_file_patterns,
+      :model_dir,
+      :require,
+      :root_dir,
+    ].freeze
 
     ALL_OPTION_KEYS = [
       POSITION_OPTION_KEYS, FLAG_OPTION_KEYS, OTHER_OPTION_KEYS, PATH_OPTION_KEYS
