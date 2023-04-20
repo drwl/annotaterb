@@ -11,14 +11,16 @@ module AnnotateRb
           $stderr.puts e.message
           exit e.status_code
         end
-        require 'rake'
 
+        require 'rake'
         load './Rakefile' if File.exist?('./Rakefile')
+
         begin
           Rake::Task[:environment].invoke
         rescue
           nil
         end
+
         unless defined?(Rails)
           # Not in a Rails project, so time to load up the parts of
           # ActiveSupport we need.
@@ -26,12 +28,6 @@ module AnnotateRb
           require 'active_support/core_ext/class/subclasses'
           require 'active_support/core_ext/string/inflections'
         end
-
-        # TODO: See if we need this or it can be removed
-        # AnnotateRb::RakeTaskLoader.call(options)
-
-        # TODO: See if we need this or it can be removed
-        # Rake::Task[:set_annotation_options].invoke
       end
     end
   end
