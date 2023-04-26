@@ -51,7 +51,7 @@ group :development do
 For Rails projects, model files can get automatically annotated after migration tasks. To do this, run the following command:
 
 ```sh
-$ bin/rails g annotaterb:install
+$ bin/rails g annotate_rb:install
 ```
 
 This will copy a rake task into your Rails project's `lib/tasks` directory that will hook into the Rails project rake tasks, automatically running AnnotateRb after database migration rake tasks.
