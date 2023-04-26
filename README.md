@@ -3,6 +3,7 @@
 
 ----------
 [![CI](https://github.com/drwl/annotaterb/actions/workflows/ci.yml/badge.svg)](https://github.com/drwl/annotaterb/actions/workflows/ci.yml)
+[![Gem Version](https://badge.fury.io/rb/annotaterb.svg)](https://badge.fury.io/rb/annotaterb)
 
 Adds comments summarizing the model schema or routes in your:
 
