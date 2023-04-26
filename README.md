@@ -68,6 +68,81 @@ AnnotateRb has a CLI that you can use to add or remove annotations.
 ```sh
 # To show the CLI options
 $ bundle exec annotaterb 
+
+Usage: annotaterb [command] [options]
+
+Commands:
+    models [options]
+    routes [options]
+    help
+    version
+
+Options:
+    -v, --version                    Display the version..
+    -h, --help                       You're looking at it.
+
+Annotate model options:
+    Usage: annotaterb models [options]
+
+    -a, --active-admin               Annotate active_admin models
+        --show-migration             Include the migration version number in the annotation
+    -k, --show-foreign-keys          List the table's foreign key constraints in the annotation
+        --ck, --complete-foreign-keys
+                                     Complete foreign key names in the annotation
+    -i, --show-indexes               List the table's database indexes in the annotation
+    -s, --simple-indexes             Concat the column's related indexes in the annotation
+        --hide-limit-column-types VALUES
+                                     don't show limit for given column types, separated by commas (i.e., `integer,boolean,text`)
+        --hide-default-column-types VALUES
+                                     don't show default for given column types, separated by commas (i.e., `json,jsonb,hstore`)
+        --ignore-unknown-models      don't display warnings for bad model files
+    -I, --ignore-columns REGEX       don't annotate columns that match a given REGEX (i.e., `annotate -I '^(id|updated_at|created_at)'`
+        --with-comment               include database comments in model annotations
+
+Annotate routes options:
+    Usage: annotaterb routes [options]
+
+        --ignore-routes REGEX        don't annotate routes that match a given REGEX (i.e., `annotate -I '(mobile|resque|pghero)'`
+        --timestamp                  Include timestamp in (routes) annotation
+        --w, --wrapper STR           Wrap annotation with the text passed as parameter.
+                                     If --w option is used, the same text will be used as opening and closing
+        --wo, --wrapper-open STR     Annotation wrapper opening.
+        --wc, --wrapper-close STR    Annotation wrapper closing
+
+Command options:
+Additional options that work for annotating models and routes
+
+        --additional-file-patterns path1,path2,path3
+                                     Additional file paths or globs to annotate, separated by commas (e.g. `/foo/bar/%model_name%/*.rb,/baz/%model_name%.rb`)
+    -d, --delete                     Remove annotations from all model files or the routes.rb file
+        --model-dir dir              Annotate model files stored in dir rather than app/models, separate multiple dirs with commas
+        --root-dir dir               Annotate files stored within root dir projects, separate multiple dirs with commas
+        --ignore-model-subdirects    Ignore subdirectories of the models directory
+        --sort                       Sort columns alphabetically, rather than in creation order
+        --classified-sort            Sort columns alphabetically, but first goes id, then the rest columns, then the timestamp columns and then the association columns
+    -R, --require path               Additional file to require before loading models, may be used multiple times
+    -e [tests,fixtures,factories,serializers],
+        --exclude                    Do not annotate fixtures, test files, factories, and/or serializers
+    -f [bare|rdoc|yard|markdown],    Render Schema Information as plain/RDoc/Yard/Markdown
+        --format
+    -p [before|top|after|bottom],    Place the annotations at the top (before) or the bottom (after) of the model/test/fixture/factory/route/serializer file(s)
+        --position
+        --pc, --position-in-class [before|top|after|bottom]
+                                     Place the annotations at the top (before) or the bottom (after) of the model file
+        --pf, --position-in-factory [before|top|after|bottom]
+                                     Place the annotations at the top (before) or the bottom (after) of any factory files
+        --px, --position-in-fixture [before|top|after|bottom]
+                                     Place the annotations at the top (before) or the bottom (after) of any fixture files
+        --pt, --position-in-test [before|top|after|bottom]
+                                     Place the annotations at the top (before) or the bottom (after) of any test files
+        --pr, --position-in-routes [before|top|after|bottom]
+                                     Place the annotations at the top (before) or the bottom (after) of the routes.rb file
+        --ps, --position-in-serializer [before|top|after|bottom]
+                                     Place the annotations at the top (before) or the bottom (after) of the serializer files
+        --force                      Force new annotations even if there are no changes.
+        --debug                      Prints the options and outputs messages to make it easier to debug.
+        --frozen                     Do not allow to change annotations. Exits non-zero if there are going to be changes to files.
+        --trace                      If unable to annotate a file, print the full stack trace, not just the exception message.
 ```
 
 ## Configuration
