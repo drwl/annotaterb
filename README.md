@@ -58,8 +58,8 @@ $ bin/rails g annotate_rb:install
 This will copy a rake task into your Rails project's `lib/tasks` directory that will hook into the Rails project rake tasks, automatically running AnnotateRb after database migration rake tasks.
 
 ## Migrating from the annotate gem
+The old [annotate gem](https://github.com/ctran/annotate_models) relied on environment variables and hardcoded values in rake files for configuration. AnnotateRb is different. It reads from an optional configuration yml file and options from the CLI to function.
 
-Add steps for migrating from annotate gem.
 
 ## Usage
 
