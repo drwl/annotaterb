@@ -7,7 +7,7 @@ module AnnotateRb
       source_root File.expand_path('templates', __dir__)
 
       def copy_task
-        copy_file "auto_annotate_models.rake", "lib/tasks/auto_annotate_models.rake"
+        copy_file "annotate_rb.rake", "lib/tasks/annotate_rb.rake"
       end
     end
   end
