@@ -78,7 +78,7 @@ module AnnotateRb
         # TODO: Should raise or alert user that multiple commands were selected but only 1 command will be ran
         @options[:command] = map[@commands.first]
       else # None
-        @options[:command] = nil
+        @options[:command] = map[:help]
       end
     end
 

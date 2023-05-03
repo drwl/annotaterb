@@ -11,8 +11,6 @@ group :development, :test do
 
   gem 'terminal-notifier-guard', require: false
 
-  gem 'overcommit'
-
   platforms :mri, :mingw do
     gem 'pry', require: false
     gem 'pry-byebug', require: false
