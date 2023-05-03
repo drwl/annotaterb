@@ -149,6 +149,16 @@ Additional options that work for annotating models and routes
 
 ## Configuration
 
+### Storing default options
+Previously in the [Annotate](https://github.com/ctran/annotate_models) you could pass options through the CLI or store them as environment variables. Annotaterb removes dependency on the environment variables and instead can read values from a `.annotaterb.yml` file stored in the Rails project root.
+
+```yml
+# .annotaterb.yml
+
+position: after
+```
+
+Annotaterb reads first from the configuration file, if it exists, then merges it with any options passed into the CLI.
 
 ### How to skip annotating a particular model
 If you want to always skip annotations on a particular model, add this string
