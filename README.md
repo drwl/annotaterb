@@ -1,6 +1,8 @@
 ## AnnotateRb
 ### forked from the [Annotate aka AnnotateModels gem](https://github.com/ctran/annotate_models)
 
+A Ruby Gem that adds annotations to your Rails models and route files.
+
 ----------
 [![CI](https://github.com/drwl/annotaterb/actions/workflows/ci.yml/badge.svg)](https://github.com/drwl/annotaterb/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/annotaterb.svg)](https://badge.fury.io/rb/annotaterb)
