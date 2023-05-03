@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    annotaterb (4.0.0)
+    annotaterb (4.0.0.beta.1)
 
 GEM
   remote: https://rubygems.org/
