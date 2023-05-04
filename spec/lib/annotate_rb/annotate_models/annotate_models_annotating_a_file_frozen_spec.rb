@@ -18,7 +18,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
                             mock_column(:name, :string, limit: 50)
                           ])
       @schema_info = AnnotateRb::ModelAnnotator::SchemaInfo.generate(@klass, '== Schema Info')
-      AnnotateRb::ModelAnnotator::Helper.reset_options(AnnotateRb::ModelAnnotator::Constants::ALL_ANNOTATE_OPTIONS)
     end
 
     # TODO: Check out why this test fails due to test pollution

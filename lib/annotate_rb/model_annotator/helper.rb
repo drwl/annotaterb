@@ -24,18 +24,6 @@ module AnnotateRb
           end
         end
 
-        def skip_on_migration?
-          Env.read('ANNOTATE_SKIP_ON_DB_MIGRATE') =~ Constants::TRUE_RE || Env.read('skip_on_db_migrate') =~ Constants::TRUE_RE
-        end
-
-        def include_routes?
-          Env.read('routes') =~ Constants::TRUE_RE
-        end
-
-        def include_models?
-          Env.read('models') =~ Constants::TRUE_RE
-        end
-
         def true?(val)
           val.present? && Constants::TRUE_RE.match?(val)
         end
@@ -43,10 +31,6 @@ module AnnotateRb
         # TODO: Find another implementation that doesn't depend on ActiveSupport
         def fallback(*args)
           args.compact.detect(&:present?)
-        end
-
-        def reset_options(options)
-          options.flatten.each { |key| Env.write(key, nil) }
         end
       end
     end
