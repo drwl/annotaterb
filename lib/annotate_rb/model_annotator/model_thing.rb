@@ -75,6 +75,18 @@ module AnnotateRb
         max_size
       end
 
+      def retrieve_indexes_from_table
+        table_name = @klass.table_name
+        return [] unless table_name
+
+        indexes = @klass.connection.indexes(table_name)
+        return indexes if indexes.any? || !@klass.table_name_prefix
+
+        # Try to search the table without prefix
+        table_name_without_prefix = table_name.to_s.sub(@klass.table_name_prefix, '')
+        @klass.connection.indexes(table_name_without_prefix)
+      end
+
 
       private
 

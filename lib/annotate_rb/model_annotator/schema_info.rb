@@ -98,6 +98,7 @@ module AnnotateRb
         def get_attributes(column, column_type, klass, options)
           attrs = []
 
+          model_thing = ModelThing.new(klass, options)
           column_thing = ColumnThing.new(column, options)
 
           unless column_thing.default.nil? || column_thing.hide_default?
@@ -154,7 +155,7 @@ module AnnotateRb
           # Check if the column has indices and print "indexed" if true
           # If the index includes another column, print it too.
           if options[:simple_indexes] && klass.table_exists? # Check out if this column is indexed
-            table_indices = retrieve_indexes_from_table(klass)
+            table_indices = model_thing.retrieve_indexes_from_table
             indices = table_indices.select { |ind| ind.columns.include? column_thing.name }
             indices&.sort_by(&:name)&.each do |ind|
               next if ind.columns.is_a?(String)
@@ -169,18 +170,6 @@ module AnnotateRb
 
         def schema_default(klass, column)
           Helper.quote(klass.column_defaults[column.name])
-        end
-
-        def retrieve_indexes_from_table(klass)
-          table_name = klass.table_name
-          return [] unless table_name
-
-          indexes = klass.connection.indexes(table_name)
-          return indexes if indexes.any? || !klass.table_name_prefix
-
-          # Try to search the table without prefix
-          table_name_without_prefix = table_name.to_s.sub(klass.table_name_prefix, '')
-          klass.connection.indexes(table_name_without_prefix)
         end
 
         def format_default(col_name, max_size, col_type, bare_type_allowance, attrs)
@@ -207,7 +196,9 @@ module AnnotateRb
                          "#\n# Indexes\n#\n"
                        end
 
-          indexes = retrieve_indexes_from_table(klass)
+          model_thing = ModelThing.new(klass, options)
+
+          indexes = model_thing.retrieve_indexes_from_table
           return '' if indexes.empty?
 
           max_size = indexes.collect { |index| index.name.size }.max + 1
