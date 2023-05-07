@@ -29,11 +29,11 @@ module AnnotateRb
 
           cols = model_thing.columns
           cols.each do |col|
-            column_thing = ColumnThing.new(col, options)
+            column_thing = ColumnThing.new(col, klass, options)
 
             col_type = column_thing.column_type
             # `col_type` gets modified in `get_attributes`. Need to change method so it does not mutate input.
-            attrs = column_thing.get_attributes(col_type, klass)
+            attrs = column_thing.get_attributes(col_type)
             col_name = if model_thing.with_comments? && col.comment
                          "#{col.name}(#{col.comment.gsub(/\n/, '\\n')})"
                        else

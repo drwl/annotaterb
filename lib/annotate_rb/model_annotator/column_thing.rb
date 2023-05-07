@@ -10,21 +10,22 @@ module AnnotateRb
       # Example: show "integer" instead of "integer(4)"
       NO_LIMIT_COL_TYPES = %w[integer bigint boolean].freeze
 
-      def initialize(column, options)
+      def initialize(column, klass, options)
         @column = column
+        @klass = klass
         @options = options
       end
 
       # Get the list of attributes that should be included in the annotation for
       # a given column.
-      def get_attributes(column_type, klass)
+      def get_attributes(column_type)
         # Note: The input `column_type` gets modified in this method call.
         attrs = []
 
-        model_thing = ModelThing.new(klass, @options)
+        model_thing = ModelThing.new(@klass, @options)
 
         unless default.nil? || hide_default?
-          attrs << "default(#{schema_default(klass)})"
+          attrs << "default(#{schema_default(@klass)})"
         end
 
         if unsigned?
@@ -35,13 +36,13 @@ module AnnotateRb
           attrs << 'not null'
         end
 
-        if klass.primary_key
-          if klass.primary_key.is_a?(Array)
-            if klass.primary_key.collect(&:to_sym).include?(name.to_sym)
+        if @klass.primary_key
+          if @klass.primary_key.is_a?(Array)
+            if @klass.primary_key.collect(&:to_sym).include?(name.to_sym)
               attrs << 'primary key'
             end
           else
-            if name.to_sym == klass.primary_key.to_sym
+            if name.to_sym == @klass.primary_key.to_sym
               attrs << 'primary key'
             end
           end
@@ -76,7 +77,7 @@ module AnnotateRb
 
         # Check if the column has indices and print "indexed" if true
         # If the index includes another column, print it too.
-        if @options[:simple_indexes] && klass.table_exists? # Check out if this column is indexed
+        if @options[:simple_indexes] && @klass.table_exists? # Check out if this column is indexed
           table_indices = model_thing.retrieve_indexes_from_table
           indices = table_indices.select { |ind| ind.columns.include? name }
           indices&.sort_by(&:name)&.each do |ind|
