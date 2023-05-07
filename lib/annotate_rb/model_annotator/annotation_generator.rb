@@ -33,6 +33,22 @@ module AnnotateRb
           @info << "# #{'-' * (max_size + MD_NAMES_OVERHEAD)} | #{'-' * MD_TYPE_ALLOWANCE} | #{'-' * 27}\n"
         end
 
+        add_column_info(max_size)
+
+        if @options[:show_indexes] && @klass.table_exists?
+          @info << index_info
+        end
+
+        if @options[:show_foreign_keys] && @klass.table_exists?
+          @info << foreign_key_info
+        end
+
+        @info << schema_footer_text
+
+        @info
+      end
+
+      def add_column_info(max_size)
         cols = @model_thing.columns
         cols.each do |col|
           column_thing = ColumnThing.new(col, @klass, @options)
@@ -48,8 +64,8 @@ module AnnotateRb
 
           if @options[:format_rdoc]
             @info << format("# %-#{max_size}.#{max_size}s<tt>%s</tt>",
-                           "*#{col_name}*::",
-                           attrs.unshift(col_type).join(', ')).rstrip + "\n"
+                            "*#{col_name}*::",
+                            attrs.unshift(col_type).join(', ')).rstrip + "\n"
           elsif @options[:format_yard]
             @info << sprintf("# @!attribute #{col_name}") + "\n"
 
@@ -64,27 +80,15 @@ module AnnotateRb
             name_remainder = max_size - col_name.length - Helper.non_ascii_length(col_name)
             type_remainder = (MD_TYPE_ALLOWANCE - 2) - col_type.length
             @info << format("# **`%s`**%#{name_remainder}s | `%s`%#{type_remainder}s | `%s`",
-                           col_name,
-                           ' ',
-                           col_type,
-                           ' ',
-                           attrs.join(', ').rstrip).gsub('``', '  ').rstrip + "\n"
+                            col_name,
+                            ' ',
+                            col_type,
+                            ' ',
+                            attrs.join(', ').rstrip).gsub('``', '  ').rstrip + "\n"
           else
             @info << format_default(col_name, max_size, col_type, attrs)
           end
         end
-
-        if @options[:show_indexes] && @klass.table_exists?
-          @info << index_info
-        end
-
-        if @options[:show_foreign_keys] && @klass.table_exists?
-          @info << foreign_key_info
-        end
-
-        @info << schema_footer_text
-
-        @info
       end
 
       def index_info
