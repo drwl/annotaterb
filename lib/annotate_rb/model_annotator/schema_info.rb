@@ -90,8 +90,6 @@ module AnnotateRb
 
         private
 
-
-
         def with_comments?(klass, options)
           model_thing = ModelThing.new(klass, options)
 
