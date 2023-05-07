@@ -30,7 +30,8 @@ module AnnotateRb
         # to create a comment block containing a line for
         # each column. The line contains the column name,
         # the type (and length), and any optional attributes
-        def generate(klass, header, options = {}) # rubocop:disable Metrics/MethodLength
+        def generate(klass, header, options = {})
+          # rubocop:disable Metrics/MethodLength
           model_thing = ModelThing.new(klass, options)
           generator = AnnotationGenerator.new(klass, header, options)
 
@@ -103,10 +104,22 @@ module AnnotateRb
         # a given column.
         def get_attributes(column, column_type, klass, options)
           attrs = []
-          attrs << "default(#{schema_default(klass, column)})" unless column.default.nil? || hide_default?(column_type, options)
-          attrs << 'unsigned' if column.respond_to?(:unsigned?) && column.unsigned?
-          attrs << 'not null' unless column.null
-          attrs << 'primary key' if klass.primary_key && (klass.primary_key.is_a?(Array) ? klass.primary_key.collect(&:to_sym).include?(column.name.to_sym) : column.name.to_sym == klass.primary_key.to_sym)
+
+          unless column.default.nil? || hide_default?(column_type, options)
+            attrs << "default(#{schema_default(klass, column)})"
+          end
+
+          if column.respond_to?(:unsigned?) && column.unsigned?
+            attrs << 'unsigned'
+          end
+
+          unless column.null
+            attrs << 'not null'
+          end
+
+          if klass.primary_key && (klass.primary_key.is_a?(Array) ? klass.primary_key.collect(&:to_sym).include?(column.name.to_sym) : column.name.to_sym == klass.primary_key.to_sym)
+            attrs << 'primary key'
+          end
 
           if column_type == 'decimal'
             column_type << "(#{column.precision}, #{column.scale})"
