@@ -51,7 +51,7 @@ module AnnotateRb
 
           cols = model_thing.columns
           cols.each do |col|
-            col_type = get_col_type(col)
+            col_type = Helper.get_col_type(col)
             attrs = get_attributes(col, col_type, klass, options)
             col_name = if with_comments?(klass, options) && col.comment
                          "#{col.name}(#{col.comment.gsub(/\n/, '\\n')})"
@@ -68,7 +68,7 @@ module AnnotateRb
               ruby_class = col.respond_to?(:array) && col.array ? "Array<#{Helper.map_col_type_to_ruby_classes(col_type)}>" : Helper.map_col_type_to_ruby_classes(col_type)
               info << sprintf("#   @return [#{ruby_class}]") + "\n"
             elsif options[:format_markdown]
-              name_remainder = max_size - col_name.length - non_ascii_length(col_name)
+              name_remainder = max_size - col_name.length - Helper.non_ascii_length(col_name)
               type_remainder = (md_type_allowance - 2) - col_type.length
               info << format("# **`%s`**%#{name_remainder}s | `%s`%#{type_remainder}s | `%s`",
                              col_name,
@@ -96,14 +96,6 @@ module AnnotateRb
           options[:with_comment] &&
             model_thing.raw_columns.first.respond_to?(:comment) &&
             model_thing.raw_columns.map(&:comment).any? { |comment| !comment.nil? }
-        end
-
-        def get_col_type(col)
-          if (col.respond_to?(:bigint?) && col.bigint?) || /\Abigint\b/ =~ col.sql_type
-            'bigint'
-          else
-            (col.type || col.sql_type).to_s
-          end
         end
 
         # Get the list of attributes that should be included in the annotation for
@@ -189,10 +181,6 @@ module AnnotateRb
           # Try to search the table without prefix
           table_name_without_prefix = table_name.to_s.sub(klass.table_name_prefix, '')
           klass.connection.indexes(table_name_without_prefix)
-        end
-
-        def non_ascii_length(string)
-          string.to_s.chars.reject(&:ascii_only?).length
         end
 
         def format_default(col_name, max_size, col_type, bare_type_allowance, attrs)
