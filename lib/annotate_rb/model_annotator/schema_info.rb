@@ -136,13 +136,17 @@ module AnnotateRb
               if column.limit.is_a? Array
                 attrs << "(#{column.limit.join(', ')})"
               else
-                column_type << "(#{column.limit})" unless hide_limit?(column_type, options)
+                unless hide_limit?(column_type, options)
+                  column_type << "(#{column.limit})"
+                end
               end
             end
           end
 
           # Check out if we got an array column
-          attrs << 'is an Array' if column.respond_to?(:array) && column.array
+          if column.respond_to?(:array) && column.array
+            attrs << 'is an Array'
+          end
 
           # Check out if we got a geometric column
           # and print the type and SRID
