@@ -5,6 +5,8 @@ module AnnotateRb
       PREFIX = '== Schema Information'.freeze
       PREFIX_MD = '## Schema Information'.freeze
 
+      END_MARK = '== Schema Information End'.freeze
+
       def initialize(klass, header, options)
         @klass = klass
         @header = header
@@ -37,6 +39,17 @@ module AnnotateRb
         info << "#\n" # We want the last line break
 
         info.join("\n")
+      end
+
+      def schema_footer_text
+        info = ''
+        if @options[:format_rdoc]
+          info << "#--\n"
+          info << "# #{END_MARK}\n"
+          info << "#++\n"
+        else
+          info << "#\n"
+        end
       end
     end
   end

@@ -16,8 +16,6 @@ module AnnotateRb
         }
       }.freeze
 
-      END_MARK = '== Schema Information End'.freeze
-
       class << self
         # Use the column information in an ActiveRecord class
         # to create a comment block containing a line for
@@ -81,7 +79,7 @@ module AnnotateRb
 
           info << get_foreign_key_info(klass, options) if options[:show_foreign_keys] && klass.table_exists?
 
-          info << get_schema_footer_text(klass, options)
+          info << generator.schema_footer_text
         end
 
         private
@@ -307,17 +305,6 @@ module AnnotateRb
           end
 
           fk_info
-        end
-
-        def get_schema_footer_text(_klass, options = {})
-          info = ''
-          if options[:format_rdoc]
-            info << "#--\n"
-            info << "# #{END_MARK}\n"
-            info << "#++\n"
-          else
-            info << "#\n"
-          end
         end
       end
     end
