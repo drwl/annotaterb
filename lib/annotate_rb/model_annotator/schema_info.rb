@@ -1,10 +1,6 @@
 module AnnotateRb
   module ModelAnnotator
     module SchemaInfo # rubocop:disable Metrics/ModuleLength
-      # Don't show limit (#) on these column types
-      # Example: show "integer" instead of "integer(4)"
-      NO_LIMIT_COL_TYPES = %w[integer bigint boolean].freeze
-
       INDEX_CLAUSES = {
         unique: {
           default: 'UNIQUE',
@@ -108,35 +104,35 @@ module AnnotateRb
             attrs << "default(#{schema_default(klass, column)})"
           end
 
-          if column.respond_to?(:unsigned?) && column.unsigned?
+          if column_thing.unsigned?
             attrs << 'unsigned'
           end
 
-          unless column.null
+          if !column_thing.null
             attrs << 'not null'
           end
 
           if klass.primary_key
             if klass.primary_key.is_a?(Array)
-              if klass.primary_key.collect(&:to_sym).include?(column.name.to_sym)
+              if klass.primary_key.collect(&:to_sym).include?(column_thing.name.to_sym)
                 attrs << 'primary key'
               end
             else
-              if column.name.to_sym == klass.primary_key.to_sym
+              if column_thing.name.to_sym == klass.primary_key.to_sym
                 attrs << 'primary key'
               end
             end
           end
 
-          if column_type == 'decimal'
-            column_type << "(#{column.precision}, #{column.scale})"
-          elsif !%w[spatial geometry geography].include?(column_type)
-            if column.limit && !options[:format_yard]
-              if column.limit.is_a? Array
-                attrs << "(#{column.limit.join(', ')})"
+          if column_thing.column_type == 'decimal'
+            column_type << "(#{column_thing.precision}, #{column_thing.scale})"
+          elsif !%w[spatial geometry geography].include?(column_thing.column_type)
+            if column_thing.limit && !options[:format_yard]
+              if column_thing.limit.is_a? Array
+                attrs << "(#{column_thing.limit.join(', ')})"
               else
-                unless hide_limit?(column_type, options)
-                  column_type << "(#{column.limit})"
+                unless column_thing.hide_limit?
+                  column_type << "(#{column_thing.limit})"
                 end
               end
             end
@@ -172,17 +168,6 @@ module AnnotateRb
 
         def schema_default(klass, column)
           Helper.quote(klass.column_defaults[column.name])
-        end
-
-        def hide_limit?(col_type, options)
-          excludes =
-            if options[:hide_limit_column_types].blank?
-              NO_LIMIT_COL_TYPES
-            else
-              options[:hide_limit_column_types].split(',')
-            end
-
-          excludes.include?(col_type)
         end
 
         def retrieve_indexes_from_table(klass)
