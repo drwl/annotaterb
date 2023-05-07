@@ -19,6 +19,21 @@ module AnnotateRb
           end
         end
 
+        # Simple quoting for the default column value
+        def quote(value)
+          case value
+          when NilClass then 'NULL'
+          when TrueClass then 'TRUE'
+          when FalseClass then 'FALSE'
+          when Float, Integer then value.to_s
+          # BigDecimals need to be output in a non-normalized form and quoted.
+          when BigDecimal then value.to_s('F')
+          when Array then value.map { |v| quote(v) }
+          else
+            value.inspect
+          end
+        end
+
         def width(string)
           string.chars.inject(0) { |acc, elem| acc + (elem.bytesize == 3 ? 2 : 1) }
         end

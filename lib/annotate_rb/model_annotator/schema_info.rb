@@ -154,22 +154,7 @@ module AnnotateRb
         end
 
         def schema_default(klass, column)
-          quote(klass.column_defaults[column.name])
-        end
-
-        # Simple quoting for the default column value
-        def quote(value)
-          case value
-          when NilClass then 'NULL'
-          when TrueClass then 'TRUE'
-          when FalseClass then 'FALSE'
-          when Float, Integer then value.to_s
-          # BigDecimals need to be output in a non-normalized form and quoted.
-          when BigDecimal then value.to_s('F')
-          when Array then value.map { |v| quote(v) }
-          else
-            value.inspect
-          end
+          Helper.quote(klass.column_defaults[column.name])
         end
 
         def hide_default?(col_type, options)
