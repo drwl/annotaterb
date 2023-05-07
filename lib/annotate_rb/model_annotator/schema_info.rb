@@ -31,7 +31,7 @@ module AnnotateRb
         # each column. The line contains the column name,
         # the type (and length), and any optional attributes
         def generate(klass, header, options = {}) # rubocop:disable Metrics/MethodLength
-          model_thing = ModelThing.new(klass)
+          model_thing = ModelThing.new(klass, options)
 
           info = "# #{header}\n"
           info << get_schema_header_text(model_thing, options)
@@ -49,7 +49,7 @@ module AnnotateRb
             info << "# #{'-' * (max_size + md_names_overhead)} | #{'-' * md_type_allowance} | #{'-' * 27}\n"
           end
 
-          cols = columns(klass, options)
+          cols = model_thing.columns
           cols.each do |col|
             col_type = get_col_type(col)
             attrs = get_attributes(col, col_type, klass, options)
@@ -105,7 +105,8 @@ module AnnotateRb
         # Calculates the max width of the schema for the model by looking at the columns, schema comments, with respect
         # to the options.
         def max_schema_info_width(klass, options)
-          cols = columns(klass, options)
+          model_thing = ModelThing.new(klass, options)
+          cols = model_thing.columns
 
           if with_comments?(klass, options)
             max_size = cols.map do |column|
@@ -128,48 +129,6 @@ module AnnotateRb
 
         def width(string)
           string.chars.inject(0) { |acc, elem| acc + (elem.bytesize == 3 ? 2 : 1) }
-        end
-
-        # TODO: Memoize this since it's called multiple times with the same args
-        # Gets the columns of the ActiveRecord model, processes them, and then returns them.
-        def columns(klass, options)
-          model_thing = ModelThing.new(klass)
-          cols = model_thing.raw_columns
-          cols += model_thing.translated_columns
-
-          ignore_columns = options[:ignore_columns]
-          if ignore_columns
-            cols = cols.reject do |col|
-              col.name.match(/#{ignore_columns}/)
-            end
-          end
-
-          cols = cols.sort_by(&:name) if options[:sort]
-          cols = classified_sort(cols) if options[:classified_sort]
-
-          cols
-        end
-
-        def classified_sort(cols)
-          rest_cols = []
-          timestamps = []
-          associations = []
-          id = nil
-
-          cols.each do |c|
-            if c.name.eql?('id')
-              id = c
-            elsif c.name.eql?('created_at') || c.name.eql?('updated_at')
-              timestamps << c
-            elsif c.name[-3, 3].eql?('_id')
-              associations << c
-            else
-              rest_cols << c
-            end
-          end
-          [rest_cols, timestamps, associations].each { |a| a.sort_by!(&:name) }
-
-          ([id] << rest_cols << timestamps << associations).flatten.compact
         end
 
         def get_col_type(col)
