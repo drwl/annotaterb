@@ -29,9 +29,11 @@ module AnnotateRb
 
           cols = model_thing.columns
           cols.each do |col|
-            col_type = Helper.get_col_type(col)
+            column_thing = ColumnThing.new(col, options)
+
+            col_type = column_thing.column_type
             # `col_type` gets modified in `get_attributes`. Need to change method so it does not mutate input.
-            attrs = get_attributes(col, col_type, klass, options)
+            attrs = column_thing.get_attributes(col_type, klass)
             col_name = if model_thing.with_comments? && col.comment
                          "#{col.name}(#{col.comment.gsub(/\n/, '\\n')})"
                        else
@@ -78,85 +80,6 @@ module AnnotateRb
         end
 
         private
-
-        # Get the list of attributes that should be included in the annotation for
-        # a given column.
-        def get_attributes(column, column_type, klass, options)
-          attrs = []
-
-          model_thing = ModelThing.new(klass, options)
-          column_thing = ColumnThing.new(column, options)
-
-          unless column_thing.default.nil? || column_thing.hide_default?
-            attrs << "default(#{schema_default(klass, column_thing)})"
-          end
-
-          if column_thing.unsigned?
-            attrs << 'unsigned'
-          end
-
-          if !column_thing.null
-            attrs << 'not null'
-          end
-
-          if klass.primary_key
-            if klass.primary_key.is_a?(Array)
-              if klass.primary_key.collect(&:to_sym).include?(column_thing.name.to_sym)
-                attrs << 'primary key'
-              end
-            else
-              if column_thing.name.to_sym == klass.primary_key.to_sym
-                attrs << 'primary key'
-              end
-            end
-          end
-
-          if column_thing.column_type == 'decimal'
-            column_type << "(#{column_thing.precision}, #{column_thing.scale})"
-          elsif !%w[spatial geometry geography].include?(column_thing.column_type)
-            if column_thing.limit && !options[:format_yard]
-              if column_thing.limit.is_a? Array
-                attrs << "(#{column_thing.limit.join(', ')})"
-              else
-                unless column_thing.hide_limit?
-                  column_type << "(#{column_thing.limit})"
-                end
-              end
-            end
-          end
-
-          # Check out if we got an array column
-          if column_thing.array?
-            attrs << 'is an Array'
-          end
-
-          # Check out if we got a geometric column
-          # and print the type and SRID
-          if column_thing.geometry_type?
-            attrs << "#{column_thing.geometry_type}, #{column_thing.srid}"
-          elsif column_thing.geometric_type? && column_thing.geometric_type.present?
-            attrs << "#{column_thing.geometric_type.to_s.downcase}, #{column_thing.srid}"
-          end
-
-          # Check if the column has indices and print "indexed" if true
-          # If the index includes another column, print it too.
-          if options[:simple_indexes] && klass.table_exists? # Check out if this column is indexed
-            table_indices = model_thing.retrieve_indexes_from_table
-            indices = table_indices.select { |ind| ind.columns.include? column_thing.name }
-            indices&.sort_by(&:name)&.each do |ind|
-              next if ind.columns.is_a?(String)
-
-              ind = ind.columns.reject! { |i| i == column_thing.name }
-              attrs << (ind.empty? ? 'indexed' : "indexed => [#{ind.join(', ')}]")
-            end
-          end
-
-          attrs
-        end
-
-        def schema_default(klass, column)
-          Helper.quote(klass.column_defaults[column.name])
-        end
 
         def format_default(col_name, max_size, col_type, bare_type_allowance, attrs)
           format('#  %s:%s %s',

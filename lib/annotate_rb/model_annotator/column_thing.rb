@@ -15,6 +15,85 @@ module AnnotateRb
         @options = options
       end
 
+      # Get the list of attributes that should be included in the annotation for
+      # a given column.
+      def get_attributes(column_type, klass)
+        # Note: The input `column_type` gets modified in this method call.
+        attrs = []
+
+        model_thing = ModelThing.new(klass, @options)
+
+        unless default.nil? || hide_default?
+          attrs << "default(#{schema_default(klass)})"
+        end
+
+        if unsigned?
+          attrs << 'unsigned'
+        end
+
+        if !null
+          attrs << 'not null'
+        end
+
+        if klass.primary_key
+          if klass.primary_key.is_a?(Array)
+            if klass.primary_key.collect(&:to_sym).include?(name.to_sym)
+              attrs << 'primary key'
+            end
+          else
+            if name.to_sym == klass.primary_key.to_sym
+              attrs << 'primary key'
+            end
+          end
+        end
+
+        if column_type == 'decimal'
+          column_type << "(#{precision}, #{scale})"
+        elsif !%w[spatial geometry geography].include?(column_type)
+          if limit && !@options[:format_yard]
+            if limit.is_a? Array
+              attrs << "(#{limit.join(', ')})"
+            else
+              unless hide_limit?
+                column_type << "(#{limit})"
+              end
+            end
+          end
+        end
+
+        # Check out if we got an array column
+        if array?
+          attrs << 'is an Array'
+        end
+
+        # Check out if we got a geometric column
+        # and print the type and SRID
+        if geometry_type?
+          attrs << "#{geometry_type}, #{srid}"
+        elsif geometric_type? && geometric_type.present?
+          attrs << "#{geometric_type.to_s.downcase}, #{srid}"
+        end
+
+        # Check if the column has indices and print "indexed" if true
+        # If the index includes another column, print it too.
+        if @options[:simple_indexes] && klass.table_exists? # Check out if this column is indexed
+          table_indices = model_thing.retrieve_indexes_from_table
+          indices = table_indices.select { |ind| ind.columns.include? name }
+          indices&.sort_by(&:name)&.each do |ind|
+            next if ind.columns.is_a?(String)
+
+            ind = ind.columns.reject! { |i| i == name }
+            attrs << (ind.empty? ? 'indexed' : "indexed => [#{ind.join(', ')}]")
+          end
+        end
+
+        attrs
+      end
+
+      def schema_default(klass)
+        Helper.quote(klass.column_defaults[name])
+      end
+
       def default
         @column.default
       end
