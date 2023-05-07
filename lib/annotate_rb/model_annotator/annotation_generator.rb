@@ -75,11 +75,11 @@ module AnnotateRb
         end
 
         if @options[:show_indexes] && @klass.table_exists?
-          @info << get_index_info
+          @info << index_info
         end
 
         if @options[:show_foreign_keys] && @klass.table_exists?
-          @info << get_foreign_key_info
+          @info << foreign_key_info
         end
 
         @info << schema_footer_text
@@ -87,7 +87,7 @@ module AnnotateRb
         @info
       end
 
-      def get_index_info
+      def index_info
         index_info = if @options[:format_markdown]
                        "#\n# ### Indexes\n#\n"
                      else
@@ -181,7 +181,7 @@ module AnnotateRb
         end
       end
 
-      def get_foreign_key_info
+      def foreign_key_info
         fk_info = if @options[:format_markdown]
                     "#\n# ### Foreign Keys\n#\n"
                   else
