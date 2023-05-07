@@ -34,7 +34,7 @@ module AnnotateRb
           model_thing = ModelThing.new(klass, options)
 
           info = "# #{header}\n"
-          info << get_schema_header_text(model_thing, options)
+          info << model_thing.get_schema_header_text
 
           max_size = model_thing.max_schema_info_width
           md_names_overhead = 6
@@ -90,17 +90,7 @@ module AnnotateRb
 
         private
 
-        def get_schema_header_text(klass, options = {})
-          info = "#\n"
-          if options[:format_markdown]
-            info << "# Table name: `#{klass.table_name}`\n"
-            info << "#\n"
-            info << "# ### Columns\n"
-          else
-            info << "# Table name: #{klass.table_name}\n"
-          end
-          info << "#\n"
-        end
+
 
         def with_comments?(klass, options)
           model_thing = ModelThing.new(klass, options)

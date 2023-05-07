@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module AnnotateRb
   module ModelAnnotator
     # TODO: Change name
@@ -73,6 +71,19 @@ module AnnotateRb
         max_size += @options[:format_rdoc] ? 5 : 1
 
         max_size
+      end
+
+      def get_schema_header_text
+        info = "#\n"
+
+        if @options[:format_markdown]
+          info << "# Table name: `#{table_name}`\n"
+          info << "#\n"
+          info << "# ### Columns\n"
+        else
+          info << "# Table name: #{table_name}\n"
+        end
+        info << "#\n"
       end
 
       private
