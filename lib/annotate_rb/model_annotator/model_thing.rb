@@ -1,0 +1,106 @@
+# frozen_string_literal: true
+
+module AnnotateRb
+  module ModelAnnotator
+    # TODO: Change name
+    class ModelThing
+      # Should be the wrapper for an ActiveRecord model that serves as the source of truth of the model
+      # of the model that we're annotating
+
+      def initialize(klass, options = {})
+        @klass = klass
+        @options = options
+      end
+
+      # Gets the columns of the ActiveRecord model, processes them, and then returns them.
+      def columns
+        @columns ||= begin
+                       cols = raw_columns
+                       cols += translated_columns
+
+                       ignore_columns = @options[:ignore_columns]
+                       if ignore_columns
+                         cols = cols.reject do |col|
+                           col.name.match(/#{ignore_columns}/)
+                         end
+                       end
+
+                       cols = cols.sort_by(&:name) if @options[:sort]
+                       cols = classified_sort(cols) if @options[:classified_sort]
+
+                       cols
+                     end
+      end
+
+      # Returns the unmodified model columns
+      def raw_columns
+        @raw_columns ||= @klass.columns
+      end
+
+      # Add columns managed by the globalize gem if this gem is being used.
+      # TODO: Audit if this is still needed, it seems like Globalize gem is no longer maintained
+      def translated_columns
+        return [] unless @klass.respond_to?(:translation_class)
+
+        ignored_cols = ignored_translation_table_columns
+
+        @klass.translation_class.columns.reject do |col|
+          ignored_cols.include? col.name.to_sym
+        end
+      end
+
+      def table_name
+        @klass.table_name
+      end
+
+      def model_name
+        @klass.name.underscore
+      end
+
+      private
+
+      def classified_sort(cols)
+        rest_cols = []
+        timestamps = []
+        associations = []
+        id = nil
+
+        cols.each do |c|
+          if c.name.eql?('id')
+            id = c
+          elsif c.name.eql?('created_at') || c.name.eql?('updated_at')
+            timestamps << c
+          elsif c.name[-3, 3].eql?('_id')
+            associations << c
+          else
+            rest_cols << c
+          end
+        end
+        [rest_cols, timestamps, associations].each { |a| a.sort_by!(&:name) }
+
+        ([id] << rest_cols << timestamps << associations).flatten.compact
+      end
+
+      # These are the columns that the globalize gem needs to work but
+      # are not necessary for the models to be displayed as annotations.
+      def ignored_translation_table_columns
+        # Construct the foreign column name in the translations table
+        # eg. Model: Car, foreign column name: car_id
+        foreign_column_name = [
+          @klass.translation_class.to_s
+               .gsub('::Translation', '').gsub('::', '_')
+               .downcase,
+          '_id'
+        ].join.to_sym
+
+        [
+          :id,
+          :created_at,
+          :updated_at,
+          :locale,
+          foreign_column_name
+        ]
+      end
+    end
+  end
+end
