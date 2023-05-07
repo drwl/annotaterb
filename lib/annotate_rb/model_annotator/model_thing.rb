@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AnnotateRb
   module ModelAnnotator
     # TODO: Change name
@@ -74,16 +76,19 @@ module AnnotateRb
       end
 
       def get_schema_header_text
-        info = "#\n"
+        info = []
+        info << "#"
 
         if @options[:format_markdown]
-          info << "# Table name: `#{table_name}`\n"
-          info << "#\n"
-          info << "# ### Columns\n"
+          info << "# Table name: `#{table_name}`"
+          info << "#"
+          info << "# ### Columns"
         else
-          info << "# Table name: #{table_name}\n"
+          info << "# Table name: #{table_name}"
         end
-        info << "#\n"
+        info << "#\n" # We want the last line break
+
+        info.join("\n")
       end
 
       private
