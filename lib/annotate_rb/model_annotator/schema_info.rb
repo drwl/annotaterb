@@ -44,7 +44,13 @@ module AnnotateRb
                              attrs.unshift(col_type).join(', ')).rstrip + "\n"
             elsif options[:format_yard]
               info << sprintf("# @!attribute #{col_name}") + "\n"
-              ruby_class = col.respond_to?(:array) && col.array ? "Array<#{Helper.map_col_type_to_ruby_classes(col_type)}>" : Helper.map_col_type_to_ruby_classes(col_type)
+
+              if col.respond_to?(:array) && col.array
+                ruby_class = "Array<#{Helper.map_col_type_to_ruby_classes(col_type)}>"
+              else
+                ruby_class = Helper.map_col_type_to_ruby_classes(col_type)
+              end
+
               info << sprintf("#   @return [#{ruby_class}]") + "\n"
             elsif options[:format_markdown]
               name_remainder = max_size - col_name.length - Helper.non_ascii_length(col_name)
@@ -60,9 +66,13 @@ module AnnotateRb
             end
           end
 
-          info << get_index_info(klass, options) if options[:show_indexes] && klass.table_exists?
+          if options[:show_indexes] && klass.table_exists?
+            info << get_index_info(klass, options)
+          end
 
-          info << get_foreign_key_info(klass, options) if options[:show_foreign_keys] && klass.table_exists?
+          if options[:show_foreign_keys] && klass.table_exists?
+            info << get_foreign_key_info(klass, options)
+          end
 
           info << generator.schema_footer_text
         end
