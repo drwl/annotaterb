@@ -36,7 +36,7 @@ module AnnotateRb
           info = "# #{header}\n"
           info << get_schema_header_text(model_thing, options)
 
-          max_size = max_schema_info_width(klass, options)
+          max_size = model_thing.max_schema_info_width
           md_names_overhead = 6
           md_type_allowance = 18
           bare_type_allowance = 16
@@ -102,33 +102,12 @@ module AnnotateRb
           info << "#\n"
         end
 
-        # Calculates the max width of the schema for the model by looking at the columns, schema comments, with respect
-        # to the options.
-        def max_schema_info_width(klass, options)
-          model_thing = ModelThing.new(klass, options)
-          cols = model_thing.columns
-
-          if with_comments?(klass, options)
-            max_size = cols.map do |column|
-              column.name.size + (column.comment ? Helper.width(column.comment) : 0)
-            end.max || 0
-            max_size += 2
-          else
-            max_size = cols.map(&:name).map(&:size).max
-          end
-          max_size += options[:format_rdoc] ? 5 : 1
-
-          max_size
-        end
-
         def with_comments?(klass, options)
-          options[:with_comment] &&
-            klass.columns.first.respond_to?(:comment) &&
-            klass.columns.map(&:comment).any? { |comment| !comment.nil? }
-        end
+          model_thing = ModelThing.new(klass, options)
 
-        def width(string)
-          string.chars.inject(0) { |acc, elem| acc + (elem.bytesize == 3 ? 2 : 1) }
+          options[:with_comment] &&
+            model_thing.raw_columns.first.respond_to?(:comment) &&
+            model_thing.raw_columns.map(&:comment).any? { |comment| !comment.nil? }
         end
 
         def get_col_type(col)

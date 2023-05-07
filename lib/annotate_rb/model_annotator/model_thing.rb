@@ -57,7 +57,31 @@ module AnnotateRb
         @klass.name.underscore
       end
 
+      # Calculates the max width of the schema for the model by looking at the columns, schema comments, with respect
+      # to the options.
+      def max_schema_info_width
+        cols = columns
+
+        if with_comments?
+          max_size = cols.map do |column|
+            column.name.size + (column.comment ? Helper.width(column.comment) : 0)
+          end.max || 0
+          max_size += 2
+        else
+          max_size = cols.map(&:name).map(&:size).max
+        end
+        max_size += @options[:format_rdoc] ? 5 : 1
+
+        max_size
+      end
+
       private
+
+      def with_comments?
+        @options[:with_comment] &&
+          raw_columns.first.respond_to?(:comment) &&
+          raw_columns.map(&:comment).any? { |comment| !comment.nil? }
+      end
 
       def classified_sort(cols)
         rest_cols = []
