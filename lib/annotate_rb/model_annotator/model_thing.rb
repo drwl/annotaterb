@@ -87,9 +87,6 @@ module AnnotateRb
         @klass.connection.indexes(table_name_without_prefix)
       end
 
-
-      private
-
       def with_comments?
         @options[:with_comment] &&
           raw_columns.first.respond_to?(:comment) &&

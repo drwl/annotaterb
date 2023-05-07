@@ -47,8 +47,9 @@ module AnnotateRb
           cols = model_thing.columns
           cols.each do |col|
             col_type = Helper.get_col_type(col)
+            # `col_type` gets modified in `get_attributes`. Need to change method so it does not mutate input.
             attrs = get_attributes(col, col_type, klass, options)
-            col_name = if with_comments?(klass, options) && col.comment
+            col_name = if model_thing.with_comments? && col.comment
                          "#{col.name}(#{col.comment.gsub(/\n/, '\\n')})"
                        else
                          col.name
@@ -84,14 +85,6 @@ module AnnotateRb
         end
 
         private
-
-        def with_comments?(klass, options)
-          model_thing = ModelThing.new(klass, options)
-
-          options[:with_comment] &&
-            model_thing.raw_columns.first.respond_to?(:comment) &&
-            model_thing.raw_columns.map(&:comment).any? { |comment| !comment.nil? }
-        end
 
         # Get the list of attributes that should be included in the annotation for
         # a given column.
