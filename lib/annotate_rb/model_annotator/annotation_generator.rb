@@ -7,6 +7,10 @@ module AnnotateRb
 
       END_MARK = '== Schema Information End'.freeze
 
+      MD_NAMES_OVERHEAD = 6
+      MD_TYPE_ALLOWANCE = 18
+      BARE_TYPE_ALLOWANCE = 16
+
       def initialize(klass, header, options)
         @klass = klass
         @header = header
@@ -20,16 +24,13 @@ module AnnotateRb
         @info << schema_header_text
 
         max_size = @model_thing.max_schema_info_width
-        md_names_overhead = 6
-        md_type_allowance = 18
-        bare_type_allowance = 16
 
         if @options[:format_markdown]
-          @info << format("# %-#{max_size + md_names_overhead}.#{max_size + md_names_overhead}s | %-#{md_type_allowance}.#{md_type_allowance}s | %s\n",
+          @info << format("# %-#{max_size + MD_NAMES_OVERHEAD}.#{max_size + MD_NAMES_OVERHEAD}s | %-#{MD_TYPE_ALLOWANCE}.#{MD_TYPE_ALLOWANCE}s | %s\n",
                          'Name',
                          'Type',
                          'Attributes')
-          @info << "# #{'-' * (max_size + md_names_overhead)} | #{'-' * md_type_allowance} | #{'-' * 27}\n"
+          @info << "# #{'-' * (max_size + MD_NAMES_OVERHEAD)} | #{'-' * MD_TYPE_ALLOWANCE} | #{'-' * 27}\n"
         end
 
         cols = @model_thing.columns
@@ -61,7 +62,7 @@ module AnnotateRb
             @info << sprintf("#   @return [#{ruby_class}]") + "\n"
           elsif @options[:format_markdown]
             name_remainder = max_size - col_name.length - Helper.non_ascii_length(col_name)
-            type_remainder = (md_type_allowance - 2) - col_type.length
+            type_remainder = (MD_TYPE_ALLOWANCE - 2) - col_type.length
             @info << format("# **`%s`**%#{name_remainder}s | `%s`%#{type_remainder}s | `%s`",
                            col_name,
                            ' ',
@@ -69,7 +70,7 @@ module AnnotateRb
                            ' ',
                            attrs.join(', ').rstrip).gsub('``', '  ').rstrip + "\n"
           else
-            @info << format_default(col_name, max_size, col_type, bare_type_allowance, attrs)
+            @info << format_default(col_name, max_size, col_type, attrs)
           end
         end
 
@@ -223,10 +224,10 @@ module AnnotateRb
         fk_info
       end
 
-      def format_default(col_name, max_size, col_type, bare_type_allowance, attrs)
+      def format_default(col_name, max_size, col_type, attrs)
         format('#  %s:%s %s',
                Helper.mb_chars_ljust(col_name, max_size),
-               Helper.mb_chars_ljust(col_type, bare_type_allowance),
+               Helper.mb_chars_ljust(col_type, BARE_TYPE_ALLOWANCE),
                attrs.join(', ')).rstrip + "\n"
       end
     end
