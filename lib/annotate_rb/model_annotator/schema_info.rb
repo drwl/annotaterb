@@ -110,7 +110,7 @@ module AnnotateRb
 
           if with_comments?(klass, options)
             max_size = cols.map do |column|
-              column.name.size + (column.comment ? width(column.comment) : 0)
+              column.name.size + (column.comment ? Helper.width(column.comment) : 0)
             end.max || 0
             max_size += 2
           else
@@ -265,7 +265,7 @@ module AnnotateRb
 
         def mb_chars_ljust(string, length)
           string = string.to_s
-          padding = length - width(string)
+          padding = length - Helper.width(string)
           if padding.positive?
             string + (' ' * padding)
           else

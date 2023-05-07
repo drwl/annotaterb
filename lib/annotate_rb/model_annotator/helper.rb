@@ -6,6 +6,10 @@ module AnnotateRb
       MATCHED_TYPES = %w(test fixture factory serializer scaffold controller helper).freeze
 
       class << self
+        def width(string)
+          string.chars.inject(0) { |acc, elem| acc + (elem.bytesize == 3 ? 2 : 1) }
+        end
+
         def matched_types(options)
           types = MATCHED_TYPES.dup
           types << 'admin' if options[:active_admin] =~ Constants::TRUE_RE && !types.include?('admin')
