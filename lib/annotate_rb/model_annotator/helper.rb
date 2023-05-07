@@ -6,6 +6,19 @@ module AnnotateRb
       MATCHED_TYPES = %w(test fixture factory serializer scaffold controller helper).freeze
 
       class << self
+        def map_col_type_to_ruby_classes(col_type)
+          case col_type
+          when 'integer' then Integer.to_s
+          when 'float' then Float.to_s
+          when 'decimal' then BigDecimal.to_s
+          when 'datetime', 'timestamp', 'time' then Time.to_s
+          when 'date' then Date.to_s
+          when 'text', 'string', 'binary', 'inet', 'uuid' then String.to_s
+          when 'json', 'jsonb' then Hash.to_s
+          when 'boolean' then 'Boolean'
+          end
+        end
+
         def width(string)
           string.chars.inject(0) { |acc, elem| acc + (elem.bytesize == 3 ? 2 : 1) }
         end

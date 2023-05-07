@@ -65,7 +65,7 @@ module AnnotateRb
                              attrs.unshift(col_type).join(', ')).rstrip + "\n"
             elsif options[:format_yard]
               info << sprintf("# @!attribute #{col_name}") + "\n"
-              ruby_class = col.respond_to?(:array) && col.array ? "Array<#{map_col_type_to_ruby_classes(col_type)}>" : map_col_type_to_ruby_classes(col_type)
+              ruby_class = col.respond_to?(:array) && col.array ? "Array<#{Helper.map_col_type_to_ruby_classes(col_type)}>" : Helper.map_col_type_to_ruby_classes(col_type)
               info << sprintf("#   @return [#{ruby_class}]") + "\n"
             elsif options[:format_markdown]
               name_remainder = max_size - col_name.length - non_ascii_length(col_name)
@@ -204,19 +204,6 @@ module AnnotateRb
           # Try to search the table without prefix
           table_name_without_prefix = table_name.to_s.sub(klass.table_name_prefix, '')
           klass.connection.indexes(table_name_without_prefix)
-        end
-
-        def map_col_type_to_ruby_classes(col_type)
-          case col_type
-          when 'integer' then Integer.to_s
-          when 'float' then Float.to_s
-          when 'decimal' then BigDecimal.to_s
-          when 'datetime', 'timestamp', 'time' then Time.to_s
-          when 'date' then Date.to_s
-          when 'text', 'string', 'binary', 'inet', 'uuid' then String.to_s
-          when 'json', 'jsonb' then Hash.to_s
-          when 'boolean' then 'Boolean'
-          end
         end
 
         def non_ascii_length(string)
