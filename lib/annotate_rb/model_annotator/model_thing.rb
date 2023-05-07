@@ -75,21 +75,6 @@ module AnnotateRb
         max_size
       end
 
-      def get_schema_header_text
-        info = []
-        info << "#"
-
-        if @options[:format_markdown]
-          info << "# Table name: `#{table_name}`"
-          info << "#"
-          info << "# ### Columns"
-        else
-          info << "# Table name: #{table_name}"
-        end
-        info << "#\n" # We want the last line break
-
-        info.join("\n")
-      end
 
       private
 

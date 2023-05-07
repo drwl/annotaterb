@@ -32,9 +32,10 @@ module AnnotateRb
         # the type (and length), and any optional attributes
         def generate(klass, header, options = {}) # rubocop:disable Metrics/MethodLength
           model_thing = ModelThing.new(klass, options)
+          generator = AnnotationGenerator.new(klass, header, options)
 
-          info = "# #{header}\n"
-          info << model_thing.get_schema_header_text
+          info = "# #{generator.header}\n"
+          info << generator.schema_header_text
 
           max_size = model_thing.max_schema_info_width
           md_names_overhead = 6
