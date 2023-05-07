@@ -31,8 +31,10 @@ module AnnotateRb
         # each column. The line contains the column name,
         # the type (and length), and any optional attributes
         def generate(klass, header, options = {}) # rubocop:disable Metrics/MethodLength
+          model_thing = ModelThing.new(klass)
+
           info = "# #{header}\n"
-          info << get_schema_header_text(klass, options)
+          info << get_schema_header_text(model_thing, options)
 
           max_size = max_schema_info_width(klass, options)
           md_names_overhead = 6
@@ -100,6 +102,8 @@ module AnnotateRb
           info << "#\n"
         end
 
+        # Calculates the max width of the schema for the model by looking at the columns, schema comments, with respect
+        # to the options.
         def max_schema_info_width(klass, options)
           cols = columns(klass, options)
 
@@ -127,9 +131,11 @@ module AnnotateRb
         end
 
         # TODO: Memoize this since it's called multiple times with the same args
+        # Gets the columns of the ActiveRecord model, processes them, and then returns them.
         def columns(klass, options)
-          cols = klass.columns
-          cols += translated_columns(klass)
+          model_thing = ModelThing.new(klass)
+          cols = model_thing.raw_columns
+          cols += model_thing.translated_columns
 
           ignore_columns = options[:ignore_columns]
           if ignore_columns
@@ -142,37 +148,6 @@ module AnnotateRb
           cols = classified_sort(cols) if options[:classified_sort]
 
           cols
-        end
-
-        # Add columns managed by the globalize gem if this gem is being used.
-        def translated_columns(klass)
-          return [] unless klass.respond_to? :translation_class
-
-          ignored_cols = ignored_translation_table_colums(klass)
-          klass.translation_class.columns.reject do |col|
-            ignored_cols.include? col.name.to_sym
-          end
-        end
-
-        # These are the columns that the globalize gem needs to work but
-        # are not necessary for the models to be displayed as annotations.
-        def ignored_translation_table_colums(klass)
-          # Construct the foreign column name in the translations table
-          # eg. Model: Car, foreign column name: car_id
-          foreign_column_name = [
-            klass.translation_class.to_s
-                 .gsub('::Translation', '').gsub('::', '_')
-                 .downcase,
-            '_id'
-          ].join.to_sym
-
-          [
-            :id,
-            :created_at,
-            :updated_at,
-            :locale,
-            foreign_column_name
-          ]
         end
 
         def classified_sort(cols)
