@@ -5,7 +5,44 @@ module AnnotateRb
     module Helper
       MATCHED_TYPES = %w(test fixture factory serializer scaffold controller helper).freeze
 
+      INDEX_CLAUSES = {
+        unique: {
+          default: 'UNIQUE',
+          markdown: '_unique_'
+        },
+        where: {
+          default: 'WHERE',
+          markdown: '_where_'
+        },
+        using: {
+          default: 'USING',
+          markdown: '_using_'
+        }
+      }.freeze
+
       class << self
+        def index_unique_info(index, format = :default)
+          index.unique ? " #{INDEX_CLAUSES[:unique][format]}" : ''
+        end
+
+        def index_where_info(index, format = :default)
+          value = index.try(:where).try(:to_s)
+          if value.blank?
+            ''
+          else
+            " #{INDEX_CLAUSES[:where][format]} #{value}"
+          end
+        end
+
+        def index_using_info(index, format = :default)
+          value = index.try(:using) && index.using.try(:to_sym)
+          if !value.blank? && value != :btree
+            " #{INDEX_CLAUSES[:using][format]} #{value}"
+          else
+            ''
+          end
+        end
+
         def map_col_type_to_ruby_classes(col_type)
           case col_type
           when 'integer' then Integer.to_s
