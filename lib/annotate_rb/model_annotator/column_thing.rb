@@ -47,6 +47,33 @@ module AnnotateRb
         @column.null
       end
 
+      def geometry_type?
+        @column.respond_to?(:geometry_type)
+      end
+
+      def geometry_type
+        # TODO: Check if we need to check if it responds before accessing the geometry type
+        @column.geometry_type
+      end
+
+      def geometric_type?
+        @column.respond_to?(:geometric_type)
+      end
+
+      def geometric_type
+        # TODO: Check if we need to check if it responds before accessing the geometric type
+        @column.geometric_type
+      end
+
+      def srid
+        # TODO: Check if we need to check if it responds before accessing the srid
+        @column.srid
+      end
+
+      def array?
+        @column.respond_to?(:array) && @column.array
+      end
+
       def hide_limit?
         excludes =
           if @options[:hide_limit_column_types].blank?
