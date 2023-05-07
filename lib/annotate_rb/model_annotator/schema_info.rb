@@ -117,8 +117,16 @@ module AnnotateRb
             attrs << 'not null'
           end
 
-          if klass.primary_key && (klass.primary_key.is_a?(Array) ? klass.primary_key.collect(&:to_sym).include?(column.name.to_sym) : column.name.to_sym == klass.primary_key.to_sym)
-            attrs << 'primary key'
+          if klass.primary_key
+            if klass.primary_key.is_a?(Array)
+              if klass.primary_key.collect(&:to_sym).include?(column.name.to_sym)
+                attrs << 'primary key'
+              end
+            else
+              if column.name.to_sym == klass.primary_key.to_sym
+                attrs << 'primary key'
+              end
+            end
           end
 
           if column_type == 'decimal'
