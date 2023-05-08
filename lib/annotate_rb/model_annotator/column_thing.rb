@@ -43,14 +43,14 @@ module AnnotateRb
         end
 
         if column_type == 'decimal'
-          column_type << "(#{@column.precision}, #{@column.scale})"
+          column_type += "(#{@column.precision}, #{@column.scale})"
         elsif !%w[spatial geometry geography].include?(column_type)
           if @column.limit && !@options[:format_yard]
             if @column.limit.is_a?(Array)
               attrs << "(#{@column.limit.join(', ')})"
             else
               unless hide_limit?
-                column_type << "(#{@column.limit})"
+                column_type += "(#{@column.limit})"
               end
             end
           end
