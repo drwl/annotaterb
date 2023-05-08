@@ -70,14 +70,6 @@ module AnnotateRb
           string.to_s.chars.reject(&:ascii_only?).length
         end
 
-        def get_col_type(col)
-          if (col.respond_to?(:bigint?) && col.bigint?) || /\Abigint\b/ =~ col.sql_type
-            'bigint'
-          else
-            (col.type || col.sql_type).to_s
-          end
-        end
-
         # Simple quoting for the default column value
         def quote(value)
           case value

@@ -158,7 +158,13 @@ module AnnotateRb
       end
 
       def column_type
-        Helper.get_col_type(@column)
+        col = @column
+
+        if (col.respond_to?(:bigint?) && col.bigint?) || /\Abigint\b/ =~ col.sql_type
+          'bigint'
+        else
+          (col.type || col.sql_type).to_s
+        end
       end
 
       def hide_limit?
