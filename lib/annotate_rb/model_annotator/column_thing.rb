@@ -32,8 +32,8 @@ module AnnotateRb
 
       # Get the list of attributes that should be included in the annotation for
       # a given column.
-      def get_attributes(column_type)
-        # Note: The input `column_type` gets modified in this method call.
+      def get_attributes(column_type_input)
+        # Note: The input `column_type_input` gets modified in this method call.
         attrs = []
 
         unless @column_wrapper.default.nil? || hide_default?
@@ -55,15 +55,15 @@ module AnnotateRb
           attrs << 'primary key'
         end
 
-        if column_type == 'decimal'
-          column_type << "(#{precision}, #{scale})"
-        elsif !%w[spatial geometry geography].include?(column_type)
+        if column_type_input == 'decimal'
+          column_type_input << "(#{precision}, #{scale})"
+        elsif !%w[spatial geometry geography].include?(column_type_input)
           if limit && !@options[:format_yard]
             if limit.is_a? Array
               attrs << "(#{limit.join(', ')})"
             else
               unless hide_limit?
-                column_type << "(#{limit})"
+                column_type_input << "(#{limit})"
               end
             end
           end
