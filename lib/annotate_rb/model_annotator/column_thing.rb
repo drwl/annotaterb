@@ -83,7 +83,7 @@ module AnnotateRb
 
         # Check if the column has indices and print "indexed" if true
         # If the index includes another column, print it too.
-        if @options[:simple_indexes] && @model_thing.table_exists? # Check out if this column is indexed
+        if @options[:simple_indexes]
           sorted_column_indices&.each do |index|
             indexed_columns = index.columns.reject { |i| i == name }
 
