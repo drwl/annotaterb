@@ -19,5 +19,6 @@ module AnnotateRb
     autoload :ModelThing, 'annotate_rb/model_annotator/model_thing'
     autoload :AnnotationGenerator, 'annotate_rb/model_annotator/annotation_generator'
     autoload :ColumnThing, 'annotate_rb/model_annotator/column_thing'
+    autoload :ColumnWrapper, 'annotate_rb/model_annotator/column_wrapper'
   end
 end

@@ -10,69 +10,6 @@ module AnnotateRb
       # Example: show "integer" instead of "integer(4)"
       NO_LIMIT_COL_TYPES = %w[integer bigint boolean].freeze
 
-      class ColumnWrapper
-        def initialize(column)
-          @column = column
-        end
-
-        def default
-          # Note: Used to be klass.column_defaults[name], where name is the column name.
-          # Looks to be identical, but keeping note here in case there are differences.
-          _column_default = @column.default
-        end
-
-        def unsigned?
-          @column.respond_to?(:unsigned?) && @column.unsigned?
-        end
-
-        def null
-          @column.null
-        end
-
-        def precision
-          @column.precision
-        end
-
-        def scale
-          @column.scale
-        end
-
-        def limit
-          @column.limit
-        end
-
-        def geometry_type?
-          @column.respond_to?(:geometry_type)
-        end
-
-        def geometry_type
-          # TODO: Check if we need to check if it responds before accessing the geometry type
-          @column.geometry_type
-        end
-
-        def geometric_type?
-          @column.respond_to?(:geometric_type)
-        end
-
-        def geometric_type
-          # TODO: Check if we need to check if it responds before accessing the geometric type
-          @column.geometric_type
-        end
-
-        def srid
-          # TODO: Check if we need to check if it responds before accessing the srid
-          @column.srid
-        end
-
-        def array?
-          @column.respond_to?(:array) && @column.array
-        end
-
-        def name
-          @column.name
-        end
-      end
-
       def initialize(column, options, is_primary_key, column_indices)
         @column = column
         @options = options
