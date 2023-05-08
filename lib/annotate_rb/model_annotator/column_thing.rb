@@ -11,11 +11,10 @@ module AnnotateRb
       NO_LIMIT_COL_TYPES = %w[integer bigint boolean].freeze
 
       def initialize(column, options, is_primary_key, column_indices)
-        @column = column
+        @column = ColumnWrapper.new(column)
         @options = options
         @is_primary_key = is_primary_key
         @column_indices = column_indices
-        @column_wrapper = ColumnWrapper.new(@column)
       end
 
       # Get the list of attributes that should be included in the annotation for
@@ -24,18 +23,17 @@ module AnnotateRb
         # Note: The input `column_type_input` gets modified in this method call.
         attrs = []
 
-        unless @column_wrapper.default.nil? || hide_default?
-          string_default_column_value = Helper.quote(@column_wrapper.default)
-          schema_default = "default(#{string_default_column_value})"
+        unless @column.default.nil? || hide_default?
+          schema_default = "default(#{@column.default_string})"
 
           attrs << schema_default
         end
 
-        if @column_wrapper.unsigned?
+        if @column.unsigned?
           attrs << 'unsigned'
         end
 
-        if !@column_wrapper.null
+        if !@column.null
           attrs << 'not null'
         end
 
@@ -44,37 +42,37 @@ module AnnotateRb
         end
 
         if column_type_input == 'decimal'
-          column_type_input << "(#{@column_wrapper.precision}, #{@column_wrapper.scale})"
+          column_type_input << "(#{@column.precision}, #{@column.scale})"
         elsif !%w[spatial geometry geography].include?(column_type_input)
-          if @column_wrapper.limit && !@options[:format_yard]
-            if @column_wrapper.limit.is_a?(Array)
-              attrs << "(#{@column_wrapper.limit.join(', ')})"
+          if @column.limit && !@options[:format_yard]
+            if @column.limit.is_a?(Array)
+              attrs << "(#{@column.limit.join(', ')})"
             else
               unless hide_limit?
-                column_type_input << "(#{@column_wrapper.limit})"
+                column_type_input << "(#{@column.limit})"
               end
             end
           end
         end
 
         # Check out if we got an array column
-        if @column_wrapper.array?
+        if @column.array?
           attrs << 'is an Array'
         end
 
         # Check out if we got a geometric column
         # and print the type and SRID
-        if @column_wrapper.geometry_type?
-          attrs << "#{@column_wrapper.geometry_type}, #{@column_wrapper.srid}"
-        elsif @column_wrapper.geometric_type? && @column_wrapper.geometric_type.present?
-          attrs << "#{@column_wrapper.geometric_type.to_s.downcase}, #{@column_wrapper.srid}"
+        if @column.geometry_type?
+          attrs << "#{@column.geometry_type}, #{@column.srid}"
+        elsif @column.geometric_type? && @column.geometric_type.present?
+          attrs << "#{@column.geometric_type.to_s.downcase}, #{@column.srid}"
         end
 
         # Check if the column has indices and print "indexed" if true
         # If the index includes another column, print it too.
         if @options[:simple_indexes]
           sorted_column_indices&.each do |index|
-            indexed_columns = index.columns.reject { |i| i == @column_wrapper.name }
+            indexed_columns = index.columns.reject { |i| i == @column.name }
 
             if indexed_columns.empty?
               attrs << 'indexed'
@@ -95,13 +93,7 @@ module AnnotateRb
       end
 
       def column_type
-        col = @column
-
-        if (col.respond_to?(:bigint?) && col.bigint?) || /\Abigint\b/ =~ col.sql_type
-          'bigint'
-        else
-          (col.type || col.sql_type).to_s
-        end
+        @column.column_type_string
       end
 
       def hide_limit?
