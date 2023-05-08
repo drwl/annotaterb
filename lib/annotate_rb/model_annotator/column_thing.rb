@@ -85,8 +85,6 @@ module AnnotateRb
         # If the index includes another column, print it too.
         if @options[:simple_indexes] && @model_thing.table_exists? # Check out if this column is indexed
           sorted_column_indices&.each do |index|
-            next if index.columns.is_a?(String)
-
             indexed_columns = index.columns.reject { |i| i == name }
 
             if indexed_columns.empty?
@@ -106,7 +104,9 @@ module AnnotateRb
         column_indices = table_indices.select { |ind| ind.columns.include? name }
 
         # Not sure why there were & safe accessors here, but keeping in for time being.
-        _sorted_indices = column_indices&.sort_by(&:name)
+        sorted_indices = column_indices&.sort_by(&:name)
+
+        _sorted_indices = sorted_indices.reject { |ind| ind.columns.is_a?(String) }
       end
 
       def model_primary_key
