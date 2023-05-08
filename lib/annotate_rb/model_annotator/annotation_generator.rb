@@ -52,10 +52,12 @@ module AnnotateRb
       def is_column_primary_key?(model_thing, column_name)
         if model_thing.primary_key
           if model_thing.primary_key.is_a?(Array)
+            # If the model has multiple primary keys, check if this column is one of them
             if model_thing.primary_key.collect(&:to_sym).include?(column_name.to_sym)
               return true
             end
           else
+            # If model has 1 primary key, check if this column is it
             if column_name.to_sym == model_thing.primary_key.to_sym
               return true
             end
