@@ -20,6 +20,57 @@ module AnnotateRb
           # Looks to be identical, but keeping note here in case there are differences.
           _column_default = @column.default
         end
+
+        def unsigned?
+          @column.respond_to?(:unsigned?) && @column.unsigned?
+        end
+
+        def null
+          @column.null
+        end
+
+        def precision
+          @column.precision
+        end
+
+        def scale
+          @column.scale
+        end
+
+        def limit
+          @column.limit
+        end
+
+        def geometry_type?
+          @column.respond_to?(:geometry_type)
+        end
+
+        def geometry_type
+          # TODO: Check if we need to check if it responds before accessing the geometry type
+          @column.geometry_type
+        end
+
+        def geometric_type?
+          @column.respond_to?(:geometric_type)
+        end
+
+        def geometric_type
+          # TODO: Check if we need to check if it responds before accessing the geometric type
+          @column.geometric_type
+        end
+
+        def srid
+          # TODO: Check if we need to check if it responds before accessing the srid
+          @column.srid
+        end
+
+        def array?
+          @column.respond_to?(:array) && @column.array
+        end
+
+        def name
+          @column.name
+        end
       end
 
       def initialize(column, options, is_primary_key, column_indices)
@@ -43,11 +94,11 @@ module AnnotateRb
           attrs << schema_default
         end
 
-        if unsigned?
+        if @column_wrapper.unsigned?
           attrs << 'unsigned'
         end
 
-        if !null
+        if !@column_wrapper.null
           attrs << 'not null'
         end
 
@@ -56,37 +107,37 @@ module AnnotateRb
         end
 
         if column_type_input == 'decimal'
-          column_type_input << "(#{precision}, #{scale})"
+          column_type_input << "(#{@column_wrapper.precision}, #{@column_wrapper.scale})"
         elsif !%w[spatial geometry geography].include?(column_type_input)
-          if limit && !@options[:format_yard]
-            if limit.is_a? Array
-              attrs << "(#{limit.join(', ')})"
+          if @column_wrapper.limit && !@options[:format_yard]
+            if @column_wrapper.limit.is_a?(Array)
+              attrs << "(#{@column_wrapper.limit.join(', ')})"
             else
               unless hide_limit?
-                column_type_input << "(#{limit})"
+                column_type_input << "(#{@column_wrapper.limit})"
               end
             end
           end
         end
 
         # Check out if we got an array column
-        if array?
+        if @column_wrapper.array?
           attrs << 'is an Array'
         end
 
         # Check out if we got a geometric column
         # and print the type and SRID
-        if geometry_type?
-          attrs << "#{geometry_type}, #{srid}"
-        elsif geometric_type? && geometric_type.present?
-          attrs << "#{geometric_type.to_s.downcase}, #{srid}"
+        if @column_wrapper.geometry_type?
+          attrs << "#{@column_wrapper.geometry_type}, #{@column_wrapper.srid}"
+        elsif @column_wrapper.geometric_type? && @column_wrapper.geometric_type.present?
+          attrs << "#{@column_wrapper.geometric_type.to_s.downcase}, #{@column_wrapper.srid}"
         end
 
         # Check if the column has indices and print "indexed" if true
         # If the index includes another column, print it too.
         if @options[:simple_indexes]
           sorted_column_indices&.each do |index|
-            indexed_columns = index.columns.reject { |i| i == name }
+            indexed_columns = index.columns.reject { |i| i == @column_wrapper.name }
 
             if indexed_columns.empty?
               attrs << 'indexed'
@@ -108,57 +159,6 @@ module AnnotateRb
 
       def column_type
         Helper.get_col_type(@column)
-      end
-
-      def unsigned?
-        @column.respond_to?(:unsigned?) && @column.unsigned?
-      end
-
-      def precision
-        @column.precision
-      end
-
-      def scale
-        @column.scale
-      end
-
-      def limit
-        @column.limit
-      end
-
-      def name
-        @column.name
-      end
-
-      def null
-        @column.null
-      end
-
-      def geometry_type?
-        @column.respond_to?(:geometry_type)
-      end
-
-      def geometry_type
-        # TODO: Check if we need to check if it responds before accessing the geometry type
-        @column.geometry_type
-      end
-
-      def geometric_type?
-        @column.respond_to?(:geometric_type)
-      end
-
-      def geometric_type
-        # TODO: Check if we need to check if it responds before accessing the geometric type
-        @column.geometric_type
-      end
-
-      def srid
-        # TODO: Check if we need to check if it responds before accessing the srid
-        @column.srid
-      end
-
-      def array?
-        @column.respond_to?(:array) && @column.array
       end
 
       def hide_limit?
