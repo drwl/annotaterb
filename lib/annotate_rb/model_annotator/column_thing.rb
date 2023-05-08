@@ -39,13 +39,13 @@ module AnnotateRb
           attrs << 'not null'
         end
 
-        if @klass.primary_key
-          if @klass.primary_key.is_a?(Array)
-            if @klass.primary_key.collect(&:to_sym).include?(name.to_sym)
+        if model_thing.primary_key
+          if model_thing.primary_key.is_a?(Array)
+            if model_thing.primary_key.collect(&:to_sym).include?(name.to_sym)
               attrs << 'primary key'
             end
           else
-            if name.to_sym == @klass.primary_key.to_sym
+            if name.to_sym == model_thing.primary_key.to_sym
               attrs << 'primary key'
             end
           end
@@ -80,7 +80,7 @@ module AnnotateRb
 
         # Check if the column has indices and print "indexed" if true
         # If the index includes another column, print it too.
-        if @options[:simple_indexes] && @klass.table_exists? # Check out if this column is indexed
+        if @options[:simple_indexes] && model_thing.table_exists? # Check out if this column is indexed
           table_indices = model_thing.retrieve_indexes_from_table
           indices = table_indices.select { |ind| ind.columns.include? name }
           indices&.sort_by(&:name)&.each do |ind|

@@ -37,6 +37,18 @@ module AnnotateRb
         @raw_columns ||= @klass.columns
       end
 
+      def primary_key
+        @klass.primary_key
+      end
+
+      def table_exists?
+        @klass.table_exists?
+      end
+
+      def column_defaults
+        @klass.column_defaults
+      end
+
       # Add columns managed by the globalize gem if this gem is being used.
       # TODO: Audit if this is still needed, it seems like Globalize gem is no longer maintained
       def translated_columns
