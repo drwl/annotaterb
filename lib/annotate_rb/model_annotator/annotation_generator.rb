@@ -76,9 +76,7 @@ module AnnotateRb
 
           column_thing = ColumnThing.new(col, @options, is_primary_key, column_indices)
 
-          col_type = column_thing.column_type
-          # `col_type` gets modified in `get_attributes`. Need to change method so it does not mutate input.
-          attrs = column_thing.get_attributes(col_type)
+          attrs, col_type = column_thing.get_attributes
           col_name = if @model_thing.with_comments? && col.comment
                        "#{col.name}(#{col.comment.gsub(/\n/, '\\n')})"
                      else

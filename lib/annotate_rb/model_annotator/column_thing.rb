@@ -19,7 +19,8 @@ module AnnotateRb
 
       # Get the list of attributes that should be included in the annotation for
       # a given column.
-      def get_attributes(column_type_input)
+      def get_attributes
+        column_type_input = column_type
         # Note: The input `column_type_input` gets modified in this method call.
         attrs = []
 
@@ -82,7 +83,7 @@ module AnnotateRb
           end
         end
 
-        attrs
+        [attrs, column_type_input]
       end
 
       def sorted_column_indices
