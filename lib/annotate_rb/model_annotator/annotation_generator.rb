@@ -21,29 +21,29 @@ module AnnotateRb
 
       def generate
         @info = "# #{header}\n"
-        @info << schema_header_text
+        @info += schema_header_text
 
         max_size = @model_thing.max_schema_info_width
 
         if @options[:format_markdown]
-          @info << format("# %-#{max_size + MD_NAMES_OVERHEAD}.#{max_size + MD_NAMES_OVERHEAD}s | %-#{MD_TYPE_ALLOWANCE}.#{MD_TYPE_ALLOWANCE}s | %s\n",
+          @info += format("# %-#{max_size + MD_NAMES_OVERHEAD}.#{max_size + MD_NAMES_OVERHEAD}s | %-#{MD_TYPE_ALLOWANCE}.#{MD_TYPE_ALLOWANCE}s | %s\n",
                          'Name',
                          'Type',
                          'Attributes')
-          @info << "# #{'-' * (max_size + MD_NAMES_OVERHEAD)} | #{'-' * MD_TYPE_ALLOWANCE} | #{'-' * 27}\n"
+          @info += "# #{'-' * (max_size + MD_NAMES_OVERHEAD)} | #{'-' * MD_TYPE_ALLOWANCE} | #{'-' * 27}\n"
         end
 
         add_column_info(max_size)
 
         if @options[:show_indexes] && @klass.table_exists?
-          @info << index_info
+          @info += index_info
         end
 
         if @options[:show_foreign_keys] && @klass.table_exists?
-          @info << foreign_key_info
+          @info += foreign_key_info
         end
 
-        @info << schema_footer_text
+        @info += schema_footer_text
 
         @info
       end
@@ -84,11 +84,11 @@ module AnnotateRb
                      end
 
           if @options[:format_rdoc]
-            @info << format("# %-#{max_size}.#{max_size}s<tt>%s</tt>",
+            @info += format("# %-#{max_size}.#{max_size}s<tt>%s</tt>",
                             "*#{col_name}*::",
                             attrs.unshift(col_type).join(', ')).rstrip + "\n"
           elsif @options[:format_yard]
-            @info << sprintf("# @!attribute #{col_name}") + "\n"
+            @info += sprintf("# @!attribute #{col_name}") + "\n"
 
             if col.respond_to?(:array) && col.array
               ruby_class = "Array<#{Helper.map_col_type_to_ruby_classes(col_type)}>"
@@ -96,18 +96,18 @@ module AnnotateRb
               ruby_class = Helper.map_col_type_to_ruby_classes(col_type)
             end
 
-            @info << sprintf("#   @return [#{ruby_class}]") + "\n"
+            @info += sprintf("#   @return [#{ruby_class}]") + "\n"
           elsif @options[:format_markdown]
             name_remainder = max_size - col_name.length - Helper.non_ascii_length(col_name)
             type_remainder = (MD_TYPE_ALLOWANCE - 2) - col_type.length
-            @info << format("# **`%s`**%#{name_remainder}s | `%s`%#{type_remainder}s | `%s`",
+            @info += format("# **`%s`**%#{name_remainder}s | `%s`%#{type_remainder}s | `%s`",
                             col_name,
                             ' ',
                             col_type,
                             ' ',
                             attrs.join(', ').rstrip).gsub('``', '  ').rstrip + "\n"
           else
-            @info << format_default(col_name, max_size, col_type, attrs)
+            @info += format_default(col_name, max_size, col_type, attrs)
           end
         end
       end
