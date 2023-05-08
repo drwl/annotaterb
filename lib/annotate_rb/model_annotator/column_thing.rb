@@ -10,11 +10,24 @@ module AnnotateRb
       # Example: show "integer" instead of "integer(4)"
       NO_LIMIT_COL_TYPES = %w[integer bigint boolean].freeze
 
+      class ColumnWrapper
+        def initialize(column)
+          @column = column
+        end
+
+        def default
+          # Note: Used to be klass.column_defaults[name], where name is the column name.
+          # Looks to be identical, but keeping note here in case there are differences.
+          _column_default = @column.default
+        end
+      end
+
       def initialize(column, options, is_primary_key, column_indices)
         @column = column
         @options = options
         @is_primary_key = is_primary_key
         @column_indices = column_indices
+        @column_wrapper = ColumnWrapper.new(@column)
       end
 
       # Get the list of attributes that should be included in the annotation for
@@ -23,12 +36,8 @@ module AnnotateRb
         # Note: The input `column_type` gets modified in this method call.
         attrs = []
 
-        # Note: Used to be klass.column_defaults[name], where name is the column name.
-        # Looks to be identical, but keeping note here in case there are differences.
-        column_default = @column.default
-
-        unless default.nil? || hide_default?
-          string_default_column_value = Helper.quote(column_default)
+        unless @column_wrapper.default.nil? || hide_default?
+          string_default_column_value = Helper.quote(@column_wrapper.default)
           schema_default = "default(#{string_default_column_value})"
 
           attrs << schema_default
@@ -95,10 +104,6 @@ module AnnotateRb
         sorted_indices = @column_indices&.sort_by(&:name)
 
         _sorted_indices = sorted_indices.reject { |ind| ind.columns.is_a?(String) }
-      end
-
-      def default
-        @column.default
       end
 
       def column_type
