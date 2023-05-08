@@ -14,6 +14,7 @@ module AnnotateRb
         @column = column
         @klass = klass
         @options = options
+        @model_thing = ModelThing.new(@klass, @options)
       end
 
       # Get the list of attributes that should be included in the annotation for
@@ -22,10 +23,11 @@ module AnnotateRb
         # Note: The input `column_type` gets modified in this method call.
         attrs = []
 
-        model_thing = ModelThing.new(@klass, @options)
+        # TODO: Check if this is the same as Column#default
+        column_default = @model_thing.column_defaults[name]
 
         unless default.nil? || hide_default?
-          string_default_column_value = Helper.quote(model_thing.column_defaults[name])
+          string_default_column_value = Helper.quote(column_default)
           schema_default = "default(#{string_default_column_value})"
 
           attrs << schema_default
@@ -39,13 +41,13 @@ module AnnotateRb
           attrs << 'not null'
         end
 
-        if model_thing.primary_key
-          if model_thing.primary_key.is_a?(Array)
-            if model_thing.primary_key.collect(&:to_sym).include?(name.to_sym)
+        if model_primary_key
+          if model_primary_key.is_a?(Array)
+            if model_primary_key.collect(&:to_sym).include?(name.to_sym)
               attrs << 'primary key'
             end
           else
-            if name.to_sym == model_thing.primary_key.to_sym
+            if name.to_sym == model_primary_key.to_sym
               attrs << 'primary key'
             end
           end
@@ -80,8 +82,8 @@ module AnnotateRb
 
         # Check if the column has indices and print "indexed" if true
         # If the index includes another column, print it too.
-        if @options[:simple_indexes] && model_thing.table_exists? # Check out if this column is indexed
-          table_indices = model_thing.retrieve_indexes_from_table
+        if @options[:simple_indexes] && @model_thing.table_exists? # Check out if this column is indexed
+          table_indices = @model_thing.retrieve_indexes_from_table
           indices = table_indices.select { |ind| ind.columns.include? name }
           indices&.sort_by(&:name)&.each do |ind|
             next if ind.columns.is_a?(String)
@@ -92,6 +94,10 @@ module AnnotateRb
         end
 
         attrs
+      end
+
+      def model_primary_key
+        @model_thing.primary_key
       end
 
       def default
