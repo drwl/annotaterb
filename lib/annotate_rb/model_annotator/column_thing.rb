@@ -25,7 +25,10 @@ module AnnotateRb
         model_thing = ModelThing.new(@klass, @options)
 
         unless default.nil? || hide_default?
-          attrs << "default(#{schema_default(@klass)})"
+          string_default_column_value = Helper.quote(model_thing.column_defaults[name])
+          schema_default = "default(#{string_default_column_value})"
+
+          attrs << schema_default
         end
 
         if unsigned?
@@ -89,10 +92,6 @@ module AnnotateRb
         end
 
         attrs
-      end
-
-      def schema_default(klass)
-        Helper.quote(klass.column_defaults[name])
       end
 
       def default
