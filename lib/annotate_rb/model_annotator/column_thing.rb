@@ -23,8 +23,9 @@ module AnnotateRb
         # Note: The input `column_type` gets modified in this method call.
         attrs = []
 
-        # TODO: Check if this is the same as Column#default
-        column_default = @model_thing.column_defaults[name]
+        # Note: Used to be klass.column_defaults[name], where name is the column name.
+        # Looks to be identical, but keeping note here in case there are differences.
+        column_default = @column.default
 
         unless default.nil? || hide_default?
           string_default_column_value = Helper.quote(column_default)
