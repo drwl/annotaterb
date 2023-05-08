@@ -20,8 +20,8 @@ module AnnotateRb
       # Get the list of attributes that should be included in the annotation for
       # a given column.
       def get_attributes
-        column_type_input = column_type
-        # Note: The input `column_type_input` gets modified in this method call.
+        column_type = @column.column_type_string
+        # Note: The input `column_type` gets modified in this method call.
         attrs = []
 
         unless @column.default.nil? || hide_default?
@@ -42,15 +42,15 @@ module AnnotateRb
           attrs << 'primary key'
         end
 
-        if column_type_input == 'decimal'
-          column_type_input << "(#{@column.precision}, #{@column.scale})"
-        elsif !%w[spatial geometry geography].include?(column_type_input)
+        if column_type == 'decimal'
+          column_type << "(#{@column.precision}, #{@column.scale})"
+        elsif !%w[spatial geometry geography].include?(column_type)
           if @column.limit && !@options[:format_yard]
             if @column.limit.is_a?(Array)
               attrs << "(#{@column.limit.join(', ')})"
             else
               unless hide_limit?
-                column_type_input << "(#{@column.limit})"
+                column_type << "(#{@column.limit})"
               end
             end
           end
@@ -83,7 +83,7 @@ module AnnotateRb
           end
         end
 
-        [attrs, column_type_input]
+        [attrs, column_type]
       end
 
       def sorted_column_indices
@@ -91,10 +91,6 @@ module AnnotateRb
         sorted_indices = @column_indices&.sort_by(&:name)
 
         _sorted_indices = sorted_indices.reject { |ind| ind.columns.is_a?(String) }
-      end
-
-      def column_type
-        @column.column_type_string
       end
 
       def hide_limit?
@@ -105,7 +101,7 @@ module AnnotateRb
             @options[:hide_limit_column_types].split(',')
           end
 
-        excludes.include?(column_type)
+        excludes.include?(@column.column_type_string)
       end
 
       def hide_default?
@@ -116,7 +112,7 @@ module AnnotateRb
             @options[:hide_default_column_types].split(',')
           end
 
-        excludes.include?(column_type)
+        excludes.include?(@column.column_type_string)
       end
     end
   end
