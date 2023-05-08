@@ -72,6 +72,8 @@ module AnnotateRb
         # Check if the column has indices and print "indexed" if true
         # If the index includes another column, print it too.
         if @options[:simple_indexes]
+          # Note: there used to be a klass.table_exists? call here, but removed it as it seemed unnecessary.
+
           sorted_column_indices&.each do |index|
             indexed_columns = index.columns.reject { |i| i == @column.name }
 
