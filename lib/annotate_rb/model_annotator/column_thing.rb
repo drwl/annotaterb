@@ -84,17 +84,29 @@ module AnnotateRb
         # Check if the column has indices and print "indexed" if true
         # If the index includes another column, print it too.
         if @options[:simple_indexes] && @model_thing.table_exists? # Check out if this column is indexed
-          table_indices = @model_thing.retrieve_indexes_from_table
-          indices = table_indices.select { |ind| ind.columns.include? name }
-          indices&.sort_by(&:name)&.each do |ind|
-            next if ind.columns.is_a?(String)
+          sorted_column_indices&.each do |index|
+            next if index.columns.is_a?(String)
 
-            ind = ind.columns.reject! { |i| i == name }
-            attrs << (ind.empty? ? 'indexed' : "indexed => [#{ind.join(', ')}]")
+            indexed_columns = index.columns.reject { |i| i == name }
+
+            if indexed_columns.empty?
+              attrs << 'indexed'
+            else
+              attrs << "indexed => [#{indexed_columns.join(', ')}]"
+            end
           end
         end
 
         attrs
+      end
+
+      def sorted_column_indices
+        table_indices = @model_thing.retrieve_indexes_from_table
+
+        column_indices = table_indices.select { |ind| ind.columns.include? name }
+
+        # Not sure why there were & safe accessors here, but keeping in for time being.
+        _sorted_indices = column_indices&.sort_by(&:name)
       end
 
       def model_primary_key
