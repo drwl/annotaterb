@@ -21,7 +21,6 @@ module AnnotateRb
       # a given column.
       def build
         column_type = @column.column_type_string
-        # Note: The input `column_type` gets modified in this method call.
         attrs = []
 
         unless @column.default.nil? || hide_default?
@@ -42,15 +41,17 @@ module AnnotateRb
           attrs << 'primary key'
         end
 
+        formatted_column_type = column_type
+
         if column_type == 'decimal'
-          column_type += "(#{@column.precision}, #{@column.scale})"
+          formatted_column_type = "decimal(#{@column.precision}, #{@column.scale})"
         elsif !%w[spatial geometry geography].include?(column_type)
           if @column.limit && !@options[:format_yard]
             if @column.limit.is_a?(Array)
               attrs << "(#{@column.limit.join(', ')})"
             else
               unless hide_limit?
-                column_type += "(#{@column.limit})"
+                formatted_column_type = column_type + "(#{@column.limit})"
               end
             end
           end
@@ -85,7 +86,10 @@ module AnnotateRb
           end
         end
 
-        [attrs, column_type]
+        {
+          attributes: attrs,
+          column_type: formatted_column_type
+        }
       end
 
       def sorted_column_indices
