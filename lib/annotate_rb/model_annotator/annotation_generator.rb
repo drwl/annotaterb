@@ -48,10 +48,33 @@ module AnnotateRb
         @info
       end
 
+      # TODO: Simplify this conditional
+      def is_column_primary_key?(model_thing, column_name)
+        if model_thing.primary_key
+          if model_thing.primary_key.is_a?(Array)
+            if model_thing.primary_key.collect(&:to_sym).include?(column_name.to_sym)
+              return true
+            end
+          else
+            if column_name.to_sym == model_thing.primary_key.to_sym
+              return true
+            end
+          end
+        end
+
+        false
+      end
+
       def add_column_info(max_size)
         cols = @model_thing.columns
         cols.each do |col|
-          column_thing = ColumnThing.new(col, @klass, @options)
+
+          is_primary_key = is_column_primary_key?(@model_thing, col.name)
+
+          table_indices = @model_thing.retrieve_indexes_from_table
+          column_indices = table_indices.select { |ind| ind.columns.include?(col.name) }
+
+          column_thing = ColumnThing.new(col, @options, is_primary_key, column_indices)
 
           col_type = column_thing.column_type
           # `col_type` gets modified in `get_attributes`. Need to change method so it does not mutate input.

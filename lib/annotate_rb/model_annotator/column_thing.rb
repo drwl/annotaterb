@@ -10,11 +10,11 @@ module AnnotateRb
       # Example: show "integer" instead of "integer(4)"
       NO_LIMIT_COL_TYPES = %w[integer bigint boolean].freeze
 
-      def initialize(column, klass, options)
+      def initialize(column, options, is_primary_key, column_indices)
         @column = column
-        @klass = klass
         @options = options
-        @model_thing = ModelThing.new(@klass, @options)
+        @is_primary_key = is_primary_key
+        @column_indices = column_indices
       end
 
       # Get the list of attributes that should be included in the annotation for
@@ -42,16 +42,8 @@ module AnnotateRb
           attrs << 'not null'
         end
 
-        if model_primary_key
-          if model_primary_key.is_a?(Array)
-            if model_primary_key.collect(&:to_sym).include?(name.to_sym)
-              attrs << 'primary key'
-            end
-          else
-            if name.to_sym == model_primary_key.to_sym
-              attrs << 'primary key'
-            end
-          end
+        if @is_primary_key
+          attrs << 'primary key'
         end
 
         if column_type == 'decimal'
@@ -99,18 +91,10 @@ module AnnotateRb
       end
 
       def sorted_column_indices
-        table_indices = @model_thing.retrieve_indexes_from_table
-
-        column_indices = table_indices.select { |ind| ind.columns.include? name }
-
         # Not sure why there were & safe accessors here, but keeping in for time being.
-        sorted_indices = column_indices&.sort_by(&:name)
+        sorted_indices = @column_indices&.sort_by(&:name)
 
         _sorted_indices = sorted_indices.reject { |ind| ind.columns.is_a?(String) }
-      end
-
-      def model_primary_key
-        @model_thing.primary_key
       end
 
       def default
