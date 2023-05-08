@@ -2,7 +2,7 @@
 
 module AnnotateRb
   module ModelAnnotator
-    class ColumnThing
+    class ColumnAnnotationBuilder
       # Don't show default value for these column types
       NO_DEFAULT_COL_TYPES = %w[json jsonb hstore].freeze
 
@@ -19,7 +19,7 @@ module AnnotateRb
 
       # Get the list of attributes that should be included in the annotation for
       # a given column.
-      def get_attributes
+      def build
         column_type = @column.column_type_string
         # Note: The input `column_type` gets modified in this method call.
         attrs = []

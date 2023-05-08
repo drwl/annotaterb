@@ -74,9 +74,9 @@ module AnnotateRb
           table_indices = @model_thing.retrieve_indexes_from_table
           column_indices = table_indices.select { |ind| ind.columns.include?(col.name) }
 
-          column_thing = ColumnThing.new(col, @options, is_primary_key, column_indices)
+          column_thing = ColumnAnnotationBuilder.new(col, @options, is_primary_key, column_indices)
 
-          attrs, col_type = column_thing.get_attributes
+          attrs, col_type = column_thing.build
           col_name = if @model_thing.with_comments? && col.comment
                        "#{col.name}(#{col.comment.gsub(/\n/, '\\n')})"
                      else
