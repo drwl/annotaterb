@@ -71,7 +71,7 @@ module AnnotateRb
         def annotate(klass, file, header, options = {})
           begin
             klass.reset_column_information
-            info = SchemaInfo.generate(klass, header, options)
+            info = AnnotationGenerator.new(klass, header, options).generate
             model_name = klass.name.underscore
             table_name = klass.table_name
             model_file_name = File.join(file)
