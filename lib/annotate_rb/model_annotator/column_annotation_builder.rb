@@ -48,20 +48,20 @@ module AnnotateRb
 
         if is_decimal_type
           formatted_column_type = "decimal(#{@column.precision}, #{@column.scale})"
-        end
-
-        if !is_decimal_type && !is_special_type
+        elsif is_special_type
+          # Do nothing. Kept as a code fragment in case we need to do something here.
+        else
           if @column.limit && !@options[:format_yard]
-            if @column.limit.is_a?(Array)
-              attrs << "(#{@column.limit.join(', ')})"
+            if !@column.limit.is_a?(Array) && !hide_limit?
+              formatted_column_type = column_type + "(#{@column.limit})"
             end
           end
         end
 
         if !is_decimal_type && !is_special_type
           if @column.limit && !@options[:format_yard]
-            if !@column.limit.is_a?(Array) && !hide_limit?
-              formatted_column_type = column_type + "(#{@column.limit})"
+            if @column.limit.is_a?(Array)
+              attrs << "(#{@column.limit.join(', ')})"
             end
           end
         end
