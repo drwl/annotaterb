@@ -1,0 +1,83 @@
+# frozen_string_literal: true
+
+RSpec.describe AnnotateRb::ModelAnnotator::ColumnAttributesBuilder do
+  include AnnotateTestHelpers
+
+  describe '#build' do
+    subject { described_class.new(column, options, is_primary_key, column_indices).build }
+
+    let(:column) {}
+    let(:options) { AnnotateRb::Options.from({}) }
+    let(:is_primary_key) {}
+    let(:column_indices) {}
+
+    context 'when the primary key is not specified' do
+      let(:is_primary_key) { false }
+
+      context 'when the column is normal' do
+        let(:column) { mock_column(:id, :integer) }
+        let(:expected_result) { ['not null'] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context 'when an enum column exists' do
+        let(:column) { mock_column(:name, :enum, limit: [:enum1, :enum2]) }
+        let(:expected_result) { ['not null', '(enum1, enum2)'] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context 'when an unsigned columns exist' do
+        let(:column) { mock_column(:integer, :integer, unsigned?: true) }
+        let(:expected_result) { ['unsigned', 'not null'] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context 'when column is an integer with a default value' do
+        let(:column) { mock_column(:size, :integer, default: 20) }
+        let(:expected_result) { ['default(20)', 'not null'] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context 'when column is a boolean with a default value' do
+        let(:column) { mock_column(:flag, :boolean, default: false) }
+        let(:expected_result) { ['default(FALSE)', 'not null'] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+    end
+
+    context 'when the primary key is specified' do
+      let(:is_primary_key) { true }
+
+      context 'with an id integer primary key column' do
+        let(:column) { mock_column(:id, :integer, limit: 8) }
+        let(:expected_result) { ['not null', 'primary key'] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+    end
+
+    context 'when a column has an index and simple index option is on' do
+      let(:is_primary_key) { true }
+      let(:options) { AnnotateRb::Options.from({ simple_indexes: true }) }
+
+      context 'with an id integer primary key column' do
+        let(:column) { mock_column('id', :integer) }
+        let(:expected_result) { ['not null', 'primary key', 'indexed'] }
+
+        let(:column_indices) do
+          [
+            mock_index('index_rails_02e851e3b7', columns: ['id']),
+            mock_index('index_rails_02e851e3b8', columns: 'LOWER(name)')
+          ]
+        end
+
+        it { is_expected.to match_array(expected_result) }
+      end
+    end
+  end
+end
