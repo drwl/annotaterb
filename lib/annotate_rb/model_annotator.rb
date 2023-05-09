@@ -16,7 +16,7 @@ module AnnotateRb
     autoload :ModelFilesGetter, 'annotate_rb/model_annotator/model_files_getter'
     autoload :FileAnnotator, 'annotate_rb/model_annotator/file_annotator'
     autoload :ModelFileAnnotator, 'annotate_rb/model_annotator/model_file_annotator'
-    autoload :ModelThing, 'annotate_rb/model_annotator/model_thing'
+    autoload :ModelWrapper, 'annotate_rb/model_annotator/model_wrapper'
     autoload :AnnotationGenerator, 'annotate_rb/model_annotator/annotation_generator'
     autoload :ColumnAttributesBuilder, 'annotate_rb/model_annotator/column_attributes_builder'
     autoload :ColumnTypeBuilder, 'annotate_rb/model_annotator/column_type_builder'

@@ -15,7 +15,7 @@ module AnnotateRb
       def initialize(klass, header, options)
         @header = header
         @options = options
-        @model_thing = ModelThing.new(klass, options)
+        @model = ModelWrapper.new(klass, options)
         @info = "" # TODO: Make array and build string that way
       end
 
@@ -23,7 +23,7 @@ module AnnotateRb
         @info = "# #{header}\n"
         @info += schema_header_text
 
-        max_size = @model_thing.max_schema_info_width
+        max_size = @model.max_schema_info_width
 
         if @options[:format_markdown]
           @info += format("# %-#{max_size + MD_NAMES_OVERHEAD}.#{max_size + MD_NAMES_OVERHEAD}s | %-#{MD_TYPE_ALLOWANCE}.#{MD_TYPE_ALLOWANCE}s | %s\n",
@@ -33,16 +33,16 @@ module AnnotateRb
           @info += "# #{'-' * (max_size + MD_NAMES_OVERHEAD)} | #{'-' * MD_TYPE_ALLOWANCE} | #{'-' * 27}\n"
         end
 
-        @info += @model_thing.columns.map do |col|
-          ColumnAnnotationBuilder.new(col, @model_thing, max_size, @options).build
+        @info += @model.columns.map do |col|
+          ColumnAnnotationBuilder.new(col, @model, max_size, @options).build
         end.join
 
-        if @options[:show_indexes] && @model_thing.table_exists?
-          @info += IndexAnnotationBuilder.new(@model_thing, @options).build
+        if @options[:show_indexes] && @model.table_exists?
+          @info += IndexAnnotationBuilder.new(@model, @options).build
         end
 
-        if @options[:show_foreign_keys] && @model_thing.table_exists?
-          @info += ForeignKeyAnnotationBuilder.new(@model_thing, @options).build
+        if @options[:show_foreign_keys] && @model.table_exists?
+          @info += ForeignKeyAnnotationBuilder.new(@model, @options).build
         end
 
         @info += schema_footer_text
@@ -60,11 +60,11 @@ module AnnotateRb
         info << "#"
 
         if @options[:format_markdown]
-          info << "# Table name: `#{@model_thing.table_name}`"
+          info << "# Table name: `#{@model.table_name}`"
           info << "#"
           info << "# ### Columns"
         else
-          info << "# Table name: #{@model_thing.table_name}"
+          info << "# Table name: #{@model.table_name}"
         end
         info << "#\n" # We want the last line break
 

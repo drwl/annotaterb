@@ -6,9 +6,9 @@ module AnnotateRb
       BARE_TYPE_ALLOWANCE = 16
       MD_TYPE_ALLOWANCE = 18
 
-      def initialize(column, model_thing, max_size, options)
+      def initialize(column, model, max_size, options)
         @column = column
-        @model_thing = model_thing
+        @model = model
         @max_size = max_size
         @options = options
       end
@@ -16,15 +16,15 @@ module AnnotateRb
       def build
         result = ''
 
-        is_primary_key = is_column_primary_key?(@model_thing, @column.name)
+        is_primary_key = is_column_primary_key?(@model, @column.name)
 
-        table_indices = @model_thing.retrieve_indexes_from_table
+        table_indices = @model.retrieve_indexes_from_table
         column_indices = table_indices.select { |ind| ind.columns.include?(@column.name) }
 
         column_attributes = ColumnAttributesBuilder.new(@column, @options, is_primary_key, column_indices).build
         formatted_column_type = ColumnTypeBuilder.new(@column, @options).build
 
-        col_name = if @model_thing.with_comments? && @column.comment
+        col_name = if @model.with_comments? && @column.comment
                      "#{@column.name}(#{@column.comment.gsub(/\n/, '\\n')})"
                    else
                      @column.name
@@ -70,16 +70,16 @@ module AnnotateRb
       end
 
       # TODO: Simplify this conditional
-      def is_column_primary_key?(model_thing, column_name)
-        if model_thing.primary_key
-          if model_thing.primary_key.is_a?(Array)
+      def is_column_primary_key?(model, column_name)
+        if model.primary_key
+          if model.primary_key.is_a?(Array)
             # If the model has multiple primary keys, check if this column is one of them
-            if model_thing.primary_key.collect(&:to_sym).include?(column_name.to_sym)
+            if model.primary_key.collect(&:to_sym).include?(column_name.to_sym)
               return true
             end
           else
             # If model has 1 primary key, check if this column is it
-            if column_name.to_sym == model_thing.primary_key.to_sym
+            if column_name.to_sym == model.primary_key.to_sym
               return true
             end
           end

@@ -2,8 +2,7 @@
 
 module AnnotateRb
   module ModelAnnotator
-    # TODO: Change name
-    class ModelThing
+    class ModelWrapper
       # Should be the wrapper for an ActiveRecord model that serves as the source of truth of the model
       # of the model that we're annotating
 

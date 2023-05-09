@@ -3,8 +3,8 @@
 module AnnotateRb
   module ModelAnnotator
     class IndexAnnotationBuilder
-      def initialize(model_thing, options)
-        @model_thing = model_thing
+      def initialize(model, options)
+        @model = model
         @options = options
       end
 
@@ -15,7 +15,7 @@ module AnnotateRb
                        "#\n# Indexes\n#\n"
                      end
 
-        indexes = @model_thing.retrieve_indexes_from_table
+        indexes = @model.retrieve_indexes_from_table
         return '' if indexes.empty?
 
         max_size = indexes.collect { |index| index.name.size }.max + 1
