@@ -1,9 +1,9 @@
-RSpec.describe AnnotateRb::ModelAnnotator::SchemaInfo do
+RSpec.describe AnnotateRb::ModelAnnotator::AnnotationGenerator do
   include AnnotateTestHelpers
 
-  describe '.generate' do
+  describe '#generate' do
     subject do
-      described_class.generate(klass, header, **options)
+      described_class.new(klass, header, **options).generate
     end
 
     let :klass do

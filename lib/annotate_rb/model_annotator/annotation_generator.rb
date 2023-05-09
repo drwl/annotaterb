@@ -12,7 +12,7 @@ module AnnotateRb
       MD_NAMES_OVERHEAD = 6
       MD_TYPE_ALLOWANCE = 18
 
-      def initialize(klass, header, options)
+      def initialize(klass, header, options = {})
         @header = header
         @options = options
         @model = ModelWrapper.new(klass, options)

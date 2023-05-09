@@ -18,7 +18,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
                             mock_column(:id, :integer),
                             mock_column(:name, :string, limit: 50)
                           ])
-      @schema_info = AnnotateRb::ModelAnnotator::SchemaInfo.generate(@klass, '== Schema Info')
+      @schema_info = AnnotateRb::ModelAnnotator::AnnotationGenerator.new(@klass, '== Schema Info').generate
     end
 
     context "with 'before'" do
@@ -124,7 +124,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
                                                 'id',
                                                 on_delete: :cascade)
                              ])
-          @schema_info = AnnotateRb::ModelAnnotator::SchemaInfo.generate(klass, '== Schema Info', show_foreign_keys: true)
+          @schema_info = AnnotateRb::ModelAnnotator::AnnotationGenerator.new(
+            klass, '== Schema Info', show_foreign_keys: true
+          ).generate
+
           annotate_one_file
         end
 
@@ -143,7 +146,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
                                                 'id',
                                                 on_delete: :restrict)
                              ])
-          @schema_info = AnnotateRb::ModelAnnotator::SchemaInfo.generate(klass, '== Schema Info', show_foreign_keys: true)
+          @schema_info = AnnotateRb::ModelAnnotator::AnnotationGenerator.new(
+            klass, '== Schema Info', show_foreign_keys: true
+          ).generate
+
           annotate_one_file
           expect(File.read(@model_file_name)).to eq("#{@schema_info}#{@file_content}")
         end
@@ -153,10 +159,11 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
     describe 'with existing annotation => :before' do
       before do
         annotate_one_file position: :before
-        another_schema_info = AnnotateRb::ModelAnnotator::SchemaInfo.generate(
+        another_schema_info = AnnotateRb::ModelAnnotator::AnnotationGenerator.new(
           mock_class(:users, :id, [mock_column(:id, :integer)]),
           '== Schema Info'
-        )
+        ).generate
+
         @schema_info = another_schema_info
       end
 
@@ -179,7 +186,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
     describe 'with existing annotation => :after' do
       before do
         annotate_one_file position: :after
-        another_schema_info = AnnotateRb::ModelAnnotator::SchemaInfo.generate(mock_class(:users, :id, [mock_column(:id, :integer)]), '== Schema Info')
+        another_schema_info = AnnotateRb::ModelAnnotator::AnnotationGenerator.new(
+          mock_class(:users, :id, [mock_column(:id, :integer)]), '== Schema Info'
+        ).generate
+
         @schema_info = another_schema_info
       end
 
@@ -200,8 +210,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
     end
 
     it 'should skip columns with option[:ignore_columns] set' do
-      output = AnnotateRb::ModelAnnotator::SchemaInfo.generate(@klass, '== Schema Info',
-                                                   :ignore_columns => '(id|updated_at|created_at)')
+      output = AnnotateRb::ModelAnnotator::AnnotationGenerator.new(
+        @klass, '== Schema Info', :ignore_columns => '(id|updated_at|created_at)'
+      ).generate
+
       expect(output.match(/id/)).to be_nil
     end
 
@@ -217,7 +229,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
                            mock_column(:id, :integer),
                            mock_column(:name, :string, limit: 50)
                          ])
-      schema_info = AnnotateRb::ModelAnnotator::SchemaInfo.generate(klass, '== Schema Info')
+      schema_info = AnnotateRb::ModelAnnotator::AnnotationGenerator.new(
+        klass, '== Schema Info'
+      ).generate
+
       AnnotateRb::ModelAnnotator::FileAnnotator.call(model_file_name, schema_info, position: :before)
       expect(File.read(model_file_name)).to eq("#{schema_info}#{file_content}")
     end
@@ -247,7 +262,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         model_file_name, = write_model 'user.rb', "#{magic_comment}\n#{content}"
 
         annotate_one_file position: :before
-        schema_info = AnnotateRb::ModelAnnotator::SchemaInfo.generate(@klass, '== Schema Info')
+        schema_info = AnnotateRb::ModelAnnotator::AnnotationGenerator.new(@klass, '== Schema Info').generate
 
         expect(File.read(model_file_name)).to eq("#{magic_comment}\n\n#{schema_info}#{content}")
       end
@@ -256,7 +271,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
     it 'only keeps a single empty line around the annotation (position :before)' do
       content = "class User < ActiveRecord::Base\nend\n"
       AnnotateTestConstants::MAGIC_COMMENTS.each do |magic_comment|
-        schema_info = AnnotateRb::ModelAnnotator::SchemaInfo.generate(@klass, '== Schema Info')
+        schema_info = AnnotateRb::ModelAnnotator::AnnotationGenerator.new(@klass, '== Schema Info').generate
         model_file_name, = write_model 'user.rb', "#{magic_comment}\n\n\n\n#{content}"
 
         annotate_one_file position: :before
@@ -271,7 +286,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         model_file_name, = write_model 'user.rb', "#{magic_comment}\n#{content}"
 
         annotate_one_file position: :after
-        schema_info = AnnotateRb::ModelAnnotator::SchemaInfo.generate(@klass, '== Schema Info')
+        schema_info = AnnotateRb::ModelAnnotator::AnnotationGenerator.new(@klass, '== Schema Info').generate
 
         expect(File.read(model_file_name)).to eq("#{magic_comment}\n#{content}\n#{schema_info}")
       end
