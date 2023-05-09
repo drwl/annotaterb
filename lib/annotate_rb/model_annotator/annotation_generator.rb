@@ -26,16 +26,16 @@ module AnnotateRb
 
         if @options[:format_markdown]
           @info += format("# %-#{max_size + MD_NAMES_OVERHEAD}.#{max_size + MD_NAMES_OVERHEAD}s | %-#{MD_TYPE_ALLOWANCE}.#{MD_TYPE_ALLOWANCE}s | %s\n",
-                         'Name',
-                         'Type',
-                         'Attributes')
+                          'Name',
+                          'Type',
+                          'Attributes')
           @info += "# #{'-' * (max_size + MD_NAMES_OVERHEAD)} | #{'-' * MD_TYPE_ALLOWANCE} | #{'-' * 27}\n"
         end
 
         add_column_info(max_size)
 
         if @options[:show_indexes] && @klass.table_exists?
-          @info += index_info
+          @info += IndexAnnotationBuilder.new(@model_thing, @options).build
         end
 
         if @options[:show_foreign_keys] && @klass.table_exists?
@@ -55,28 +55,6 @@ module AnnotateRb
         end.join
 
         @info
-      end
-
-      def index_info
-        index_info = if @options[:format_markdown]
-                       "#\n# ### Indexes\n#\n"
-                     else
-                       "#\n# Indexes\n#\n"
-                     end
-
-        indexes = @model_thing.retrieve_indexes_from_table
-        return '' if indexes.empty?
-
-        max_size = indexes.collect { |index| index.name.size }.max + 1
-        indexes.sort_by(&:name).each do |index|
-          index_info << if @options[:format_markdown]
-                          final_index_string_in_markdown(index)
-                        else
-                          final_index_string(index, max_size)
-                        end
-        end
-
-        index_info
       end
 
       # TODO: Move header logic into here from AnnotateRb::ModelAnnotator::Annotator.do_annotations
@@ -112,44 +90,6 @@ module AnnotateRb
       end
 
       private
-
-      def final_index_string_in_markdown(index)
-        details = format(
-          '%s%s%s',
-          Helper.index_unique_info(index, :markdown),
-          Helper.index_where_info(index, :markdown),
-          Helper.index_using_info(index, :markdown)
-        ).strip
-        details = " (#{details})" unless details.blank?
-
-        format(
-          "# * `%s`%s:\n#     * **`%s`**\n",
-          index.name,
-          details,
-          index_columns_info(index).join("`**\n#     * **`")
-        )
-      end
-
-      def final_index_string(index, max_size)
-        format(
-          "#  %-#{max_size}.#{max_size}s %s%s%s%s",
-          index.name,
-          "(#{index_columns_info(index).join(',')})",
-          Helper.index_unique_info(index),
-          Helper.index_where_info(index),
-          Helper.index_using_info(index)
-        ).rstrip + "\n"
-      end
-
-      def index_columns_info(index)
-        Array(index.columns).map do |col|
-          if index.try(:orders) && index.orders[col.to_s]
-            "#{col} #{index.orders[col.to_s].upcase}"
-          else
-            col.to_s.gsub("\r", '\r').gsub("\n", '\n')
-          end
-        end
-      end
 
       def foreign_key_info
         fk_info = if @options[:format_markdown]

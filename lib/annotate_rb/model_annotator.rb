@@ -22,5 +22,6 @@ module AnnotateRb
     autoload :ColumnTypeBuilder, 'annotate_rb/model_annotator/column_type_builder'
     autoload :ColumnWrapper, 'annotate_rb/model_annotator/column_wrapper'
     autoload :ColumnAnnotationBuilder, 'annotate_rb/model_annotator/column_annotation_builder'
+    autoload :IndexAnnotationBuilder, 'annotate_rb/model_annotator/index_annotation_builder'
   end
 end
