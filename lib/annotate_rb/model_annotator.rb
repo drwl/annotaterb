@@ -23,5 +23,6 @@ module AnnotateRb
     autoload :ColumnWrapper, 'annotate_rb/model_annotator/column_wrapper'
     autoload :ColumnAnnotationBuilder, 'annotate_rb/model_annotator/column_annotation_builder'
     autoload :IndexAnnotationBuilder, 'annotate_rb/model_annotator/index_annotation_builder'
+    autoload :ForeignKeyAnnotationBuilder, 'annotate_rb/model_annotator/foreign_key_annotation_builder'
   end
 end
