@@ -1,0 +1,51 @@
+# frozen_string_literal: true
+
+module AnnotateRb
+  module ModelAnnotator
+    class ColumnTypeBuilder
+      # Don't show limit (#) on these column types
+      # Example: show "integer" instead of "integer(4)"
+      NO_LIMIT_COL_TYPES = %w[integer bigint boolean].freeze
+
+      def initialize(column, options)
+        @column = ColumnWrapper.new(column)
+        @options = options
+      end
+
+      # Returns the formatted column type as a string.
+      def build
+        column_type = @column.column_type_string
+
+        formatted_column_type = column_type
+
+        is_special_type = %w[spatial geometry geography].include?(column_type)
+        is_decimal_type = column_type == 'decimal'
+
+        if is_decimal_type
+          formatted_column_type = "decimal(#{@column.precision}, #{@column.scale})"
+        elsif is_special_type
+          # Do nothing. Kept as a code fragment in case we need to do something here.
+        else
+          if @column.limit && !@options[:format_yard]
+            if !@column.limit.is_a?(Array) && !hide_limit?
+              formatted_column_type = column_type + "(#{@column.limit})"
+            end
+          end
+        end
+
+        formatted_column_type
+      end
+
+      def hide_limit?
+        excludes =
+          if @options[:hide_limit_column_types].blank?
+            NO_LIMIT_COL_TYPES
+          else
+            @options[:hide_limit_column_types].split(',')
+          end
+
+        excludes.include?(@column.column_type_string)
+      end
+    end
+  end
+end
