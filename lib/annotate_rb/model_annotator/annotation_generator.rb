@@ -70,7 +70,6 @@ module AnnotateRb
       def add_column_info(max_size)
         cols = @model_thing.columns
         cols.each do |col|
-
           is_primary_key = is_column_primary_key?(@model_thing, col.name)
 
           table_indices = @model_thing.retrieve_indexes_from_table
@@ -78,9 +77,6 @@ module AnnotateRb
 
           column_attributes = ColumnAttributesBuilder.new(col, @options, is_primary_key, column_indices).build
           formatted_column_type = ColumnTypeBuilder.new(col, @options).build
-
-          attrs = column_attributes
-          col_type = formatted_column_type
 
           col_name = if @model_thing.with_comments? && col.comment
                        "#{col.name}(#{col.comment.gsub(/\n/, '\\n')})"
@@ -91,28 +87,28 @@ module AnnotateRb
           if @options[:format_rdoc]
             @info += format("# %-#{max_size}.#{max_size}s<tt>%s</tt>",
                             "*#{col_name}*::",
-                            attrs.unshift(col_type).join(', ')).rstrip + "\n"
+                            column_attributes.unshift(formatted_column_type).join(', ')).rstrip + "\n"
           elsif @options[:format_yard]
             @info += sprintf("# @!attribute #{col_name}") + "\n"
 
             if col.respond_to?(:array) && col.array
-              ruby_class = "Array<#{Helper.map_col_type_to_ruby_classes(col_type)}>"
+              ruby_class = "Array<#{Helper.map_col_type_to_ruby_classes(formatted_column_type)}>"
             else
-              ruby_class = Helper.map_col_type_to_ruby_classes(col_type)
+              ruby_class = Helper.map_col_type_to_ruby_classes(formatted_column_type)
             end
 
             @info += sprintf("#   @return [#{ruby_class}]") + "\n"
           elsif @options[:format_markdown]
             name_remainder = max_size - col_name.length - Helper.non_ascii_length(col_name)
-            type_remainder = (MD_TYPE_ALLOWANCE - 2) - col_type.length
+            type_remainder = (MD_TYPE_ALLOWANCE - 2) - formatted_column_type.length
             @info += format("# **`%s`**%#{name_remainder}s | `%s`%#{type_remainder}s | `%s`",
                             col_name,
                             ' ',
-                            col_type,
+                            formatted_column_type,
                             ' ',
-                            attrs.join(', ').rstrip).gsub('``', '  ').rstrip + "\n"
+                            column_attributes.join(', ').rstrip).gsub('``', '  ').rstrip + "\n"
           else
-            @info += format_default(col_name, max_size, col_type, attrs)
+            @info += format_default(col_name, max_size, formatted_column_type, column_attributes)
           end
         end
       end
