@@ -9,7 +9,6 @@ module AnnotateRb
 
       MD_NAMES_OVERHEAD = 6
       MD_TYPE_ALLOWANCE = 18
-      BARE_TYPE_ALLOWANCE = 16
 
       def initialize(klass, header, options)
         @klass = klass
@@ -48,69 +47,14 @@ module AnnotateRb
         @info
       end
 
-      # TODO: Simplify this conditional
-      def is_column_primary_key?(model_thing, column_name)
-        if model_thing.primary_key
-          if model_thing.primary_key.is_a?(Array)
-            # If the model has multiple primary keys, check if this column is one of them
-            if model_thing.primary_key.collect(&:to_sym).include?(column_name.to_sym)
-              return true
-            end
-          else
-            # If model has 1 primary key, check if this column is it
-            if column_name.to_sym == model_thing.primary_key.to_sym
-              return true
-            end
-          end
-        end
-
-        false
-      end
-
       def add_column_info(max_size)
         cols = @model_thing.columns
-        cols.each do |col|
-          is_primary_key = is_column_primary_key?(@model_thing, col.name)
 
-          table_indices = @model_thing.retrieve_indexes_from_table
-          column_indices = table_indices.select { |ind| ind.columns.include?(col.name) }
+        @info += cols.map do |col|
+          ColumnAnnotationBuilder.new(col, @model_thing, max_size, @options).build
+        end.join
 
-          column_attributes = ColumnAttributesBuilder.new(col, @options, is_primary_key, column_indices).build
-          formatted_column_type = ColumnTypeBuilder.new(col, @options).build
-
-          col_name = if @model_thing.with_comments? && col.comment
-                       "#{col.name}(#{col.comment.gsub(/\n/, '\\n')})"
-                     else
-                       col.name
-                     end
-
-          if @options[:format_rdoc]
-            @info += format("# %-#{max_size}.#{max_size}s<tt>%s</tt>",
-                            "*#{col_name}*::",
-                            column_attributes.unshift(formatted_column_type).join(', ')).rstrip + "\n"
-          elsif @options[:format_yard]
-            @info += sprintf("# @!attribute #{col_name}") + "\n"
-
-            if col.respond_to?(:array) && col.array
-              ruby_class = "Array<#{Helper.map_col_type_to_ruby_classes(formatted_column_type)}>"
-            else
-              ruby_class = Helper.map_col_type_to_ruby_classes(formatted_column_type)
-            end
-
-            @info += sprintf("#   @return [#{ruby_class}]") + "\n"
-          elsif @options[:format_markdown]
-            name_remainder = max_size - col_name.length - Helper.non_ascii_length(col_name)
-            type_remainder = (MD_TYPE_ALLOWANCE - 2) - formatted_column_type.length
-            @info += format("# **`%s`**%#{name_remainder}s | `%s`%#{type_remainder}s | `%s`",
-                            col_name,
-                            ' ',
-                            formatted_column_type,
-                            ' ',
-                            column_attributes.join(', ').rstrip).gsub('``', '  ').rstrip + "\n"
-          else
-            @info += format_default(col_name, max_size, formatted_column_type, column_attributes)
-          end
-        end
+        @info
       end
 
       def index_info
@@ -248,13 +192,6 @@ module AnnotateRb
         end
 
         fk_info
-      end
-
-      def format_default(col_name, max_size, col_type, attrs)
-        format('#  %s:%s %s',
-               Helper.mb_chars_ljust(col_name, max_size),
-               Helper.mb_chars_ljust(col_type, BARE_TYPE_ALLOWANCE),
-               attrs.join(', ')).rstrip + "\n"
       end
     end
   end
