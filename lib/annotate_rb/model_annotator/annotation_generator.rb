@@ -32,7 +32,9 @@ module AnnotateRb
           @info += "# #{'-' * (max_size + MD_NAMES_OVERHEAD)} | #{'-' * MD_TYPE_ALLOWANCE} | #{'-' * 27}\n"
         end
 
-        add_column_info(max_size)
+        @info += @model_thing.columns.map do |col|
+          ColumnAnnotationBuilder.new(col, @model_thing, max_size, @options).build
+        end.join
 
         if @options[:show_indexes] && @klass.table_exists?
           @info += IndexAnnotationBuilder.new(@model_thing, @options).build
@@ -43,16 +45,6 @@ module AnnotateRb
         end
 
         @info += schema_footer_text
-
-        @info
-      end
-
-      def add_column_info(max_size)
-        cols = @model_thing.columns
-
-        @info += cols.map do |col|
-          ColumnAnnotationBuilder.new(col, @model_thing, max_size, @options).build
-        end.join
 
         @info
       end
