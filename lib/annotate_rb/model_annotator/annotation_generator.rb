@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AnnotateRb
   module ModelAnnotator
     class AnnotationGenerator
@@ -72,12 +74,13 @@ module AnnotateRb
 
       def schema_footer_text
         info = ''
+
         if @options[:format_rdoc]
-          info << "#--\n"
-          info << "# #{END_MARK}\n"
-          info << "#++\n"
+          info += "#--\n"
+          info += "# #{END_MARK}\n"
+          info += "#++\n"
         else
-          info << "#\n"
+          info += "#\n"
         end
       end
     end
