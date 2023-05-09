@@ -72,15 +72,17 @@ module AnnotateRb
       end
 
       def schema_footer_text
-        info = ''
+        info = []
 
         if @options[:format_rdoc]
-          info += "#--\n"
-          info += "# #{END_MARK}\n"
-          info += "#++\n"
+          info << "#--"
+          info << "# #{END_MARK}"
+          info << "#++\n"
         else
-          info += "#\n"
+          info << "#\n"
         end
+
+        info.join("\n")
       end
     end
   end
