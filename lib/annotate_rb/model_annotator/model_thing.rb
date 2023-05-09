@@ -32,6 +32,10 @@ module AnnotateRb
                      end
       end
 
+      def connection
+        @klass.connection
+      end
+
       # Returns the unmodified model columns
       def raw_columns
         @raw_columns ||= @klass.columns

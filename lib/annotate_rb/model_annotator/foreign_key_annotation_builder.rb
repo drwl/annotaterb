@@ -3,8 +3,8 @@
 module AnnotateRb
   module ModelAnnotator
     class ForeignKeyAnnotationBuilder
-      def initialize(klass, options)
-        @klass = klass
+      def initialize(model_thing, options)
+        @model_thing = model_thing
         @options = options
       end
 
@@ -15,10 +15,10 @@ module AnnotateRb
                     "#\n# Foreign Keys\n#\n"
                   end
 
-        return '' unless @klass.connection.respond_to?(:supports_foreign_keys?) &&
-          @klass.connection.supports_foreign_keys? && @klass.connection.respond_to?(:foreign_keys)
+        return '' unless @model_thing.connection.respond_to?(:supports_foreign_keys?) &&
+          @model_thing.connection.supports_foreign_keys? && @model_thing.connection.respond_to?(:foreign_keys)
 
-        foreign_keys = @klass.connection.foreign_keys(@klass.table_name)
+        foreign_keys = @model_thing.connection.foreign_keys(@model_thing.table_name)
         return '' if foreign_keys.empty?
 
         format_name = lambda do |fk|

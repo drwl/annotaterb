@@ -13,7 +13,6 @@ module AnnotateRb
       MD_TYPE_ALLOWANCE = 18
 
       def initialize(klass, header, options)
-        @klass = klass
         @header = header
         @options = options
         @model_thing = ModelThing.new(klass, options)
@@ -38,12 +37,12 @@ module AnnotateRb
           ColumnAnnotationBuilder.new(col, @model_thing, max_size, @options).build
         end.join
 
-        if @options[:show_indexes] && @klass.table_exists?
+        if @options[:show_indexes] && @model_thing.table_exists?
           @info += IndexAnnotationBuilder.new(@model_thing, @options).build
         end
 
-        if @options[:show_foreign_keys] && @klass.table_exists?
-          @info += ForeignKeyAnnotationBuilder.new(@klass, @options).build
+        if @options[:show_foreign_keys] && @model_thing.table_exists?
+          @info += ForeignKeyAnnotationBuilder.new(@model_thing, @options).build
         end
 
         @info += schema_footer_text
