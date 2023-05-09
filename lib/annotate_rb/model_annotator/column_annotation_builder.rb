@@ -43,14 +43,16 @@ module AnnotateRb
 
         formatted_column_type = column_type
 
+        is_special_type = %w[spatial geometry geography].include?(column_type)
+
         if column_type == 'decimal'
           formatted_column_type = "decimal(#{@column.precision}, #{@column.scale})"
-        elsif !%w[spatial geometry geography].include?(column_type)
+        elsif !is_special_type
           if @column.limit && !@options[:format_yard]
             if @column.limit.is_a?(Array)
               attrs << "(#{@column.limit.join(', ')})"
             else
-              unless hide_limit?
+              if !hide_limit?
                 formatted_column_type = column_type + "(#{@column.limit})"
               end
             end
