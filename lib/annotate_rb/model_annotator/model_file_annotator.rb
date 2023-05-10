@@ -12,8 +12,8 @@ module AnnotateRb
 
             klass_is_a_class = klass.is_a?(Class)
             klass_inherits_active_record_base = klass < ActiveRecord::Base
-            klass_is_not_abstract = !klass.abstract_class?
-            klass_table_exists = klass.table_exists?
+            klass_is_not_abstract = klass.respond_to?(:abstract_class) && !klass.abstract_class?
+            klass_table_exists = klass.respond_to?(:abstract_class) && klass.table_exists?
 
             not_sure_this_conditional = (!options[:exclude_sti_subclasses] || !(klass.superclass < ActiveRecord::Base && klass.table_name == klass.superclass.table_name))
 
