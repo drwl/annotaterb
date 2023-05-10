@@ -11,6 +11,8 @@ module AnnotateRb
         def call(options)
           model_files = []
 
+          # Note: This is currently broken as we don't set `is_rake` anywhere.
+          # It's an artifact from the old Annotate gem and how it did control flow.
           model_files = list_model_files_from_argument(options) if !options[:is_rake]
 
           return model_files if !model_files.empty?
