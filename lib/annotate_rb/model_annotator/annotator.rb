@@ -12,6 +12,9 @@ module AnnotateRb
         # then pass it to the associated block
         def do_annotations(options = {})
           annotated = []
+
+          # Currently ModelFilesGetter gets the model files we want to annotate. The list of model files then gets
+          # expanded in ModelFileAnnotator. This is unintuitive.
           model_files_to_annotate = ModelFilesGetter.call(options)
 
           model_files_to_annotate.each do |path, filename|
