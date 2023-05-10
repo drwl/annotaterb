@@ -26,14 +26,14 @@ module AnnotateRb
 
     FLAG_OPTIONS = {
       classified_sort: true, # ModelAnnotator
-      exclude_controllers: true, # Unused
-      exclude_factories: false, # Unused
-      exclude_fixtures: false, # Unused
-      exclude_helpers: true, # Unused
-      exclude_scaffolds: true, # Unused
-      exclude_serializers: false, # Unused
+      exclude_controllers: true, # ModelAnnotator
+      exclude_factories: false, # ModelAnnotator
+      exclude_fixtures: false, # ModelAnnotator
+      exclude_helpers: true, # ModelAnnotator
+      exclude_scaffolds: true, # ModelAnnotator
+      exclude_serializers: false, # ModelAnnotator
       exclude_sti_subclasses: false, # ModelAnnotator
-      exclude_tests: false, # Unused
+      exclude_tests: false, # ModelAnnotator
       force: false, # ModelAnnotator, but should be used by both
       format_bare: true, # Unused
       format_markdown: false, # ModelAnnotator, RouteAnnotator
@@ -59,10 +59,10 @@ module AnnotateRb
       debug: false, # Core
 
       # ModelAnnotator
-      hide_default_column_types: '<%= ::AnnotateRb::ModelAnnotator::SchemaInfo::NO_DEFAULT_COL_TYPES.join(",") %>',
+      hide_default_column_types: '',
 
       # ModelAnnotator
-      hide_limit_column_types: '<%= ::AnnotateRb::ModelAnnotator::SchemaInfo::NO_LIMIT_COL_TYPES.join(",") %>',
+      hide_limit_column_types: '',
 
       ignore_columns: nil, # ModelAnnotator
       ignore_routes: nil, # RouteAnnotator
@@ -95,7 +95,14 @@ module AnnotateRb
 
     FLAG_OPTION_KEYS = [
       :classified_sort,
+      :exclude_controllers,
+      :exclude_factories,
+      :exclude_fixtures,
+      :exclude_helpers,
+      :exclude_scaffolds,
+      :exclude_serializers,
       :exclude_sti_subclasses,
+      :exclude_tests,
       :force,
       :format_markdown,
       :format_rdoc,
