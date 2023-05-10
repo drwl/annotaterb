@@ -59,10 +59,10 @@ module AnnotateRb
       debug: false, # Core
 
       # ModelAnnotator
-      hide_default_column_types: '<%= ::AnnotateRb::ModelAnnotator::SchemaInfo::NO_DEFAULT_COL_TYPES.join(",") %>',
+      hide_default_column_types: '',
 
       # ModelAnnotator
-      hide_limit_column_types: '<%= ::AnnotateRb::ModelAnnotator::SchemaInfo::NO_LIMIT_COL_TYPES.join(",") %>',
+      hide_limit_column_types: '',
 
       ignore_columns: nil, # ModelAnnotator
       ignore_routes: nil, # RouteAnnotator
