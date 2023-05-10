@@ -3,10 +3,6 @@
 module AnnotateRb
   module ModelAnnotator
     class Annotator
-      # Annotate Models plugin use this header
-      PREFIX = '== Schema Information'.freeze
-      PREFIX_MD = '## Schema Information'.freeze
-
       MAGIC_COMMENT_MATCHER = Regexp.new(/(^#\s*encoding:.*(?:\n|r\n))|(^# coding:.*(?:\n|\r\n))|(^# -\*- coding:.*(?:\n|\r\n))|(^# -\*- encoding\s?:.*(?:\n|\r\n))|(^#\s*frozen_string_literal:.+(?:\n|\r\n))|(^# -\*- frozen_string_literal\s*:.+-\*-(?:\n|\r\n))/).freeze
 
       class << self
@@ -15,17 +11,11 @@ module AnnotateRb
         # if its a subclass of ActiveRecord::Base,
         # then pass it to the associated block
         def do_annotations(options = {})
-          header = options[:format_markdown] ? PREFIX_MD.dup : PREFIX.dup
-          version = ActiveRecord::Migrator.current_version rescue 0
-          if options[:include_version] && version > 0
-            header += "\n# Schema version: #{version}"
-          end
-
           annotated = []
           model_files_to_annotate = ModelFilesGetter.call(options)
 
           model_files_to_annotate.each do |path, filename|
-            ModelFileAnnotator.call(annotated, File.join(path, filename), header, options)
+            ModelFileAnnotator.call(annotated, File.join(path, filename), options)
           end
 
           if annotated.empty?

@@ -3,7 +3,7 @@
 RSpec.describe AnnotateRb::ModelAnnotator::ModelFileAnnotator do
   describe '.call' do
     subject do
-      described_class.call([], 'some_foo.rb', nil, options)
+      described_class.call([], 'some_foo.rb', options)
     end
 
     let(:options) { AnnotateRb::Options.from({ ignore_unknown_models: true }) }

@@ -12,10 +12,9 @@ module AnnotateRb
       MD_NAMES_OVERHEAD = 6
       MD_TYPE_ALLOWANCE = 18
 
-      def initialize(klass, header, options = {})
-        @header = header
-        @options = options
+      def initialize(klass, options = {})
         @model = ModelWrapper.new(klass, options)
+        @options = options
         @info = "" # TODO: Make array and build string that way
       end
 
@@ -50,9 +49,15 @@ module AnnotateRb
         @info
       end
 
-      # TODO: Move header logic into here from AnnotateRb::ModelAnnotator::Annotator.do_annotations
       def header
-        @header
+        header = @options[:format_markdown] ? PREFIX_MD.dup : PREFIX.dup
+        version = ActiveRecord::Migrator.current_version rescue 0
+
+        if @options[:include_version] && version > 0
+          header += "\n# Schema version: #{version}"
+        end
+
+        header
       end
 
       def schema_header_text

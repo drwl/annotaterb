@@ -5,7 +5,7 @@ module AnnotateRb
     # Not sure yet what the difference is between this and FileAnnotator
     class ModelFileAnnotator
       class << self
-        def call(annotated, file, header, options)
+        def call(annotated, file, options)
           begin
             return false if /#{Constants::SKIP_ANNOTATION_PREFIX}.*/ =~ (File.exist?(file) ? File.read(file) : '')
             klass = ModelClassGetter.call(file, options)
@@ -28,7 +28,7 @@ module AnnotateRb
             do_annotate = annotate_conditions.all?
 
             if do_annotate
-              files_annotated = annotate(klass, file, header, options)
+              files_annotated = annotate(klass, file, options)
               annotated.concat(files_annotated)
             end
 
@@ -68,10 +68,10 @@ module AnnotateRb
         # == Returns:
         # an array of file names that were annotated.
         #
-        def annotate(klass, file, header, options = {})
+        def annotate(klass, file, options = {})
           begin
             klass.reset_column_information
-            info = AnnotationGenerator.new(klass, header, options).generate
+            info = AnnotationGenerator.new(klass, options).generate
             model_name = klass.name.underscore
             table_name = klass.table_name
             model_file_name = File.join(file)
