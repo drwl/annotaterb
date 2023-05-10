@@ -1,4 +1,4 @@
-# require 'bigdecimal'
+# frozen_string_literal: true
 
 module AnnotateRb
   module ModelAnnotator
@@ -18,7 +18,7 @@ module AnnotateRb
           header = options[:format_markdown] ? PREFIX_MD.dup : PREFIX.dup
           version = ActiveRecord::Migrator.current_version rescue 0
           if options[:include_version] && version > 0
-            header << "\n# Schema version: #{version}"
+            header += "\n# Schema version: #{version}"
           end
 
           annotated = []
