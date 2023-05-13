@@ -97,10 +97,6 @@ module AnnotateRb
           end
         end
 
-        def true?(val)
-          val.present? && Constants::TRUE_RE.match?(val)
-        end
-
         # TODO: Find another implementation that doesn't depend on ActiveSupport
         def fallback(*args)
           args.compact.detect(&:present?)
