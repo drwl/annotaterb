@@ -83,7 +83,11 @@ module AnnotateRb
               annotated << model_file_name
             end
 
-            matched_types(options).each do |key|
+            types = MATCHED_TYPES.dup
+            types << 'admin' if options[:active_admin] && !types.include?('admin')
+            types << 'additional_file_patterns' if options[:additional_file_patterns].present?
+
+            types.each do |key|
               exclusion_key = "exclude_#{key.pluralize}".to_sym
               position_key = "position_in_#{key}".to_sym
 
@@ -113,14 +117,6 @@ module AnnotateRb
           end
 
           annotated
-        end
-
-        def matched_types(options)
-          types = MATCHED_TYPES.dup
-          types << 'admin' if options[:active_admin] && !types.include?('admin')
-          types << 'additional_file_patterns' if options[:additional_file_patterns].present?
-
-          types
         end
       end
     end
