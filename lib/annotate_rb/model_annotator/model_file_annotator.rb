@@ -4,6 +4,8 @@ module AnnotateRb
   module ModelAnnotator
     # Not sure yet what the difference is between this and FileAnnotator
     class ModelFileAnnotator
+      MATCHED_TYPES = %w(test fixture factory serializer scaffold controller helper).freeze
+
       class << self
         def call(annotated, file, options)
           begin
@@ -111,6 +113,14 @@ module AnnotateRb
           end
 
           annotated
+        end
+
+        def matched_types(options)
+          types = MATCHED_TYPES.dup
+          types << 'admin' if options[:active_admin] =~ Constants::TRUE_RE && !types.include?('admin')
+          types << 'additional_file_patterns' if options[:additional_file_patterns].present?
+
+          types
         end
       end
     end
