@@ -83,7 +83,7 @@ module AnnotateRb
               annotated << model_file_name
             end
 
-            Helper.matched_types(options).each do |key|
+            matched_types(options).each do |key|
               exclusion_key = "exclude_#{key.pluralize}".to_sym
               position_key = "position_in_#{key}".to_sym
 
