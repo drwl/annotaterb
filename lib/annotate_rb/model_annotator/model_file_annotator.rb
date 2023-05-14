@@ -4,8 +4,6 @@ module AnnotateRb
   module ModelAnnotator
     # Not sure yet what the difference is between this and FileAnnotator
     class ModelFileAnnotator
-      MATCHED_TYPES = %w(test fixture factory serializer scaffold controller helper).freeze
-
       class << self
         def call(annotated, file, options)
           begin
@@ -83,7 +81,8 @@ module AnnotateRb
               annotated << model_file_name
             end
 
-            types = MATCHED_TYPES.dup
+            related_files = []
+            types = %w(test fixture factory serializer scaffold controller helper)
             types << 'admin' if options[:active_admin] && !types.include?('admin')
             types << 'additional_file_patterns' if options[:additional_file_patterns].present?
 
@@ -106,11 +105,16 @@ module AnnotateRb
                 .map { |f| Dir.glob(f) }
                 .flatten
                 .each do |f|
-                if FileAnnotator.call(f, info, position_key, options)
-                  annotated << f
-                end
+                  related_files << [f, position_key]
               end
             end
+
+            related_files.each do |f, position_key|
+              if FileAnnotator.call(f, info, position_key, options)
+                annotated << f
+              end
+            end
+
           rescue StandardError => e
             $stderr.puts "Unable to annotate #{file}: #{e.message}"
             $stderr.puts "\t" + e.backtrace.join("\n\t") if options[:trace]
