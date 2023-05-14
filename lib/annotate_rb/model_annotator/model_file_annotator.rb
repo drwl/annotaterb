@@ -45,29 +45,6 @@ module AnnotateRb
 
         private
 
-        # Given the name of an ActiveRecord class, create a schema
-        # info block (basically a comment containing information
-        # on the columns and their types) and put it at the front
-        # of the model and fixture source files.
-        #
-        # === Options (opts)
-        #  :position_in_class<Symbol>:: where to place the annotated section in model file
-        #  :position_in_test<Symbol>:: where to place the annotated section in test/spec file(s)
-        #  :position_in_fixture<Symbol>:: where to place the annotated section in fixture file
-        #  :position_in_factory<Symbol>:: where to place the annotated section in factory file
-        #  :position_in_serializer<Symbol>:: where to place the annotated section in serializer file
-        #  :exclude_tests<Symbol>:: whether to skip modification of test/spec files
-        #  :exclude_fixtures<Symbol>:: whether to skip modification of fixture files
-        #  :exclude_factories<Symbol>:: whether to skip modification of factory files
-        #  :exclude_serializers<Symbol>:: whether to skip modification of serializer files
-        #  :exclude_scaffolds<Symbol>:: whether to skip modification of scaffold files
-        #  :exclude_controllers<Symbol>:: whether to skip modification of controller files
-        #  :exclude_helpers<Symbol>:: whether to skip modification of helper files
-        #  :exclude_sti_subclasses<Symbol>:: whether to skip modification of files for STI subclasses
-        #
-        # == Returns:
-        # an array of file names that were annotated.
-        #
         def annotate(klass, file, options = {})
           begin
             klass.reset_column_information
