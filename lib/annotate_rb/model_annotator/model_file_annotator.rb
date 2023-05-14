@@ -81,33 +81,7 @@ module AnnotateRb
               annotated << model_file_name
             end
 
-            related_files = []
-            types = %w(test fixture factory serializer scaffold controller helper)
-            types << 'admin' if options[:active_admin] && !types.include?('admin')
-            types << 'additional_file_patterns' if options[:additional_file_patterns].present?
-
-            types.each do |key|
-              exclusion_key = "exclude_#{key.pluralize}".to_sym
-              position_key = "position_in_#{key}".to_sym
-
-              # Same options for active_admin models
-              if key == 'admin'
-                exclusion_key = 'exclude_class'.to_sym
-                position_key = 'position_in_class'.to_sym
-              end
-
-              next if options[exclusion_key]
-
-              patterns = PatternGetter.call(options, key)
-
-              patterns
-                .map { |f| FileNameResolver.call(f, model_name, table_name) }
-                .map { |f| Dir.glob(f) }
-                .flatten
-                .each do |f|
-                  related_files << [f, position_key]
-              end
-            end
+            related_files = RelatedFilesListBuilder.new(file, model_name, table_name, options).build
 
             related_files.each do |f, position_key|
               if FileAnnotator.call(f, info, position_key, options)
