@@ -4,8 +4,6 @@ module AnnotateRb
   module ModelAnnotator
     class Annotator
       class << self
-        # We're passed a name of things that might be ActiveRecord models. If we can find the class, and
-        # if its a subclass of ActiveRecord::Base, then pass it to the associated block
         def do_annotations(options = {})
           annotated = []
 
