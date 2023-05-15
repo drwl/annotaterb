@@ -10,7 +10,7 @@ module AnnotateRb
       end
 
       def annotate?
-        return false if /#{Constants::SKIP_ANNOTATION_PREFIX}.*/ =~ (File.exist?(@file) ? File.read(@file) : '')
+        return false if file_contains_skip_annotation
 
         begin
           klass = ModelClassGetter.call(@file, @options)
@@ -44,6 +44,18 @@ module AnnotateRb
         end
 
         false
+      end
+
+      private
+
+      def file_contains_skip_annotation
+        file_string = File.exist?(@file) ? File.read(@file) : ''
+
+        if /#{Constants::SKIP_ANNOTATION_PREFIX}.*/ =~ file_string
+          true
+        else
+          false
+        end
       end
     end
   end
