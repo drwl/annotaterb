@@ -25,5 +25,6 @@ module AnnotateRb
     autoload :ForeignKeyAnnotationBuilder, 'annotate_rb/model_annotator/foreign_key_annotation_builder'
     autoload :RelatedFilesListBuilder, 'annotate_rb/model_annotator/related_files_list_builder'
     autoload :AnnotationDecider, 'annotate_rb/model_annotator/annotation_decider'
+    autoload :FileAnnotatorInstruction, 'annotate_rb/model_annotator/file_annotator_instruction'
   end
 end

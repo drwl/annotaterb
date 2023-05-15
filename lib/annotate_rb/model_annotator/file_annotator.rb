@@ -4,6 +4,10 @@ module AnnotateRb
   module ModelAnnotator
     class FileAnnotator
       class << self
+        def call_with_instructions(instruction)
+          call(instruction.file, instruction.annotation, instruction.position, instruction.options)
+        end
+
         # Add a schema block to a file. If the file already contains
         # a schema info block (a comment starting with "== Schema Information"),
         # check if it matches the block that is already there. If so, leave it be.

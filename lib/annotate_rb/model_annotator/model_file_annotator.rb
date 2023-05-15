@@ -33,14 +33,17 @@ module AnnotateRb
             model_file_name = File.join(file)
             annotated = []
 
-            if FileAnnotator.call(model_file_name, info, :position_in_class, options)
+            instruction = FileAnnotatorInstruction.new(model_file_name, info, :position_in_class, options)
+            if FileAnnotator.call_with_instructions(instruction)
               annotated << model_file_name
             end
 
             related_files = RelatedFilesListBuilder.new(file, model_name, table_name, options).build
 
             related_files.each do |f, position_key|
-              if FileAnnotator.call(f, info, position_key, options)
+              instruction = FileAnnotatorInstruction.new(f, info, position_key, options)
+
+              if FileAnnotator.call_with_instructions(instruction)
                 annotated << f
               end
             end
