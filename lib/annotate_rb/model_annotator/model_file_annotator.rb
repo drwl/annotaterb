@@ -2,7 +2,7 @@
 
 module AnnotateRb
   module ModelAnnotator
-    # Not sure yet what the difference is between this and FileAnnotator
+    # Annotates a model file and its related files (controllers, factories, etc)
     class ModelFileAnnotator
       class << self
         def call(annotated, file, options)
