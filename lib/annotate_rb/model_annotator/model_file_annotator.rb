@@ -9,8 +9,14 @@ module AnnotateRb
           begin
             klass = ModelClassGetter.call(file, options)
 
-            files_annotated = annotate(klass, file, options)
-            annotated.concat(files_annotated)
+            instructions = build_instructions(klass, file, options)
+            instructions.each do |instruction|
+              if FileAnnotator.call_with_instructions(instruction)
+                annotated << instruction.file
+              end
+            end
+
+            annotated
           rescue BadModelFileError => e
             unless options[:ignore_unknown_models]
               $stderr.puts "Unable to annotate #{file}: #{e.message}"
@@ -24,36 +30,24 @@ module AnnotateRb
 
         private
 
-        def annotate(klass, file, options = {})
-          begin
-            klass.reset_column_information
-            info = AnnotationGenerator.new(klass, options).generate
-            model_name = klass.name.underscore
-            table_name = klass.table_name
-            model_file_name = File.join(file)
-            annotated = []
+        def build_instructions(klass, file, options = {})
+          instructions = []
 
-            instruction = FileAnnotatorInstruction.new(model_file_name, info, :position_in_class, options)
-            if FileAnnotator.call_with_instructions(instruction)
-              annotated << model_file_name
-            end
+          klass.reset_column_information
+          annotation = AnnotationGenerator.new(klass, options).generate
+          model_name = klass.name.underscore
+          table_name = klass.table_name
 
-            related_files = RelatedFilesListBuilder.new(file, model_name, table_name, options).build
+          model_instruction = FileAnnotatorInstruction.new(file, annotation, :position_in_class, options)
+          instructions << model_instruction
 
-            related_files.each do |f, position_key|
-              instruction = FileAnnotatorInstruction.new(f, info, position_key, options)
-
-              if FileAnnotator.call_with_instructions(instruction)
-                annotated << f
-              end
-            end
-
-          rescue StandardError => e
-            $stderr.puts "Unable to annotate #{file}: #{e.message}"
-            $stderr.puts "\t" + e.backtrace.join("\n\t") if options[:trace]
+          related_files = RelatedFilesListBuilder.new(file, model_name, table_name, options).build
+          related_file_instructions = related_files.map do |f, position_key|
+            _instruction = FileAnnotatorInstruction.new(f, annotation, position_key, options)
           end
+          instructions.concat(related_file_instructions)
 
-          annotated
+          instructions
         end
       end
     end
