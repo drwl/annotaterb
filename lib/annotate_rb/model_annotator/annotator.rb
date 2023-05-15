@@ -3,8 +3,6 @@
 module AnnotateRb
   module ModelAnnotator
     class Annotator
-      MAGIC_COMMENT_MATCHER = Regexp.new(/(^#\s*encoding:.*(?:\n|r\n))|(^# coding:.*(?:\n|\r\n))|(^# -\*- coding:.*(?:\n|\r\n))|(^# -\*- encoding\s?:.*(?:\n|\r\n))|(^#\s*frozen_string_literal:.+(?:\n|\r\n))|(^# -\*- frozen_string_literal\s*:.+-\*-(?:\n|\r\n))/).freeze
-
       class << self
         # We're passed a name of things that might be ActiveRecord models. If we can find the class, and
         # if its a subclass of ActiveRecord::Base, then pass it to the associated block

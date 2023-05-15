@@ -15,6 +15,8 @@ module AnnotateRb
       ALL_ANNOTATE_OPTIONS = ::AnnotateRb::Options::ALL_OPTION_KEYS
 
       SKIP_ANNOTATION_PREFIX = '# -\*- SkipSchemaAnnotations'.freeze
+
+      MAGIC_COMMENT_MATCHER = Regexp.new(/(^#\s*encoding:.*(?:\n|r\n))|(^# coding:.*(?:\n|\r\n))|(^# -\*- coding:.*(?:\n|\r\n))|(^# -\*- encoding\s?:.*(?:\n|\r\n))|(^#\s*frozen_string_literal:.+(?:\n|\r\n))|(^# -\*- frozen_string_literal\s*:.+-\*-(?:\n|\r\n))/).freeze
     end
   end
 end

@@ -88,7 +88,7 @@ module AnnotateRb
         end
 
         def magic_comments_as_string(content)
-          magic_comments = content.scan(Annotator::MAGIC_COMMENT_MATCHER).flatten.compact
+          magic_comments = content.scan(Constants::MAGIC_COMMENT_MATCHER).flatten.compact
 
           if magic_comments.any?
             magic_comments.join

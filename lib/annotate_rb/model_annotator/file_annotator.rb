@@ -47,7 +47,7 @@ module AnnotateRb
           # need to insert it in correct position
           if old_annotation.empty? || options[:force]
             magic_comments_block = Helper.magic_comments_as_string(old_content)
-            old_content.gsub!(Annotator::MAGIC_COMMENT_MATCHER, '')
+            old_content.gsub!(Constants::MAGIC_COMMENT_MATCHER, '')
 
             annotation_pattern = AnnotationPatternGenerator.call(options)
             old_content.sub!(annotation_pattern, '')
