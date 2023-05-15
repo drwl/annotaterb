@@ -7,13 +7,10 @@ module AnnotateRb
       class << self
         def call(annotated, file, options)
           begin
-            do_annotate = AnnotationDecider.new(file, options).annotate?
+            klass = ModelClassGetter.call(file, options)
 
-            if do_annotate
-              files_annotated = annotate(klass, file, options)
-              annotated.concat(files_annotated)
-            end
-
+            files_annotated = annotate(klass, file, options)
+            annotated.concat(files_annotated)
           rescue BadModelFileError => e
             unless options[:ignore_unknown_models]
               $stderr.puts "Unable to annotate #{file}: #{e.message}"

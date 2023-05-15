@@ -17,8 +17,14 @@ module AnnotateRb
           # expanded in ModelFileAnnotator. This is unintuitive.
           model_files_to_annotate = ModelFilesGetter.call(options)
 
-          model_files_to_annotate.each do |path, filename|
-            ModelFileAnnotator.call(annotated, File.join(path, filename), options)
+          model_files_to_actually_annotate = model_files_to_annotate.select do |path, filename|
+            file = File.join(path, filename)
+            AnnotationDecider.new(file, options).annotate?
+          end
+
+          model_files_to_actually_annotate.each do |path, filename|
+            file = File.join(path, filename)
+            ModelFileAnnotator.call(annotated, file, options)
           end
 
           if annotated.empty?
