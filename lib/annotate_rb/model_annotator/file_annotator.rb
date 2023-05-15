@@ -33,7 +33,7 @@ module AnnotateRb
 
           return false if old_columns == new_columns && !options[:force]
 
-          abort "annotate error. #{file_name} needs to be updated, but annotate was run with `--frozen`." if options[:frozen]
+          abort "AnnotateRb error. #{file_name} needs to be updated, but annotaterb was run with `--frozen`." if options[:frozen]
 
           # Replace inline the old schema info with the new schema info
           wrapper_open = options[:wrapper_open] ? "# #{options[:wrapper_open]}\n" : ""
