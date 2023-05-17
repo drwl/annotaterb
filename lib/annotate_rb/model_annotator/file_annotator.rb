@@ -4,6 +4,10 @@ module AnnotateRb
   module ModelAnnotator
     class FileAnnotator
       class << self
+        def call_with_instructions(instruction)
+          call(instruction.file, instruction.annotation, instruction.position, instruction.options)
+        end
+
         # Add a schema block to a file. If the file already contains
         # a schema info block (a comment starting with "== Schema Information"),
         # check if it matches the block that is already there. If so, leave it be.
@@ -33,7 +37,7 @@ module AnnotateRb
 
           return false if old_columns == new_columns && !options[:force]
 
-          abort "annotate error. #{file_name} needs to be updated, but annotate was run with `--frozen`." if options[:frozen]
+          abort "AnnotateRb error. #{file_name} needs to be updated, but annotaterb was run with `--frozen`." if options[:frozen]
 
           # Replace inline the old schema info with the new schema info
           wrapper_open = options[:wrapper_open] ? "# #{options[:wrapper_open]}\n" : ""
@@ -47,7 +51,7 @@ module AnnotateRb
           # need to insert it in correct position
           if old_annotation.empty? || options[:force]
             magic_comments_block = Helper.magic_comments_as_string(old_content)
-            old_content.gsub!(Annotator::MAGIC_COMMENT_MATCHER, '')
+            old_content.gsub!(Constants::MAGIC_COMMENT_MATCHER, '')
 
             annotation_pattern = AnnotationPatternGenerator.call(options)
             old_content.sub!(annotation_pattern, '')

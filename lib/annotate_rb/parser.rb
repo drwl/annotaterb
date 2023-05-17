@@ -156,13 +156,6 @@ module AnnotateRb
       option_parser.separator(' ' * 4 + 'Usage: annotaterb models [options]')
       option_parser.separator('')
 
-      # option_parser.on('-m',
-      #                  '--models',
-      #                  "Annotate ActiveRecord models") do
-      #   @options[:models] = true
-      #   @options[:command] = Commands::AnnotateModels.new
-      # end
-
       option_parser.on('-a',
                        '--active-admin',
                        'Annotate active_admin models') do
@@ -231,13 +224,6 @@ module AnnotateRb
       option_parser.separator('Annotate routes options:')
       option_parser.separator(' ' * 4 + 'Usage: annotaterb routes [options]')
       option_parser.separator('')
-
-      # option_parser.on('-r',
-      #                  '--routes',
-      #                  "Annotate routes.rb with the output of 'rails routes'") do
-      #   @options[:routes] = true
-      #   @options[:command] = Commands::AnnotateRoutes.new
-      # end
 
       option_parser.on('--ignore-routes REGEX',
                        "don't annotate routes that match a given REGEX (i.e., `annotate -I '(mobile|resque|pghero)'`") do |regex|
