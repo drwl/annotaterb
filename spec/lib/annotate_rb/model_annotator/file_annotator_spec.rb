@@ -151,8 +151,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileAnnotator do
                               mock_column(:id, :integer, comment: nil),
                               mock_column(:name, :string, limit: 50, comment: '[sensitivity: medium]')
                             ])
-        # @schema_info = AnnotateRb::ModelAnnotator::AnnotationGenerator.new(@klass, options).generate
-        # puts @schema_info
       end
 
       it 'updates the annotations' do
