@@ -29,14 +29,7 @@ module AnnotateRb
           # -- Validate file should be annotated
           return false if old_content =~ /#{Constants::SKIP_ANNOTATION_PREFIX}.*\n/
 
-          # Ignore the Schema version line because it changes with each migration
-          header_pattern = /(^# Table name:.*?\n(#.*[\r]?\n)*[\r]?)/
-          old_header = old_content.match(header_pattern).to_s
-          new_header = info_block.match(header_pattern).to_s
-
-          column_pattern = /^#[\t ]+[\w\*\.`]+[\t ]+.+$/
-          old_columns = old_header && old_header.scan(column_pattern).sort
-          new_columns = new_header && new_header.scan(column_pattern).sort
+          old_columns, new_columns = AnnotationDiffGenerator.new(old_content, info_block).generate
 
           # -- Validate file should be annotated part 2
           return false if old_columns == new_columns && !options[:force]

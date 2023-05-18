@@ -26,5 +26,6 @@ module AnnotateRb
     autoload :RelatedFilesListBuilder, 'annotate_rb/model_annotator/related_files_list_builder'
     autoload :AnnotationDecider, 'annotate_rb/model_annotator/annotation_decider'
     autoload :FileAnnotatorInstruction, 'annotate_rb/model_annotator/file_annotator_instruction'
+    autoload :AnnotationDiffGenerator, 'annotate_rb/model_annotator/annotation_diff_generator'
   end
 end
