@@ -22,21 +22,17 @@ module AnnotateRb
         #                           :before, :top, :after or :bottom. Default is :before.
         #
         def call(file_name, info_block, position, options = {})
-          # -- Read file
           return false unless File.exist?(file_name)
           old_content = File.read(file_name)
 
-          # -- Validate file should be annotated
           return false if old_content =~ /#{Constants::SKIP_ANNOTATION_PREFIX}.*\n/
 
           diff = AnnotationDiffGenerator.new(old_content, info_block).generate
 
-          # -- Validate file should be annotated part 2
           return false if !diff.changed? && !options[:force]
 
           abort "AnnotateRb error. #{file_name} needs to be updated, but annotaterb was run with `--frozen`." if options[:frozen]
 
-          # -- Update annotation if it exists
           # Replace inline the old schema info with the new schema info
           wrapper_open = options[:wrapper_open] ? "# #{options[:wrapper_open]}\n" : ""
           wrapper_close = options[:wrapper_close] ? "# #{options[:wrapper_close]}\n" : ""
