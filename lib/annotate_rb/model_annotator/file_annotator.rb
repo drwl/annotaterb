@@ -24,18 +24,12 @@ module AnnotateRb
         def call(file_name, info_block, position, options = {})
           return false unless File.exist?(file_name)
           old_content = File.read(file_name)
+
           return false if old_content =~ /#{Constants::SKIP_ANNOTATION_PREFIX}.*\n/
 
-          # Ignore the Schema version line because it changes with each migration
-          header_pattern = /(^# Table name:.*?\n(#.*[\r]?\n)*[\r]?)/
-          old_header = old_content.match(header_pattern).to_s
-          new_header = info_block.match(header_pattern).to_s
+          diff = AnnotationDiffGenerator.new(old_content, info_block).generate
 
-          column_pattern = /^#[\t ]+[\w\*\.`]+[\t ]+.+$/
-          old_columns = old_header && old_header.scan(column_pattern).sort
-          new_columns = new_header && new_header.scan(column_pattern).sort
-
-          return false if old_columns == new_columns && !options[:force]
+          return false if !diff.changed? && !options[:force]
 
           abort "AnnotateRb error. #{file_name} needs to be updated, but annotaterb was run with `--frozen`." if options[:frozen]
 

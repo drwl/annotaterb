@@ -26,8 +26,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
 
       it "should put annotation before class if :position == 'before'" do
         annotate_one_file position: position
-        expect(File.read(@model_file_name))
-          .to eq("#{@schema_info}#{@file_content}")
+        expect(File.read(@model_file_name)).to eq("#{@schema_info}#{@file_content}")
       end
     end
 
@@ -36,8 +35,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
 
       it "should put annotation before class if :position == :before" do
         annotate_one_file position: position
-        expect(File.read(@model_file_name))
-          .to eq("#{@schema_info}#{@file_content}")
+        expect(File.read(@model_file_name)).to eq("#{@schema_info}#{@file_content}")
       end
     end
 
@@ -46,8 +44,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
 
       it "should put annotation before class if :position == 'top'" do
         annotate_one_file position: position
-        expect(File.read(@model_file_name))
-          .to eq("#{@schema_info}#{@file_content}")
+        expect(File.read(@model_file_name)).to eq("#{@schema_info}#{@file_content}")
       end
     end
 
@@ -56,8 +53,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
 
       it "should put annotation before class if :position == :top" do
         annotate_one_file position: position
-        expect(File.read(@model_file_name))
-          .to eq("#{@schema_info}#{@file_content}")
+        expect(File.read(@model_file_name)).to eq("#{@schema_info}#{@file_content}")
       end
     end
 
@@ -66,8 +62,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
 
       it "should put annotation after class if position: 'after'" do
         annotate_one_file position: position
-        expect(File.read(@model_file_name))
-          .to eq("#{@file_content}\n#{@schema_info}")
+        expect(File.read(@model_file_name)).to eq("#{@file_content}\n#{@schema_info}")
       end
     end
 
@@ -76,8 +71,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
 
       it "should put annotation after class if position: :after" do
         annotate_one_file position: position
-        expect(File.read(@model_file_name))
-          .to eq("#{@file_content}\n#{@schema_info}")
+        expect(File.read(@model_file_name)).to eq("#{@file_content}\n#{@schema_info}")
       end
     end
 
@@ -86,8 +80,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
 
       it "should put annotation after class if position: 'bottom'" do
         annotate_one_file position: position
-        expect(File.read(@model_file_name))
-          .to eq("#{@file_content}\n#{@schema_info}")
+        expect(File.read(@model_file_name)).to eq("#{@file_content}\n#{@schema_info}")
       end
     end
 
@@ -96,15 +89,13 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
 
       it "should put annotation after class if position: :bottom" do
         annotate_one_file position: position
-        expect(File.read(@model_file_name))
-          .to eq("#{@file_content}\n#{@schema_info}")
+        expect(File.read(@model_file_name)).to eq("#{@file_content}\n#{@schema_info}")
       end
     end
 
     it 'should wrap annotation if wrapper is specified' do
       annotate_one_file wrapper_open: 'START', wrapper_close: 'END'
-      expect(File.read(@model_file_name))
-        .to eq("# START\n#{@schema_info}# END\n#{@file_content}")
+      expect(File.read(@model_file_name)).to eq("# START\n#{@schema_info}# END\n#{@file_content}")
     end
 
     describe 'with existing annotation' do
