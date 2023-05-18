@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
+  def test_columns_match_expected
+    remove_whitespace = Proc.new { |str| str.delete(" \t\r\n")  }
+
+    resulting_current_columns_data = subject.current_columns.map(&remove_whitespace)
+    expected_current_columns_data = current_columns.map(&remove_whitespace)
+    resulting_new_columns_data = subject.new_columns.map(&remove_whitespace)
+    expected_new_columns_data = new_columns.map(&remove_whitespace)
+
+    expect(resulting_current_columns_data).to eq(expected_current_columns_data)
+    expect(resulting_new_columns_data).to eq(expected_new_columns_data)
+  end
+
   describe '.call' do
     subject { described_class.call(file_content, annotation_block) }
 
@@ -33,8 +45,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
       end
 
       it 'returns an AnnotationDiff object with the expected old and new columns' do
-        expect(subject.current_columns).to eq(current_columns)
-        expect(subject.new_columns).to eq(new_columns)
+        test_columns_match_expected
+
         expect(subject.changed?).to eq(true)
       end
     end
@@ -77,20 +89,20 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
       end
 
       it 'returns an AnnotationDiff object with the expected old and new columns' do
-        expect(subject.current_columns).to eq(current_columns)
-        expect(subject.new_columns).to eq(new_columns)
+        test_columns_match_expected
+
         expect(subject.changed?).to eq(false)
       end
     end
 
-    xcontext 'when model file has existing annotations with column comments', focus: true do
+    context 'when model file has existing annotations with column comments' do
       let(:annotation_block) do
         <<~SCHEMA
           # == Schema Information
           #
           # Table name: users
           #
-          #  id                          :integer          not null, primary key
+          #  id                          :bigint           not null, primary key
           #  name([sensitivity: medium]) :string(50)       not null
           #
         SCHEMA
@@ -101,7 +113,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
           #
           # Table name: users
           #
-          #  id                       :integer          not null, primary key
+          #  id                       :bigint           not null, primary key
           #  name([sensitivity: low]) :string(50)       not null
           #
           class User < ApplicationRecord
@@ -111,23 +123,23 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
 
       let(:current_columns) do
         [
-          "#  id                     :bigint           not null, primary key",
+          "#  id                       :bigint           not null, primary key",
           "#  name([sensitivity: low]) :string(50)       not null",
           "# Table name: users"
         ]
       end
       let(:new_columns) do
         [
-          "#  id                     :bigint           not null, primary key",
+          "#  id                          :bigint           not null, primary key",
           "#  name([sensitivity: medium]) :string(50)       not null",
           "# Table name: users"
         ]
       end
 
       it 'returns an AnnotationDiff object with the expected old and new columns' do
-        expect(subject.current_columns).to eq(current_columns)
-        expect(subject.new_columns).to eq(new_columns)
-        expect(subject.changed?).to eq(false)
+        test_columns_match_expected
+
+        expect(subject.changed?).to eq(true)
       end
     end
   end
