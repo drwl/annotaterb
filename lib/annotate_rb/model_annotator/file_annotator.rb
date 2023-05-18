@@ -29,10 +29,12 @@ module AnnotateRb
           # -- Validate file should be annotated
           return false if old_content =~ /#{Constants::SKIP_ANNOTATION_PREFIX}.*\n/
 
-          old_columns, new_columns = AnnotationDiffGenerator.new(old_content, info_block).generate
+          diff = AnnotationDiffGenerator.new(old_content, info_block).generate
+          _old_columns = diff.old_columns
+          _new_columns = diff.new_columns
 
           # -- Validate file should be annotated part 2
-          return false if old_columns == new_columns && !options[:force]
+          return false if !diff.changed? && !options[:force]
 
           abort "AnnotateRb error. #{file_name} needs to be updated, but annotaterb was run with `--frozen`." if options[:frozen]
 

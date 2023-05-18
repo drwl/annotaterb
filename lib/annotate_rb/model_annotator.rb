@@ -27,5 +27,6 @@ module AnnotateRb
     autoload :AnnotationDecider, 'annotate_rb/model_annotator/annotation_decider'
     autoload :FileAnnotatorInstruction, 'annotate_rb/model_annotator/file_annotator_instruction'
     autoload :AnnotationDiffGenerator, 'annotate_rb/model_annotator/annotation_diff_generator'
+    autoload :AnnotationDiff, 'annotate_rb/model_annotator/annotation_diff'
   end
 end
