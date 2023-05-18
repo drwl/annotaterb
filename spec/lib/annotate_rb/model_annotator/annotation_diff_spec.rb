@@ -2,12 +2,12 @@
 
 RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiff do
   describe 'attributes' do
-    subject { described_class.new(old_columns, new_columns) }
-    let(:old_columns) { 'some old columns string' }
+    subject { described_class.new(current_columns, new_columns) }
+    let(:current_columns) { 'some current columns string' }
     let(:new_columns) { 'some new columns string' }
 
-    it 'returns the old columns' do
-      expect(subject.old_columns).to eq(old_columns)
+    it 'returns the current columns' do
+      expect(subject.current_columns).to eq(current_columns)
     end
 
     it 'returns the new columns' do
@@ -16,17 +16,17 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiff do
   end
 
   describe '#changed?' do
-    subject { described_class.new(old_columns, new_columns).changed? }
+    subject { described_class.new(current_columns, new_columns).changed? }
 
-    context 'when the old and new columns are the same' do
-      let(:old_columns) { 'the same' }
+    context 'when the current and new columns are the same' do
+      let(:current_columns) { 'the same' }
       let(:new_columns) { 'the same' }
 
       it { is_expected.to eq(false) }
     end
 
-    context 'when the old and new columns are different' do
-      let(:old_columns) { 'the old' }
+    context 'when the current and new columns are different' do
+      let(:current_columns) { 'the current' }
       let(:new_columns) { 'the new' }
 
       it { is_expected.to eq(true) }

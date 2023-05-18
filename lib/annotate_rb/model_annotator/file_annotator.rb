@@ -30,7 +30,7 @@ module AnnotateRb
           return false if old_content =~ /#{Constants::SKIP_ANNOTATION_PREFIX}.*\n/
 
           diff = AnnotationDiffGenerator.new(old_content, info_block).generate
-          _old_columns = diff.old_columns
+          _current_columns = diff.current_columns
           _new_columns = diff.new_columns
 
           # -- Validate file should be annotated part 2

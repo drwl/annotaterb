@@ -22,13 +22,22 @@ module AnnotateRb
 
       def generate
         # Ignore the Schema version line because it changes with each migration
-        old_header = @file_content.match(HEADER_PATTERN).to_s
-        new_header = @annotation_block.match(HEADER_PATTERN).to_s
+        current_annotations = @file_content.match(HEADER_PATTERN).to_s
+        new_annotations = @annotation_block.match(HEADER_PATTERN).to_s
 
-        old_columns = old_header && old_header.scan(COLUMN_PATTERN).sort
-        new_columns = new_header && new_header.scan(COLUMN_PATTERN).sort
+        if current_annotations.present?
+          current_annotation_columns = current_annotations.scan(COLUMN_PATTERN).sort
+        else
+          current_annotation_columns = []
+        end
 
-        _result = AnnotationDiff.new(old_columns, new_columns)
+        if new_annotations.present?
+          new_annotation_columns = new_annotations.scan(COLUMN_PATTERN).sort
+        else
+          new_annotation_columns = []
+        end
+
+        _result = AnnotationDiff.new(current_annotation_columns, new_annotation_columns)
       end
     end
   end
