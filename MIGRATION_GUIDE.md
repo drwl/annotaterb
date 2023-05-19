@@ -4,14 +4,17 @@
 * The command line interface has been changed to make commands easier to run annotations for models and routes separately. Refer to Command line differences section for more details.
 * Configuration can now be done in a yml file instead of reading from ENV.
 * No longer reads configuration options from ENV / environment variables.
-* Annotate gem added 4 rake tasks to your Rails project that were removed. If you use these and would like them back please open an issue.
+* Annotate gem added 4 rake commands: `annotate_models`, `remove_annotation`, `annotate_routes`, `remove_routes` that were removed. If you use these and would like them back please open an issue.
+
+----------
 
 ## Migration overview
 Annotate provided 3 ways for passing options to the gem.
-1. Through the command line
-2. Using environment variables (ENV)
-3. Rake files that got installed
+1. [Through the command line](#command-line-differences)
+2. [Using environment variables (ENV)](#passing-options-via-environment-variables)
+3. [Rake files that got installed](#automatic-annotations-after-running-database-migration-commands)
 
+----------
 ### Command line differences
 Previously, Annotate allowed you to annotate both model and route files in the same command. In an attempt to make the CLI easier to use, they are now separate. The following output is what you see when running annotaterb without any options. 
 
@@ -66,6 +69,8 @@ Additional options that work for annotating models and routes
     ...
 ```
 
+----------
+
 ### Passing options via Environment Variables
 Annotate also reads options from ENV. For example, this command line argument `ANNOTATE_SKIP_ON_DB_MIGRATE=1 rake db:migrate` would affect Annotate's behavior. 
 
@@ -80,6 +85,8 @@ position: after
 This change was done to reduce complexity in configuration and make the gem easier to maintain.
 
 **Note: `.annotaterb.yml` is optional. In the absence of it will use command line arguments and then the defaults. The defaults are implemented in `AnnotateRb::Options`.**
+
+----------
 
 ### Automatic annotations after running database migration commands
 The old Annotate gem came with a generator that installed the following Rake file(s) into your Rails project.
@@ -165,6 +172,8 @@ If your `lib/tasks/auto_annotate_models.rake` uses the default settings from Ann
 And you want to keep those defaults, you can use the following `.annotaterb.yml` file. 
 
 **Note: there were bugs in Annotate that may have lead to options not actually being used for some of the `exclude_*` options. If you experience different behavior despite using the same defaults then this may be why.**
+
+### Example .annotaterb.yml that uses same Annotate defaults
 
 ```yaml
 # .annotaterb.yml
