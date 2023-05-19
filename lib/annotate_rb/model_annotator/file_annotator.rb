@@ -25,46 +25,36 @@ module AnnotateRb
           return false unless File.exist?(file_name)
           old_content = File.read(file_name)
 
-          parsed_file = AnnotatedFileParser.new(old_content, options)
+          parsed_file = AnnotatedFileParser.new(old_content, info_block, options)
           parsed_file.parse
 
           return false if parsed_file.skip?
-
-          diff = AnnotationDiffGenerator.new(old_content, info_block).generate
-
-          return false if !diff.changed? && !options[:force]
+          return false if !parsed_file.annotations_changed? && !options[:force]
 
           abort "AnnotateRb error. #{file_name} needs to be updated, but annotaterb was run with `--frozen`." if options[:frozen]
 
-          wrapped_info_block = Helper.wrapped_content(info_block, options)
-
-          annotation_pattern = AnnotationPatternGenerator.call(options)
-          old_annotation = old_content.match(annotation_pattern).to_s
-
           # if there *was* no old schema info or :force was passed, we simply need to insert it in correct position
-          if old_annotation.empty? || options[:force]
+          if parsed_file.old_annotations_v1.empty? || options[:force]
             magic_comments_block = Helper.magic_comments_as_string(old_content)
             old_content.gsub!(Constants::MAGIC_COMMENT_MATCHER, '')
 
-            annotation_pattern = AnnotationPatternGenerator.call(options)
-            old_content.sub!(annotation_pattern, '')
+            old_content.sub!(parsed_file.annotation_pattern, '')
 
             new_content = if %w(after bottom).include?(options[position].to_s)
-                            magic_comments_block + (old_content.rstrip + "\n\n" + wrapped_info_block)
+                            magic_comments_block + (old_content.rstrip + "\n\n" + parsed_file.new_wrapped_annotations)
                           elsif magic_comments_block.empty?
-                            magic_comments_block + wrapped_info_block + old_content.lstrip
+                            magic_comments_block + parsed_file.new_wrapped_annotations + old_content.lstrip
                           else
-                            magic_comments_block + "\n" + wrapped_info_block + old_content.lstrip
+                            magic_comments_block + "\n" + parsed_file.new_wrapped_annotations + old_content.lstrip
                           end
           else
             # replace the old annotation with the new one
 
             # keep the surrounding whitespace the same
-            space_match = old_annotation.match(/\A(?<start>\s*).*?\n(?<end>\s*)\z/m)
-            new_annotation = space_match[:start] + wrapped_info_block + space_match[:end]
+            space_match = parsed_file.old_annotations_v1.match(/\A(?<start>\s*).*?\n(?<end>\s*)\z/m)
+            new_annotation = space_match[:start] + parsed_file.new_wrapped_annotations + space_match[:end]
 
-            annotation_pattern = AnnotationPatternGenerator.call(options)
-            new_content = old_content.sub(annotation_pattern, new_annotation)
+            new_content = old_content.sub(parsed_file.annotation_pattern, new_annotation)
           end
 
           updated_file_content = new_content
