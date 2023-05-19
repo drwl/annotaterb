@@ -33,12 +33,10 @@ module AnnotateRb
 
           abort "AnnotateRb error. #{file_name} needs to be updated, but annotaterb was run with `--frozen`." if options[:frozen]
 
-          # if there *was* no old schema info or :force was passed, we simply need to insert it in correct position
           if parsed_file.old_annotations_v1.empty? || options[:force]
             magic_comments_block = Helper.magic_comments_as_string(old_content)
-            old_content.gsub!(Constants::MAGIC_COMMENT_MATCHER, '')
-
-            old_content.sub!(parsed_file.annotation_pattern, '')
+            old_content = old_content.gsub(Constants::MAGIC_COMMENT_MATCHER, '')
+            old_content = old_content.sub(parsed_file.annotation_pattern, '')
 
             new_content = if %w(after bottom).include?(options[position].to_s)
                             magic_comments_block + (old_content.rstrip + "\n\n" + parsed_file.new_wrapped_annotations)
