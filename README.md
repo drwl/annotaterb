@@ -60,10 +60,7 @@ $ bin/rails g annotate_rb:install
 This will copy a rake task into your Rails project's `lib/tasks` directory that will hook into the Rails project rake tasks, automatically running AnnotateRb after database migration rake tasks.
 
 ## Migrating from the annotate gem
-The old [annotate gem](https://github.com/ctran/annotate_models) relied on environment variables and hardcoded values in rake files for configuration. AnnotateRb is different. It reads from an optional configuration yml file and options from the CLI to function.
-
-* Remove the following files `lib/tasks/annotate_models.rake`, `lib/tasks/annotate_models_migrate.rake`, `lib/tasks/annotate_routes.rake`.
-* Run the generator install command above.
+Refer to the [migration guide](MIGRATION_GUIDE.md).
 
 ## Usage
 
@@ -160,7 +157,9 @@ Previously in the [Annotate](https://github.com/ctran/annotate_models) you could
 position: after
 ```
 
-Annotaterb reads first from the configuration file, if it exists, then merges it with any options passed into the CLI.
+Annotaterb reads first from the configuration file, if it exists, then merges it with any options passed into the CLI. 
+
+For further details visit the [section in the migration guide](MIGRATION_GUIDE.md#automatic-annotations-after-running-database-migration-commands).
 
 ### How to skip annotating a particular model
 If you want to always skip annotations on a particular model, add this string
