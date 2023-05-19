@@ -74,7 +74,7 @@ Additional options that work for annotating models and routes
 ### Passing options via Environment Variables
 Annotate also reads options from ENV. For example, this command line argument `ANNOTATE_SKIP_ON_DB_MIGRATE=1 rake db:migrate` would affect Annotate's behavior. 
 
-The reading from ENV / environment variables has been removed in favor of reading configuration from `.annotaterb.yml` file in your Rails project root.
+The reading from ENV / environment variables has **been removed** in favor of reading configuration from `.annotaterb.yml` file in your Rails project root.
 
 ```yml
 # .annotaterb.yml
@@ -84,7 +84,7 @@ position: after
 
 This change was done to reduce complexity in configuration and make the gem easier to maintain.
 
-**Note: `.annotaterb.yml` is optional. In the absence of it will use command line arguments and then the defaults. The defaults are implemented in `AnnotateRb::Options`.**
+**Note: `.annotaterb.yml` is optional.** In its, AnnotateRb will use command line arguments and then the defaults. The defaults are implemented in `AnnotateRb::Options`.
 
 ----------
 
