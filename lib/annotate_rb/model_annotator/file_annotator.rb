@@ -34,9 +34,9 @@ module AnnotateRb
           abort "AnnotateRb error. #{file_name} needs to be updated, but annotaterb was run with `--frozen`." if options[:frozen]
 
           if parsed_file.old_annotations_v1.empty? || options[:force]
-            updated_file_content = parsed_file.regenerate_annotations
+            updated_file_content = parsed_file.regenerated_annotations
           else
-            updated_file_content = parsed_file.update_annotations
+            updated_file_content = parsed_file.updated_annotations
           end
 
           File.open(file_name, 'wb') { |f| f.puts updated_file_content }

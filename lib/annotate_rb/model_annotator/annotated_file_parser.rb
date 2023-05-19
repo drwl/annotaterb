@@ -5,6 +5,7 @@ module AnnotateRb
     # Parses a model file into its relevant parts
     class AnnotatedFileParser
       SKIP_ANNOTATION_STRING = '# -*- SkipSchemaAnnotations'
+      SOME_PATTERN = /\A(?<start>\s*).*?\n(?<end>\s*)\z/m # Unsure what this pattern is
 
       def initialize(file_content, new_annotations, annotation_position, options)
         @file_content = file_content
@@ -24,7 +25,43 @@ module AnnotateRb
         @annotation_pattern = AnnotationPatternGenerator.call(@options)
 
         @old_annotations_v1 = @file_content.match(@annotation_pattern).to_s
+
+        @regenerated_annotations = regenerate_annotations
+
+        @updated_annotations = update_annotations
       end
+
+      def regenerated_annotations
+        @regenerated_annotations
+      end
+
+      def updated_annotations
+        @updated_annotations
+      end
+
+      def new_wrapped_annotations
+        @new_wrapped_annotations
+      end
+
+      def annotation_pattern
+        @annotation_pattern
+      end
+
+      # Taken from how FileAnnotator did it
+      # Unclear how the regex patterns lead to different results than AnnotationDiffGenerator
+      def old_annotations_v1
+        @old_annotations_v1
+      end
+
+      def annotations_changed?
+        @annotations_changed
+      end
+
+      def skip?
+        @skip
+      end
+
+      private
 
       # Used when overwriting existing annotations OR model file has no annotations
       def regenerate_annotations
@@ -48,34 +85,14 @@ module AnnotateRb
       end
 
       def update_annotations
-        space_match = @old_annotations_v1.match(/\A(?<start>\s*).*?\n(?<end>\s*)\z/m)
+        return '' if @old_annotations_v1.empty?
+
+        space_match = @old_annotations_v1.match(SOME_PATTERN)
         new_annotation = space_match[:start] + @new_wrapped_annotations + space_match[:end]
 
         new_content = @file_content.sub(@annotation_pattern, new_annotation)
 
         new_content
-      end
-
-      def new_wrapped_annotations
-        @new_wrapped_annotations
-      end
-
-      def annotation_pattern
-        @annotation_pattern
-      end
-
-      # Taken from how FileAnnotator did it
-      # Unclear how the regex patterns lead to different results than AnnotationDiffGenerator
-      def old_annotations_v1
-        @old_annotations_v1
-      end
-
-      def annotations_changed?
-        @annotations_changed
-      end
-
-      def skip?
-        @skip
       end
     end
   end
