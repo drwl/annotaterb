@@ -36,14 +36,11 @@ module AnnotateRb
           if parsed_file.old_annotations_v1.empty? || options[:force]
             updated_file_content = parsed_file.regenerate_annotations
           else
-
-            space_match = parsed_file.old_annotations_v1.match(/\A(?<start>\s*).*?\n(?<end>\s*)\z/m)
-            new_annotation = space_match[:start] + parsed_file.new_wrapped_annotations + space_match[:end]
-
-            updated_file_content = old_content.sub(parsed_file.annotation_pattern, new_annotation)
+            updated_file_content = parsed_file.update_annotations
           end
 
           File.open(file_name, 'wb') { |f| f.puts updated_file_content }
+
           true
         end
       end

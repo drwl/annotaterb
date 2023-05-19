@@ -47,6 +47,15 @@ module AnnotateRb
         new_content
       end
 
+      def update_annotations
+        space_match = @old_annotations_v1.match(/\A(?<start>\s*).*?\n(?<end>\s*)\z/m)
+        new_annotation = space_match[:start] + @new_wrapped_annotations + space_match[:end]
+
+        new_content = @file_content.sub(@annotation_pattern, new_annotation)
+
+        new_content
+      end
+
       def new_wrapped_annotations
         @new_wrapped_annotations
       end
