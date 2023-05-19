@@ -83,6 +83,22 @@ module AnnotateRb
           end
         end
 
+        def wrapped_content(content, options)
+          if options[:wrapper_open]
+            wrapper_open = "# #{options[:wrapper_open]}\n"
+          else
+            wrapper_open = ""
+          end
+
+          if options[:wrapper_close]
+            wrapper_close = "# #{options[:wrapper_close]}\n"
+          else
+            wrapper_close = ""
+          end
+
+          _wrapped_info_block = "#{wrapper_open}#{content}#{wrapper_close}"
+        end
+
         def width(string)
           string.chars.inject(0) { |acc, elem| acc + (elem.bytesize == 3 ? 2 : 1) }
         end

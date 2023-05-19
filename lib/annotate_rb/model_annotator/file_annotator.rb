@@ -33,16 +33,12 @@ module AnnotateRb
 
           abort "AnnotateRb error. #{file_name} needs to be updated, but annotaterb was run with `--frozen`." if options[:frozen]
 
-          # Replace inline the old schema info with the new schema info
-          wrapper_open = options[:wrapper_open] ? "# #{options[:wrapper_open]}\n" : ""
-          wrapper_close = options[:wrapper_close] ? "# #{options[:wrapper_close]}\n" : ""
-          wrapped_info_block = "#{wrapper_open}#{info_block}#{wrapper_close}"
+          wrapped_info_block = Helper.wrapped_content(info_block, options)
 
           annotation_pattern = AnnotationPatternGenerator.call(options)
           old_annotation = old_content.match(annotation_pattern).to_s
 
-          # if there *was* no old schema info or :force was passed, we simply
-          # need to insert it in correct position
+          # if there *was* no old schema info or :force was passed, we simply need to insert it in correct position
           if old_annotation.empty? || options[:force]
             magic_comments_block = Helper.magic_comments_as_string(old_content)
             old_content.gsub!(Constants::MAGIC_COMMENT_MATCHER, '')
@@ -68,7 +64,8 @@ module AnnotateRb
             new_content = old_content.sub(annotation_pattern, new_annotation)
           end
 
-          File.open(file_name, 'wb') { |f| f.puts new_content }
+          updated_file_content = new_content
+          File.open(file_name, 'wb') { |f| f.puts updated_file_content }
           true
         end
       end
