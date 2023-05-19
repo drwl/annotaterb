@@ -25,7 +25,10 @@ module AnnotateRb
           return false unless File.exist?(file_name)
           old_content = File.read(file_name)
 
-          return false if old_content =~ /#{Constants::SKIP_ANNOTATION_PREFIX}.*\n/
+          parsed_file = AnnotatedFileParser.new(old_content, options)
+          parsed_file.parse
+
+          return false if parsed_file.skip?
 
           diff = AnnotationDiffGenerator.new(old_content, info_block).generate
 
