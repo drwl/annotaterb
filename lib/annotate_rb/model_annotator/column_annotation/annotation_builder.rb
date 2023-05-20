@@ -39,9 +39,9 @@ module AnnotateRb
             result += sprintf("# @!attribute #{col_name}") + "\n"
 
             if @column.respond_to?(:array) && @column.array
-              ruby_class = "Array<#{Helper.map_col_type_to_ruby_classes(formatted_column_type)}>"
+              ruby_class = "Array<#{map_col_type_to_ruby_classes(formatted_column_type)}>"
             else
-              ruby_class = Helper.map_col_type_to_ruby_classes(formatted_column_type)
+              ruby_class = map_col_type_to_ruby_classes(formatted_column_type)
             end
 
             result += sprintf("#   @return [#{ruby_class}]") + "\n"
@@ -62,6 +62,19 @@ module AnnotateRb
         end
 
         private
+
+        def map_col_type_to_ruby_classes(col_type)
+          case col_type
+          when 'integer' then Integer.to_s
+          when 'float' then Float.to_s
+          when 'decimal' then BigDecimal.to_s
+          when 'datetime', 'timestamp', 'time' then Time.to_s
+          when 'date' then Date.to_s
+          when 'text', 'string', 'binary', 'inet', 'uuid' then String.to_s
+          when 'json', 'jsonb' then Hash.to_s
+          when 'boolean' then 'Boolean'
+          end
+        end
 
         def format_default(col_name, max_size, col_type, attrs)
           format('#  %s:%s %s',
