@@ -47,6 +47,15 @@ module AnnotateRb
 
       private
 
+      def index_where_info(index, format = :default)
+        value = index.try(:where).try(:to_s)
+        if value.blank?
+          ''
+        else
+          " #{INDEX_CLAUSES[:where][format]} #{value}"
+        end
+      end
+
       def index_unique_info(index, format = :default)
         index.unique ? " #{INDEX_CLAUSES[:unique][format]}" : ''
       end
@@ -55,7 +64,7 @@ module AnnotateRb
         details = format(
           '%s%s%s',
           index_unique_info(index, :markdown),
-          Helper.index_where_info(index, :markdown),
+          index_where_info(index, :markdown),
           Helper.index_using_info(index, :markdown)
         ).strip
         details = " (#{details})" unless details.blank?
@@ -74,7 +83,7 @@ module AnnotateRb
           index.name,
           "(#{index_columns_info(index).join(',')})",
           index_unique_info(index),
-          Helper.index_where_info(index),
+          index_where_info(index),
           Helper.index_using_info(index)
         ).rstrip + "\n"
       end
