@@ -65,6 +65,11 @@ module AnnotateRb
 
       # Used when overwriting existing annotations OR model file has no annotations
       def regenerate_annotations
+        # Method works as follows:
+        # 1. Extract the magic comments in the file content into a variable to be used later
+        # 2. Remove the magic comments in the file content
+        # 3. Write annotations and generate the new file content that gets written to the file
+
         magic_comments_block = MagicCommentParser.call(@file_content)
 
         old_content = @file_content.gsub(Constants::MAGIC_COMMENT_MATCHER, '')
