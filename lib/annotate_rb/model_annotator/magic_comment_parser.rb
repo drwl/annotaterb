@@ -2,6 +2,7 @@
 
 module AnnotateRb
   module ModelAnnotator
+    # Extracts magic comments strings and returns them
     class MagicCommentParser
       class << self
         def call(content)
