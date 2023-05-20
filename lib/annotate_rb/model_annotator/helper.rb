@@ -19,16 +19,6 @@ module AnnotateRb
       }.freeze
 
       class << self
-        def mb_chars_ljust(string, length)
-          string = string.to_s
-          padding = length - Helper.width(string)
-          if padding.positive?
-            string + (' ' * padding)
-          else
-            string[0..(length - 1)]
-          end
-        end
-
         def index_unique_info(index, format = :default)
           index.unique ? " #{INDEX_CLAUSES[:unique][format]}" : ''
         end

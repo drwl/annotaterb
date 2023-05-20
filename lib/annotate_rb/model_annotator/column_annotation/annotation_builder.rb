@@ -63,6 +63,16 @@ module AnnotateRb
 
         private
 
+        def mb_chars_ljust(string, length)
+          string = string.to_s
+          padding = length - Helper.width(string)
+          if padding.positive?
+            string + (' ' * padding)
+          else
+            string[0..(length - 1)]
+          end
+        end
+
         def map_col_type_to_ruby_classes(col_type)
           case col_type
           when 'integer' then Integer.to_s
@@ -78,8 +88,8 @@ module AnnotateRb
 
         def format_default(col_name, max_size, col_type, attrs)
           format('#  %s:%s %s',
-                 Helper.mb_chars_ljust(col_name, max_size),
-                 Helper.mb_chars_ljust(col_type, BARE_TYPE_ALLOWANCE),
+                 mb_chars_ljust(col_name, max_size),
+                 mb_chars_ljust(col_type, BARE_TYPE_ALLOWANCE),
                  attrs.join(', ')).rstrip + "\n"
         end
 
