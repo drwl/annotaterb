@@ -33,7 +33,7 @@ module AnnotateRb
         end
 
         @info += @model.columns.map do |col|
-          ColumnAnnotationBuilder.new(col, @model, max_size, @options).build
+          ColumnAnnotation::AnnotationBuilder.new(col, @model, max_size, @options).build
         end.join
 
         if @options[:show_indexes] && @model.table_exists?
