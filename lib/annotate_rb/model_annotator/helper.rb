@@ -41,10 +41,6 @@ module AnnotateRb
           end
         end
 
-        def non_ascii_length(string)
-          string.to_s.chars.reject(&:ascii_only?).length
-        end
-
         def wrapped_content(content, options)
           if options[:wrapper_open]
             wrapper_open = "# #{options[:wrapper_open]}\n"

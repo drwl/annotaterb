@@ -46,7 +46,7 @@ module AnnotateRb
 
             result += sprintf("#   @return [#{ruby_class}]") + "\n"
           elsif @options[:format_markdown]
-            name_remainder = @max_size - col_name.length - Helper.non_ascii_length(col_name)
+            name_remainder = @max_size - col_name.length - non_ascii_length(col_name)
             type_remainder = (MD_TYPE_ALLOWANCE - 2) - formatted_column_type.length
             result += format("# **`%s`**%#{name_remainder}s | `%s`%#{type_remainder}s | `%s`",
                              col_name,
@@ -62,6 +62,10 @@ module AnnotateRb
         end
 
         private
+
+        def non_ascii_length(string)
+          string.to_s.chars.reject(&:ascii_only?).length
+        end
 
         def mb_chars_ljust(string, length)
           string = string.to_s
