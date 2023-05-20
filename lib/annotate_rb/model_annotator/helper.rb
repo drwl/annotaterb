@@ -103,16 +103,6 @@ module AnnotateRb
           string.chars.inject(0) { |acc, elem| acc + (elem.bytesize == 3 ? 2 : 1) }
         end
 
-        def magic_comments_as_string(content)
-          magic_comments = content.scan(Constants::MAGIC_COMMENT_MATCHER).flatten.compact
-
-          if magic_comments.any?
-            magic_comments.join
-          else
-            ''
-          end
-        end
-
         # TODO: Find another implementation that doesn't depend on ActiveSupport
         def fallback(*args)
           args.compact.detect(&:present?)

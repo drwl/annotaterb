@@ -30,5 +30,6 @@ module AnnotateRb
     autoload :AnnotationDiff, 'annotate_rb/model_annotator/annotation_diff'
     autoload :FileThing, 'annotate_rb/model_annotator/file_thing'
     autoload :AnnotatedFileParser, 'annotate_rb/model_annotator/annotated_file_parser'
+    autoload :MagicCommentParser, 'annotate_rb/model_annotator/magic_comment_parser'
   end
 end
