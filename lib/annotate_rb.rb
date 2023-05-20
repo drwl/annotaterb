@@ -12,6 +12,7 @@ require 'rake'
 
 require 'annotate_rb/active_record_patch'
 
+require_relative 'annotate_rb/helper'
 require_relative 'annotate_rb/core'
 require_relative 'annotate_rb/commands'
 require_relative 'annotate_rb/parser'
