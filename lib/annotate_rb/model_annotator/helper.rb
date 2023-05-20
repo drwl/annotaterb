@@ -19,10 +19,6 @@ module AnnotateRb
       }.freeze
 
       class << self
-        def index_unique_info(index, format = :default)
-          index.unique ? " #{INDEX_CLAUSES[:unique][format]}" : ''
-        end
-
         def index_where_info(index, format = :default)
           value = index.try(:where).try(:to_s)
           if value.blank?

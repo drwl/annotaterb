@@ -3,6 +3,21 @@
 module AnnotateRb
   module ModelAnnotator
     class IndexAnnotationBuilder
+      INDEX_CLAUSES = {
+        unique: {
+          default: 'UNIQUE',
+          markdown: '_unique_'
+        },
+        where: {
+          default: 'WHERE',
+          markdown: '_where_'
+        },
+        using: {
+          default: 'USING',
+          markdown: '_using_'
+        }
+      }.freeze
+
       def initialize(model, options)
         @model = model
         @options = options
@@ -32,10 +47,14 @@ module AnnotateRb
 
       private
 
+      def index_unique_info(index, format = :default)
+        index.unique ? " #{INDEX_CLAUSES[:unique][format]}" : ''
+      end
+
       def final_index_string_in_markdown(index)
         details = format(
           '%s%s%s',
-          Helper.index_unique_info(index, :markdown),
+          index_unique_info(index, :markdown),
           Helper.index_where_info(index, :markdown),
           Helper.index_using_info(index, :markdown)
         ).strip
@@ -54,7 +73,7 @@ module AnnotateRb
           "#  %-#{max_size}.#{max_size}s %s%s%s%s",
           index.name,
           "(#{index_columns_info(index).join(',')})",
-          Helper.index_unique_info(index),
+          index_unique_info(index),
           Helper.index_where_info(index),
           Helper.index_using_info(index)
         ).rstrip + "\n"
