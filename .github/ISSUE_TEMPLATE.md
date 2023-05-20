@@ -8,6 +8,6 @@ $ show your commands here.
 
 ## Version
 
-- annotate version
+- annotaterb version
 - rails version
 - ruby version
