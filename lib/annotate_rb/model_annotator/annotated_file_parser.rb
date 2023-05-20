@@ -20,7 +20,7 @@ module AnnotateRb
         diff = AnnotationDiffGenerator.new(@file_content, @new_annotations).generate
         @annotations_changed = diff.changed?
 
-        @new_wrapped_annotations = Helper.wrapped_content(@new_annotations, @options)
+        @new_wrapped_annotations = wrapped_content(@new_annotations, @options)
 
         @annotation_pattern = AnnotationPatternGenerator.call(@options)
 
@@ -98,6 +98,24 @@ module AnnotateRb
         new_content = @file_content.sub(@annotation_pattern, new_annotation)
 
         new_content
+      end
+
+      private
+
+      def wrapped_content(content, options)
+        if options[:wrapper_open]
+          wrapper_open = "# #{options[:wrapper_open]}\n"
+        else
+          wrapper_open = ""
+        end
+
+        if options[:wrapper_close]
+          wrapper_close = "# #{options[:wrapper_close]}\n"
+        else
+          wrapper_close = ""
+        end
+
+        _wrapped_info_block = "#{wrapper_open}#{content}#{wrapper_close}"
       end
     end
   end
