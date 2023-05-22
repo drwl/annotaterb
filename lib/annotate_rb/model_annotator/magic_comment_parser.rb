@@ -13,7 +13,7 @@ module AnnotateRb
         STAR_FROZEN_STRING = Regexp.new(/(^# -\*- frozen_string_literal\s*:.+-\*-(?:\n|\r\n))/)
       ].freeze
 
-      MAGIC_COMMENTS_REGEX = Regexp.union(*MAGIC_COMMENTS)
+      MAGIC_COMMENTS_REGEX = Regexp.union(*MAGIC_COMMENTS).freeze
 
       class << self
         def call(content)
