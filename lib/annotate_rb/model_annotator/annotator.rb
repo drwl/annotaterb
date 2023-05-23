@@ -18,24 +18,7 @@ module AnnotateRb
       end
 
       def do_annotations
-        annotated = []
-
-        model_files_to_consider = ModelFilesGetter.call(@options)
-
-        model_files_to_consider.each do |path, filename|
-          file = File.join(path, filename)
-
-          if AnnotationDecider.new(file, @options).annotate?
-            other_annotated = ModelFileAnnotator.call(file, @options)
-            annotated.concat(other_annotated)
-          end
-        end
-
-        if annotated.empty?
-          puts 'Model files unchanged.'
-        else
-          puts "Annotated (#{annotated.length}): #{annotated.join(', ')}"
-        end
+        ProjectAnnotator.new(@options).annotate
       end
 
       def remove_annotations

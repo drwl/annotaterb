@@ -12,7 +12,6 @@ module AnnotateRb
     autoload :ModelClassGetter, 'annotate_rb/model_annotator/model_class_getter'
     autoload :ModelFilesGetter, 'annotate_rb/model_annotator/model_files_getter'
     autoload :SingleFileAnnotator, 'annotate_rb/model_annotator/single_file_annotator'
-    autoload :ModelFileAnnotator, 'annotate_rb/model_annotator/model_file_annotator'
     autoload :ModelWrapper, 'annotate_rb/model_annotator/model_wrapper'
     autoload :AnnotationBuilder, 'annotate_rb/model_annotator/annotation_builder'
     autoload :ColumnAnnotation, 'annotate_rb/model_annotator/column_annotation'
@@ -26,5 +25,6 @@ module AnnotateRb
     autoload :FileAnnotationGenerator, 'annotate_rb/model_annotator/file_annotation_generator'
     autoload :MagicCommentParser, 'annotate_rb/model_annotator/magic_comment_parser'
     autoload :FileComponents, 'annotate_rb/model_annotator/file_components'
+    autoload :ProjectAnnotator, 'annotate_rb/model_annotator/project_annotator'
   end
 end
