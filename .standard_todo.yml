@@ -2,7 +2,6 @@
 # Remove from this list as you refactor files.
 ---
 ignore:
-- 'dummyapp/**/*'
 - lib/annotate_rb/model_annotator/annotation_builder.rb:
   - Lint/FormatParameterMismatch
 - lib/annotate_rb/model_annotator/column_annotation/annotation_builder.rb:
