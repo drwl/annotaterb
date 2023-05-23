@@ -1,0 +1,28 @@
+# Auto generated files with errors to ignore.
+# Remove from this list as you refactor files.
+---
+ignore:
+- dummyapp/config/environments/production.rb:
+  - Style/GlobalStdStream
+- exe/annotaterb:
+  - Lint/UselessAssignment
+- lib/annotate_rb/active_record_patch.rb:
+  - Style/MissingRespondToMissing
+- lib/annotate_rb/model_annotator/annotation_builder.rb:
+  - Lint/FormatParameterMismatch
+- lib/annotate_rb/model_annotator/annotation_decider.rb:
+  - Style/IfWithBooleanLiteralBranches
+- lib/annotate_rb/model_annotator/column_annotation/annotation_builder.rb:
+  - Lint/FormatParameterMismatch
+- lib/annotate_rb/model_annotator/foreign_key_annotation/annotation_builder.rb:
+  - Lint/FormatParameterMismatch
+- lib/annotate_rb/model_annotator/index_annotation/annotation_builder.rb:
+  - Lint/FormatParameterMismatch
+- lib/annotate_rb/model_annotator/model_class_getter.rb:
+  - Style/SlicingWithRange
+- lib/annotate_rb/route_annotator/header_generator.rb:
+  - Style/SlicingWithRange
+- lib/annotate_rb/runner.rb:
+  - Style/RedundantInitialize
+- spec/lib/annotate_rb/route_annotator/annotator_spec.rb:
+  - Lint/ConstantDefinitionInBlock
