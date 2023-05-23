@@ -16,7 +16,7 @@ module AnnotateRb
     autoload :ModelWrapper, 'annotate_rb/model_annotator/model_wrapper'
     autoload :AnnotationGenerator, 'annotate_rb/model_annotator/annotation_generator'
     autoload :ColumnAnnotation, 'annotate_rb/model_annotator/column_annotation'
-    autoload :IndexAnnotationBuilder, 'annotate_rb/model_annotator/index_annotation_builder'
+    autoload :IndexAnnotation, 'annotate_rb/model_annotator/index_annotation'
     autoload :ForeignKeyAnnotationBuilder, 'annotate_rb/model_annotator/foreign_key_annotation_builder'
     autoload :RelatedFilesListBuilder, 'annotate_rb/model_annotator/related_files_list_builder'
     autoload :AnnotationDecider, 'annotate_rb/model_annotator/annotation_decider'

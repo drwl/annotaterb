@@ -37,7 +37,7 @@ module AnnotateRb
         end.join
 
         if @options[:show_indexes] && @model.table_exists?
-          @info += IndexAnnotationBuilder.new(@model, @options).build
+          @info += IndexAnnotation::AnnotationBuilder.new(@model, @options).build
         end
 
         if @options[:show_foreign_keys] && @model.table_exists?
