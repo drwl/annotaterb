@@ -20,7 +20,7 @@ module AnnotateRb
     autoload :ForeignKeyAnnotation, 'annotate_rb/model_annotator/foreign_key_annotation'
     autoload :RelatedFilesListBuilder, 'annotate_rb/model_annotator/related_files_list_builder'
     autoload :AnnotationDecider, 'annotate_rb/model_annotator/annotation_decider'
-    autoload :FileAnnotatorInstruction, 'annotate_rb/model_annotator/file_annotator_instruction'
+    autoload :SingleFileAnnotatorInstruction, 'annotate_rb/model_annotator/single_file_annotator_instruction'
     autoload :AnnotationDiffGenerator, 'annotate_rb/model_annotator/annotation_diff_generator'
     autoload :AnnotationDiff, 'annotate_rb/model_annotator/annotation_diff'
     autoload :FileAnnotationGenerator, 'annotate_rb/model_annotator/file_annotation_generator'

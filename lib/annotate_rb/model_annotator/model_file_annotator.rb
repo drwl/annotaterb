@@ -50,12 +50,12 @@ module AnnotateRb
         model_name = klass.name.underscore
         table_name = klass.table_name
 
-        model_instruction = FileAnnotatorInstruction.new(@file, annotation, :position_in_class, @options)
+        model_instruction = SingleFileAnnotatorInstruction.new(@file, annotation, :position_in_class, @options)
         instructions << model_instruction
 
         related_files = RelatedFilesListBuilder.new(@file, model_name, table_name, @options).build
         related_file_instructions = related_files.map do |f, position_key|
-          _instruction = FileAnnotatorInstruction.new(f, annotation, position_key, @options)
+          _instruction = SingleFileAnnotatorInstruction.new(f, annotation, position_key, @options)
         end
         instructions.concat(related_file_instructions)
 
