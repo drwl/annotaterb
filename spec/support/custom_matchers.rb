@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # From Rubocop
 
 RSpec::Matchers.define :exit_with_code do |code|
@@ -17,7 +18,7 @@ RSpec::Matchers.define :exit_with_code do |code|
 
   failure_message do
     "expected block to call exit(#{code}) but exit" +
-      (actual.nil? ? ' not called' : "(#{actual}) was called")
+      (actual.nil? ? " not called" : "(#{actual}) was called")
   end
 
   failure_message_when_negated { "expected block not to call exit(#{code})" }

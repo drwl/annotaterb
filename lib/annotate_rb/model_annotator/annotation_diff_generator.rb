@@ -4,8 +4,8 @@ module AnnotateRb
   module ModelAnnotator
     # Compares the current file content and new annotation block and generates the column annotation differences
     class AnnotationDiffGenerator
-      HEADER_PATTERN = /(^# Table name:.*?\n(#.*[\r]?\n)*[\r]?)/.freeze
-      COLUMN_PATTERN = /^#[\t ]+[\w\*\.`\[\]():]+[\t ]+.+$/.freeze
+      HEADER_PATTERN = /(^# Table name:.*?\n(#.*\r?\n)*\r?)/
+      COLUMN_PATTERN = /^#[\t ]+[\w*.`\[\]():]+[\t ]+.+$/
 
       class << self
         def call(file_content, annotation_block)
@@ -25,16 +25,16 @@ module AnnotateRb
         current_annotations = @file_content.match(HEADER_PATTERN).to_s
         new_annotations = @annotation_block.match(HEADER_PATTERN).to_s
 
-        if current_annotations.present?
-          current_annotation_columns = current_annotations.scan(COLUMN_PATTERN).sort
+        current_annotation_columns = if current_annotations.present?
+          current_annotations.scan(COLUMN_PATTERN).sort
         else
-          current_annotation_columns = []
+          []
         end
 
-        if new_annotations.present?
-          new_annotation_columns = new_annotations.scan(COLUMN_PATTERN).sort
+        new_annotation_columns = if new_annotations.present?
+          new_annotations.scan(COLUMN_PATTERN).sort
         else
-          new_annotation_columns = []
+          []
         end
 
         _result = AnnotationDiff.new(current_annotation_columns, new_annotation_columns)

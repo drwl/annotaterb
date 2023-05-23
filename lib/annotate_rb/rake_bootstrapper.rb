@@ -5,15 +5,15 @@ module AnnotateRb
     class << self
       def call(options)
         begin
-          require 'rake/dsl_definition'
-        rescue StandardError => e
+          require "rake/dsl_definition"
+        rescue => e
           # We might just be on an old version of Rake...
-          $stderr.puts e.message
+          warn e.message
           exit e.status_code
         end
 
-        require 'rake'
-        load './Rakefile' if File.exist?('./Rakefile')
+        require "rake"
+        load "./Rakefile" if File.exist?("./Rakefile")
 
         begin
           Rake::Task[:environment].invoke
@@ -24,9 +24,9 @@ module AnnotateRb
         unless defined?(Rails)
           # Not in a Rails project, so time to load up the parts of
           # ActiveSupport we need.
-          require 'active_support'
-          require 'active_support/core_ext/class/subclasses'
-          require 'active_support/core_ext/string/inflections'
+          require "active_support"
+          require "active_support/core_ext/class/subclasses"
+          require "active_support/core_ext/string/inflections"
         end
       end
     end

@@ -44,9 +44,9 @@ module AnnotateRb
       # Method from Rubocop::ConfigLoader
       def yaml_safe_load(yaml_code, filename)
         yaml_safe_load!(yaml_code, filename)
-      rescue ::StandardError
+      rescue
         if defined?(::SafeYAML)
-          raise 'SafeYAML is unmaintained, no longer needed and should be removed'
+          raise "SafeYAML is unmaintained, no longer needed and should be removed"
         end
 
         raise

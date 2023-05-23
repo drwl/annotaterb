@@ -23,14 +23,14 @@ module AnnotateRb
       end
 
       def add_annotations
-        routes_file = File.join('config', 'routes.rb')
+        routes_file = File.join("config", "routes.rb")
         AnnotationProcessor.execute(@options, routes_file).tap do |result|
           puts result
         end
       end
 
       def remove_annotations
-        routes_file = File.join('config', 'routes.rb')
+        routes_file = File.join("config", "routes.rb")
         RemovalProcessor.execute(@options, routes_file).tap do |result|
           puts result
         end

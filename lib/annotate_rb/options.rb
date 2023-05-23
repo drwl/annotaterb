@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forwardable'
+require "forwardable"
 
 module AnnotateRb
   # Used to hold all of the options when annotating models and routes.
@@ -22,7 +22,7 @@ module AnnotateRb
       position_in_fixture: nil, # ModelAnnotator
       position_in_routes: nil, # RouteAnnotator
       position_in_serializer: nil, # ModelAnnotator
-      position_in_test: nil, # ModelAnnotator
+      position_in_test: nil # ModelAnnotator
     }.freeze
 
     FLAG_OPTIONS = {
@@ -51,7 +51,7 @@ module AnnotateRb
       sort: false, # ModelAnnotator
       timestamp: false, # RouteAnnotator
       trace: false, # ModelAnnotator, but is part of Core
-      with_comment: true, # ModelAnnotator
+      with_comment: true # ModelAnnotator
     }.freeze
 
     OTHER_OPTIONS = {
@@ -60,10 +60,10 @@ module AnnotateRb
       debug: false, # Core
 
       # ModelAnnotator
-      hide_default_column_types: '',
+      hide_default_column_types: "",
 
       # ModelAnnotator
-      hide_limit_column_types: '',
+      hide_limit_column_types: "",
 
       ignore_columns: nil, # ModelAnnotator
       ignore_routes: nil, # RouteAnnotator
@@ -74,14 +74,14 @@ module AnnotateRb
       target_action: :do_annotations, # Core; Possible values: :do_annotations, :remove_annotations
       wrapper: nil, # ModelAnnotator, RouteAnnotator
       wrapper_close: nil, # ModelAnnotator, RouteAnnotator
-      wrapper_open: nil, # ModelAnnotator, RouteAnnotator
+      wrapper_open: nil # ModelAnnotator, RouteAnnotator
     }.freeze
 
     PATH_OPTIONS = {
       additional_file_patterns: [], # ModelAnnotator
-      model_dir: ['app/models'], # ModelAnnotator
+      model_dir: ["app/models"], # ModelAnnotator
       require: [], # Core
-      root_dir: [''], # Core; Old model Annotate code depends on it being empty when not provided another value
+      root_dir: [""] # Core; Old model Annotate code depends on it being empty when not provided another value
       # `root_dir` can also be a string but should get converted into an array with that string as the sole element when
       # that happens.
     }.freeze
@@ -113,7 +113,7 @@ module AnnotateRb
       :sort,
       :timestamp,
       :trace,
-      :with_comment,
+      :with_comment
     ].freeze
 
     OTHER_OPTION_KEYS = [
@@ -131,21 +131,21 @@ module AnnotateRb
       :target_action,
       :wrapper,
       :wrapper_close,
-      :wrapper_open,
+      :wrapper_open
     ].freeze
 
     PATH_OPTION_KEYS = [
       :additional_file_patterns,
       :model_dir,
       :require,
-      :root_dir,
+      :root_dir
     ].freeze
 
     ALL_OPTION_KEYS = [
       POSITION_OPTIONS.keys, FLAG_OPTION_KEYS, OTHER_OPTION_KEYS, PATH_OPTION_KEYS
     ].flatten.freeze
 
-    POSITION_DEFAULT = 'before'
+    POSITION_DEFAULT = "before"
 
     # Want this to be read only after initializing
     def_delegator :@options, :[]
@@ -179,7 +179,7 @@ module AnnotateRb
       # Unpack path options if we're passed in a String
       PATH_OPTION_KEYS.each do |key|
         if @options[key].is_a?(String)
-          @options[key] = @options[key].split(',').map(&:strip).reject(&:empty?)
+          @options[key] = @options[key].split(",").map(&:strip).reject(&:empty?)
         end
       end
 

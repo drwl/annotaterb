@@ -25,9 +25,9 @@ module AnnotateRb
         end.compact
 
         if annotated.empty?
-          puts 'Model files unchanged.'
+          puts "Model files unchanged."
         else
-          puts "Annotated (#{annotated.length}): #{annotated.join(', ')}"
+          puts "Annotated (#{annotated.length}): #{annotated.join(", ")}"
         end
       end
 

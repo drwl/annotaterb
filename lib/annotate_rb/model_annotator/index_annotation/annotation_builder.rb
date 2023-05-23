@@ -6,16 +6,16 @@ module AnnotateRb
       class AnnotationBuilder
         INDEX_CLAUSES = {
           unique: {
-            default: 'UNIQUE',
-            markdown: '_unique_'
+            default: "UNIQUE",
+            markdown: "_unique_"
           },
           where: {
-            default: 'WHERE',
-            markdown: '_where_'
+            default: "WHERE",
+            markdown: "_where_"
           },
           using: {
-            default: 'USING',
-            markdown: '_using_'
+            default: "USING",
+            markdown: "_using_"
           }
         }.freeze
 
@@ -26,21 +26,21 @@ module AnnotateRb
 
         def build
           index_info = if @options[:format_markdown]
-                         "#\n# ### Indexes\n#\n"
-                       else
-                         "#\n# Indexes\n#\n"
-                       end
+            "#\n# ### Indexes\n#\n"
+          else
+            "#\n# Indexes\n#\n"
+          end
 
           indexes = @model.retrieve_indexes_from_table
-          return '' if indexes.empty?
+          return "" if indexes.empty?
 
           max_size = indexes.collect { |index| index.name.size }.max + 1
           indexes.sort_by(&:name).each do |index|
             index_info += if @options[:format_markdown]
-                            final_index_string_in_markdown(index)
-                          else
-                            final_index_string(index, max_size)
-                          end
+              final_index_string_in_markdown(index)
+            else
+              final_index_string(index, max_size)
+            end
           end
 
           index_info
@@ -53,26 +53,26 @@ module AnnotateRb
           if !value.blank? && value != :btree
             " #{INDEX_CLAUSES[:using][format]} #{value}"
           else
-            ''
+            ""
           end
         end
 
         def index_where_info(index, format = :default)
           value = index.try(:where).try(:to_s)
           if value.blank?
-            ''
+            ""
           else
             " #{INDEX_CLAUSES[:where][format]} #{value}"
           end
         end
 
         def index_unique_info(index, format = :default)
-          index.unique ? " #{INDEX_CLAUSES[:unique][format]}" : ''
+          index.unique ? " #{INDEX_CLAUSES[:unique][format]}" : ""
         end
 
         def final_index_string_in_markdown(index)
           details = format(
-            '%s%s%s',
+            "%s%s%s",
             index_unique_info(index, :markdown),
             index_where_info(index, :markdown),
             index_using_info(index, :markdown)
@@ -91,7 +91,7 @@ module AnnotateRb
           format(
             "#  %-#{max_size}.#{max_size}s %s%s%s%s",
             index.name,
-            "(#{index_columns_info(index).join(',')})",
+            "(#{index_columns_info(index).join(",")})",
             index_unique_info(index),
             index_where_info(index),
             index_using_info(index)

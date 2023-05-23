@@ -11,18 +11,18 @@ module AnnotateRb
         end
 
         def routes_file
-          @routes_rb ||= File.join('config', 'routes.rb')
+          @routes_rb ||= File.join("config", "routes.rb")
         end
 
         def strip_on_removal(content, header_position)
           if header_position == :before
-            content.shift while content.first == ''
+            content.shift while content.first == ""
           elsif header_position == :after
-            content.pop while content.last == ''
+            content.pop while content.last == ""
           end
 
           # Make sure we end on a trailing newline.
-          content << '' unless content.last == ''
+          content << "" unless content.last == ""
 
           # TODO: If the user buried it in the middle, we should probably see about
           # TODO: preserving a single line of space between the content above and
@@ -34,7 +34,7 @@ module AnnotateRb
           if existing_text == new_text
             false
           else
-            File.open(routes_file, 'wb') { |f| f.puts(new_text) }
+            File.open(routes_file, "wb") { |f| f.puts(new_text) }
             true
           end
         end
@@ -47,7 +47,7 @@ module AnnotateRb
           new_content = []
 
           content_array.each do |row|
-            if row =~ MAGIC_COMMENT_MATCHER
+            if MAGIC_COMMENT_MATCHER.match?(row)
               magic_comments << row.strip
             else
               new_content << row
@@ -74,7 +74,7 @@ module AnnotateRb
               mode = :content
               real_content << line unless line.blank?
             elsif mode == :content
-              if line =~ /^\s*#\s*== Route.*$/
+              if /^\s*#\s*== Route.*$/.match?(line)
                 header_position = line_number + 1 # index start's at 0
                 mode = :header
               else
@@ -96,7 +96,7 @@ module AnnotateRb
           return real_content, :after if header_position >= real_content.count
 
           # and the default
-          return real_content, header_position
+          [real_content, header_position]
         end
       end
     end

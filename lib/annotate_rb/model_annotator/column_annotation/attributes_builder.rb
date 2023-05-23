@@ -27,31 +27,31 @@ module AnnotateRb
           end
 
           if @column.unsigned?
-            attrs << 'unsigned'
+            attrs << "unsigned"
           end
 
           if !@column.null
-            attrs << 'not null'
+            attrs << "not null"
           end
 
           if @is_primary_key
-            attrs << 'primary key'
+            attrs << "primary key"
           end
 
           is_special_type = %w[spatial geometry geography].include?(column_type)
-          is_decimal_type = column_type == 'decimal'
+          is_decimal_type = column_type == "decimal"
 
           if !is_decimal_type && !is_special_type
             if @column.limit && !@options[:format_yard]
               if @column.limit.is_a?(Array)
-                attrs << "(#{@column.limit.join(', ')})"
+                attrs << "(#{@column.limit.join(", ")})"
               end
             end
           end
 
           # Check out if we got an array column
           if @column.array?
-            attrs << 'is an Array'
+            attrs << "is an Array"
           end
 
           # Check out if we got a geometric column
@@ -70,10 +70,10 @@ module AnnotateRb
             sorted_column_indices&.each do |index|
               indexed_columns = index.columns.reject { |i| i == @column.name }
 
-              if indexed_columns.empty?
-                attrs << 'indexed'
+              attrs << if indexed_columns.empty?
+                "indexed"
               else
-                attrs << "indexed => [#{indexed_columns.join(', ')}]"
+                "indexed => [#{indexed_columns.join(", ")}]"
               end
             end
           end
@@ -93,7 +93,7 @@ module AnnotateRb
             if @options[:hide_default_column_types].blank?
               NO_DEFAULT_COL_TYPES
             else
-              @options[:hide_default_column_types].split(',')
+              @options[:hide_default_column_types].split(",")
             end
 
           excludes.include?(@column.column_type_string)

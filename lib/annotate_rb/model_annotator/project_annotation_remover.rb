@@ -19,20 +19,18 @@ module AnnotateRb
         end.flatten.compact
 
         deannotated = removal_instructions.map do |instruction|
-          begin
-            if SingleFileAnnotationRemover.call_with_instructions(instruction)
-              instruction.file
-            end
-          rescue StandardError => e
-            $stderr.puts "Unable to process #{File.join(instruction.file)}: #{e.message}"
-            $stderr.puts "\t" + e.backtrace.join("\n\t") if @options[:trace]
+          if SingleFileAnnotationRemover.call_with_instructions(instruction)
+            instruction.file
           end
+        rescue => e
+          warn "Unable to process #{File.join(instruction.file)}: #{e.message}"
+          warn "\t" + e.backtrace.join("\n\t") if @options[:trace]
         end.flatten.compact
 
         if deannotated.empty?
-          puts 'Model files unchanged.'
+          puts "Model files unchanged."
         else
-          puts "Removed annotations (#{deannotated.length}) from: #{deannotated.join(', ')}"
+          puts "Removed annotations (#{deannotated.length}) from: #{deannotated.join(", ")}"
         end
       end
 

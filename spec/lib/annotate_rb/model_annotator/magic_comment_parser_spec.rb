@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
-  describe '.call' do
+  describe ".call" do
     subject { described_class.call(content) }
 
-    context 'model file without any magic comments' do
+    context "model file without any magic comments" do
       let(:content) do
         <<~FILE
           class User < ApplicationRecord
@@ -15,7 +15,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
       it { is_expected.to be_blank }
     end
 
-    context 'model file with a normal comment' do
+    context "model file with a normal comment" do
       let(:content) do
         <<~FILE
           # some comment describing the class
@@ -28,7 +28,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
     end
 
     context "model file with '# encoding: UTF-8' magic comment" do
-      let(:magic_comment) { '# encoding: UTF-8' }
+      let(:magic_comment) { "# encoding: UTF-8" }
       let(:expected) { "#{magic_comment}\n" }
       let(:content) do
         <<~FILE
@@ -42,7 +42,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
     end
 
     context "model file with '# coding: UTF-8' magic comment" do
-      let(:magic_comment) { '# coding: UTF-8' }
+      let(:magic_comment) { "# coding: UTF-8" }
       let(:expected) { "#{magic_comment}\n" }
       let(:content) do
         <<~FILE
@@ -56,7 +56,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
     end
 
     context "model file with '# -*- coding: UTF-8 -*-' magic comment" do
-      let(:magic_comment) { '# -*- coding: UTF-8 -*-' }
+      let(:magic_comment) { "# -*- coding: UTF-8 -*-" }
       let(:expected) { "#{magic_comment}\n" }
       let(:content) do
         <<~FILE
@@ -70,7 +70,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
     end
 
     context "model file with '#encoding: utf-8' magic comment" do
-      let(:magic_comment) { '#encoding: utf-8' }
+      let(:magic_comment) { "#encoding: utf-8" }
       let(:expected) { "#{magic_comment}\n" }
       let(:content) do
         <<~FILE
@@ -84,7 +84,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
     end
 
     context "model file with '# encoding: utf-8' magic comment" do
-      let(:magic_comment) { '# encoding: utf-8' }
+      let(:magic_comment) { "# encoding: utf-8" }
       let(:expected) { "#{magic_comment}\n" }
       let(:content) do
         <<~FILE
@@ -98,7 +98,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
     end
 
     context "model file with '# -*- encoding : utf-8 -*-' magic comment" do
-      let(:magic_comment) { '# -*- encoding : utf-8 -*-' }
+      let(:magic_comment) { "# -*- encoding : utf-8 -*-" }
       let(:expected) { "#{magic_comment}\n" }
       let(:content) do
         <<~FILE
@@ -140,7 +140,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
     end
 
     context "model file with '# frozen_string_literal: true' magic comment" do
-      let(:magic_comment) { '# frozen_string_literal: true' }
+      let(:magic_comment) { "# frozen_string_literal: true" }
       let(:expected) { "#{magic_comment}\n" }
       let(:content) do
         <<~FILE
@@ -154,7 +154,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
     end
 
     context "model file with '#frozen_string_literal: false' magic comment" do
-      let(:magic_comment) { '#frozen_string_literal: false' }
+      let(:magic_comment) { "#frozen_string_literal: false" }
       let(:expected) { "#{magic_comment}\n" }
       let(:content) do
         <<~FILE
@@ -168,7 +168,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
     end
 
     context "model file with '# -*- frozen_string_literal : true -*-' magic comment" do
-      let(:magic_comment) { '# -*- frozen_string_literal : true -*-' }
+      let(:magic_comment) { "# -*- frozen_string_literal : true -*-" }
       let(:expected) { "#{magic_comment}\n" }
       let(:content) do
         <<~FILE
@@ -182,7 +182,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
     end
 
     context "model file with '# typed: ignore' magic comment" do
-      let(:magic_comment) { '# typed: ignore' }
+      let(:magic_comment) { "# typed: ignore" }
       let(:expected) { "#{magic_comment}\n" }
       let(:content) do
         <<~FILE
@@ -196,7 +196,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
     end
 
     context "model file with '# typed: false' magic comment" do
-      let(:magic_comment) { '# typed: false' }
+      let(:magic_comment) { "# typed: false" }
       let(:expected) { "#{magic_comment}\n" }
       let(:content) do
         <<~FILE
@@ -210,7 +210,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
     end
 
     context "model file with '# typed: true' magic comment" do
-      let(:magic_comment) { '# typed: true' }
+      let(:magic_comment) { "# typed: true" }
       let(:expected) { "#{magic_comment}\n" }
       let(:content) do
         <<~FILE
@@ -224,7 +224,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
     end
 
     context "model file with '# typed: strict' magic comment" do
-      let(:magic_comment) { '# typed: strict' }
+      let(:magic_comment) { "# typed: strict" }
       let(:expected) { "#{magic_comment}\n" }
       let(:content) do
         <<~FILE
@@ -238,7 +238,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
     end
 
     context "model file with '# typed: strong' magic comment" do
-      let(:magic_comment) { '# typed: strong' }
+      let(:magic_comment) { "# typed: strong" }
       let(:expected) { "#{magic_comment}\n" }
       let(:content) do
         <<~FILE

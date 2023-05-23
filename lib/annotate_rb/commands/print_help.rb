@@ -13,4 +13,3 @@ module AnnotateRb
     end
   end
 end
-

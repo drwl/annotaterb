@@ -24,7 +24,7 @@ module AnnotateRb
 
         def column_type_string
           if (@column.respond_to?(:bigint?) && @column.bigint?) || /\Abigint\b/ =~ @column.sql_type
-            'bigint'
+            "bigint"
           else
             (@column.type || @column.sql_type).to_s
           end
@@ -86,12 +86,12 @@ module AnnotateRb
         # Simple quoting for the default column value
         def quote(value)
           case value
-          when NilClass then 'NULL'
-          when TrueClass then 'TRUE'
-          when FalseClass then 'FALSE'
+          when NilClass then "NULL"
+          when TrueClass then "TRUE"
+          when FalseClass then "FALSE"
           when Float, Integer then value.to_s
           # BigDecimals need to be output in a non-normalized form and quoted.
-          when BigDecimal then value.to_s('F')
+          when BigDecimal then value.to_s("F")
           when Array then value.map { |v| quote(v) }
           else
             value.inspect

@@ -2,7 +2,7 @@
 
 RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
   def test_columns_match_expected
-    remove_whitespace = Proc.new { |str| str.delete(" \t\r\n")  }
+    remove_whitespace = proc { |str| str.delete(" \t\r\n") }
 
     resulting_current_columns_data = subject.current_columns.map(&remove_whitespace)
     expected_current_columns_data = current_columns.map(&remove_whitespace)
@@ -13,10 +13,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
     expect(resulting_new_columns_data).to eq(expected_new_columns_data)
   end
 
-  describe '.call' do
+  describe ".call" do
     subject { described_class.call(file_content, annotation_block) }
 
-    context 'when model file does not have any annotations' do
+    context "when model file does not have any annotations" do
       let(:file_content) do
         <<~FILE
           class User < ApplicationRecord
@@ -44,14 +44,14 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
         ]
       end
 
-      it 'returns an AnnotationDiff object with the expected old and new columns' do
+      it "returns an AnnotationDiff object with the expected old and new columns" do
         test_columns_match_expected
 
         expect(subject.changed?).to eq(true)
       end
     end
 
-    context 'when model files has the latest annotations (does not need to be updated)' do
+    context "when model files has the latest annotations (does not need to be updated)" do
       let(:file_content) do
         <<~FILE
           # == Schema Information
@@ -88,14 +88,14 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
         ]
       end
 
-      it 'returns an AnnotationDiff object with the expected old and new columns' do
+      it "returns an AnnotationDiff object with the expected old and new columns" do
         test_columns_match_expected
 
         expect(subject.changed?).to eq(false)
       end
     end
 
-    context 'when model file has existing annotations with column comments' do
+    context "when model file has existing annotations with column comments" do
       let(:annotation_block) do
         <<~SCHEMA
           # == Schema Information
@@ -136,7 +136,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
         ]
       end
 
-      it 'returns an AnnotationDiff object with the expected old and new columns' do
+      it "returns an AnnotationDiff object with the expected old and new columns" do
         test_columns_match_expected
 
         expect(subject.changed?).to eq(true)

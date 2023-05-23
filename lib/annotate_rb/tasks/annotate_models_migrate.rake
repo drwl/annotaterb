@@ -5,15 +5,15 @@
 # run after doing db:migrate.
 
 # Migration tasks are tasks that we'll "hook" into
-migration_tasks = %w(db:migrate db:migrate:up db:migrate:down db:migrate:reset db:migrate:redo db:rollback)
-if defined?(Rails::Application) && Rails.version.split('.').first.to_i >= 6
-  require 'active_record'
+migration_tasks = %w[db:migrate db:migrate:up db:migrate:down db:migrate:reset db:migrate:redo db:rollback]
+if defined?(Rails::Application) && Rails.version.split(".").first.to_i >= 6
+  require "active_record"
 
   databases = ActiveRecord::Tasks::DatabaseTasks.setup_initial_database_yaml
 
   # If there's multiple databases, this appends database specific rake tasks to `migration_tasks`
   ActiveRecord::Tasks::DatabaseTasks.for_each(databases) do |database_name|
-    migration_tasks.concat(%w(db:migrate db:migrate:up db:migrate:down).map { |task| "#{task}:#{database_name}" })
+    migration_tasks.concat(%w[db:migrate db:migrate:up db:migrate:down].map { |task| "#{task}:#{database_name}" })
   end
 end
 
@@ -24,7 +24,7 @@ migration_tasks.each do |task|
     task_name = Rake.application.top_level_tasks.last # The name of the task that was run, e.g. "db:migrate"
 
     Rake::Task[task_name].enhance do
-      ::AnnotateRb::Runner.run(['models'])
+      ::AnnotateRb::Runner.run(["models"])
     end
   end
 end

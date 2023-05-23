@@ -9,7 +9,6 @@ module AnnotateRb
     end
 
     def initialize
-
     end
 
     def run(args)

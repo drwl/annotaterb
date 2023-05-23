@@ -8,8 +8,8 @@ module AnnotateRb
         # Check for namespaced models in subdirectories as well as models
         # in subdirectories without namespacing.
         def call(file, options)
-          model_path = file.gsub(/\.rb$/, '')
-          options[:model_dir].each { |dir| model_path = model_path.gsub(/^#{dir}/, '').gsub(/^\//, '') }
+          model_path = file.gsub(/\.rb$/, "")
+          options[:model_dir].each { |dir| model_path = model_path.gsub(/^#{dir}/, "").gsub(/^\//, "") }
 
           begin
             get_loaded_model(model_path, file) || raise(BadModelFileError.new)
@@ -18,8 +18,8 @@ module AnnotateRb
             file_path = File.expand_path(file)
             if File.file?(file_path) && Kernel.require(file_path)
               retry
-            elsif model_path =~ /\//
-              model_path = model_path.split('/')[1..-1].join('/').to_s
+            elsif /\//.match?(model_path)
+              model_path = model_path.split("/")[1..-1].join("/").to_s
               retry
             else
               raise
@@ -39,7 +39,7 @@ module AnnotateRb
           absolute_file = File.expand_path(file)
           model_paths =
             $LOAD_PATH.select { |path| absolute_file.include?(path) }
-                      .map { |path| absolute_file.sub(path, '').sub(/\.rb$/, '').sub(/^\//, '') }
+              .map { |path| absolute_file.sub(path, "").sub(/\.rb$/, "").sub(/^\//, "") }
           model_paths
             .map { |path| get_loaded_model_by_path(path) }
             .find { |loaded_model| !loaded_model.nil? }
@@ -51,7 +51,7 @@ module AnnotateRb
         rescue StandardError, LoadError
           # Revert to the old way but it is not really robust
           ObjectSpace.each_object(::Class)
-                     .select do |c|
+            .select do |c|
             Class === c && # note: we use === to avoid a bug in activesupport 2.3.14 OptionMerger vs. is_a?
               c.ancestors.respond_to?(:include?) && # to fix FactoryGirl bug, see https://github.com/ctran/annotate_models/pull/82
               c.ancestors.include?(::ActiveRecord::Base)
