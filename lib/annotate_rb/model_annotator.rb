@@ -24,7 +24,7 @@ module AnnotateRb
     autoload :FileAnnotatorInstruction, 'annotate_rb/model_annotator/file_annotator_instruction'
     autoload :AnnotationDiffGenerator, 'annotate_rb/model_annotator/annotation_diff_generator'
     autoload :AnnotationDiff, 'annotate_rb/model_annotator/annotation_diff'
-    autoload :FileThing, 'annotate_rb/model_annotator/file_thing'
+    autoload :FileAnnotationGenerator, 'annotate_rb/model_annotator/file_annotation_generator'
     autoload :AnnotatedFileParser, 'annotate_rb/model_annotator/annotated_file_parser'
     autoload :MagicCommentParser, 'annotate_rb/model_annotator/magic_comment_parser'
     autoload :FileComponents, 'annotate_rb/model_annotator/file_components'

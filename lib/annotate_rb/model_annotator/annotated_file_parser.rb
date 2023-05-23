@@ -44,7 +44,7 @@ module AnnotateRb
       end
 
       def skip?
-        @file_components.skip?
+        @file_components.has_skip_string?
       end
 
       private

@@ -25,18 +25,18 @@ module AnnotateRb
           return false unless File.exist?(file_name)
           old_content = File.read(file_name)
 
-          parsed_file = AnnotatedFileParser.new(old_content, info_block, position, options)
-          parsed_file.parse
+          file_components = FileComponents.new(old_content, info_block, options)
+          generator = FileAnnotationGenerator.new(file_components, info_block, position, options)
 
-          return false if parsed_file.skip?
-          return false if !parsed_file.annotations_changed? && !options[:force]
+          return false if file_components.has_skip_string?
+          return false if !file_components.annotations_changed? && !options[:force]
 
           abort "AnnotateRb error. #{file_name} needs to be updated, but annotaterb was run with `--frozen`." if options[:frozen]
 
-          if !parsed_file.has_annotations? || options[:force]
-            updated_file_content = parsed_file.regenerated_annotations
+          if !file_components.has_annotations? || options[:force]
+            updated_file_content = generator.generate_content_with_new_annotations
           else
-            updated_file_content = parsed_file.updated_annotations
+            updated_file_content = generator.update_existing_annotations
           end
 
           File.open(file_name, 'wb') { |f| f.puts updated_file_content }

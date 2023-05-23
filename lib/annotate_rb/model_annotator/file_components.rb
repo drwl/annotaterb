@@ -13,6 +13,10 @@ module AnnotateRb
         @annotation_pattern = AnnotationPatternGenerator.call(options)
       end
 
+      def current_file_content
+        @file_content
+      end
+
       # TODO: Rename method once it's clear what this actually does
       def space_before_annotation
         return @space_before_annotation if defined?(@space_before_annotation)
@@ -51,8 +55,8 @@ module AnnotateRb
         @magic_comments ||= MagicCommentParser.call(@file_content)
       end
 
-      def skip?
-        @skip ||= @file_content.include?(SKIP_ANNOTATION_STRING)
+      def has_skip_string?
+        @has_skip_string ||= @file_content.include?(SKIP_ANNOTATION_STRING)
       end
 
       def has_annotations?
