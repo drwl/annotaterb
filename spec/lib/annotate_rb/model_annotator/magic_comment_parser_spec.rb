@@ -180,5 +180,75 @@ RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
 
       it { is_expected.to eq(expected) }
     end
+
+    context "model file with '# typed: ignore' magic comment" do
+      let(:magic_comment) { '# typed: ignore' }
+      let(:expected) { "#{magic_comment}\n" }
+      let(:content) do
+        <<~FILE
+          #{magic_comment}
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      it { is_expected.to eq(expected) }
+    end
+
+    context "model file with '# typed: false' magic comment" do
+      let(:magic_comment) { '# typed: false' }
+      let(:expected) { "#{magic_comment}\n" }
+      let(:content) do
+        <<~FILE
+          #{magic_comment}
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      it { is_expected.to eq(expected) }
+    end
+
+    context "model file with '# typed: true' magic comment" do
+      let(:magic_comment) { '# typed: true' }
+      let(:expected) { "#{magic_comment}\n" }
+      let(:content) do
+        <<~FILE
+          #{magic_comment}
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      it { is_expected.to eq(expected) }
+    end
+
+    context "model file with '# typed: strict' magic comment" do
+      let(:magic_comment) { '# typed: strict' }
+      let(:expected) { "#{magic_comment}\n" }
+      let(:content) do
+        <<~FILE
+          #{magic_comment}
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      it { is_expected.to eq(expected) }
+    end
+
+    context "model file with '# typed: strong' magic comment" do
+      let(:magic_comment) { '# typed: strong' }
+      let(:expected) { "#{magic_comment}\n" }
+      let(:content) do
+        <<~FILE
+          #{magic_comment}
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      it { is_expected.to eq(expected) }
+    end
   end
 end
