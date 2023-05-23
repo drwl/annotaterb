@@ -23,7 +23,7 @@ module AnnotateRb
           if magic_comments.any?
             magic_comments.join
           else
-            ''
+            ""
           end
         end
       end

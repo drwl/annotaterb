@@ -55,7 +55,7 @@ module AnnotateRb
       end
 
       def write(text)
-        File.open(routes_file, 'wb') { |f| f.puts(text) }
+        File.open(routes_file, "wb") { |f| f.puts(text) }
       end
 
       # TODO: write the method doc using ruby rdoc formats
@@ -75,7 +75,7 @@ module AnnotateRb
             mode = :content
             real_content << line unless line.blank?
           elsif mode == :content
-            if line =~ /^\s*#\s*== Route.*$/
+            if /^\s*#\s*== Route.*$/.match?(line)
               header_position = line_number + 1 # index start's at 0
               mode = :header
             else
@@ -97,7 +97,7 @@ module AnnotateRb
         return real_content, :after if header_position >= real_content.count
 
         # and the default
-        return real_content, header_position
+        [real_content, header_position]
       end
     end
   end

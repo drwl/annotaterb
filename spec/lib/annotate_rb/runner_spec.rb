@@ -13,28 +13,28 @@ RSpec.describe AnnotateRb::Runner do
     $stderr = STDERR
   end
 
-  describe 'help option' do
-    describe '-h/-?/--help' do
-      it 'shows help text' do
-        runner.run(['-h'])
+  describe "help option" do
+    describe "-h/-?/--help" do
+      it "shows help text" do
+        runner.run(["-h"])
 
         expect($stdout.string).to include(AnnotateRb::Parser::BANNER_STRING)
       end
     end
 
-    describe 'help' do
-      it 'shows help text' do
-        runner.run(['help'])
+    describe "help" do
+      it "shows help text" do
+        runner.run(["help"])
 
         expect($stdout.string).to include(AnnotateRb::Parser::BANNER_STRING)
       end
     end
   end
 
-  describe 'version option' do
-    describe '-v/--version' do
-      it 'shows version text' do
-        runner.run(['-v'])
+  describe "version option" do
+    describe "-v/--version" do
+      it "shows version text" do
+        runner.run(["-v"])
 
         version_string = AnnotateRb::Core.version
 
@@ -42,9 +42,9 @@ RSpec.describe AnnotateRb::Runner do
       end
     end
 
-    describe 'version' do
-      it 'shows version text' do
-        runner.run(['version'])
+    describe "version" do
+      it "shows version text" do
+        runner.run(["version"])
 
         version_string = AnnotateRb::Core.version
 
@@ -53,8 +53,8 @@ RSpec.describe AnnotateRb::Runner do
     end
   end
 
-  describe 'Annotating models' do
-    let(:args) { ['models'] }
+  describe "Annotating models" do
+    let(:args) { ["models"] }
     let(:command_double) { instance_double(AnnotateRb::Commands::AnnotateModels) }
 
     before do
@@ -62,15 +62,15 @@ RSpec.describe AnnotateRb::Runner do
       allow(command_double).to receive(:call)
     end
 
-    it 'calls the annotate models command' do
+    it "calls the annotate models command" do
       runner.run(args)
 
       expect(command_double).to have_received(:call)
     end
   end
 
-  describe 'Annotating routes' do
-    let(:args) { ['routes'] }
+  describe "Annotating routes" do
+    let(:args) { ["routes"] }
     let(:command_double) { instance_double(AnnotateRb::Commands::AnnotateRoutes) }
 
     before do
@@ -78,7 +78,7 @@ RSpec.describe AnnotateRb::Runner do
       allow(command_double).to receive(:call)
     end
 
-    it 'calls the annotate routes command' do
+    it "calls the annotate routes command" do
       runner.run(args)
 
       expect(command_double).to have_received(:call)

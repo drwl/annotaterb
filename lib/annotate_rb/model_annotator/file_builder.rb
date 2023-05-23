@@ -17,17 +17,17 @@ module AnnotateRb
         # Need to keep `.to_s` for now since the it can be either a String or Symbol
         annotation_write_position = @options[@annotation_position].to_s
 
-        if %w(after bottom).include?(annotation_write_position)
-          _content = @file_components.magic_comments + (@file_components.pure_file_content.rstrip + "\n\n" + @new_wrapped_annotations)
+        _content = if %w[after bottom].include?(annotation_write_position)
+          @file_components.magic_comments + (@file_components.pure_file_content.rstrip + "\n\n" + @new_wrapped_annotations)
         elsif @file_components.magic_comments.empty?
-          _content = @file_components.magic_comments + @new_wrapped_annotations + @file_components.pure_file_content.lstrip
+          @file_components.magic_comments + @new_wrapped_annotations + @file_components.pure_file_content.lstrip
         else
-          _content = @file_components.magic_comments + "\n" + @new_wrapped_annotations + @file_components.pure_file_content.lstrip
+          @file_components.magic_comments + "\n" + @new_wrapped_annotations + @file_components.pure_file_content.lstrip
         end
       end
 
       def update_existing_annotations
-        return '' if !@file_components.has_annotations?
+        return "" if !@file_components.has_annotations?
 
         annotation_pattern = AnnotationPatternGenerator.call(@options)
 
@@ -39,16 +39,16 @@ module AnnotateRb
       private
 
       def wrapped_content(content)
-        if @options[:wrapper_open]
-          wrapper_open = "# #{@options[:wrapper_open]}\n"
+        wrapper_open = if @options[:wrapper_open]
+          "# #{@options[:wrapper_open]}\n"
         else
-          wrapper_open = ""
+          ""
         end
 
-        if @options[:wrapper_close]
-          wrapper_close = "# #{@options[:wrapper_close]}\n"
+        wrapper_close = if @options[:wrapper_close]
+          "# #{@options[:wrapper_close]}\n"
         else
-          wrapper_close = ""
+          ""
         end
 
         _wrapped_info_block = "#{wrapper_open}#{content}#{wrapper_close}"

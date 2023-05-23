@@ -105,7 +105,7 @@ module AnnotateRb
         return indexes if indexes.any? || !@klass.table_name_prefix
 
         # Try to search the table without prefix
-        table_name_without_prefix = table_name.to_s.sub(@klass.table_name_prefix, '')
+        table_name_without_prefix = table_name.to_s.sub(@klass.table_name_prefix, "")
         @klass.connection.indexes(table_name_without_prefix)
       end
 
@@ -122,11 +122,11 @@ module AnnotateRb
         id = nil
 
         cols.each do |c|
-          if c.name.eql?('id')
+          if c.name.eql?("id")
             id = c
-          elsif c.name.eql?('created_at') || c.name.eql?('updated_at')
+          elsif c.name.eql?("created_at") || c.name.eql?("updated_at")
             timestamps << c
-          elsif c.name[-3, 3].eql?('_id')
+          elsif c.name[-3, 3].eql?("_id")
             associations << c
           else
             rest_cols << c
@@ -144,9 +144,9 @@ module AnnotateRb
         # eg. Model: Car, foreign column name: car_id
         foreign_column_name = [
           @klass.translation_class.to_s
-                .gsub('::Translation', '').gsub('::', '_')
-                .downcase,
-          '_id'
+            .gsub("::Translation", "").gsub("::", "_")
+            .downcase,
+          "_id"
         ].join.to_sym
 
         [

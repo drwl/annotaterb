@@ -3,10 +3,10 @@
 module AnnotateRb
   module ModelAnnotator
     module ColumnAnnotation
-      autoload :AttributesBuilder, 'annotate_rb/model_annotator/column_annotation/attributes_builder'
-      autoload :TypeBuilder, 'annotate_rb/model_annotator/column_annotation/type_builder'
-      autoload :ColumnWrapper, 'annotate_rb/model_annotator/column_annotation/column_wrapper'
-      autoload :AnnotationBuilder, 'annotate_rb/model_annotator/column_annotation/annotation_builder'
+      autoload :AttributesBuilder, "annotate_rb/model_annotator/column_annotation/attributes_builder"
+      autoload :TypeBuilder, "annotate_rb/model_annotator/column_annotation/type_builder"
+      autoload :ColumnWrapper, "annotate_rb/model_annotator/column_annotation/column_wrapper"
+      autoload :AnnotationBuilder, "annotate_rb/model_annotator/column_annotation/annotation_builder"
     end
   end
 end

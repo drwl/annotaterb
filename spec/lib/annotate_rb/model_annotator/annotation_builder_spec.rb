@@ -1,7 +1,7 @@
 RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
   include AnnotateTestHelpers
 
-  describe '#build' do
+  describe "#build" do
     subject do
       described_class.new(klass, options).build
     end
@@ -18,22 +18,22 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
       []
     end
 
-    context 'when option is not present' do
+    context "when option is not present" do
       let :options do
-        AnnotateRb::Options.from({ classified_sort: false })
+        AnnotateRb::Options.from({classified_sort: false})
       end
 
       context 'when header is "Schema Info"' do
         before do
-          stub_const('AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX', 'Schema Info')
+          stub_const("AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX", "Schema Info")
         end
 
-        context 'when the primary key is not specified' do
+        context "when the primary key is not specified" do
           let :primary_key do
             nil
           end
 
-          context 'when the columns are normal' do
+          context "when the columns are normal" do
             let :columns do
               [
                 mock_column(:id, :integer),
@@ -53,12 +53,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
               EOS
             end
 
-            it 'returns schema info' do
+            it "returns schema info" do
               is_expected.to eq(expected_result)
             end
           end
 
-          context 'when an enum column exists' do
+          context "when an enum column exists" do
             let :columns do
               [
                 mock_column(:id, :integer),
@@ -78,12 +78,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
               EOS
             end
 
-            it 'returns schema info' do
+            it "returns schema info" do
               is_expected.to eq(expected_result)
             end
           end
 
-          context 'when unsigned columns exist' do
+          context "when unsigned columns exist" do
             let :columns do
               [
                 mock_column(:id, :integer),
@@ -111,19 +111,19 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
               EOS
             end
 
-            it 'returns schema info' do
+            it "returns schema info" do
               is_expected.to eq(expected_result)
             end
           end
         end
 
-        context 'when the primary key is specified' do
-          context 'when the primary_key is :id' do
+        context "when the primary key is specified" do
+          context "when the primary_key is :id" do
             let :primary_key do
               :id
             end
 
-            context 'when columns are normal' do
+            context "when columns are normal" do
               let :columns do
                 [
                   mock_column(:id, :integer, limit: 8),
@@ -145,12 +145,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 EOS
               end
 
-              it 'returns schema info' do
+              it "returns schema info" do
                 is_expected.to eq(expected_result)
               end
             end
 
-            context 'when columns have default values' do
+            context "when columns have default values" do
               let :columns do
                 [
                   mock_column(:id, :integer),
@@ -172,21 +172,21 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 EOS
               end
 
-              it 'returns schema info with default values' do
+              it "returns schema info with default values" do
                 is_expected.to eq(expected_result)
               end
             end
 
-            context 'with Globalize gem' do
+            context "with Globalize gem" do
               let :translation_klass do
-                double('Post::Translation',
-                       to_s: 'Post::Translation',
-                       columns: [
-                         mock_column(:id, :integer, limit: 8),
-                         mock_column(:post_id, :integer, limit: 8),
-                         mock_column(:locale, :string, limit: 50),
-                         mock_column(:title, :string, limit: 50)
-                       ])
+                double("Post::Translation",
+                  to_s: "Post::Translation",
+                  columns: [
+                    mock_column(:id, :integer, limit: 8),
+                    mock_column(:post_id, :integer, limit: 8),
+                    mock_column(:locale, :string, limit: 50),
+                    mock_column(:title, :string, limit: 50)
+                  ])
               end
 
               let :klass do
@@ -215,13 +215,13 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 EOS
               end
 
-              it 'returns schema info' do
+              it "returns schema info" do
                 is_expected.to eq expected_result
               end
             end
           end
 
-          context 'when the primary key is an array (using composite_primary_keys)' do
+          context "when the primary key is an array (using composite_primary_keys)" do
             let :primary_key do
               [:a_id, :b_id]
             end
@@ -247,7 +247,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
               EOS
             end
 
-            it 'returns schema info' do
+            it "returns schema info" do
               is_expected.to eq(expected_result)
             end
           end
@@ -255,25 +255,25 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
       end
     end
 
-    context 'when option is present' do
+    context "when option is present" do
       context 'when header is "Schema Info"' do
         before do
-          stub_const('AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX', 'Schema Info')
+          stub_const("AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX", "Schema Info")
         end
 
-        context 'when the primary key is specified' do
-          context 'when the primary_key is :id' do
+        context "when the primary key is specified" do
+          context "when the primary_key is :id" do
             let :primary_key do
               :id
             end
 
-            context 'when indexes exist' do
+            context "when indexes exist" do
               context 'when option "show_indexes" is true' do
                 let :options do
-                  AnnotateRb::Options.from({ simple_indexes: false, show_indexes: true })
+                  AnnotateRb::Options.from({simple_indexes: false, show_indexes: true})
                 end
 
-                context 'when indexes are normal' do
+                context "when indexes are normal" do
                   let :columns do
                     [
                       mock_column(:id, :integer),
@@ -283,8 +283,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
                   let :indexes do
                     [
-                      mock_index('index_rails_02e851e3b7', columns: ['id']),
-                      mock_index('index_rails_02e851e3b8', columns: ['foreign_thing_id'])
+                      mock_index("index_rails_02e851e3b7", columns: ["id"]),
+                      mock_index("index_rails_02e851e3b8", columns: ["foreign_thing_id"])
                     ]
                   end
 
@@ -305,27 +305,27 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with index information' do
+                  it "returns schema info with index information" do
                     is_expected.to eq expected_result
                   end
                 end
 
-                context 'when one of indexes includes orderd index key' do
+                context "when one of indexes includes orderd index key" do
                   let :columns do
                     [
-                      mock_column('id', :integer),
-                      mock_column('firstname', :string),
-                      mock_column('surname', :string),
-                      mock_column('value', :string)
+                      mock_column("id", :integer),
+                      mock_column("firstname", :string),
+                      mock_column("surname", :string),
+                      mock_column("value", :string)
                     ]
                   end
 
                   let :indexes do
                     [
-                      mock_index('index_rails_02e851e3b7', columns: ['id']),
-                      mock_index('index_rails_02e851e3b8',
-                                 columns: %w[firstname surname value],
-                                 orders: { 'surname' => :asc, 'value' => :desc })
+                      mock_index("index_rails_02e851e3b7", columns: ["id"]),
+                      mock_index("index_rails_02e851e3b8",
+                        columns: %w[firstname surname value],
+                        orders: {"surname" => :asc, "value" => :desc})
                     ]
                   end
 
@@ -348,7 +348,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with index information' do
+                  it "returns schema info with index information" do
                     is_expected.to eq expected_result
                   end
                 end
@@ -356,19 +356,19 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context 'when one of indexes includes "where" clause' do
                   let :columns do
                     [
-                      mock_column('id', :integer),
-                      mock_column('firstname', :string),
-                      mock_column('surname', :string),
-                      mock_column('value', :string)
+                      mock_column("id", :integer),
+                      mock_column("firstname", :string),
+                      mock_column("surname", :string),
+                      mock_column("value", :string)
                     ]
                   end
 
                   let :indexes do
                     [
-                      mock_index('index_rails_02e851e3b7', columns: ['id']),
-                      mock_index('index_rails_02e851e3b8',
-                                 columns: %w[firstname surname],
-                                 where: 'value IS NOT NULL')
+                      mock_index("index_rails_02e851e3b7", columns: ["id"]),
+                      mock_index("index_rails_02e851e3b8",
+                        columns: %w[firstname surname],
+                        where: "value IS NOT NULL")
                     ]
                   end
 
@@ -391,7 +391,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with index information' do
+                  it "returns schema info with index information" do
                     is_expected.to eq expected_result
                   end
                 end
@@ -399,19 +399,19 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context 'when one of indexes includes "using" clause other than "btree"' do
                   let :columns do
                     [
-                      mock_column('id', :integer),
-                      mock_column('firstname', :string),
-                      mock_column('surname', :string),
-                      mock_column('value', :string)
+                      mock_column("id", :integer),
+                      mock_column("firstname", :string),
+                      mock_column("surname", :string),
+                      mock_column("value", :string)
                     ]
                   end
 
                   let :indexes do
                     [
-                      mock_index('index_rails_02e851e3b7', columns: ['id']),
-                      mock_index('index_rails_02e851e3b8',
-                                 columns: %w[firstname surname],
-                                 using: 'hash')
+                      mock_index("index_rails_02e851e3b7", columns: ["id"]),
+                      mock_index("index_rails_02e851e3b8",
+                        columns: %w[firstname surname],
+                        using: "hash")
                     ]
                   end
 
@@ -434,12 +434,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with index information' do
+                  it "returns schema info with index information" do
                     is_expected.to eq expected_result
                   end
                 end
 
-                context 'when index is not defined' do
+                context "when index is not defined" do
                   let :columns do
                     [
                       mock_column(:id, :integer),
@@ -463,7 +463,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info without index information' do
+                  it "returns schema info without index information" do
                     is_expected.to eq expected_result
                   end
                 end
@@ -471,10 +471,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when option "show_indexes" is true and "simple_indexes" is true' do
                 let :options do
-                  AnnotateRb::Options.from({ simple_indexes: true, show_indexes: true })
+                  AnnotateRb::Options.from({simple_indexes: true, show_indexes: true})
                 end
 
-                context 'when indexes are normal' do
+                context "when indexes are normal" do
                   let :columns do
                     [
                       mock_column(:id, :integer),
@@ -484,8 +484,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
                   let :indexes do
                     [
-                      mock_index('index_rails_02e851e3b7', columns: ['id']),
-                      mock_index('index_rails_02e851e3b8', columns: ['foreign_thing_id'])
+                      mock_index("index_rails_02e851e3b7", columns: ["id"]),
+                      mock_index("index_rails_02e851e3b8", columns: ["foreign_thing_id"])
                     ]
                   end
 
@@ -506,27 +506,27 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with index information' do
+                  it "returns schema info with index information" do
                     is_expected.to eq expected_result
                   end
                 end
 
-                context 'when one of indexes includes ordered index key' do
+                context "when one of indexes includes ordered index key" do
                   let :columns do
                     [
-                      mock_column('id', :integer),
-                      mock_column('firstname', :string),
-                      mock_column('surname', :string),
-                      mock_column('value', :string)
+                      mock_column("id", :integer),
+                      mock_column("firstname", :string),
+                      mock_column("surname", :string),
+                      mock_column("value", :string)
                     ]
                   end
 
                   let :indexes do
                     [
-                      mock_index('index_rails_02e851e3b7', columns: ['id']),
-                      mock_index('index_rails_02e851e3b8',
-                                 columns: %w[firstname surname value],
-                                 orders: { 'surname' => :asc, 'value' => :desc })
+                      mock_index("index_rails_02e851e3b7", columns: ["id"]),
+                      mock_index("index_rails_02e851e3b8",
+                        columns: %w[firstname surname value],
+                        orders: {"surname" => :asc, "value" => :desc})
                     ]
                   end
 
@@ -549,7 +549,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with index information' do
+                  it "returns schema info with index information" do
                     is_expected.to eq expected_result
                   end
                 end
@@ -557,19 +557,19 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context 'when one of indexes includes "where" clause' do
                   let :columns do
                     [
-                      mock_column('id', :integer),
-                      mock_column('firstname', :string),
-                      mock_column('surname', :string),
-                      mock_column('value', :string)
+                      mock_column("id", :integer),
+                      mock_column("firstname", :string),
+                      mock_column("surname", :string),
+                      mock_column("value", :string)
                     ]
                   end
 
                   let :indexes do
                     [
-                      mock_index('index_rails_02e851e3b7', columns: ['id']),
-                      mock_index('index_rails_02e851e3b8',
-                                 columns: %w[firstname surname],
-                                 where: 'value IS NOT NULL')
+                      mock_index("index_rails_02e851e3b7", columns: ["id"]),
+                      mock_index("index_rails_02e851e3b8",
+                        columns: %w[firstname surname],
+                        where: "value IS NOT NULL")
                     ]
                   end
 
@@ -592,7 +592,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with index information' do
+                  it "returns schema info with index information" do
                     is_expected.to eq expected_result
                   end
                 end
@@ -600,19 +600,19 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context 'when one of indexes includes "using" clause other than "btree"' do
                   let :columns do
                     [
-                      mock_column('id', :integer),
-                      mock_column('firstname', :string),
-                      mock_column('surname', :string),
-                      mock_column('value', :string)
+                      mock_column("id", :integer),
+                      mock_column("firstname", :string),
+                      mock_column("surname", :string),
+                      mock_column("value", :string)
                     ]
                   end
 
                   let :indexes do
                     [
-                      mock_index('index_rails_02e851e3b7', columns: ['id']),
-                      mock_index('index_rails_02e851e3b8',
-                                 columns: %w[firstname surname],
-                                 using: 'hash')
+                      mock_index("index_rails_02e851e3b7", columns: ["id"]),
+                      mock_index("index_rails_02e851e3b8",
+                        columns: %w[firstname surname],
+                        using: "hash")
                     ]
                   end
 
@@ -635,12 +635,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with index information' do
+                  it "returns schema info with index information" do
                     is_expected.to eq expected_result
                   end
                 end
 
-                context 'when index is not defined' do
+                context "when index is not defined" do
                   let :columns do
                     [
                       mock_column(:id, :integer),
@@ -664,7 +664,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info without index information' do
+                  it "returns schema info without index information" do
                     is_expected.to eq expected_result
                   end
                 end
@@ -672,7 +672,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when option "simple_indexes" is true' do
                 let :options do
-                  AnnotateRb::Options.from({ simple_indexes: true, show_indexes: false })
+                  AnnotateRb::Options.from({simple_indexes: true, show_indexes: false})
                 end
 
                 context 'when one of indexes includes "orders" clause' do
@@ -685,10 +685,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
                   let :indexes do
                     [
-                      mock_index('index_rails_02e851e3b7', columns: ['id']),
-                      mock_index('index_rails_02e851e3b8',
-                                 columns: ['foreign_thing_id'],
-                                 orders: { 'foreign_thing_id' => :desc })
+                      mock_index("index_rails_02e851e3b7", columns: ["id"]),
+                      mock_index("index_rails_02e851e3b8",
+                        columns: ["foreign_thing_id"],
+                        orders: {"foreign_thing_id" => :desc})
                     ]
                   end
 
@@ -704,23 +704,23 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with index information' do
+                  it "returns schema info with index information" do
                     is_expected.to eq expected_result
                   end
                 end
 
-                context 'when one of indexes is in string form' do
+                context "when one of indexes is in string form" do
                   let :columns do
                     [
-                      mock_column('id', :integer),
-                      mock_column('name', :string)
+                      mock_column("id", :integer),
+                      mock_column("name", :string)
                     ]
                   end
 
                   let :indexes do
                     [
-                      mock_index('index_rails_02e851e3b7', columns: ['id']),
-                      mock_index('index_rails_02e851e3b8', columns: 'LOWER(name)')
+                      mock_index("index_rails_02e851e3b7", columns: ["id"]),
+                      mock_index("index_rails_02e851e3b8", columns: "LOWER(name)")
                     ]
                   end
 
@@ -736,7 +736,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with index information' do
+                  it "returns schema info with index information" do
                     is_expected.to eq expected_result
                   end
                 end
@@ -744,7 +744,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when option "simple_indexes" is true and "show_indexes" is true' do
                 let :options do
-                  AnnotateRb::Options.from({ simple_indexes: true, show_indexes: true })
+                  AnnotateRb::Options.from({simple_indexes: true, show_indexes: true})
                 end
 
                 context 'when one of indexes includes "orders" clause' do
@@ -757,10 +757,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
                   let :indexes do
                     [
-                      mock_index('index_rails_02e851e3b7', columns: ['id']),
-                      mock_index('index_rails_02e851e3b8',
-                                 columns: ['foreign_thing_id'],
-                                 orders: { 'foreign_thing_id' => :desc })
+                      mock_index("index_rails_02e851e3b7", columns: ["id"]),
+                      mock_index("index_rails_02e851e3b8",
+                        columns: ["foreign_thing_id"],
+                        orders: {"foreign_thing_id" => :desc})
                     ]
                   end
 
@@ -781,23 +781,23 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with index information' do
+                  it "returns schema info with index information" do
                     is_expected.to eq expected_result
                   end
                 end
 
-                context 'when one of indexes is in string form' do
+                context "when one of indexes is in string form" do
                   let :columns do
                     [
-                      mock_column('id', :integer),
-                      mock_column('name', :string)
+                      mock_column("id", :integer),
+                      mock_column("name", :string)
                     ]
                   end
 
                   let :indexes do
                     [
-                      mock_index('index_rails_02e851e3b7', columns: ['id']),
-                      mock_index('index_rails_02e851e3b8', columns: 'LOWER(name)')
+                      mock_index("index_rails_02e851e3b7", columns: ["id"]),
+                      mock_index("index_rails_02e851e3b8", columns: "LOWER(name)")
                     ]
                   end
 
@@ -818,14 +818,14 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with index information' do
+                  it "returns schema info with index information" do
                     is_expected.to eq expected_result
                   end
                 end
               end
             end
 
-            context 'when foreign keys exist' do
+            context "when foreign keys exist" do
               let :columns do
                 [
                   mock_column(:id, :integer),
@@ -835,18 +835,18 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               let :foreign_keys do
                 [
-                  mock_foreign_key('fk_rails_cf2568e89e', 'foreign_thing_id', 'foreign_things'),
-                  mock_foreign_key('custom_fk_name', 'other_thing_id', 'other_things'),
-                  mock_foreign_key('fk_rails_a70234b26c', 'third_thing_id', 'third_things')
+                  mock_foreign_key("fk_rails_cf2568e89e", "foreign_thing_id", "foreign_things"),
+                  mock_foreign_key("custom_fk_name", "other_thing_id", "other_things"),
+                  mock_foreign_key("fk_rails_a70234b26c", "third_thing_id", "third_things")
                 ]
               end
 
               context 'when option "show_foreign_keys" is specified' do
                 let :options do
-                  AnnotateRb::Options.from({ show_foreign_keys: true })
+                  AnnotateRb::Options.from({show_foreign_keys: true})
                 end
 
-                context 'when foreign_keys does not have option' do
+                context "when foreign_keys does not have option" do
                   let :expected_result do
                     <<~EOS
                       # Schema Info
@@ -865,7 +865,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with foreign keys' do
+                  it "returns schema info with foreign keys" do
                     is_expected.to eq(expected_result)
                   end
                 end
@@ -873,12 +873,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context 'when foreign_keys have option "on_delete" and "on_update"' do
                   let :foreign_keys do
                     [
-                      mock_foreign_key('fk_rails_02e851e3b7',
-                                       'foreign_thing_id',
-                                       'foreign_things',
-                                       'id',
-                                       on_delete: 'on_delete_value',
-                                       on_update: 'on_update_value')
+                      mock_foreign_key("fk_rails_02e851e3b7",
+                        "foreign_thing_id",
+                        "foreign_things",
+                        "id",
+                        on_delete: "on_delete_value",
+                        on_update: "on_update_value")
                     ]
                   end
 
@@ -898,7 +898,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with foreign keys' do
+                  it "returns schema info with foreign keys" do
                     is_expected.to eq(expected_result)
                   end
                 end
@@ -906,7 +906,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when option "show_foreign_keys" and "show_complete_foreign_keys" are specified' do
                 let :options do
-                  AnnotateRb::Options.from({ show_foreign_keys: true, show_complete_foreign_keys: true })
+                  AnnotateRb::Options.from({show_foreign_keys: true, show_complete_foreign_keys: true})
                 end
 
                 let :expected_result do
@@ -927,7 +927,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                   EOS
                 end
 
-                it 'returns schema info with foreign keys' do
+                it "returns schema info with foreign keys" do
                   is_expected.to eq(expected_result)
                 end
               end
@@ -945,7 +945,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when "hide_limit_column_types" is blank string' do
                 let :options do
-                  AnnotateRb::Options.from({ classified_sort: false, hide_limit_column_types: '' })
+                  AnnotateRb::Options.from({classified_sort: false, hide_limit_column_types: ""})
                 end
 
                 let :expected_result do
@@ -969,7 +969,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when "hide_limit_column_types" is "integer,boolean"' do
                 let :options do
-                  AnnotateRb::Options.from({classified_sort: false, hide_limit_column_types: 'integer,boolean' })
+                  AnnotateRb::Options.from({classified_sort: false, hide_limit_column_types: "integer,boolean"})
                 end
 
                 let :expected_result do
@@ -993,7 +993,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when "hide_limit_column_types" is "integer,boolean,string,text"' do
                 let :options do
-                  AnnotateRb::Options.from({ classified_sort: false, hide_limit_column_types: 'integer,boolean,string,text' })
+                  AnnotateRb::Options.from({classified_sort: false, hide_limit_column_types: "integer,boolean,string,text"})
                 end
 
                 let :expected_result do
@@ -1027,7 +1027,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when "hide_default_column_types" is blank string' do
                 let :options do
-                  AnnotateRb::Options.from({ classified_sort: false, hide_default_column_types: '' })
+                  AnnotateRb::Options.from({classified_sort: false, hide_default_column_types: ""})
                 end
 
                 let :expected_result do
@@ -1050,7 +1050,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when "hide_default_column_types" is "skip"' do
                 let :options do
-                  AnnotateRb::Options.from({ classified_sort: false, hide_default_column_types: 'skip' })
+                  AnnotateRb::Options.from({classified_sort: false, hide_default_column_types: "skip"})
                 end
 
                 let :expected_result do
@@ -1073,7 +1073,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when "hide_default_column_types" is "json"' do
                 let :options do
-                  AnnotateRb::Options.from({ classified_sort: false, hide_default_column_types: 'json' })
+                  AnnotateRb::Options.from({classified_sort: false, hide_default_column_types: "json"})
                 end
 
                 let :expected_result do
@@ -1106,7 +1106,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when "classified_sort" is "yes"' do
                 let :options do
-                  AnnotateRb::Options.from({ classified_sort: 'yes' })
+                  AnnotateRb::Options.from({classified_sort: "yes"})
                 end
 
                 let :expected_result do
@@ -1131,16 +1131,16 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
             context 'when "with_comment" is specified in options' do
               context 'when "with_comment" is "yes"' do
                 let :options do
-                  AnnotateRb::Options.from({ classified_sort: false, with_comment: 'yes' })
+                  AnnotateRb::Options.from({classified_sort: false, with_comment: "yes"})
                 end
 
-                context 'when columns have comments' do
+                context "when columns have comments" do
                   let :columns do
                     [
-                      mock_column(:id, :integer, limit: 8, comment: 'ID'),
-                      mock_column(:active, :boolean, limit: 1, comment: 'Active'),
-                      mock_column(:name, :string, limit: 50, comment: 'Name'),
-                      mock_column(:notes, :text, limit: 55, comment: 'Notes'),
+                      mock_column(:id, :integer, limit: 8, comment: "ID"),
+                      mock_column(:active, :boolean, limit: 1, comment: "Active"),
+                      mock_column(:name, :string, limit: 50, comment: "Name"),
+                      mock_column(:notes, :text, limit: 55, comment: "Notes"),
                       mock_column(:no_comment, :text, limit: 20, comment: nil)
                     ]
                   end
@@ -1165,16 +1165,16 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                   end
                 end
 
-                context 'when columns have multibyte comments' do
+                context "when columns have multibyte comments" do
                   let :columns do
                     [
-                      mock_column(:id, :integer, limit: 8, comment: 'ＩＤ'),
-                      mock_column(:active, :boolean, limit: 1, comment: 'ＡＣＴＩＶＥ'),
-                      mock_column(:name, :string, limit: 50, comment: 'ＮＡＭＥ'),
-                      mock_column(:notes, :text, limit: 55, comment: 'ＮＯＴＥＳ'),
-                      mock_column(:cyrillic, :text, limit: 30, comment: 'Кириллица'),
-                      mock_column(:japanese, :text, limit: 60, comment: '熊本大学　イタリア　宝島'),
-                      mock_column(:arabic, :text, limit: 20, comment: 'لغة'),
+                      mock_column(:id, :integer, limit: 8, comment: "ＩＤ"),
+                      mock_column(:active, :boolean, limit: 1, comment: "ＡＣＴＩＶＥ"),
+                      mock_column(:name, :string, limit: 50, comment: "ＮＡＭＥ"),
+                      mock_column(:notes, :text, limit: 55, comment: "ＮＯＴＥＳ"),
+                      mock_column(:cyrillic, :text, limit: 30, comment: "Кириллица"),
+                      mock_column(:japanese, :text, limit: 60, comment: "熊本大学　イタリア　宝島"),
+                      mock_column(:arabic, :text, limit: 20, comment: "لغة"),
                       mock_column(:no_comment, :text, limit: 20, comment: nil),
                       mock_column(:location, :geometry_collection, limit: nil, comment: nil)
                     ]
@@ -1204,10 +1204,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                   end
                 end
 
-                context 'when columns have multiline comments' do
+                context "when columns have multiline comments" do
                   let :columns do
                     [
-                      mock_column(:id, :integer, limit: 8, comment: 'ID'),
+                      mock_column(:id, :integer, limit: 8, comment: "ID"),
                       mock_column(:notes, :text, limit: 55, comment: "Notes.\nMay include things like notes."),
                       mock_column(:no_comment, :text, limit: 20, comment: nil)
                     ]
@@ -1231,17 +1231,17 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                   end
                 end
 
-                context 'when geometry columns are included' do
+                context "when geometry columns are included" do
                   let :columns do
                     [
                       mock_column(:id, :integer, limit: 8),
                       mock_column(:active, :boolean, default: false, null: false),
                       mock_column(:geometry, :geometry,
-                                  geometric_type: 'Geometry', srid: 4326,
-                                  limit: { srid: 4326, type: 'geometry' }),
+                        geometric_type: "Geometry", srid: 4326,
+                        limit: {srid: 4326, type: "geometry"}),
                       mock_column(:location, :geography,
-                                  geometric_type: 'Point', srid: 0,
-                                  limit: { srid: 0, type: 'geometry' })
+                        geometric_type: "Point", srid: 0,
+                        limit: {srid: 0, type: "geometry"})
                     ]
                   end
 
@@ -1271,11 +1271,11 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
       context 'when header is "== Schema Information"' do
         before do
-          stub_const('AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX', '== Schema Information')
+          stub_const("AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX", "== Schema Information")
         end
 
-        context 'when the primary key is specified' do
-          context 'when the primary_key is :id' do
+        context "when the primary key is specified" do
+          context "when the primary_key is :id" do
             let :primary_key do
               :id
             end
@@ -1289,7 +1289,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
             context 'when option "format_rdoc" is true' do
               let :options do
-                { format_rdoc: true }
+                {format_rdoc: true}
               end
 
               let :expected_result do
@@ -1306,14 +1306,14 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 EOS
               end
 
-              it 'returns schema info in RDoc format' do
+              it "returns schema info in RDoc format" do
                 is_expected.to eq(expected_result)
               end
             end
 
             context 'when option "format_yard" is true' do
               let :options do
-                { format_yard: true }
+                {format_yard: true}
               end
 
               let :expected_result do
@@ -1330,19 +1330,19 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 EOS
               end
 
-              it 'returns schema info in YARD format' do
+              it "returns schema info in YARD format" do
                 is_expected.to eq(expected_result)
               end
             end
 
             context 'when option "format_markdown" is true' do
               before do
-                stub_const('AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX_MD', '== Schema Information')
+                stub_const("AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX_MD", "== Schema Information")
               end
 
-              context 'when other option is not specified' do
+              context "when other option is not specified" do
                 let :options do
-                  AnnotateRb::Options.from({ format_markdown: true })
+                  AnnotateRb::Options.from({format_markdown: true})
                 end
 
                 let :expected_result do
@@ -1361,21 +1361,21 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                   EOS
                 end
 
-                it 'returns schema info in Markdown format' do
+                it "returns schema info in Markdown format" do
                   is_expected.to eq(expected_result)
                 end
               end
 
               context 'when option "show_indexes" is true' do
                 let :options do
-                  AnnotateRb::Options.from({ format_markdown: true, show_indexes: true })
+                  AnnotateRb::Options.from({format_markdown: true, show_indexes: true})
                 end
 
-                context 'when indexes are normal' do
+                context "when indexes are normal" do
                   let :indexes do
                     [
-                      mock_index('index_rails_02e851e3b7', columns: ['id']),
-                      mock_index('index_rails_02e851e3b8', columns: ['foreign_thing_id'])
+                      mock_index("index_rails_02e851e3b7", columns: ["id"]),
+                      mock_index("index_rails_02e851e3b8", columns: ["foreign_thing_id"])
                     ]
                   end
 
@@ -1402,7 +1402,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with index information in Markdown format' do
+                  it "returns schema info with index information in Markdown format" do
                     is_expected.to eq expected_result
                   end
                 end
@@ -1410,10 +1410,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context 'when one of indexes includes "unique" clause' do
                   let :indexes do
                     [
-                      mock_index('index_rails_02e851e3b7', columns: ['id']),
-                      mock_index('index_rails_02e851e3b8',
-                                 columns: ['foreign_thing_id'],
-                                 unique: true)
+                      mock_index("index_rails_02e851e3b7", columns: ["id"]),
+                      mock_index("index_rails_02e851e3b8",
+                        columns: ["foreign_thing_id"],
+                        unique: true)
                     ]
                   end
 
@@ -1440,18 +1440,18 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with index information in Markdown format' do
+                  it "returns schema info with index information in Markdown format" do
                     is_expected.to eq expected_result
                   end
                 end
 
-                context 'when one of indexes includes ordered index key' do
+                context "when one of indexes includes ordered index key" do
                   let :indexes do
                     [
-                      mock_index('index_rails_02e851e3b7', columns: ['id']),
-                      mock_index('index_rails_02e851e3b8',
-                                 columns: ['foreign_thing_id'],
-                                 orders: { 'foreign_thing_id' => :desc })
+                      mock_index("index_rails_02e851e3b7", columns: ["id"]),
+                      mock_index("index_rails_02e851e3b8",
+                        columns: ["foreign_thing_id"],
+                        orders: {"foreign_thing_id" => :desc})
                     ]
                   end
 
@@ -1478,7 +1478,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with index information in Markdown format' do
+                  it "returns schema info with index information in Markdown format" do
                     is_expected.to eq expected_result
                   end
                 end
@@ -1486,11 +1486,11 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context 'when one of indexes includes "where" clause and "unique" clause' do
                   let :indexes do
                     [
-                      mock_index('index_rails_02e851e3b7', columns: ['id']),
-                      mock_index('index_rails_02e851e3b8',
-                                 columns: ['foreign_thing_id'],
-                                 unique: true,
-                                 where: 'name IS NOT NULL')
+                      mock_index("index_rails_02e851e3b7", columns: ["id"]),
+                      mock_index("index_rails_02e851e3b8",
+                        columns: ["foreign_thing_id"],
+                        unique: true,
+                        where: "name IS NOT NULL")
                     ]
                   end
 
@@ -1517,7 +1517,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with index information in Markdown format' do
+                  it "returns schema info with index information in Markdown format" do
                     is_expected.to eq expected_result
                   end
                 end
@@ -1525,10 +1525,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context 'when one of indexes includes "using" clause other than "btree"' do
                   let :indexes do
                     [
-                      mock_index('index_rails_02e851e3b7', columns: ['id']),
-                      mock_index('index_rails_02e851e3b8',
-                                 columns: ['foreign_thing_id'],
-                                 using: 'hash')
+                      mock_index("index_rails_02e851e3b7", columns: ["id"]),
+                      mock_index("index_rails_02e851e3b8",
+                        columns: ["foreign_thing_id"],
+                        using: "hash")
                     ]
                   end
 
@@ -1555,7 +1555,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with index information in Markdown format' do
+                  it "returns schema info with index information in Markdown format" do
                     is_expected.to eq expected_result
                   end
                 end
@@ -1563,7 +1563,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when option "show_foreign_keys" is true' do
                 let :options do
-                  AnnotateRb::Options.from({ format_markdown: true, show_foreign_keys: true })
+                  AnnotateRb::Options.from({format_markdown: true, show_foreign_keys: true})
                 end
 
                 let :columns do
@@ -1576,12 +1576,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context 'when foreign_keys have option "on_delete" and "on_update"' do
                   let :foreign_keys do
                     [
-                      mock_foreign_key('fk_rails_02e851e3b7',
-                                       'foreign_thing_id',
-                                       'foreign_things',
-                                       'id',
-                                       on_delete: 'on_delete_value',
-                                       on_update: 'on_update_value')
+                      mock_foreign_key("fk_rails_02e851e3b7",
+                        "foreign_thing_id",
+                        "foreign_things",
+                        "id",
+                        on_delete: "on_delete_value",
+                        on_update: "on_update_value")
                     ]
                   end
 
@@ -1606,7 +1606,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                     EOS
                   end
 
-                  it 'returns schema info with foreign_keys in Markdown format' do
+                  it "returns schema info with foreign_keys in Markdown format" do
                     is_expected.to eq(expected_result)
                   end
                 end
@@ -1615,14 +1615,14 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
             context 'when "format_doc" and "with_comment" are specified in options' do
               let :options do
-                { format_rdoc: true, with_comment: true }
+                {format_rdoc: true, with_comment: true}
               end
 
-              context 'when columns are normal' do
+              context "when columns are normal" do
                 let :columns do
                   [
-                    mock_column(:id, :integer, comment: 'ID'),
-                    mock_column(:name, :string, limit: 50, comment: 'Name')
+                    mock_column(:id, :integer, comment: "ID"),
+                    mock_column(:name, :string, limit: 50, comment: "Name")
                   ]
                 end
 
@@ -1640,7 +1640,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                   EOS
                 end
 
-                it 'returns schema info in RDoc format' do
+                it "returns schema info in RDoc format" do
                   is_expected.to eq expected_result
                 end
               end
@@ -1648,18 +1648,18 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
             context 'when "format_markdown" and "with_comment" are specified in options' do
               before do
-                stub_const('AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX_MD', '== Schema Information')
+                stub_const("AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX_MD", "== Schema Information")
               end
 
               let :options do
-                { format_markdown: true, with_comment: true }
+                {format_markdown: true, with_comment: true}
               end
 
-              context 'when columns have comments' do
+              context "when columns have comments" do
                 let :columns do
                   [
-                    mock_column(:id, :integer, comment: 'ID'),
-                    mock_column(:name, :string, limit: 50, comment: 'Name')
+                    mock_column(:id, :integer, comment: "ID"),
+                    mock_column(:name, :string, limit: 50, comment: "Name")
                   ]
                 end
 
@@ -1679,16 +1679,16 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                   EOS
                 end
 
-                it 'returns schema info in Markdown format' do
+                it "returns schema info in Markdown format" do
                   is_expected.to eq expected_result
                 end
               end
 
-              context 'when columns have multibyte comments' do
+              context "when columns have multibyte comments" do
                 let :columns do
                   [
-                    mock_column(:id, :integer, comment: 'ＩＤ'),
-                    mock_column(:name, :string, limit: 50, comment: 'ＮＡＭＥ')
+                    mock_column(:id, :integer, comment: "ＩＤ"),
+                    mock_column(:name, :string, limit: 50, comment: "ＮＡＭＥ")
                   ]
                 end
 
@@ -1708,7 +1708,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                   EOS
                 end
 
-                it 'returns schema info in Markdown format' do
+                it "returns schema info in Markdown format" do
                   is_expected.to eq expected_result
                 end
               end

@@ -4,10 +4,10 @@ module AnnotateRb
   module ModelAnnotator
     class AnnotationBuilder
       # Annotate Models plugin use this header
-      PREFIX = '== Schema Information'.freeze
-      PREFIX_MD = '## Schema Information'.freeze
+      PREFIX = "== Schema Information"
+      PREFIX_MD = "## Schema Information"
 
-      END_MARK = '== Schema Information End'.freeze
+      END_MARK = "== Schema Information End"
 
       MD_NAMES_OVERHEAD = 6
       MD_TYPE_ALLOWANCE = 18
@@ -26,10 +26,10 @@ module AnnotateRb
 
         if @options[:format_markdown]
           @info += format("# %-#{max_size + MD_NAMES_OVERHEAD}.#{max_size + MD_NAMES_OVERHEAD}s | %-#{MD_TYPE_ALLOWANCE}.#{MD_TYPE_ALLOWANCE}s | %s\n",
-                          'Name',
-                          'Type',
-                          'Attributes')
-          @info += "# #{'-' * (max_size + MD_NAMES_OVERHEAD)} | #{'-' * MD_TYPE_ALLOWANCE} | #{'-' * 27}\n"
+            "Name",
+            "Type",
+            "Attributes")
+          @info += "# #{"-" * (max_size + MD_NAMES_OVERHEAD)} | #{"-" * MD_TYPE_ALLOWANCE} | #{"-" * 27}\n"
         end
 
         @info += @model.columns.map do |col|
@@ -51,7 +51,11 @@ module AnnotateRb
 
       def header
         header = @options[:format_markdown] ? PREFIX_MD.dup : PREFIX.dup
-        version = ActiveRecord::Migrator.current_version rescue 0
+        version = begin
+          ActiveRecord::Migrator.current_version
+        rescue
+          0
+        end
 
         if @options[:include_version] && version > 0
           header += "\n# Schema version: #{version}"

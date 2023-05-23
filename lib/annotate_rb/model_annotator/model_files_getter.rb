@@ -19,12 +19,12 @@ module AnnotateRb
 
           options[:model_dir].each do |dir|
             Dir.chdir(dir) do
-              if options[:ignore_model_sub_dir]
-                list = Dir["*.rb"].map { |f| [dir, f] }
+              list = if options[:ignore_model_sub_dir]
+                Dir["*.rb"].map { |f| [dir, f] }
               else
-                list = Dir["**/*.rb"]
-                         .reject { |f| f["concerns/"] }
-                         .map { |f| [dir, f] }
+                Dir["**/*.rb"]
+                  .reject { |f| f["concerns/"] }
+                  .map { |f| [dir, f] }
               end
               model_files.concat(list)
             end
@@ -32,9 +32,9 @@ module AnnotateRb
 
           model_files
         rescue SystemCallError
-          $stderr.puts "No models found in directory '#{options[:model_dir].join("', '")}'."
-          $stderr.puts "Either specify models on the command line, or use the --model-dir option."
-          $stderr.puts "Call 'annotaterb --help' for more info."
+          warn "No models found in directory '#{options[:model_dir].join("', '")}'."
+          warn "Either specify models on the command line, or use the --model-dir option."
+          warn "Call 'annotaterb --help' for more info."
           # exit 1 # TODO: Return exit code back to caller. Right now it messes up RSpec being able to run
         end
 
@@ -49,12 +49,12 @@ module AnnotateRb
             absolute_dir_path = File.expand_path(dir)
             specified_files
               .find_all { |file| file.start_with?(absolute_dir_path) }
-              .map { |file| [dir, file.sub("#{absolute_dir_path}/", '')] }
+              .map { |file| [dir, file.sub("#{absolute_dir_path}/", "")] }
           end
 
           if model_files.size != specified_files.size
-            $stderr.puts "The specified file could not be found in directory '#{options[:model_dir].join("', '")}'."
-            $stderr.puts "Call 'annotaterb --help' for more info."
+            warn "The specified file could not be found in directory '#{options[:model_dir].join("', '")}'."
+            warn "Call 'annotaterb --help' for more info."
             # exit 1 # TODO: Return exit code back to caller. Right now it messes up RSpec being able to run
           end
 

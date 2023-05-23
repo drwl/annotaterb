@@ -1,13 +1,11 @@
-# encoding: utf-8
-
 RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
-  describe '.call' do
+  describe ".call" do
     def create(filename, file_content, options)
       model_dir_path = options[:model_dir][0]
 
       File.join(model_dir_path, filename).tap do |path|
         FileUtils.mkdir_p(File.dirname(path))
-        File.open(path, 'wb') do |f|
+        File.open(path, "wb") do |f|
           f.puts(file_content)
         end
       end
@@ -18,7 +16,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
     end
 
     let(:options) { AnnotateRb::Options.from(base_options) }
-    let(:base_options) { { model_dir: [Dir.mktmpdir('annotate_models')] } }
+    let(:base_options) { {model_dir: [Dir.mktmpdir("annotate_models")]} }
     let :klass do
       model_dir_path = options[:model_dir][0]
 
@@ -27,7 +25,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
 
     context 'when class Foo is defined in "foo.rb"' do
       let :filename do
-        'foo.rb'
+        "foo.rb"
       end
 
       let :file_content do
@@ -37,15 +35,15 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
         EOS
       end
 
-      it 'works' do
-        expect(klass.name).to eq('Foo')
+      it "works" do
+        expect(klass.name).to eq("Foo")
       end
     end
 
-    context 'when class name is not capitalized normally' do
+    context "when class name is not capitalized normally" do
       context 'when class FooWithCAPITALS is defined in "foo_with_capitals.rb"' do
         let :filename do
-          'foo_with_capitals.rb'
+          "foo_with_capitals.rb"
         end
 
         let :file_content do
@@ -55,16 +53,16 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
           EOS
         end
 
-        it 'works' do
-          expect(klass.name).to eq('FooWithCAPITALS')
+        it "works" do
+          expect(klass.name).to eq("FooWithCAPITALS")
         end
       end
     end
 
-    context 'when class is defined inside module' do
+    context "when class is defined inside module" do
       context 'when class Bar::FooInsideBar is defined in "bar/foo_inside_bar.rb"' do
         let :filename do
-          'bar/foo_inside_bar.rb'
+          "bar/foo_inside_bar.rb"
         end
 
         let :file_content do
@@ -76,16 +74,16 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
           EOS
         end
 
-        it 'works' do
-          expect(klass.name).to eq('Bar::FooInsideBar')
+        it "works" do
+          expect(klass.name).to eq("Bar::FooInsideBar")
         end
       end
     end
 
-    context 'when class is defined inside module and class name is not capitalized normally' do
+    context "when class is defined inside module and class name is not capitalized normally" do
       context 'when class Bar::FooInsideCapitalsBAR is defined in "bar/foo_inside_capitals_bar.rb"' do
         let :filename do
-          'bar/foo_inside_capitals_bar.rb'
+          "bar/foo_inside_capitals_bar.rb"
         end
 
         let :file_content do
@@ -97,16 +95,16 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
           EOS
         end
 
-        it 'works' do
-          expect(klass.name).to eq('BAR::FooInsideCapitalsBAR')
+        it "works" do
+          expect(klass.name).to eq("BAR::FooInsideCapitalsBAR")
         end
       end
     end
 
-    context 'when unknown macros exist in class' do
+    context "when unknown macros exist in class" do
       context 'when class FooWithMacro is defined in "foo_with_macro.rb"' do
         let :filename do
-          'foo_with_macro.rb'
+          "foo_with_macro.rb"
         end
 
         let :file_content do
@@ -117,15 +115,15 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
           EOS
         end
 
-        it 'works and does not care about known macros' do
-          expect(klass.name).to eq('FooWithMacro')
+        it "works and does not care about known macros" do
+          expect(klass.name).to eq("FooWithMacro")
         end
       end
 
-      context 'when class name is with ALL CAPS segments' do
+      context "when class name is with ALL CAPS segments" do
         context 'when class is "FooWithCAPITALS" is defined in "foo_with_capitals.rb"' do
           let :filename do
-            'foo_with_capitals.rb'
+            "foo_with_capitals.rb"
           end
 
           let :file_content do
@@ -136,17 +134,17 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
             EOS
           end
 
-          it 'works' do
-            expect(klass.name).to eq('FooWithCAPITALS')
+          it "works" do
+            expect(klass.name).to eq("FooWithCAPITALS")
           end
         end
       end
     end
 
-    context 'when known macros exist in class' do
+    context "when known macros exist in class" do
       context 'when class FooWithKnownMacro is defined in "foo_with_known_macro.rb"' do
         let :filename do
-          'foo_with_known_macro.rb'
+          "foo_with_known_macro.rb"
         end
 
         let :file_content do
@@ -157,16 +155,16 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
           EOS
         end
 
-        it 'works and does not care about known macros' do
-          expect(klass.name).to eq('FooWithKnownMacro')
+        it "works and does not care about known macros" do
+          expect(klass.name).to eq("FooWithKnownMacro")
         end
       end
     end
 
-    context 'when the file includes invlaid multibyte chars (USASCII)' do
+    context "when the file includes invlaid multibyte chars (USASCII)" do
       context 'when class FooWithUtf8 is defined in "foo_with_utf8.rb"' do
         let :filename do
-          'foo_with_utf8.rb'
+          "foo_with_utf8.rb"
         end
 
         let :file_content do
@@ -178,16 +176,16 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
           EOS
         end
 
-        it 'works without complaining of invalid multibyte chars' do
-          expect(klass.name).to eq('FooWithUtf8')
+        it "works without complaining of invalid multibyte chars" do
+          expect(klass.name).to eq("FooWithUtf8")
         end
       end
     end
 
-    context 'when non-namespaced model is inside subdirectory' do
+    context "when non-namespaced model is inside subdirectory" do
       context 'when class NonNamespacedFooInsideBar is defined in "bar/non_namespaced_foo_inside_bar.rb"' do
         let :filename do
-          'bar/non_namespaced_foo_inside_bar.rb'
+          "bar/non_namespaced_foo_inside_bar.rb"
         end
 
         let :file_content do
@@ -197,15 +195,15 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
           EOS
         end
 
-        it 'works' do
-          expect(klass.name).to eq('NonNamespacedFooInsideBar')
+        it "works" do
+          expect(klass.name).to eq("NonNamespacedFooInsideBar")
         end
       end
 
-      context 'when class name is not capitalized normally' do
+      context "when class name is not capitalized normally" do
         context 'when class NonNamespacedFooWithCapitalsInsideBar is defined in "bar/non_namespaced_foo_with_capitals_inside_bar.rb"' do
           let :filename do
-            'bar/non_namespaced_foo_with_capitals_inside_bar.rb'
+            "bar/non_namespaced_foo_with_capitals_inside_bar.rb"
           end
 
           let :file_content do
@@ -215,17 +213,17 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
             EOS
           end
 
-          it 'works' do
-            expect(klass.name).to eq('NonNamespacedFooWithCapitalsInsideBar')
+          it "works" do
+            expect(klass.name).to eq("NonNamespacedFooWithCapitalsInsideBar")
           end
         end
       end
     end
 
-    context 'when class file is loaded twice' do
+    context "when class file is loaded twice" do
       context 'when class LoadedClass is defined in "loaded_class.rb"' do
         let :filename do
-          'loaded_class.rb'
+          "loaded_class.rb"
         end
 
         let :file_content do
@@ -244,12 +242,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
           expect(Kernel).not_to receive(:require)
         end
 
-        it 'does not require model file twice' do
-          expect(klass.name).to eq('LoadedClass')
+        it "does not require model file twice" do
+          expect(klass.name).to eq("LoadedClass")
         end
       end
 
-      context 'when class is defined in a subdirectory' do
+      context "when class is defined in a subdirectory" do
         dir = Array.new(8) { (0..9).to_a.sample(random: Random.new) }.join
 
         context "when class SubdirLoadedClass is defined in \"#{dir}/subdir_loaded_class.rb\"" do
@@ -275,21 +273,21 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
             EOS
           end
 
-          it 'does not require model file twice' do
-            expect(klass.name).to eq('SubdirLoadedClass')
+          it "does not require model file twice" do
+            expect(klass.name).to eq("SubdirLoadedClass")
           end
         end
       end
     end
 
-    context 'when two class exist' do
+    context "when two class exist" do
       before do
         create(filename_2, file_content_2, options)
       end
 
-      context 'the base names are duplicated' do
+      context "the base names are duplicated" do
         let :filename do
-          'foo.rb'
+          "foo.rb"
         end
 
         let :file_content do
@@ -300,7 +298,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
         end
 
         let :filename_2 do
-          'bar/foo.rb'
+          "bar/foo.rb"
         end
 
         let :file_content_2 do
@@ -317,15 +315,15 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
           described_class.call(File.join(model_dir_path, filename_2), options)
         end
 
-        it 'finds valid model' do
-          expect(klass.name).to eq('Foo')
-          expect(klass_2.name).to eq('Bar::Foo')
+        it "finds valid model" do
+          expect(klass.name).to eq("Foo")
+          expect(klass_2.name).to eq("Bar::Foo")
         end
       end
 
-      context 'one of the classes is nested in another class' do
+      context "one of the classes is nested in another class" do
         let :filename do
-          'voucher.rb'
+          "voucher.rb"
         end
 
         let :file_content do
@@ -336,7 +334,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
         end
 
         let :filename_2 do
-          'voucher/foo.rb'
+          "voucher/foo.rb"
         end
 
         let :file_content_2 do
@@ -354,9 +352,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
           described_class.call(File.join(model_dir_path, filename_2), options)
         end
 
-        it 'finds valid model' do
-          expect(klass.name).to eq('Voucher')
-          expect(klass_2.name).to eq('Voucher::Foo')
+        it "finds valid model" do
+          expect(klass.name).to eq("Voucher")
+          expect(klass_2.name).to eq("Voucher::Foo")
         end
       end
     end

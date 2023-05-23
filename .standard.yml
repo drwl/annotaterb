@@ -1,0 +1,5 @@
+parallel: true
+format: progress
+ruby_version: 2.7
+ignore:
+  - 'dummyapp/**/*'

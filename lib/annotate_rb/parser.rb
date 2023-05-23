@@ -1,4 +1,4 @@
-require 'optparse'
+require "optparse"
 
 module AnnotateRb
   # Class for handling command line arguments
@@ -28,10 +28,10 @@ module AnnotateRb
     FORMAT_TYPES = %w[bare rdoc yard markdown].freeze
 
     COMMAND_MAP = {
-      'models' => :models,
-      'routes' => :routes,
-      'version' => :version,
-      'help' => :help
+      "models" => :models,
+      "routes" => :routes,
+      "version" => :version,
+      "help" => :help
     }.freeze
 
     def initialize(args, existing_options)
@@ -72,13 +72,13 @@ module AnnotateRb
         version: Commands::PrintVersion.new
       }
 
-      if @commands.any?
-        @options[:command] = map[@commands.first]
+      @options[:command] = if @commands.any?
+        map[@commands.first]
       elsif @commands.size > 1
         # TODO: Should raise or alert user that multiple commands were selected but only 1 command will be ran
-        @options[:command] = map[@commands.first]
+        map[@commands.first]
       else # None
-        @options[:command] = map[:help]
+        map[:help]
       end
     end
 
@@ -87,14 +87,14 @@ module AnnotateRb
         option_parser.banner = BANNER_STRING
 
         # ------------------------------------------------------------------------------------------------------------=
-        option_parser.separator('')
-        option_parser.separator('Options:')
+        option_parser.separator("")
+        option_parser.separator("Options:")
 
-        option_parser.on('-v', '--version', "Display the version..") do
+        option_parser.on("-v", "--version", "Display the version..") do
           @commands << :version
         end
 
-        option_parser.on('-h', '--help', "You're looking at it.") do
+        option_parser.on("-h", "--help", "You're looking at it.") do
           @commands << :help
         end
 
@@ -108,130 +108,130 @@ module AnnotateRb
     end
 
     def add_wrapper_options_to_parser(option_parser)
-      option_parser.on('--w',
-                       '--wrapper STR',
-                       'Wrap annotation with the text passed as parameter.',
-                       'If --w option is used, the same text will be used as opening and closing') do |wrapper|
+      option_parser.on("--w",
+        "--wrapper STR",
+        "Wrap annotation with the text passed as parameter.",
+        "If --w option is used, the same text will be used as opening and closing") do |wrapper|
         @options[:wrapper] = wrapper
       end
 
-      option_parser.on('--wo',
-                       '--wrapper-open STR',
-                       'Annotation wrapper opening.') do |wrapper_open|
+      option_parser.on("--wo",
+        "--wrapper-open STR",
+        "Annotation wrapper opening.") do |wrapper_open|
         @options[:wrapper_open] = wrapper_open
       end
 
-      option_parser.on('--wc',
-                       '--wrapper-close STR',
-                       'Annotation wrapper closing') do |wrapper_close|
+      option_parser.on("--wc",
+        "--wrapper-close STR",
+        "Annotation wrapper closing") do |wrapper_close|
         @options[:wrapper_close] = wrapper_close
       end
     end
 
     def add_utils_to_parser(option_parser)
-      option_parser.on('--force',
-                       'Force new annotations even if there are no changes.') do
+      option_parser.on("--force",
+        "Force new annotations even if there are no changes.") do
         @options[:force] = true
       end
 
-      option_parser.on('--debug',
-                       'Prints the options and outputs messages to make it easier to debug.') do
+      option_parser.on("--debug",
+        "Prints the options and outputs messages to make it easier to debug.") do
         @options[:debug] = true
       end
 
-      option_parser.on('--frozen',
-                       'Do not allow to change annotations. Exits non-zero if there are going to be changes to files.') do
+      option_parser.on("--frozen",
+        "Do not allow to change annotations. Exits non-zero if there are going to be changes to files.") do
         @options[:frozen] = true
       end
 
-      option_parser.on('--trace',
-                       'If unable to annotate a file, print the full stack trace, not just the exception message.') do
+      option_parser.on("--trace",
+        "If unable to annotate a file, print the full stack trace, not just the exception message.") do
         @options[:trace] = true
       end
     end
 
     def add_model_options_to_parser(option_parser)
-      option_parser.separator('')
-      option_parser.separator('Annotate model options:')
-      option_parser.separator(' ' * 4 + 'Usage: annotaterb models [options]')
-      option_parser.separator('')
+      option_parser.separator("")
+      option_parser.separator("Annotate model options:")
+      option_parser.separator(" " * 4 + "Usage: annotaterb models [options]")
+      option_parser.separator("")
 
-      option_parser.on('-a',
-                       '--active-admin',
-                       'Annotate active_admin models') do
+      option_parser.on("-a",
+        "--active-admin",
+        "Annotate active_admin models") do
         @options[:active_admin] = true
       end
 
-      option_parser.on('--show-migration',
-                       'Include the migration version number in the annotation') do
+      option_parser.on("--show-migration",
+        "Include the migration version number in the annotation") do
         @options[:include_version] = true
       end
 
-      option_parser.on('-k',
-                       '--show-foreign-keys',
-                       "List the table's foreign key constraints in the annotation") do
+      option_parser.on("-k",
+        "--show-foreign-keys",
+        "List the table's foreign key constraints in the annotation") do
         @options[:show_foreign_keys] = true
       end
 
-      option_parser.on('--ck',
-                       '--complete-foreign-keys',
-                       'Complete foreign key names in the annotation') do
+      option_parser.on("--ck",
+        "--complete-foreign-keys",
+        "Complete foreign key names in the annotation") do
         @options[:show_foreign_keys] = true
         @options[:show_complete_foreign_keys] = true
       end
 
-      option_parser.on('-i',
-                       '--show-indexes',
-                       "List the table's database indexes in the annotation") do
+      option_parser.on("-i",
+        "--show-indexes",
+        "List the table's database indexes in the annotation") do
         @options[:show_indexes] = true
       end
 
-      option_parser.on('-s',
-                       '--simple-indexes',
-                       "Concat the column's related indexes in the annotation") do
+      option_parser.on("-s",
+        "--simple-indexes",
+        "Concat the column's related indexes in the annotation") do
         @options[:simple_indexes] = true
       end
 
-      option_parser.on('--hide-limit-column-types VALUES',
-                       "don't show limit for given column types, separated by commas (i.e., `integer,boolean,text`)") do |values|
+      option_parser.on("--hide-limit-column-types VALUES",
+        "don't show limit for given column types, separated by commas (i.e., `integer,boolean,text`)") do |values|
         @options[:hide_limit_column_types] = values.to_s
       end
 
-      option_parser.on('--hide-default-column-types VALUES',
-                       "don't show default for given column types, separated by commas (i.e., `json,jsonb,hstore`)") do |values|
+      option_parser.on("--hide-default-column-types VALUES",
+        "don't show default for given column types, separated by commas (i.e., `json,jsonb,hstore`)") do |values|
         @options[:hide_default_column_types] = values.to_s
       end
 
-      option_parser.on('--ignore-unknown-models',
-                       "don't display warnings for bad model files") do
+      option_parser.on("--ignore-unknown-models",
+        "don't display warnings for bad model files") do
         @options[:ignore_unknown_models] = true
       end
 
-      option_parser.on('-I',
-                       '--ignore-columns REGEX',
-                       "don't annotate columns that match a given REGEX (i.e., `annotate -I '^(id|updated_at|created_at)'`") do |regex|
+      option_parser.on("-I",
+        "--ignore-columns REGEX",
+        "don't annotate columns that match a given REGEX (i.e., `annotate -I '^(id|updated_at|created_at)'`") do |regex|
         @options[:ignore_columns] = regex
       end
 
-      option_parser.on('--with-comment',
-                       "include database comments in model annotations") do
+      option_parser.on("--with-comment",
+        "include database comments in model annotations") do
         @options[:with_comment] = true
       end
     end
 
     def add_route_options_to_parser(option_parser)
-      option_parser.separator('')
-      option_parser.separator('Annotate routes options:')
-      option_parser.separator(' ' * 4 + 'Usage: annotaterb routes [options]')
-      option_parser.separator('')
+      option_parser.separator("")
+      option_parser.separator("Annotate routes options:")
+      option_parser.separator(" " * 4 + "Usage: annotaterb routes [options]")
+      option_parser.separator("")
 
-      option_parser.on('--ignore-routes REGEX',
-                       "don't annotate routes that match a given REGEX (i.e., `annotate -I '(mobile|resque|pghero)'`") do |regex|
+      option_parser.on("--ignore-routes REGEX",
+        "don't annotate routes that match a given REGEX (i.e., `annotate -I '(mobile|resque|pghero)'`") do |regex|
         @options[:ignore_routes] = regex
       end
 
-      option_parser.on('--timestamp',
-                       'Include timestamp in (routes) annotation') do
+      option_parser.on("--timestamp",
+        "Include timestamp in (routes) annotation") do
         @options[:timestamp] = true
       end
     end
@@ -239,10 +239,10 @@ module AnnotateRb
     def add_position_options_to_parser(option_parser)
       has_set_position = {}
 
-      option_parser.on('-p',
-                       '--position [before|top|after|bottom]',
-                       ANNOTATION_POSITIONS,
-                       'Place the annotations at the top (before) or the bottom (after) of the model/test/fixture/factory/route/serializer file(s)') do |position|
+      option_parser.on("-p",
+        "--position [before|top|after|bottom]",
+        ANNOTATION_POSITIONS,
+        "Place the annotations at the top (before) or the bottom (after) of the model/test/fixture/factory/route/serializer file(s)") do |position|
         @options[:position] = position
 
         FILE_TYPE_POSITIONS.each do |key|
@@ -250,128 +250,128 @@ module AnnotateRb
         end
       end
 
-      option_parser.on('--pc',
-                       '--position-in-class [before|top|after|bottom]',
-                       ANNOTATION_POSITIONS,
-                       'Place the annotations at the top (before) or the bottom (after) of the model file') do |position_in_class|
+      option_parser.on("--pc",
+        "--position-in-class [before|top|after|bottom]",
+        ANNOTATION_POSITIONS,
+        "Place the annotations at the top (before) or the bottom (after) of the model file") do |position_in_class|
         @options[:position_in_class] = position_in_class
-        has_set_position['position_in_class'] = true
+        has_set_position["position_in_class"] = true
       end
 
-      option_parser.on('--pf',
-                       '--position-in-factory [before|top|after|bottom]',
-                       ANNOTATION_POSITIONS,
-                       'Place the annotations at the top (before) or the bottom (after) of any factory files') do |position_in_factory|
+      option_parser.on("--pf",
+        "--position-in-factory [before|top|after|bottom]",
+        ANNOTATION_POSITIONS,
+        "Place the annotations at the top (before) or the bottom (after) of any factory files") do |position_in_factory|
         @options[:position_in_factory] = position_in_factory
-        has_set_position['position_in_factory'] = true
+        has_set_position["position_in_factory"] = true
       end
 
-      option_parser.on('--px',
-                       '--position-in-fixture [before|top|after|bottom]',
-                       ANNOTATION_POSITIONS,
-                       'Place the annotations at the top (before) or the bottom (after) of any fixture files') do |position_in_fixture|
+      option_parser.on("--px",
+        "--position-in-fixture [before|top|after|bottom]",
+        ANNOTATION_POSITIONS,
+        "Place the annotations at the top (before) or the bottom (after) of any fixture files") do |position_in_fixture|
         @options[:position_in_fixture] = position_in_fixture
-        has_set_position['position_in_fixture'] = true
+        has_set_position["position_in_fixture"] = true
       end
 
-      option_parser.on('--pt',
-                       '--position-in-test [before|top|after|bottom]',
-                       ANNOTATION_POSITIONS,
-                       'Place the annotations at the top (before) or the bottom (after) of any test files') do |position_in_test|
+      option_parser.on("--pt",
+        "--position-in-test [before|top|after|bottom]",
+        ANNOTATION_POSITIONS,
+        "Place the annotations at the top (before) or the bottom (after) of any test files") do |position_in_test|
         @options[:position_in_test] = position_in_test
-        has_set_position['position_in_test'] = true
+        has_set_position["position_in_test"] = true
       end
 
-      option_parser.on('--pr',
-                       '--position-in-routes [before|top|after|bottom]',
-                       ANNOTATION_POSITIONS,
-                       'Place the annotations at the top (before) or the bottom (after) of the routes.rb file') do |position_in_routes|
+      option_parser.on("--pr",
+        "--position-in-routes [before|top|after|bottom]",
+        ANNOTATION_POSITIONS,
+        "Place the annotations at the top (before) or the bottom (after) of the routes.rb file") do |position_in_routes|
         @options[:position_in_routes] = position_in_routes
-        has_set_position['position_in_routes'] = true
+        has_set_position["position_in_routes"] = true
       end
 
-      option_parser.on('--ps',
-                       '--position-in-serializer [before|top|after|bottom]',
-                       ANNOTATION_POSITIONS,
-                       'Place the annotations at the top (before) or the bottom (after) of the serializer files') do |position_in_serializer|
+      option_parser.on("--ps",
+        "--position-in-serializer [before|top|after|bottom]",
+        ANNOTATION_POSITIONS,
+        "Place the annotations at the top (before) or the bottom (after) of the serializer files") do |position_in_serializer|
         @options[:position_in_serializer] = position_in_serializer
-        has_set_position['position_in_serializer'] = true
+        has_set_position["position_in_serializer"] = true
       end
 
-      option_parser.on('--pa',
-                       '--position-in-additional-file-patterns [before|top|after|bottom]',
-                       ANNOTATION_POSITIONS,
-                       'Place the annotations at the top (before) or the bottom (after) of files captured in additional file patterns') do |position_in_serializer|
+      option_parser.on("--pa",
+        "--position-in-additional-file-patterns [before|top|after|bottom]",
+        ANNOTATION_POSITIONS,
+        "Place the annotations at the top (before) or the bottom (after) of files captured in additional file patterns") do |position_in_serializer|
         @options[:position_in_additional_file_patterns] = position_in_serializer
-        has_set_position['position_in_additional_file_patterns'] = true
+        has_set_position["position_in_additional_file_patterns"] = true
       end
     end
 
     def add_options_to_parser(option_parser) # rubocop:disable Metrics/MethodLength
-      option_parser.separator('')
-      option_parser.separator('Command options:')
-      option_parser.separator('Additional options that work for annotating models and routes')
-      option_parser.separator('')
+      option_parser.separator("")
+      option_parser.separator("Command options:")
+      option_parser.separator("Additional options that work for annotating models and routes")
+      option_parser.separator("")
 
-      option_parser.on('--additional-file-patterns path1,path2,path3',
-                       Array,
-                       "Additional file paths or globs to annotate, separated by commas (e.g. `/foo/bar/%model_name%/*.rb,/baz/%model_name%.rb`)") do |additional_file_patterns|
+      option_parser.on("--additional-file-patterns path1,path2,path3",
+        Array,
+        "Additional file paths or globs to annotate, separated by commas (e.g. `/foo/bar/%model_name%/*.rb,/baz/%model_name%.rb`)") do |additional_file_patterns|
         @options[:additional_file_patterns] = additional_file_patterns
       end
 
-      option_parser.on('-d',
-                       '--delete',
-                       'Remove annotations from all model files or the routes.rb file') do
+      option_parser.on("-d",
+        "--delete",
+        "Remove annotations from all model files or the routes.rb file") do
         @options[:target_action] = :remove_annotations
       end
 
-      option_parser.on('--model-dir dir',
-                       "Annotate model files stored in dir rather than app/models, separate multiple dirs with commas") do |dir|
+      option_parser.on("--model-dir dir",
+        "Annotate model files stored in dir rather than app/models, separate multiple dirs with commas") do |dir|
         @options[:model_dir] = dir
       end
 
-      option_parser.on('--root-dir dir',
-                       "Annotate files stored within root dir projects, separate multiple dirs with commas") do |dir|
+      option_parser.on("--root-dir dir",
+        "Annotate files stored within root dir projects, separate multiple dirs with commas") do |dir|
         @options[:root_dir] = dir
       end
 
-      option_parser.on('--ignore-model-subdirects',
-                       "Ignore subdirectories of the models directory") do
+      option_parser.on("--ignore-model-subdirects",
+        "Ignore subdirectories of the models directory") do
         @options[:ignore_model_sub_dir] = true
       end
 
-      option_parser.on('--sort',
-                       "Sort columns alphabetically, rather than in creation order") do
+      option_parser.on("--sort",
+        "Sort columns alphabetically, rather than in creation order") do
         @options[:sort] = true
       end
 
-      option_parser.on('--classified-sort',
-                       "Sort columns alphabetically, but first goes id, then the rest columns, then the timestamp columns and then the association columns") do
+      option_parser.on("--classified-sort",
+        "Sort columns alphabetically, but first goes id, then the rest columns, then the timestamp columns and then the association columns") do
         @options[:classified_sort] = true
       end
 
-      option_parser.on('-R',
-                       '--require path',
-                       "Additional file to require before loading models, may be used multiple times") do |path|
+      option_parser.on("-R",
+        "--require path",
+        "Additional file to require before loading models, may be used multiple times") do |path|
         @options[:require] = if @options[:require].present?
-                           [@options[:require], path].join(',')
-                         else
-                           path
-                         end
+          [@options[:require], path].join(",")
+        else
+          path
+        end
       end
 
-      option_parser.on('-e',
-                       '--exclude [tests,fixtures,factories,serializers]',
-                       Array,
-                       "Do not annotate fixtures, test files, factories, and/or serializers") do |exclusions|
+      option_parser.on("-e",
+        "--exclude [tests,fixtures,factories,serializers]",
+        Array,
+        "Do not annotate fixtures, test files, factories, and/or serializers") do |exclusions|
         exclusions ||= EXCLUSION_LIST
         exclusions.each { |exclusion| @options["exclude_#{exclusion}".to_sym] = true }
       end
 
-      option_parser.on('-f',
-                       '--format [bare|rdoc|yard|markdown]',
-                       FORMAT_TYPES,
-                       'Render Schema Information as plain/RDoc/Yard/Markdown') do |format_type|
+      option_parser.on("-f",
+        "--format [bare|rdoc|yard|markdown]",
+        FORMAT_TYPES,
+        "Render Schema Information as plain/RDoc/Yard/Markdown") do |format_type|
         @options["format_#{format_type}".to_sym] = true
       end
     end

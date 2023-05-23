@@ -4,7 +4,7 @@ module AnnotateRb
   module ModelAnnotator
     # Class that encapsulates the logic to decide whether to annotate a model file and its related files or not.
     class AnnotationDecider
-      SKIP_ANNOTATION_PREFIX = '# -\*- SkipSchemaAnnotations'.freeze
+      SKIP_ANNOTATION_PREFIX = '# -\*- SkipSchemaAnnotations'
 
       def initialize(file, options)
         @file = file
@@ -37,12 +37,12 @@ module AnnotateRb
           return to_annotate
         rescue BadModelFileError => e
           unless @options[:ignore_unknown_models]
-            $stderr.puts "Unable to process #{@file}: #{e.message}"
-            $stderr.puts "\t" + e.backtrace.join("\n\t") if @options[:trace]
+            warn "Unable to process #{@file}: #{e.message}"
+            warn "\t" + e.backtrace.join("\n\t") if @options[:trace]
           end
-        rescue StandardError => e
-          $stderr.puts "Unable to process #{@file}: #{e.message}"
-          $stderr.puts "\t" + e.backtrace.join("\n\t") if @options[:trace]
+        rescue => e
+          warn "Unable to process #{@file}: #{e.message}"
+          warn "\t" + e.backtrace.join("\n\t") if @options[:trace]
         end
 
         false
@@ -51,13 +51,9 @@ module AnnotateRb
       private
 
       def file_contains_skip_annotation
-        file_string = File.exist?(@file) ? File.read(@file) : ''
+        file_string = File.exist?(@file) ? File.read(@file) : ""
 
-        if /#{SKIP_ANNOTATION_PREFIX}.*/ =~ file_string
-          true
-        else
-          false
-        end
+        /#{SKIP_ANNOTATION_PREFIX}.*/o.match?(file_string)
       end
     end
   end

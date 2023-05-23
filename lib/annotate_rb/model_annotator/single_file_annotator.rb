@@ -33,13 +33,13 @@ module AnnotateRb
 
           abort "AnnotateRb error. #{file_name} needs to be updated, but annotaterb was run with `--frozen`." if options[:frozen]
 
-          if !file_components.has_annotations? || options[:force]
-            updated_file_content = builder.generate_content_with_new_annotations
+          updated_file_content = if !file_components.has_annotations? || options[:force]
+            builder.generate_content_with_new_annotations
           else
-            updated_file_content = builder.update_existing_annotations
+            builder.update_existing_annotations
           end
 
-          File.open(file_name, 'wb') { |f| f.puts updated_file_content }
+          File.open(file_name, "wb") { |f| f.puts updated_file_content }
 
           true
         end

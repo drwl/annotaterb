@@ -2,7 +2,7 @@
 
 module AnnotateRb
   class ConfigFinder
-    DOTFILE = '.annotaterb.yml'
+    DOTFILE = ".annotaterb.yml"
 
     class << self
       def find_project_root
