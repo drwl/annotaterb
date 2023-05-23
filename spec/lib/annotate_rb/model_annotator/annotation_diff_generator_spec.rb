@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
+  include AnnotateTestHelpers
+
   def test_columns_match_expected
     remove_whitespace = proc { |str| str.delete(" \t\r\n") }
 
@@ -132,6 +134,54 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
         [
           "#  id                          :bigint           not null, primary key",
           "#  name([sensitivity: medium]) :string(50)       not null",
+          "# Table name: users"
+        ]
+      end
+
+      it 'returns an AnnotationDiff object with the expected old and new columns' do
+        test_columns_match_expected
+
+        expect(subject.changed?).to eq(true)
+      end
+    end
+
+    context 'when model file has existing annotations with column multi-byte comments' do
+      let(:annotation_block) do
+        klass = mock_class(:users,
+                           :id,
+                           [
+                             mock_column(:id, :bigint, comment: 'ID'),
+                             mock_column(:active, :boolean, limit: 1, comment: 'ＡＣＴＩＶＥ'),
+                           ],
+                           [],
+                           [])
+        options = AnnotateRb::Options.from({})
+        AnnotateRb::ModelAnnotator::AnnotationBuilder.new(klass, options).build
+      end
+
+      let(:file_content) do
+        <<~FILE
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id(ID) :bigint           not null, primary key
+          #
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      let(:current_columns) do
+        [
+          "#  id(ID)               :bigint           not null, primary key",
+          "# Table name: users"
+        ]
+      end
+      let(:new_columns) do
+        [
+          "#  id(ID)               :bigint           not null, primary key",
+          "#  active(ＡＣＴＩＶＥ) :boolean          not null",
           "# Table name: users"
         ]
       end
