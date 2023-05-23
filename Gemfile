@@ -18,6 +18,5 @@ group :development, :test do
 end
 
 group :test do
-  gem 'files', require: false, path: "vendor/files"
   gem 'git', require: false
 end
