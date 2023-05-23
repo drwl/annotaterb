@@ -188,6 +188,20 @@ module AnnotateRb # rubocop:disable Metrics/ModuleLength
       end
     end
 
+    %w[--pa --position-in-additional-file-patterns].each do |option|
+      describe option do
+        Parser::ANNOTATION_POSITIONS.each do |position|
+          context "when specifying '#{position}'" do
+            let(:args) { [option, position] }
+
+            it "sets the position_in_additional_file_patterns to '#{position}'" do
+              expect(result).to include(:position_in_additional_file_patterns => position)
+            end
+          end
+        end
+      end
+    end
+
     %w[--w --wrapper].each do |option|
       describe option do
         let(:wrapper_text) { 'WRAPPER_STR' }

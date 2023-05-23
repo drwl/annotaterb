@@ -16,12 +16,13 @@ module AnnotateRb
 
     POSITION_OPTIONS = {
       position: nil, # ModelAnnotator, RouteAnnotator
+      position_in_additional_file_patterns: nil, # ModelAnnotator
       position_in_class: nil, # ModelAnnotator
-      position_in_factory: nil, # Unused
-      position_in_fixture: nil, # Unused
+      position_in_factory: nil, # ModelAnnotator
+      position_in_fixture: nil, # ModelAnnotator
       position_in_routes: nil, # RouteAnnotator
-      position_in_serializer: nil, # Unused
-      position_in_test: nil, # Unused
+      position_in_serializer: nil, # ModelAnnotator
+      position_in_test: nil, # ModelAnnotator
     }.freeze
 
     FLAG_OPTIONS = {
@@ -87,12 +88,6 @@ module AnnotateRb
 
     DEFAULT_OPTIONS = {}.merge(POSITION_OPTIONS, FLAG_OPTIONS, OTHER_OPTIONS, PATH_OPTIONS).freeze
 
-    POSITION_OPTION_KEYS = [
-      :position,
-      :position_in_class,
-      :position_in_routes,
-    ].freeze
-
     FLAG_OPTION_KEYS = [
       :classified_sort,
       :exclude_controllers,
@@ -147,7 +142,7 @@ module AnnotateRb
     ].freeze
 
     ALL_OPTION_KEYS = [
-      POSITION_OPTION_KEYS, FLAG_OPTION_KEYS, OTHER_OPTION_KEYS, PATH_OPTION_KEYS
+      POSITION_OPTIONS.keys, FLAG_OPTION_KEYS, OTHER_OPTION_KEYS, PATH_OPTION_KEYS
     ].flatten.freeze
 
     POSITION_DEFAULT = 'before'
@@ -175,7 +170,7 @@ module AnnotateRb
       # 1) Use the value if it's defined
       # 2) Use value from :position if it's defined
       # 3) Use default
-      POSITION_OPTION_KEYS.each do |key|
+      POSITION_OPTIONS.keys.each do |key|
         @options[key] = Helper.fallback(
           @options[key], @options[:position], POSITION_DEFAULT
         )
