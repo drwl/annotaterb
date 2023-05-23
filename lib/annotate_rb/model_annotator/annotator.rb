@@ -26,7 +26,8 @@ module AnnotateRb
           file = File.join(path, filename)
 
           if AnnotationDecider.new(file, @options).annotate?
-            ModelFileAnnotator.call(annotated, file, @options)
+            other_annotated = ModelFileAnnotator.call(file, @options)
+            annotated.concat(other_annotated)
           end
         end
 

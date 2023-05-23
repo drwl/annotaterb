@@ -5,27 +5,26 @@ module AnnotateRb
     # Annotates a model file and its related files (controllers, factories, etc)
     class ModelFileAnnotator
       class << self
-        def call(annotated, file, options)
-          new(annotated, file, options).annotate
+        def call(file, options)
+          new(file, options).annotate
         end
       end
 
-      def initialize(annotated, file, options)
-        @annotated = annotated
+      def initialize(file, options)
         @file = file
         @options = options
       end
 
       def annotate
+        annotated = []
+
         begin
           instructions = build_instructions
           instructions.each do |instruction|
             if FileAnnotator.call_with_instructions(instruction)
-              @annotated << instruction.file
+              annotated << instruction.file
             end
           end
-
-          @annotated
         rescue BadModelFileError => e
           unless @options[:ignore_unknown_models]
             $stderr.puts "Unable to annotate #{@file}: #{e.message}"
@@ -35,6 +34,8 @@ module AnnotateRb
           $stderr.puts "Unable to annotate #{@file}: #{e.message}"
           $stderr.puts "\t" + e.backtrace.join("\n\t") if @options[:trace]
         end
+
+        annotated
       end
 
       private

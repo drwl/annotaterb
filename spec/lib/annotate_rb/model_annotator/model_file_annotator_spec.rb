@@ -3,7 +3,7 @@
 RSpec.describe AnnotateRb::ModelAnnotator::ModelFileAnnotator do
   describe '.call' do
     subject do
-      described_class.call([], 'some_foo.rb', options)
+      described_class.call('some_foo.rb', options)
     end
 
     let(:options) { AnnotateRb::Options.from({ ignore_unknown_models: true }) }
@@ -29,7 +29,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelFileAnnotator do
       end
 
       it 'skips attempt to annotate if no table exists for model' do
-        expect(subject).to eq(nil)
+        expect(subject).to be_a(Array)
+        expect(subject).to be_empty
         expect($stderr.string).not_to include('Unable to annotate')
       end
     end
