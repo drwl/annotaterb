@@ -2,8 +2,7 @@
 # Remove from this list as you refactor files.
 ---
 ignore:
-- dummyapp/config/environments/production.rb:
-  - Style/GlobalStdStream
+- 'dummyapp/**/*'
 - exe/annotaterb:
   - Lint/UselessAssignment
 - lib/annotate_rb/active_record_patch.rb:
