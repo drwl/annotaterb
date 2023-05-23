@@ -41,7 +41,7 @@ module AnnotateRb
         end
 
         if @options[:show_foreign_keys] && @model.table_exists?
-          @info += ForeignKeyAnnotationBuilder.new(@model, @options).build
+          @info += ForeignKeyAnnotation::AnnotationBuilder.new(@model, @options).build
         end
 
         @info += schema_footer_text
