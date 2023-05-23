@@ -22,7 +22,7 @@ module AnnotateRb
     autoload :SingleFileAnnotatorInstruction, 'annotate_rb/model_annotator/single_file_annotator_instruction'
     autoload :AnnotationDiffGenerator, 'annotate_rb/model_annotator/annotation_diff_generator'
     autoload :AnnotationDiff, 'annotate_rb/model_annotator/annotation_diff'
-    autoload :FileAnnotationGenerator, 'annotate_rb/model_annotator/file_annotation_generator'
+    autoload :FileBuilder, 'annotate_rb/model_annotator/file_builder'
     autoload :MagicCommentParser, 'annotate_rb/model_annotator/magic_comment_parser'
     autoload :FileComponents, 'annotate_rb/model_annotator/file_components'
     autoload :ProjectAnnotator, 'annotate_rb/model_annotator/project_annotator'
