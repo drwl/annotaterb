@@ -35,11 +35,11 @@ module AnnotateRb
           return to_annotate
         rescue BadModelFileError => e
           unless @options[:ignore_unknown_models]
-            $stderr.puts "Unable to annotate #{@file}: #{e.message}"
+            $stderr.puts "Unable to process #{@file}: #{e.message}"
             $stderr.puts "\t" + e.backtrace.join("\n\t") if @options[:trace]
           end
         rescue StandardError => e
-          $stderr.puts "Unable to annotate #{@file}: #{e.message}"
+          $stderr.puts "Unable to process #{@file}: #{e.message}"
           $stderr.puts "\t" + e.backtrace.join("\n\t") if @options[:trace]
         end
 

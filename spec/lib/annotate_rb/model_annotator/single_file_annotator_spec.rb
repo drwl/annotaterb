@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::FileAnnotator do
+RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
   include AnnotateTestHelpers
   include AnnotateTestConstants
 
@@ -43,7 +43,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileAnnotator do
       end
 
       it 'writes the annotations to the file' do
-        AnnotateRb::ModelAnnotator::FileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
+        AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
         expect(File.read(@model_file_name)).to eq(expected_file_content)
       end
     end
@@ -93,7 +93,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileAnnotator do
       end
 
       it 'updates the annotations' do
-        AnnotateRb::ModelAnnotator::FileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
+        AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
         expect(File.read(@model_file_name)).to eq(expected_file_content)
       end
     end
@@ -154,7 +154,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileAnnotator do
       end
 
       it 'updates the annotations' do
-        AnnotateRb::ModelAnnotator::FileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
+        AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
         expect(File.read(@model_file_name)).to eq(expected_file_content)
       end
     end

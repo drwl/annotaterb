@@ -2,7 +2,7 @@
 
 module AnnotateRb
   module ModelAnnotator
-    class AnnotationGenerator
+    class AnnotationBuilder
       # Annotate Models plugin use this header
       PREFIX = '== Schema Information'.freeze
       PREFIX_MD = '## Schema Information'.freeze
@@ -18,7 +18,7 @@ module AnnotateRb
         @info = "" # TODO: Make array and build string that way
       end
 
-      def generate
+      def build
         @info = "# #{header}\n"
         @info += schema_header_text
 
@@ -33,15 +33,15 @@ module AnnotateRb
         end
 
         @info += @model.columns.map do |col|
-          ColumnAnnotationBuilder.new(col, @model, max_size, @options).build
+          ColumnAnnotation::AnnotationBuilder.new(col, @model, max_size, @options).build
         end.join
 
         if @options[:show_indexes] && @model.table_exists?
-          @info += IndexAnnotationBuilder.new(@model, @options).build
+          @info += IndexAnnotation::AnnotationBuilder.new(@model, @options).build
         end
 
         if @options[:show_foreign_keys] && @model.table_exists?
-          @info += ForeignKeyAnnotationBuilder.new(@model, @options).build
+          @info += ForeignKeyAnnotation::AnnotationBuilder.new(@model, @options).build
         end
 
         @info += schema_footer_text

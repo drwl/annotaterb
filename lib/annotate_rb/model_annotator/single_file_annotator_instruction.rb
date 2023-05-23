@@ -2,8 +2,8 @@
 
 module AnnotateRb
   module ModelAnnotator
-    # A plain old Ruby object (PORO) that contains all necessary information for FileAnnotator
-    class FileAnnotatorInstruction
+    # A plain old Ruby object (PORO) that contains all necessary information for SingleFileAnnotator
+    class SingleFileAnnotatorInstruction
       def initialize(file, annotation, position, options = {})
         @file = file # Path to file
         @annotation = annotation # Annotation string

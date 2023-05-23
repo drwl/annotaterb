@@ -176,7 +176,7 @@ module AnnotateRb
       # 2) Use value from :position if it's defined
       # 3) Use default
       POSITION_OPTION_KEYS.each do |key|
-        @options[key] = ModelAnnotator::Helper.fallback(
+        @options[key] = Helper.fallback(
           @options[key], @options[:position], POSITION_DEFAULT
         )
       end

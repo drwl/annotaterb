@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::ColumnAttributesBuilder do
+RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder do
   include AnnotateTestHelpers
 
   describe '#build' do

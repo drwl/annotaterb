@@ -19,11 +19,13 @@ module AnnotateRb
 
           options[:model_dir].each do |dir|
             Dir.chdir(dir) do
-              list = if options[:ignore_model_sub_dir]
-                       Dir["*.rb"].map { |f| [dir, f] }
-                     else
-                       Dir["**/*.rb"].reject { |f| f["concerns/"] }.map { |f| [dir, f] }
-                     end
+              if options[:ignore_model_sub_dir]
+                list = Dir["*.rb"].map { |f| [dir, f] }
+              else
+                list = Dir["**/*.rb"]
+                         .reject { |f| f["concerns/"] }
+                         .map { |f| [dir, f] }
+              end
               model_files.concat(list)
             end
           end
