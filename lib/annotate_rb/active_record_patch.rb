@@ -1,5 +1,6 @@
 # monkey patches
 
+# standard:disable Style/MissingRespondToMissing
 module ::ActiveRecord
   class Base
     def self.method_missing(_name, *_args)
@@ -7,3 +8,4 @@ module ::ActiveRecord
     end
   end
 end
+# standard:enable Style/MissingRespondToMissing

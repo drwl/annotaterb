@@ -3,8 +3,6 @@
 ---
 ignore:
 - 'dummyapp/**/*'
-- lib/annotate_rb/active_record_patch.rb:
-  - Style/MissingRespondToMissing
 - lib/annotate_rb/model_annotator/annotation_builder.rb:
   - Lint/FormatParameterMismatch
 - lib/annotate_rb/model_annotator/annotation_decider.rb:
