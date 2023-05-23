@@ -15,7 +15,7 @@ $LOAD_PATH.unshift("#{__dir__}/../lib")
 
 require "annotate_rb"
 
-exit_status = ::AnnotateRb::Runner.run(ARGV)
+_exit_status = ::AnnotateRb::Runner.run(ARGV)
 
 # TODO: Return exit status
 # exit exit_status
