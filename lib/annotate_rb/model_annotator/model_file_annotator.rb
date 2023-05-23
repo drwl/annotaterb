@@ -21,7 +21,7 @@ module AnnotateRb
         begin
           instructions = build_instructions
           instructions.each do |instruction|
-            if FileAnnotator.call_with_instructions(instruction)
+            if SingleFileAnnotator.call_with_instructions(instruction)
               annotated << instruction.file
             end
           end

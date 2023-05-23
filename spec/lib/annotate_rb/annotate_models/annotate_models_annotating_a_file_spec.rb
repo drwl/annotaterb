@@ -223,7 +223,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         klass
       ).build
 
-      AnnotateRb::ModelAnnotator::FileAnnotator.call(model_file_name, schema_info, position: :before)
+      AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(model_file_name, schema_info, position: :before)
       expect(File.read(model_file_name)).to eq("#{schema_info}#{file_content}")
     end
 

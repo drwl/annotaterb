@@ -2,7 +2,7 @@
 
 module AnnotateRb
   module ModelAnnotator
-    class FileAnnotator
+    class SingleFileAnnotator
       class << self
         def call_with_instructions(instruction)
           call(instruction.file, instruction.annotation, instruction.position, instruction.options)
