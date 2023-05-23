@@ -1,0 +1,53 @@
+# frozen_string_literal: true
+
+module AnnotateRb
+  module ModelAnnotator
+    class ProjectAnnotationRemover
+      def initialize(options)
+        @options = options
+      end
+
+      def remove_annotations
+        unannotated = []
+
+        project_model_files = model_files
+
+        project_model_files.each do |path, filename|
+          unannotated_klass = false
+          file = File.join(path, filename)
+
+          begin
+            klass = ModelClassGetter.call(file, @options)
+
+            if AnnotationDecider.new(file, @options).annotate?
+              if SingleFileAnnotationRemover.call(file, @options)
+                unannotated_klass = true
+              end
+
+              related_files = RelatedFilesListBuilder.new(file, model_name, table_name, @options).build
+
+              related_files.each do |f, _position_key|
+                if File.exist?(f)
+                  SingleFileAnnotationRemover.call(f, @options)
+                end
+              end
+            end
+
+            unannotated << klass if unannotated_klass
+          rescue StandardError => e
+            $stderr.puts "Unable to unannotate #{File.join(file)}: #{e.message}"
+            $stderr.puts "\t" + e.backtrace.join("\n\t") if @options[:trace]
+          end
+        end
+
+        puts "Removed annotations from: #{unannotated.join(', ')}"
+      end
+
+      private
+
+      def model_files
+        @model_files ||= ModelFilesGetter.call(@options)
+      end
+    end
+  end
+end

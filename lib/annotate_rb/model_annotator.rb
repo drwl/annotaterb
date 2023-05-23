@@ -26,5 +26,6 @@ module AnnotateRb
     autoload :MagicCommentParser, 'annotate_rb/model_annotator/magic_comment_parser'
     autoload :FileComponents, 'annotate_rb/model_annotator/file_components'
     autoload :ProjectAnnotator, 'annotate_rb/model_annotator/project_annotator'
+    autoload :ProjectAnnotationRemover, 'annotate_rb/model_annotator/project_annotation_remover'
   end
 end

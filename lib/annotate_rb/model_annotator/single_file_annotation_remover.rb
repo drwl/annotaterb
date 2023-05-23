@@ -4,25 +4,32 @@ module AnnotateRb
   module ModelAnnotator
     class SingleFileAnnotationRemover
       class << self
+        def call_with_instructions(instruction)
+          call(instruction.file, instruction.options)
+        end
+
         def call(file_name, options = Options.from({}))
-          if File.exist?(file_name)
-            content = File.read(file_name)
-            return false if content =~ /#{Constants::SKIP_ANNOTATION_PREFIX}.*\n/
+          return false unless File.exist?(file_name)
+          old_content = File.read(file_name)
 
-            if options[:wrapper_open]
-              wrapper_open = "# #{options[:wrapper_open]}\n"
-            else
-              wrapper_open = ''
-            end
+          file_components = FileComponents.new(old_content, '', options)
 
-            content.sub!(/(#{wrapper_open})?#{AnnotationPatternGenerator.call(options)}/, '')
+          return false if file_components.has_skip_string?
+          # TODO: Uncomment below after tests are fixed
+          # return false if !file_components.has_annotations?
 
-            File.open(file_name, 'wb') { |f| f.puts content }
-
-            true
+          if options[:wrapper_open]
+            wrapper_open = "# #{options[:wrapper_open]}\n"
           else
-            false
+            wrapper_open = ''
           end
+
+          generated_pattern = AnnotationPatternGenerator.call(options)
+          updated_file_content = old_content.sub!(/(#{wrapper_open})?#{generated_pattern}/, '')
+
+          File.open(file_name, 'wb') { |f| f.puts updated_file_content }
+
+          true
         end
       end
     end
