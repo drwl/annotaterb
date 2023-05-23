@@ -4,6 +4,40 @@ module AnnotateRb
   module ModelAnnotator
     # Parses a model file into its relevant parts
     class AnnotatedFileParser
+      class FileComponents
+        def initialize(file_content, new_annotations, options)
+          @file_content = file_content
+          @diff = AnnotationDiffGenerator.new(file_content, new_annotations).generate
+          @options = options
+          @annotation_pattern = AnnotationPatternGenerator.call(options)
+        end
+
+        def skip?
+          @skip ||= @file_content.include?(SKIP_ANNOTATION_STRING)
+        end
+
+        def has_annotations?
+          @has_annotations ||= @diff.current_columns.present?
+        end
+
+        def annotations_changed?
+          @has_annotations_changed ||= @diff.changed?
+        end
+
+        def current_annotations
+          @current_annotations ||=
+            begin
+              if has_annotations?
+                # `#has_annotations?` uses a different regex pattern than the one in `@annotation_pattern`,
+                # this could lead to unexpected behavior
+                @file_content.match(@annotation_pattern).to_s
+              else
+                ''
+              end
+            end
+        end
+      end
+
       SKIP_ANNOTATION_STRING = '# -*- SkipSchemaAnnotations'
       SOME_PATTERN = /\A(?<start>\s*).*?\n(?<end>\s*)\z/m # Unsure what this pattern is
 
