@@ -53,11 +53,7 @@ module AnnotateRb
       def file_contains_skip_annotation
         file_string = File.exist?(@file) ? File.read(@file) : ""
 
-        if /#{SKIP_ANNOTATION_PREFIX}.*/o.match?(file_string)
-          true
-        else
-          false
-        end
+        /#{SKIP_ANNOTATION_PREFIX}.*/o.match?(file_string)
       end
     end
   end

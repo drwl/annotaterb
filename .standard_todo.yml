@@ -5,8 +5,6 @@ ignore:
 - 'dummyapp/**/*'
 - lib/annotate_rb/model_annotator/annotation_builder.rb:
   - Lint/FormatParameterMismatch
-- lib/annotate_rb/model_annotator/annotation_decider.rb:
-  - Style/IfWithBooleanLiteralBranches
 - lib/annotate_rb/model_annotator/column_annotation/annotation_builder.rb:
   - Lint/FormatParameterMismatch
 - lib/annotate_rb/model_annotator/foreign_key_annotation/annotation_builder.rb:
