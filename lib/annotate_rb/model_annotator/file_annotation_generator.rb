@@ -2,7 +2,7 @@
 
 module AnnotateRb
   module ModelAnnotator
-    # TODO: Rename
+    # Generates the text file content with annotations, these are then to be written to filesystem.
     class FileAnnotationGenerator
       def initialize(file_components, new_annotations, annotation_position, options)
         @file_components = file_components
