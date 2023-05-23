@@ -124,7 +124,7 @@ module AnnotateRb
       end
 
       def add_additional_file_patterns
-        position_key = :position_in_additional_file_patterns # Key does not exist
+        position_key = :position_in_additional_file_patterns
         pattern_type = 'additional_file_patterns'
 
         related_files = related_files_for_pattern(pattern_type)
