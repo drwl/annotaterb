@@ -13,22 +13,23 @@ module AnnotateRb
 
       # Gets the columns of the ActiveRecord model, processes them, and then returns them.
       def columns
-        @columns ||= begin
-                       cols = raw_columns
-                       cols += translated_columns
+        @columns ||=
+          begin
+            cols = raw_columns
+            cols += translated_columns
 
-                       ignore_columns = @options[:ignore_columns]
-                       if ignore_columns
-                         cols = cols.reject do |col|
-                           col.name.match(/#{ignore_columns}/)
-                         end
-                       end
+            ignore_columns = @options[:ignore_columns]
+            if ignore_columns
+              cols = cols.reject do |col|
+                col.name.match(/#{ignore_columns}/)
+              end
+            end
 
-                       cols = cols.sort_by(&:name) if @options[:sort]
-                       cols = classified_sort(cols) if @options[:classified_sort]
+            cols = cols.sort_by(&:name) if @options[:sort]
+            cols = classified_sort(cols) if @options[:classified_sort]
 
-                       cols
-                     end
+            cols
+          end
       end
 
       def connection
@@ -75,19 +76,25 @@ module AnnotateRb
       # Calculates the max width of the schema for the model by looking at the columns, schema comments, with respect
       # to the options.
       def max_schema_info_width
-        cols = columns
+        @max_schema_info_width ||=
+          begin
+            cols = columns
 
-        if with_comments?
-          max_size = cols.map do |column|
-            column.name.size + (column.comment ? Helper.width(column.comment) : 0)
-          end.max || 0
-          max_size += 2
-        else
-          max_size = cols.map(&:name).map(&:size).max
-        end
-        max_size += @options[:format_rdoc] ? 5 : 1
+            if with_comments?
+              column_widths = cols.map do |column|
+                column.name.size + (column.comment ? Helper.width(column.comment) : 0)
+              end
 
-        max_size
+              max_size = column_widths.max || 0
+              max_size += 2
+            else
+              max_size = cols.map(&:name).map(&:size).max
+            end
+
+            max_size += @options[:format_rdoc] ? 5 : 1
+
+            max_size
+          end
       end
 
       def retrieve_indexes_from_table
@@ -103,7 +110,7 @@ module AnnotateRb
       end
 
       def with_comments?
-        @options[:with_comment] &&
+        @with_comments ||= @options[:with_comment] &&
           raw_columns.first.respond_to?(:comment) &&
           raw_columns.map(&:comment).any? { |comment| !comment.nil? }
       end
@@ -137,8 +144,8 @@ module AnnotateRb
         # eg. Model: Car, foreign column name: car_id
         foreign_column_name = [
           @klass.translation_class.to_s
-               .gsub('::Translation', '').gsub('::', '_')
-               .downcase,
+                .gsub('::Translation', '').gsub('::', '_')
+                .downcase,
           '_id'
         ].join.to_sym
 
