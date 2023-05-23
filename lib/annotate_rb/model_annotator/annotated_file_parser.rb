@@ -12,6 +12,44 @@ module AnnotateRb
           @annotation_pattern = AnnotationPatternGenerator.call(options)
         end
 
+        # TODO: Rename method once it's clear what this actually does
+        def space_before_annotation
+          return @space_before_annotation if defined?(@space_before_annotation)
+
+          match = current_annotations.match(SOME_PATTERN)
+          if match
+            @space_before_annotation = match[:start]
+          else
+            @space_before_annotation = nil
+          end
+        end
+
+        # TODO: Rename method once it's clear what this actually does
+        def space_after_annotation
+          return @space_after_annotation if defined?(@space_after_annotation)
+
+          match = current_annotations.match(SOME_PATTERN)
+          if match
+            @space_after_annotation = match[:end]
+          else
+            @space_after_annotation = nil
+          end
+        end
+
+        def pure_file_content
+          @pure_file_content ||=
+            begin
+              content_without_magic_comments = @file_content.gsub(MagicCommentParser::MAGIC_COMMENTS_REGEX, '')
+              content_without_annotations = content_without_magic_comments.sub(@annotation_pattern, '')
+
+              content_without_annotations
+            end
+        end
+
+        def magic_comments
+          @magic_comments ||= MagicCommentParser.call(@file_content)
+        end
+
         def skip?
           @skip ||= @file_content.include?(SKIP_ANNOTATION_STRING)
         end
@@ -49,16 +87,11 @@ module AnnotateRb
       end
 
       def parse
-        @skip = @file_content.include?(SKIP_ANNOTATION_STRING)
-
-        diff = AnnotationDiffGenerator.new(@file_content, @new_annotations).generate
-        @annotations_changed = diff.changed?
+        @file_components = FileComponents.new(@file_content, @new_annotations, @options)
 
         @new_wrapped_annotations = wrapped_content(@new_annotations)
 
         @annotation_pattern = AnnotationPatternGenerator.call(@options)
-
-        @old_annotations_v1 = @file_content.match(@annotation_pattern).to_s
 
         @regenerated_annotations = regenerate_annotations
 
@@ -77,57 +110,40 @@ module AnnotateRb
         @new_wrapped_annotations
       end
 
-      def annotation_pattern
-        @annotation_pattern
-      end
-
-      # Taken from how FileAnnotator did it
-      # Unclear how the regex patterns lead to different results than AnnotationDiffGenerator
-      def old_annotations_v1
-        @old_annotations_v1
+      def has_annotations?
+        @file_components.has_annotations?
       end
 
       def annotations_changed?
-        @annotations_changed
+        @file_components.annotations_changed?
       end
 
       def skip?
-        @skip
+        @file_components.skip?
       end
 
       private
 
       # Used when overwriting existing annotations OR model file has no annotations
       def regenerate_annotations
-        # Method works as follows:
-        # 1. Extract the magic comments in the file content into a variable to be used later
-        # 2. Remove the magic comments in the file content
-        # 3. Write annotations and generate the new file content that gets written to the file
-
-        magic_comments_block = MagicCommentParser.call(@file_content)
-
-        old_content = @file_content.gsub(MagicCommentParser::MAGIC_COMMENTS_REGEX, '')
-        old_content = old_content.sub(@annotation_pattern, '')
-
         # Need to keep `.to_s` for now since the it can be either a String or Symbol
         annotation_write_position = @options[@annotation_position].to_s
 
         if %w(after bottom).include?(annotation_write_position)
-          new_content = magic_comments_block + (old_content.rstrip + "\n\n" + @new_wrapped_annotations)
-        elsif magic_comments_block.empty?
-          new_content = magic_comments_block + @new_wrapped_annotations + old_content.lstrip
+          new_content = @file_components.magic_comments + (@file_components.pure_file_content.rstrip + "\n\n" + @new_wrapped_annotations)
+        elsif @file_components.magic_comments.empty?
+          new_content = @file_components.magic_comments + @new_wrapped_annotations + @file_components.pure_file_content.lstrip
         else
-          new_content = magic_comments_block + "\n" + @new_wrapped_annotations + old_content.lstrip
+          new_content = @file_components.magic_comments + "\n" + @new_wrapped_annotations + @file_components.pure_file_content.lstrip
         end
 
         new_content
       end
 
       def update_annotations
-        return '' if @old_annotations_v1.empty?
+        return '' if !@file_components.has_annotations?
 
-        space_match = @old_annotations_v1.match(SOME_PATTERN)
-        new_annotation = space_match[:start] + @new_wrapped_annotations + space_match[:end]
+        new_annotation = @file_components.space_before_annotation + @new_wrapped_annotations + @file_components.space_after_annotation
 
         new_content = @file_content.sub(@annotation_pattern, new_annotation)
 

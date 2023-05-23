@@ -33,7 +33,7 @@ module AnnotateRb
 
           abort "AnnotateRb error. #{file_name} needs to be updated, but annotaterb was run with `--frozen`." if options[:frozen]
 
-          if parsed_file.old_annotations_v1.empty? || options[:force]
+          if !parsed_file.has_annotations? || options[:force]
             updated_file_content = parsed_file.regenerated_annotations
           else
             updated_file_content = parsed_file.updated_annotations
