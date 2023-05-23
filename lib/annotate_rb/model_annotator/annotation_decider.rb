@@ -4,6 +4,8 @@ module AnnotateRb
   module ModelAnnotator
     # Class that encapsulates the logic to decide whether to annotate a model file and its related files or not.
     class AnnotationDecider
+      SKIP_ANNOTATION_PREFIX = '# -\*- SkipSchemaAnnotations'.freeze
+
       def initialize(file, options)
         @file = file
         @options = options
@@ -51,7 +53,7 @@ module AnnotateRb
       def file_contains_skip_annotation
         file_string = File.exist?(@file) ? File.read(@file) : ''
 
-        if /#{Constants::SKIP_ANNOTATION_PREFIX}.*/ =~ file_string
+        if /#{SKIP_ANNOTATION_PREFIX}.*/ =~ file_string
           true
         else
           false
