@@ -9,6 +9,7 @@ group :development, :test do
   gem 'byebug'
   gem 'guard-rspec', require: false
 
+  gem 'standard'
   gem 'terminal-notifier-guard', require: false
 
   platforms :mri, :mingw do
