@@ -27,5 +27,6 @@ module AnnotateRb
     autoload :FileThing, 'annotate_rb/model_annotator/file_thing'
     autoload :AnnotatedFileParser, 'annotate_rb/model_annotator/annotated_file_parser'
     autoload :MagicCommentParser, 'annotate_rb/model_annotator/magic_comment_parser'
+    autoload :FileComponents, 'annotate_rb/model_annotator/file_components'
   end
 end
