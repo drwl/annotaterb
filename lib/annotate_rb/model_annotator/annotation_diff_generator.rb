@@ -4,7 +4,7 @@ module AnnotateRb
   module ModelAnnotator
     # Compares the current file content and new annotation block and generates the column annotation differences
     class AnnotationDiffGenerator
-      HEADER_PATTERN = /(^# Table name:.*?\n(#.*[\r]?\n)*[\r]?)/.freeze
+      HEADER_PATTERN = /(^# Table name:.*?\n(#.*\r?\n)*\r?)/.freeze
       # COLUMN_PATTERN = /^#[\t ]+[\w\*\.`\[\]():]+[\t ]+.+$/.freeze
       COLUMN_PATTERN = /^#[\t ]+[^\t ]+[\t ]+.+$/.freeze
 
