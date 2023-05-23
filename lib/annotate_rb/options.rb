@@ -16,6 +16,7 @@ module AnnotateRb
 
     POSITION_OPTIONS = {
       position: nil, # ModelAnnotator, RouteAnnotator
+      position_in_additional_file_patterns: nil, # ModelAnnotator
       position_in_class: nil, # ModelAnnotator
       position_in_factory: nil, # ModelAnnotator
       position_in_fixture: nil, # ModelAnnotator

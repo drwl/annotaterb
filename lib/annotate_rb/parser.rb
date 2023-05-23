@@ -297,6 +297,14 @@ module AnnotateRb
         @options[:position_in_serializer] = position_in_serializer
         has_set_position['position_in_serializer'] = true
       end
+
+      option_parser.on('--pa',
+                       '--position-in-additional-file-patterns [before|top|after|bottom]',
+                       ANNOTATION_POSITIONS,
+                       'Place the annotations at the top (before) or the bottom (after) of files captured in additional file patterns') do |position_in_serializer|
+        @options[:position_in_additional_file_patterns] = position_in_serializer
+        has_set_position['position_in_additional_file_patterns'] = true
+      end
     end
 
     def add_options_to_parser(option_parser) # rubocop:disable Metrics/MethodLength
