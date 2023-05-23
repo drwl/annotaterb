@@ -325,14 +325,14 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
       it 'displays just the error message with trace disabled (default)' do
         options = AnnotateRb::Options.from({ model_dir: @model_dir, is_rake: true })
 
-        expect { described_class.remove_annotations(options) }.to output(a_string_including("Unable to deannotate #{@model_dir}/user.rb: oops")).to_stderr
+        expect { described_class.remove_annotations(options) }.to output(a_string_including("Unable to unannotate #{@model_dir}/user.rb: oops")).to_stderr
         expect { described_class.remove_annotations(options) }.not_to output(a_string_including("/user.rb:2:in `<class:User>'")).to_stderr
       end
 
       it 'displays the error message and stacktrace with trace enabled' do
         options = AnnotateRb::Options.from({ model_dir: @model_dir, is_rake: true, trace: true })
 
-        expect { described_class.remove_annotations(options) }.to output(a_string_including("Unable to deannotate #{@model_dir}/user.rb: oops")).to_stderr
+        expect { described_class.remove_annotations(options) }.to output(a_string_including("Unable to unannotate #{@model_dir}/user.rb: oops")).to_stderr
         expect { described_class.remove_annotations(options) }.to output(a_string_including("/user.rb:2:in `<class:User>'")).to_stderr
       end
     end

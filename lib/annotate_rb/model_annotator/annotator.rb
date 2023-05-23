@@ -25,22 +25,20 @@ module AnnotateRb
         end
 
         def remove_annotations(options = {})
-          deannotated = []
+          unannotated = []
 
           model_files_to_consider = ModelFilesGetter.call(options)
 
           model_files_to_consider.each do |path, filename|
-            deannotated_klass = false
+            unannotated_klass = false
             file = File.join(path, filename)
 
             begin
               klass = ModelClassGetter.call(file, options)
-              if klass < ActiveRecord::Base && !klass.abstract_class?
-                model_name = klass.name.underscore
-                table_name = klass.table_name
 
+              if AnnotationDecider.new(file, options).annotate?
                 if FileAnnotationRemover.call(file, options)
-                  deannotated_klass = true
+                  unannotated_klass = true
                 end
 
                 related_files = RelatedFilesListBuilder.new(file, model_name, table_name, options).build
@@ -52,16 +50,14 @@ module AnnotateRb
                 end
               end
 
-              if deannotated_klass
-                deannotated << klass
-              end
+              unannotated << klass if unannotated_klass
             rescue StandardError => e
-              $stderr.puts "Unable to deannotate #{File.join(file)}: #{e.message}"
+              $stderr.puts "Unable to unannotate #{File.join(file)}: #{e.message}"
               $stderr.puts "\t" + e.backtrace.join("\n\t") if options[:trace]
             end
           end
 
-          puts "Removed annotations from: #{deannotated.join(', ')}"
+          puts "Removed annotations from: #{unannotated.join(', ')}"
         end
       end
     end
