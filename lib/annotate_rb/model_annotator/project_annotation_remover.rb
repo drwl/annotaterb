@@ -27,9 +27,13 @@ module AnnotateRb
             $stderr.puts "Unable to process #{File.join(instruction.file)}: #{e.message}"
             $stderr.puts "\t" + e.backtrace.join("\n\t") if @options[:trace]
           end
-        end
+        end.flatten.compact
 
-        puts "Removed annotations from: #{deannotated.join(', ')}"
+        if deannotated.empty?
+          puts 'Model files unchanged.'
+        else
+          puts "Removed annotations (#{deannotated.length}) from: #{deannotated.join(', ')}"
+        end
       end
 
       private

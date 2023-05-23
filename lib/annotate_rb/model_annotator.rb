@@ -20,6 +20,7 @@ module AnnotateRb
     autoload :RelatedFilesListBuilder, 'annotate_rb/model_annotator/related_files_list_builder'
     autoload :AnnotationDecider, 'annotate_rb/model_annotator/annotation_decider'
     autoload :SingleFileAnnotatorInstruction, 'annotate_rb/model_annotator/single_file_annotator_instruction'
+    autoload :SingleFileRemoveAnnotationInstruction, 'annotate_rb/model_annotator/single_file_remove_annotation_instruction'
     autoload :AnnotationDiffGenerator, 'annotate_rb/model_annotator/annotation_diff_generator'
     autoload :AnnotationDiff, 'annotate_rb/model_annotator/annotation_diff'
     autoload :FileBuilder, 'annotate_rb/model_annotator/file_builder'
