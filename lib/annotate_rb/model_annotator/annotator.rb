@@ -34,7 +34,7 @@ module AnnotateRb
             klass = ModelClassGetter.call(file, @options)
 
             if AnnotationDecider.new(file, @options).annotate?
-              if FileAnnotationRemover.call(file, @options)
+              if SingleFileAnnotationRemover.call(file, @options)
                 unannotated_klass = true
               end
 
@@ -42,7 +42,7 @@ module AnnotateRb
 
               related_files.each do |f, _position_key|
                 if File.exist?(f)
-                  FileAnnotationRemover.call(f, @options)
+                  SingleFileAnnotationRemover.call(f, @options)
                 end
               end
             end

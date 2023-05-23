@@ -2,7 +2,7 @@
 
 module AnnotateRb
   module ModelAnnotator
-    class FileAnnotationRemover
+    class SingleFileAnnotationRemover
       class << self
         def call(file_name, options = Options.from({}))
           if File.exist?(file_name)

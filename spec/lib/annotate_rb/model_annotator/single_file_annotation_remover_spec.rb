@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-RSpec.describe AnnotateRb::ModelAnnotator::FileAnnotationRemover do
+RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotationRemover do
   describe '.call' do
     subject { described_class.call(path) }
 
