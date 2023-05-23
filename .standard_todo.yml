@@ -15,7 +15,5 @@ ignore:
   - Style/SlicingWithRange
 - lib/annotate_rb/route_annotator/header_generator.rb:
   - Style/SlicingWithRange
-- lib/annotate_rb/runner.rb:
-  - Style/RedundantInitialize
 - spec/lib/annotate_rb/route_annotator/annotator_spec.rb:
   - Lint/ConstantDefinitionInBlock

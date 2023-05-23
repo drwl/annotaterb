@@ -8,9 +8,6 @@ module AnnotateRb
       end
     end
 
-    def initialize
-    end
-
     def run(args)
       _original_args = args.dup
 
