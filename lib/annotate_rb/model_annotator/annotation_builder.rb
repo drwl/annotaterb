@@ -18,7 +18,7 @@ module AnnotateRb
         @info = "" # TODO: Make array and build string that way
       end
 
-      def generate
+      def build
         @info = "# #{header}\n"
         @info += schema_header_text
 

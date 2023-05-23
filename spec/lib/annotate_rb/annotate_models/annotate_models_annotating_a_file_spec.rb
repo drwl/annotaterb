@@ -18,7 +18,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
                             mock_column(:id, :integer),
                             mock_column(:name, :string, limit: 50)
                           ])
-      @schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass).generate
+      @schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass).build
     end
 
     context "with 'before'" do
@@ -117,7 +117,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
                              ])
           @schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(
             klass, show_foreign_keys: true
-          ).generate
+          ).build
 
           annotate_one_file
         end
@@ -139,7 +139,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
                              ])
           @schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(
             klass, show_foreign_keys: true
-          ).generate
+          ).build
 
           annotate_one_file
           expect(File.read(@model_file_name)).to eq("#{@schema_info}#{@file_content}")
@@ -152,7 +152,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         annotate_one_file position: :before
         another_schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(
           mock_class(:users, :id, [mock_column(:id, :integer)]),
-        ).generate
+        ).build
 
         @schema_info = another_schema_info
       end
@@ -178,7 +178,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         annotate_one_file position: :after
         another_schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(
           mock_class(:users, :id, [mock_column(:id, :integer)]),
-        ).generate
+        ).build
 
         @schema_info = another_schema_info
       end
@@ -202,7 +202,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
     it 'should skip columns with option[:ignore_columns] set' do
       output = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(
         @klass, :ignore_columns => '(id|updated_at|created_at)'
-      ).generate
+      ).build
 
       expect(output.match(/id/)).to be_nil
     end
@@ -221,7 +221,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
                          ])
       schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(
         klass
-      ).generate
+      ).build
 
       AnnotateRb::ModelAnnotator::FileAnnotator.call(model_file_name, schema_info, position: :before)
       expect(File.read(model_file_name)).to eq("#{schema_info}#{file_content}")
@@ -252,7 +252,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         model_file_name, = write_model 'user.rb', "#{magic_comment}\n#{content}"
 
         annotate_one_file position: :before
-        schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass).generate
+        schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass).build
 
         expect(File.read(model_file_name)).to eq("#{magic_comment}\n\n#{schema_info}#{content}")
       end
@@ -261,7 +261,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
     it 'only keeps a single empty line around the annotation (position :before)' do
       content = "class User < ActiveRecord::Base\nend\n"
       AnnotateTestConstants::MAGIC_COMMENTS.each do |magic_comment|
-        schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass).generate
+        schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass).build
         model_file_name, = write_model 'user.rb', "#{magic_comment}\n\n\n\n#{content}"
 
         annotate_one_file position: :before
@@ -276,7 +276,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         model_file_name, = write_model 'user.rb', "#{magic_comment}\n#{content}"
 
         annotate_one_file position: :after
-        schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass).generate
+        schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass).build
 
         expect(File.read(model_file_name)).to eq("#{magic_comment}\n#{content}\n#{schema_info}")
       end

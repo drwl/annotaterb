@@ -1,9 +1,9 @@
 RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
   include AnnotateTestHelpers
 
-  describe '#generate' do
+  describe '#build' do
     subject do
-      described_class.new(klass, options).generate
+      described_class.new(klass, options).build
     end
 
     let :klass do
