@@ -98,6 +98,60 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
     end
 
+    describe 'annotating a file with old annotations and magic comments' do
+      let(:options) { AnnotateRb::Options.from({}) }
+      let(:schema_info) do
+        <<~SCHEMA
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #  name :string(50)       not null
+          #
+        SCHEMA
+      end
+      let(:starting_file_content) do
+        <<~FILE
+          # frozen_string_literal: true
+          # typed: true
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:expected_file_content) do
+        <<~FILE
+          # frozen_string_literal: true
+          # typed: true
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #  name :string(50)       not null
+          #
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      before do
+        @model_dir = Dir.mktmpdir('annotaterb')
+        (@model_file_name, _file_content) = write_model('user.rb', starting_file_content)
+      end
+
+      it 'updates the annotations' do
+        AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
+        expect(File.read(@model_file_name)).to eq(expected_file_content)
+      end
+    end
+
     describe 'annotating a file with existing column comments' do
       let(:options) { AnnotateRb::Options.from({ with_comment: true }) }
       let(:schema_info) do
