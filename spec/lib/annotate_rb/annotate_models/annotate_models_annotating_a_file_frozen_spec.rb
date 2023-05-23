@@ -17,7 +17,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
                             mock_column(:id, :integer),
                             mock_column(:name, :string, limit: 50)
                           ])
-      @schema_info = AnnotateRb::ModelAnnotator::AnnotationGenerator.new(@klass).generate
+      @schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass).generate
     end
 
     # TODO: Check out why this test fails due to test pollution
@@ -29,7 +29,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
       it "should abort with different annotation when frozen: true " do
         annotate_one_file
 
-        another_schema_info = AnnotateRb::ModelAnnotator::AnnotationGenerator.new(
+        another_schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(
           mock_class(:users, :id, [mock_column(:id, :integer)]),
         ).generate
 

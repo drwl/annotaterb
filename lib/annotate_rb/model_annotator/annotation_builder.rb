@@ -2,7 +2,7 @@
 
 module AnnotateRb
   module ModelAnnotator
-    class AnnotationGenerator
+    class AnnotationBuilder
       # Annotate Models plugin use this header
       PREFIX = '== Schema Information'.freeze
       PREFIX_MD = '## Schema Information'.freeze

@@ -1,4 +1,4 @@
-RSpec.describe AnnotateRb::ModelAnnotator::AnnotationGenerator do
+RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
   include AnnotateTestHelpers
 
   describe '#generate' do
@@ -25,7 +25,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationGenerator do
 
       context 'when header is "Schema Info"' do
         before do
-          stub_const('AnnotateRb::ModelAnnotator::AnnotationGenerator::PREFIX', 'Schema Info')
+          stub_const('AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX', 'Schema Info')
         end
 
         context 'when the primary key is not specified' do
@@ -258,7 +258,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationGenerator do
     context 'when option is present' do
       context 'when header is "Schema Info"' do
         before do
-          stub_const('AnnotateRb::ModelAnnotator::AnnotationGenerator::PREFIX', 'Schema Info')
+          stub_const('AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX', 'Schema Info')
         end
 
         context 'when the primary key is specified' do
@@ -1271,7 +1271,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationGenerator do
 
       context 'when header is "== Schema Information"' do
         before do
-          stub_const('AnnotateRb::ModelAnnotator::AnnotationGenerator::PREFIX', '== Schema Information')
+          stub_const('AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX', '== Schema Information')
         end
 
         context 'when the primary key is specified' do
@@ -1337,7 +1337,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationGenerator do
 
             context 'when option "format_markdown" is true' do
               before do
-                stub_const('AnnotateRb::ModelAnnotator::AnnotationGenerator::PREFIX_MD', '== Schema Information')
+                stub_const('AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX_MD', '== Schema Information')
               end
 
               context 'when other option is not specified' do
@@ -1648,7 +1648,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationGenerator do
 
             context 'when "format_markdown" and "with_comment" are specified in options' do
               before do
-                stub_const('AnnotateRb::ModelAnnotator::AnnotationGenerator::PREFIX_MD', '== Schema Information')
+                stub_const('AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX_MD', '== Schema Information')
               end
 
               let :options do

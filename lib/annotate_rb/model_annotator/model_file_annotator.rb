@@ -34,7 +34,7 @@ module AnnotateRb
           instructions = []
 
           klass.reset_column_information
-          annotation = AnnotationGenerator.new(klass, options).generate
+          annotation = AnnotationBuilder.new(klass, options).generate
           model_name = klass.name.underscore
           table_name = klass.table_name
 
