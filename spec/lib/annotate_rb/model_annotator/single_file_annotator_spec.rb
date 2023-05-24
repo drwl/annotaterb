@@ -6,7 +6,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
 
   describe ".call" do
     describe "annotating a file without annotations" do
-      let(:options) { AnnotateRb::Options.from({}) }
+      let(:options) { AnnotateRb::Options.new({}) }
       let(:schema_info) do
         <<~SCHEMA
           # == Schema Information
@@ -48,7 +48,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
     end
 
     describe "annotating a file with old annotations" do
-      let(:options) { AnnotateRb::Options.from({}) }
+      let(:options) { AnnotateRb::Options.new({}) }
       let(:schema_info) do
         <<~SCHEMA
           # == Schema Information
@@ -98,7 +98,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
     end
 
     describe "annotating a file with old annotations and magic comments" do
-      let(:options) { AnnotateRb::Options.from({}) }
+      let(:options) { AnnotateRb::Options.new({}) }
       let(:schema_info) do
         <<~SCHEMA
           # == Schema Information
@@ -152,7 +152,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
     end
 
     describe "annotating a file with existing column comments" do
-      let(:options) { AnnotateRb::Options.from({with_comment: true}) }
+      let(:options) { AnnotateRb::Options.new({with_comment: true}) }
       let(:schema_info) do
         <<~SCHEMA
           # == Schema Information
