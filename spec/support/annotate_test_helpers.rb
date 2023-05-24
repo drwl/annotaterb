@@ -2,6 +2,7 @@
 
 module AnnotateTestHelpers
   def annotate_one_file(options = {})
+    # Note: .from uses loads the defaults which can make it unclear what options are actually be loaded
     opts = AnnotateRb::Options.from(options)
 
     AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, @schema_info, :position_in_class, opts)
