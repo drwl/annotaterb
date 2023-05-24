@@ -20,7 +20,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
     context "when option is not present" do
       let :options do
-        AnnotateRb::Options.from({classified_sort: false})
+        AnnotateRb::Options.new({classified_sort: false})
       end
 
       context 'when header is "Schema Info"' do
@@ -270,7 +270,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
             context "when indexes exist" do
               context 'when option "show_indexes" is true' do
                 let :options do
-                  AnnotateRb::Options.from({simple_indexes: false, show_indexes: true})
+                  AnnotateRb::Options.new({simple_indexes: false, show_indexes: true})
                 end
 
                 context "when indexes are normal" do
@@ -471,7 +471,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when option "show_indexes" is true and "simple_indexes" is true' do
                 let :options do
-                  AnnotateRb::Options.from({simple_indexes: true, show_indexes: true})
+                  AnnotateRb::Options.new({simple_indexes: true, show_indexes: true})
                 end
 
                 context "when indexes are normal" do
@@ -672,7 +672,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when option "simple_indexes" is true' do
                 let :options do
-                  AnnotateRb::Options.from({simple_indexes: true, show_indexes: false})
+                  AnnotateRb::Options.new({simple_indexes: true, show_indexes: false})
                 end
 
                 context 'when one of indexes includes "orders" clause' do
@@ -744,7 +744,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when option "simple_indexes" is true and "show_indexes" is true' do
                 let :options do
-                  AnnotateRb::Options.from({simple_indexes: true, show_indexes: true})
+                  AnnotateRb::Options.new({simple_indexes: true, show_indexes: true})
                 end
 
                 context 'when one of indexes includes "orders" clause' do
@@ -843,7 +843,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when option "show_foreign_keys" is specified' do
                 let :options do
-                  AnnotateRb::Options.from({show_foreign_keys: true})
+                  AnnotateRb::Options.new({show_foreign_keys: true})
                 end
 
                 context "when foreign_keys does not have option" do
@@ -906,7 +906,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when option "show_foreign_keys" and "show_complete_foreign_keys" are specified' do
                 let :options do
-                  AnnotateRb::Options.from({show_foreign_keys: true, show_complete_foreign_keys: true})
+                  AnnotateRb::Options.new({show_foreign_keys: true, show_complete_foreign_keys: true})
                 end
 
                 let :expected_result do
@@ -945,7 +945,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when "hide_limit_column_types" is blank string' do
                 let :options do
-                  AnnotateRb::Options.from({classified_sort: false, hide_limit_column_types: ""})
+                  AnnotateRb::Options.new({classified_sort: false, hide_limit_column_types: ""})
                 end
 
                 let :expected_result do
@@ -969,7 +969,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when "hide_limit_column_types" is "integer,boolean"' do
                 let :options do
-                  AnnotateRb::Options.from({classified_sort: false, hide_limit_column_types: "integer,boolean"})
+                  AnnotateRb::Options.new({classified_sort: false, hide_limit_column_types: "integer,boolean"})
                 end
 
                 let :expected_result do
@@ -993,7 +993,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when "hide_limit_column_types" is "integer,boolean,string,text"' do
                 let :options do
-                  AnnotateRb::Options.from({classified_sort: false, hide_limit_column_types: "integer,boolean,string,text"})
+                  AnnotateRb::Options.new({classified_sort: false, hide_limit_column_types: "integer,boolean,string,text"})
                 end
 
                 let :expected_result do
@@ -1027,7 +1027,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when "hide_default_column_types" is blank string' do
                 let :options do
-                  AnnotateRb::Options.from({classified_sort: false, hide_default_column_types: ""})
+                  AnnotateRb::Options.new({classified_sort: false, hide_default_column_types: ""})
                 end
 
                 let :expected_result do
@@ -1050,7 +1050,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when "hide_default_column_types" is "skip"' do
                 let :options do
-                  AnnotateRb::Options.from({classified_sort: false, hide_default_column_types: "skip"})
+                  AnnotateRb::Options.new({classified_sort: false, hide_default_column_types: "skip"})
                 end
 
                 let :expected_result do
@@ -1073,7 +1073,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when "hide_default_column_types" is "json"' do
                 let :options do
-                  AnnotateRb::Options.from({classified_sort: false, hide_default_column_types: "json"})
+                  AnnotateRb::Options.new({classified_sort: false, hide_default_column_types: "json"})
                 end
 
                 let :expected_result do
@@ -1106,7 +1106,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when "classified_sort" is "yes"' do
                 let :options do
-                  AnnotateRb::Options.from({classified_sort: "yes"})
+                  AnnotateRb::Options.new({classified_sort: "yes"})
                 end
 
                 let :expected_result do
@@ -1131,7 +1131,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
             context 'when "with_comment" is specified in options' do
               context 'when "with_comment" is "yes"' do
                 let :options do
-                  AnnotateRb::Options.from({classified_sort: false, with_comment: "yes"})
+                  AnnotateRb::Options.new({classified_sort: false, with_comment: "yes"})
                 end
 
                 context "when columns have comments" do
@@ -1342,7 +1342,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context "when other option is not specified" do
                 let :options do
-                  AnnotateRb::Options.from({format_markdown: true})
+                  AnnotateRb::Options.new({format_markdown: true})
                 end
 
                 let :expected_result do
@@ -1368,7 +1368,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when option "show_indexes" is true' do
                 let :options do
-                  AnnotateRb::Options.from({format_markdown: true, show_indexes: true})
+                  AnnotateRb::Options.new({format_markdown: true, show_indexes: true})
                 end
 
                 context "when indexes are normal" do
@@ -1563,7 +1563,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               context 'when option "show_foreign_keys" is true' do
                 let :options do
-                  AnnotateRb::Options.from({format_markdown: true, show_foreign_keys: true})
+                  AnnotateRb::Options.new({format_markdown: true, show_foreign_keys: true})
                 end
 
                 let :columns do

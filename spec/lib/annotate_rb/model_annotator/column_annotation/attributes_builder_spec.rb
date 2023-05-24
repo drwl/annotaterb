@@ -7,7 +7,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
     subject { described_class.new(column, options, is_primary_key, column_indices).build }
 
     let(:column) {}
-    let(:options) { AnnotateRb::Options.from({}) }
+    let(:options) { AnnotateRb::Options.new({}) }
     let(:is_primary_key) {}
     let(:column_indices) {}
 
@@ -63,7 +63,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
 
     context "when a column has an index and simple index option is on" do
       let(:is_primary_key) { true }
-      let(:options) { AnnotateRb::Options.from({simple_indexes: true}) }
+      let(:options) { AnnotateRb::Options.new({simple_indexes: true}) }
 
       context "with an id integer primary key column" do
         let(:column) { mock_column("id", :integer) }
