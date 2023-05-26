@@ -27,6 +27,7 @@ module AnnotateRb
           elsif is_special_type
             # Do nothing. Kept as a code fragment in case we need to do something here.
           elsif @column.limit && !@options[:format_yard]
+            # Unsure if Column#limit will ever be an array. May be safe to remove.
             if !@column.limit.is_a?(Array) && !hide_limit?
               formatted_column_type = column_type + "(#{@column.limit})"
             end
@@ -34,6 +35,8 @@ module AnnotateRb
 
           formatted_column_type
         end
+
+        private
 
         def hide_limit?
           excludes =

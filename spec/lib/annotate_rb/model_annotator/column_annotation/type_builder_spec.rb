@@ -9,6 +9,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::TypeBuilder do
     let(:column) {}
     let(:options) { AnnotateRb::Options.new({}) }
 
+    before do
+      stub_const("#{described_class}::NO_LIMIT_COL_TYPES", %w[integer bigint boolean].freeze)
+    end
+
     context "with an integer column" do
       let(:column) { mock_column(:id, :integer) }
       let(:expected_result) { "integer" }
@@ -72,16 +76,19 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::TypeBuilder do
       it { is_expected.to eq(expected_result) }
     end
 
-    context 'when "hide_limit_column_types" is specified in options' do
-      let :columns do
-        [
-          mock_column(:id, :integer, limit: 8),
-          mock_column(:active, :boolean, limit: 1),
-          mock_column(:name, :string, limit: 50),
-          mock_column(:notes, :text, limit: 55)
-        ]
-      end
+    context 'when "format_yard" is specified in options' do
+      context "with a string column with a limit" do
+        let(:column) { mock_column(:name, :string, limit: 50) }
+        let(:options) do
+          AnnotateRb::Options.new({format_yard: true})
+        end
+        let(:expected_result) { "string" }
 
+        it { is_expected.to eq(expected_result) }
+      end
+    end
+
+    context 'when "hide_limit_column_types" is specified in options' do
       context 'when "hide_limit_column_types" is blank string' do
         let(:column) { mock_column(:name, :string, limit: 50) }
         let(:options) do
