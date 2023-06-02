@@ -1,5 +1,20 @@
 # Changelog
 
+## [Unreleased](https://github.com/drwl/annotaterb/tree/HEAD)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.1.1...HEAD)
+
+**Merged pull requests:**
+
+- Improve tests for `ColumnAnnotation::*` [\#35](https://github.com/drwl/annotaterb/pull/35) ([drwl](https://github.com/drwl))
+- Change instances of `Options.from` =\> `Options.new` in tests [\#34](https://github.com/drwl/annotaterb/pull/34) ([drwl](https://github.com/drwl))
+- Add `Standard` linter to project [\#33](https://github.com/drwl/annotaterb/pull/33) ([drwl](https://github.com/drwl))
+- Support Sorbet `typed` magic comment [\#32](https://github.com/drwl/annotaterb/pull/32) ([drwl](https://github.com/drwl))
+- Add `position_in_additional_file_patterns` to Options and Parser [\#31](https://github.com/drwl/annotaterb/pull/31) ([drwl](https://github.com/drwl))
+- Remove `Files` gem as a dependency [\#30](https://github.com/drwl/annotaterb/pull/30) ([drwl](https://github.com/drwl))
+- Refactor `ModelAnnotator` again [\#28](https://github.com/drwl/annotaterb/pull/28) ([drwl](https://github.com/drwl))
+- Add initial change log [\#27](https://github.com/drwl/annotaterb/pull/27) ([drwl](https://github.com/drwl))
+
 ## [v4.1.1](https://github.com/drwl/annotaterb/tree/v4.1.1) (2023-05-20)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.1.0...v4.1.1)
