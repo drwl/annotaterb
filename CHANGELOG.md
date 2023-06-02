@@ -6,6 +6,8 @@
 
 **Merged pull requests:**
 
+- Bump version to v4.2.0 [\#37](https://github.com/drwl/annotaterb/pull/37) ([drwl](https://github.com/drwl))
+- Generate changelog for 4.2 [\#36](https://github.com/drwl/annotaterb/pull/36) ([drwl](https://github.com/drwl))
 - Improve tests for `ColumnAnnotation::*` [\#35](https://github.com/drwl/annotaterb/pull/35) ([drwl](https://github.com/drwl))
 - Change instances of `Options.from` =\> `Options.new` in tests [\#34](https://github.com/drwl/annotaterb/pull/34) ([drwl](https://github.com/drwl))
 - Add `Standard` linter to project [\#33](https://github.com/drwl/annotaterb/pull/33) ([drwl](https://github.com/drwl))
