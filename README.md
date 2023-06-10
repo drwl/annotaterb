@@ -59,6 +59,12 @@ $ bin/rails g annotate_rb:install
 
 This will copy a rake task into your Rails project's `lib/tasks` directory that will hook into the Rails project rake tasks, automatically running AnnotateRb after database migration rake tasks.
 
+To skip the automatic annotation that happens after a db task, pass the environment variable `ANNOTATERB_SKIP_ON_DB_TASKS=1` before your command.
+
+```sh
+$ ANNOTATERB_SKIP_ON_DB_TASKS=1 bin/rails db:migrate
+```
+
 ## Migrating from the annotate gem
 Refer to the [migration guide](MIGRATION_GUIDE.md).
 
