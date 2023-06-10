@@ -17,7 +17,3 @@ group :development, :test do
     gem "pry-byebug", require: false
   end
 end
-
-group :test do
-  gem "git", require: false
-end
