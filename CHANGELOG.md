@@ -1,12 +1,22 @@
 # Changelog
 
-## [Unreleased](https://github.com/drwl/annotaterb/tree/HEAD)
+## [v4.3.0](https://github.com/drwl/annotaterb/tree/v4.3.0) (2023-06-10)
 
-[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.1.1...HEAD)
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.2.0...v4.3.0)
+
+**Merged pull requests:**
+
+- Bump version to v4.3.0 [\#41](https://github.com/drwl/annotaterb/pull/41) ([drwl](https://github.com/drwl))
+- Add `ANNOTATERB_SKIP_ON_DB_TASKS` ENV var to skip auto annotations [\#40](https://github.com/drwl/annotaterb/pull/40) ([drwl](https://github.com/drwl))
+
+## [v4.2.0](https://github.com/drwl/annotaterb/tree/v4.2.0) (2023-06-02)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.1.1...v4.2.0)
 
 **Merged pull requests:**
 
 - Specify `standard` gem version [\#39](https://github.com/drwl/annotaterb/pull/39) ([drwl](https://github.com/drwl))
+- Generate changelog for 4.2 again [\#38](https://github.com/drwl/annotaterb/pull/38) ([drwl](https://github.com/drwl))
 - Bump version to v4.2.0 [\#37](https://github.com/drwl/annotaterb/pull/37) ([drwl](https://github.com/drwl))
 - Generate changelog for 4.2 [\#36](https://github.com/drwl/annotaterb/pull/36) ([drwl](https://github.com/drwl))
 - Improve tests for `ColumnAnnotation::*` [\#35](https://github.com/drwl/annotaterb/pull/35) ([drwl](https://github.com/drwl))
