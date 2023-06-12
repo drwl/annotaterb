@@ -96,5 +96,22 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
         it { is_expected.to match_array(expected_result) }
       end
     end
+
+    context "when a column has a default boolean value" do
+      context "with an id integer primary key column with an integer default" do
+        let(:column) { mock_column(:flag, :boolean, default: false) }
+        let(:expected_result) { ["default(FALSE)", "not null"] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with an id integer primary key column with an integer default as a string" do
+        # PostgreSQL adapter gives the default as a String
+        let(:column) { mock_column(:flag, :boolean, default: "false") }
+        let(:expected_result) { ['default("false")', "not null"] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+    end
   end
 end
