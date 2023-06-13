@@ -32,10 +32,6 @@ module AnnotateRb
           end
       end
 
-      def column_defaults
-        @column_defaults ||= @klass.column_defaults
-      end
-
       def connection
         @klass.connection
       end
