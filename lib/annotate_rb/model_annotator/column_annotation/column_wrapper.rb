@@ -11,10 +11,6 @@ module AnnotateRb
 
         def default
           @column_defaults[@column.name]
-
-          # # Note: Used to be klass.column_defaults[name], where name is the column name.
-          # # Looks to be identical, but keeping note here in case there are differences.
-          # _column_default = @column.default
         end
 
         def default_string
