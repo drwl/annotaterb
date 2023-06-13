@@ -7,8 +7,8 @@ module AnnotateRb
         # Don't show default value for these column types
         NO_DEFAULT_COL_TYPES = %w[json jsonb hstore].freeze
 
-        def initialize(column, options, is_primary_key, column_indices)
-          @column = ColumnWrapper.new(column)
+        def initialize(column, options, is_primary_key, column_indices, column_defaults)
+          @column = ColumnWrapper.new(column, column_defaults)
           @options = options
           @is_primary_key = is_primary_key
           @column_indices = column_indices
@@ -19,6 +19,8 @@ module AnnotateRb
         def build
           column_type = @column.column_type_string
           attrs = []
+
+          # require 'pry-byebug'; binding.pry
 
           unless @column.default.nil? || hide_default?
             schema_default = "default(#{@column.default_string})"

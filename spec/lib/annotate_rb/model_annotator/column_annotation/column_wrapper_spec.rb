@@ -4,8 +4,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::ColumnWrapper do
   include AnnotateTestHelpers
 
   describe "#default_string" do
-    subject { described_class.new(column).default_string }
-    let(:column) { mock_column(nil, nil, default: value) }
+    subject { described_class.new(column, column_defaults).default_string }
+    let(:column) { mock_column("field", nil, default: value) }
+    let(:column_defaults) { {"field" => value} }
 
     context "when the value is nil" do
       let(:value) { nil }

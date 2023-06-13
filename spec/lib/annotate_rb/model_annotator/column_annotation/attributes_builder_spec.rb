@@ -4,9 +4,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
   include AnnotateTestHelpers
 
   describe "#build" do
-    subject { described_class.new(column, options, is_primary_key, column_indices).build }
+    subject { described_class.new(column, options, is_primary_key, column_indices, column_defaults).build }
 
     let(:column) {}
+    let(:column_defaults) { {} }
     let(:options) { AnnotateRb::Options.new({}) }
     let(:is_primary_key) {}
     let(:column_indices) {}
@@ -15,35 +16,37 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
       let(:is_primary_key) { false }
 
       context "when the column is normal" do
-        let(:column) { mock_column(:id, :integer) }
+        let(:column) { mock_column("id", :integer) }
         let(:expected_result) { ["not null"] }
 
         it { is_expected.to match_array(expected_result) }
       end
 
       context "when an enum column exists" do
-        let(:column) { mock_column(:name, :enum, limit: [:enum1, :enum2]) }
+        let(:column) { mock_column("name", :enum, limit: [:enum1, :enum2]) }
         let(:expected_result) { ["not null", "(enum1, enum2)"] }
 
         it { is_expected.to match_array(expected_result) }
       end
 
       context "when an unsigned columns exist" do
-        let(:column) { mock_column(:integer, :integer, unsigned?: true) }
+        let(:column) { mock_column("integer", :integer, unsigned?: true) }
         let(:expected_result) { ["unsigned", "not null"] }
 
         it { is_expected.to match_array(expected_result) }
       end
 
       context "when column is an integer with a default value" do
-        let(:column) { mock_column(:size, :integer, default: 20) }
+        let(:column) { mock_column("size", :integer, default: 20) }
+        let(:column_defaults) { {"size" => 20} }
         let(:expected_result) { ["default(20)", "not null"] }
 
         it { is_expected.to match_array(expected_result) }
       end
 
       context "when column is a boolean with a default value" do
-        let(:column) { mock_column(:flag, :boolean, default: false) }
+        let(:column) { mock_column("flag", :boolean, default: false) }
+        let(:column_defaults) { {"flag" => false} }
         let(:expected_result) { ["default(FALSE)", "not null"] }
 
         it { is_expected.to match_array(expected_result) }
@@ -54,7 +57,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
       let(:is_primary_key) { true }
 
       context "with an id integer primary key column" do
-        let(:column) { mock_column(:id, :integer, limit: 8) }
+        let(:column) { mock_column("id", :integer, limit: 8) }
         let(:expected_result) { ["not null", "primary key"] }
 
         it { is_expected.to match_array(expected_result) }
@@ -81,34 +84,36 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
     end
 
     context "when a column has a default integer value" do
-      context "with an id integer primary key column with an integer default" do
+      context "with an integer default value of 0" do
         let(:column) { mock_column("amount", :integer, default: 0) }
+        let(:column_defaults) { {"amount" => 0} }
         let(:expected_result) { ["default(0)", "not null"] }
 
         it { is_expected.to match_array(expected_result) }
       end
 
-      context "with an id integer primary key column with an integer default as a string" do
-        # PostgreSQL adapter gives the default as a String
-        let(:column) { mock_column("amount", :integer, default: "0") }
-        let(:expected_result) { ['default("0")', "not null"] }
+      context "with an integer default value of 1" do
+        let(:column) { mock_column("amount", :integer, default: 1) }
+        let(:column_defaults) { {"amount" => 1} }
+        let(:expected_result) { ["default(1)", "not null"] }
 
         it { is_expected.to match_array(expected_result) }
       end
     end
 
     context "when a column has a default boolean value" do
-      context "with an id integer primary key column with an integer default" do
-        let(:column) { mock_column(:flag, :boolean, default: false) }
+      context "with default of false" do
+        let(:column) { mock_column("flag", :boolean, default: false) }
+        let(:column_defaults) { {"flag" => false} }
         let(:expected_result) { ["default(FALSE)", "not null"] }
 
         it { is_expected.to match_array(expected_result) }
       end
 
-      context "with an id integer primary key column with an integer default as a string" do
-        # PostgreSQL adapter gives the default as a String
-        let(:column) { mock_column(:flag, :boolean, default: "false") }
-        let(:expected_result) { ['default("false")', "not null"] }
+      context "with default of true" do
+        let(:column) { mock_column("flag", :boolean, default: true) }
+        let(:column_defaults) { {"flag" => true} }
+        let(:expected_result) { ["default(TRUE)", "not null"] }
 
         it { is_expected.to match_array(expected_result) }
       end
