@@ -83,9 +83,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
       end
     end
 
-    context "when a column has a default integer value" do
+    context "column defaults in sqlite" do
+      # Mocked representations when using the sqlite adapter
       context "with an integer default value of 0" do
-        let(:column) { mock_column("amount", :integer, default: 0) }
+        let(:column) { mock_column("amount", :integer, default: "0") }
         let(:column_defaults) { {"amount" => 0} }
         let(:expected_result) { ["default(0)", "not null"] }
 
@@ -93,17 +94,23 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
       end
 
       context "with an integer default value of 1" do
-        let(:column) { mock_column("amount", :integer, default: 1) }
+        let(:column) { mock_column("amount", :integer, default: "1") }
         let(:column_defaults) { {"amount" => 1} }
         let(:expected_result) { ["default(1)", "not null"] }
 
         it { is_expected.to match_array(expected_result) }
       end
-    end
 
-    context "when a column has a default boolean value" do
+      context "with an integer field without a default" do
+        let(:column) { mock_column("amount", :integer, default: nil) }
+        let(:column_defaults) { {"amount" => nil} }
+        let(:expected_result) { ["not null"] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
       context "with default of false" do
-        let(:column) { mock_column("flag", :boolean, default: false) }
+        let(:column) { mock_column("flag", :boolean, default: "0") }
         let(:column_defaults) { {"flag" => false} }
         let(:expected_result) { ["default(FALSE)", "not null"] }
 
@@ -111,9 +118,119 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
       end
 
       context "with default of true" do
-        let(:column) { mock_column("flag", :boolean, default: true) }
+        let(:column) { mock_column("flag", :boolean, default: "1") }
         let(:column_defaults) { {"flag" => true} }
         let(:expected_result) { ["default(TRUE)", "not null"] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with a boolean field without a default" do
+        let(:column) { mock_column("flag", :boolean, default: nil) }
+        let(:column_defaults) { {"flag" => nil} }
+        let(:expected_result) { ["not null"] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+    end
+
+    context "column defaults in mysql" do
+      # Mocked representations when using the mysql adapter
+      context "with an integer default value of 0" do
+        let(:column) { mock_column("amount", :integer, default: "0") }
+        let(:column_defaults) { {"amount" => 0} }
+        let(:expected_result) { ["default(0)", "not null"] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with an integer default value of 1" do
+        let(:column) { mock_column("amount", :integer, default: "1") }
+        let(:column_defaults) { {"amount" => 1} }
+        let(:expected_result) { ["default(1)", "not null"] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with an integer field without a default" do
+        let(:column) { mock_column("amount", :integer, default: nil) }
+        let(:column_defaults) { {"amount" => 0} }
+        let(:expected_result) { ["not null"] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with default of false" do
+        let(:column) { mock_column("flag", :boolean, default: "0") }
+        let(:column_defaults) { {"flag" => false} }
+        let(:expected_result) { ["default(FALSE)", "not null"] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with default of true" do
+        let(:column) { mock_column("flag", :boolean, default: "1") }
+        let(:column_defaults) { {"flag" => true} }
+        let(:expected_result) { ["default(TRUE)", "not null"] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with a boolean field without a default" do
+        let(:column) { mock_column("flag", :boolean, default: nil) }
+        let(:column_defaults) { {"flag" => nil} }
+        let(:expected_result) { ["not null"] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+    end
+
+    context "column defaults in postgres" do
+      # Mocked representations when using the postgresql adapter
+      context "with an integer default value of 0" do
+        let(:column) { mock_column("amount", :integer, default: "0") }
+        let(:column_defaults) { {"amount" => 0} }
+        let(:expected_result) { ["default(0)", "not null"] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with an integer default value of 1" do
+        let(:column) { mock_column("amount", :integer, default: "1") }
+        let(:column_defaults) { {"amount" => 1} }
+        let(:expected_result) { ["default(1)", "not null"] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with an integer field without a default" do
+        let(:column) { mock_column("amount", :integer, default: nil) }
+        let(:column_defaults) { {"amount" => nil} }
+        let(:expected_result) { ["not null"] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with default of false" do
+        let(:column) { mock_column("flag", :boolean, default: "0") }
+        let(:column_defaults) { {"flag" => false} }
+        let(:expected_result) { ["default(FALSE)", "not null"] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with default of true" do
+        let(:column) { mock_column("flag", :boolean, default: "1") }
+        let(:column_defaults) { {"flag" => true} }
+        let(:expected_result) { ["default(TRUE)", "not null"] }
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with a boolean field without a default" do
+        let(:column) { mock_column("flag", :boolean, default: nil) }
+        let(:column_defaults) { {"flag" => nil} }
+        let(:expected_result) { ["not null"] }
 
         it { is_expected.to match_array(expected_result) }
       end
