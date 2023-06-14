@@ -20,9 +20,7 @@ module AnnotateRb
           column_type = @column.column_type_string
           attrs = []
 
-          # require 'pry-byebug'; binding.pry
-
-          unless @column.default.nil? || hide_default?
+          if !@column.raw_default.nil? && !hide_default?
             schema_default = "default(#{@column.default_string})"
 
             attrs << schema_default

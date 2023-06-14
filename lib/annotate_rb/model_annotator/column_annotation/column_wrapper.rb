@@ -9,12 +9,16 @@ module AnnotateRb
           @column_defaults = column_defaults
         end
 
-        def default
+        def raw_default
+          @column.default
+        end
+
+        def default_value
           @column_defaults[@column.name]
         end
 
         def default_string
-          quote(default)
+          quote(default_value)
         end
 
         def type
@@ -85,7 +89,6 @@ module AnnotateRb
         # Simple quoting for the default column value
         def quote(value)
           case value
-          # case value.class
           when NilClass then "NULL"
           when TrueClass then "TRUE"
           when FalseClass then "FALSE"
