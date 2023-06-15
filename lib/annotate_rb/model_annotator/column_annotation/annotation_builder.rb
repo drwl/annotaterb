@@ -21,9 +21,10 @@ module AnnotateRb
 
           table_indices = @model.retrieve_indexes_from_table
           column_indices = table_indices.select { |ind| ind.columns.include?(@column.name) }
+          column_defaults = @model.column_defaults
 
-          column_attributes = AttributesBuilder.new(@column, @options, is_primary_key, column_indices).build
-          formatted_column_type = TypeBuilder.new(@column, @options).build
+          column_attributes = AttributesBuilder.new(@column, @options, is_primary_key, column_indices, column_defaults).build
+          formatted_column_type = TypeBuilder.new(@column, @options, column_defaults).build
 
           col_name = if @model.with_comments? && @column.comment
             "#{@column.name}(#{@column.comment.gsub(/\n/, '\\n')})"

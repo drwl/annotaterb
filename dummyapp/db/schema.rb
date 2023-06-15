@@ -10,7 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_11_202209) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_14_221012) do
+  create_table "cases", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "is_default_false", default: false
+    t.boolean "is_default_true", default: true
+    t.integer "default_number", default: 1
+    t.integer "default_zero", default: 0
+    t.integer "simple_int"
+    t.boolean "simple_bool"
+    t.text "json_text_field"
+  end
+
   create_table "tasks", force: :cascade do |t|
     t.integer "count"
     t.boolean "status"

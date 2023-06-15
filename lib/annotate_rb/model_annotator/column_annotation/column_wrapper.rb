@@ -4,18 +4,21 @@ module AnnotateRb
   module ModelAnnotator
     module ColumnAnnotation
       class ColumnWrapper
-        def initialize(column)
+        def initialize(column, column_defaults)
           @column = column
+          @column_defaults = column_defaults
         end
 
-        def default
-          # Note: Used to be klass.column_defaults[name], where name is the column name.
-          # Looks to be identical, but keeping note here in case there are differences.
-          _column_default = @column.default
+        def raw_default
+          @column.default
+        end
+
+        def default_value
+          @column_defaults[@column.name]
         end
 
         def default_string
-          quote(@column.default)
+          quote(default_value)
         end
 
         def type

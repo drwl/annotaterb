@@ -17,7 +17,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             AnnotateRb::ModelAnnotator::ModelWrapper,
             primary_key: "id",
             retrieve_indexes_from_table: [],
-            with_comments?: false
+            with_comments?: false,
+            column_defaults: {}
           )
         end
         let(:expected_result) do
@@ -38,7 +39,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             AnnotateRb::ModelAnnotator::ModelWrapper,
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
-            with_comments?: false
+            with_comments?: false,
+            column_defaults: {}
           )
         end
         let(:expected_result) do
@@ -61,7 +63,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             AnnotateRb::ModelAnnotator::ModelWrapper,
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
-            with_comments?: true
+            with_comments?: true,
+            column_defaults: {}
           )
         end
         let(:expected_result) do
@@ -81,12 +84,14 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
 
       context "when the column is the primary key" do
         let(:column) { mock_column(:id, :integer) }
+        let(:column_defaults) { {} }
         let(:model) do
           instance_double(
             AnnotateRb::ModelAnnotator::ModelWrapper,
             primary_key: "id",
             retrieve_indexes_from_table: [],
-            with_comments?: false
+            with_comments?: false,
+            column_defaults: {}
           )
         end
 
@@ -105,12 +110,14 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
 
       context "when the column is not the primary key" do
         let(:column) { mock_column(:id, :integer) }
+        let(:column_defaults) { {} }
         let(:model) do
           instance_double(
             AnnotateRb::ModelAnnotator::ModelWrapper,
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
-            with_comments?: false
+            with_comments?: false,
+            column_defaults: {}
           )
         end
         let(:expected_result) do
@@ -130,12 +137,14 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
         let(:max_size) { 20 }
 
         let(:column) { mock_column(:id, :integer, comment: "[is commented]") }
+        let(:column_defaults) { {} }
         let(:model) do
           instance_double(
             AnnotateRb::ModelAnnotator::ModelWrapper,
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
-            with_comments?: true
+            with_comments?: true,
+            column_defaults: {}
           )
         end
         let(:expected_result) do
@@ -157,12 +166,14 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
 
       context "when the column is the primary key" do
         let(:column) { mock_column(:id, :integer) }
+        let(:column_defaults) { {} }
         let(:model) do
           instance_double(
             AnnotateRb::ModelAnnotator::ModelWrapper,
             primary_key: "id",
             retrieve_indexes_from_table: [],
-            with_comments?: false
+            with_comments?: false,
+            column_defaults: {}
           )
         end
 
@@ -182,12 +193,14 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
 
       context "when the column is not the primary key" do
         let(:column) { mock_column(:id, :integer) }
+        let(:column_defaults) { {} }
         let(:model) do
           instance_double(
             AnnotateRb::ModelAnnotator::ModelWrapper,
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
-            with_comments?: false
+            with_comments?: false,
+            column_defaults: {}
           )
         end
         let(:expected_result) do
@@ -211,7 +224,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             AnnotateRb::ModelAnnotator::ModelWrapper,
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
-            with_comments?: true
+            with_comments?: true,
+            column_defaults: {}
           )
         end
         let(:expected_result) do
@@ -239,7 +253,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             AnnotateRb::ModelAnnotator::ModelWrapper,
             primary_key: "id",
             retrieve_indexes_from_table: [],
-            with_comments?: false
+            with_comments?: false,
+            column_defaults: {}
           )
         end
 
@@ -263,7 +278,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             AnnotateRb::ModelAnnotator::ModelWrapper,
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
-            with_comments?: false
+            with_comments?: false,
+            column_defaults: {}
           )
         end
         let(:expected_result) do
@@ -286,7 +302,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             AnnotateRb::ModelAnnotator::ModelWrapper,
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
-            with_comments?: true
+            with_comments?: true,
+            column_defaults: {}
           )
         end
         let(:expected_result) do
