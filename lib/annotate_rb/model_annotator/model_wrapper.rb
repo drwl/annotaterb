@@ -49,6 +49,15 @@ module AnnotateRb
         @klass.table_exists?
       end
 
+      def table_comments
+        @klass.connection.table_comment(@klass.table_name)
+      end
+
+      def has_table_comments?
+        @klass.connection.respond_to?(:table_comment) &&
+          @klass.connection.table_comment(@klass.table_name).present?
+      end
+
       def column_defaults
         @klass.column_defaults
       end

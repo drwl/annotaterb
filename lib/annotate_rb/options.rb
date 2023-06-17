@@ -114,7 +114,8 @@ module AnnotateRb
       :sort,
       :timestamp,
       :trace,
-      :with_comment
+      :with_comment,
+      :with_table_comments
     ].freeze
 
     OTHER_OPTION_KEYS = [

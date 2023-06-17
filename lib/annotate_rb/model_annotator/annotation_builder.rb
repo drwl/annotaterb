@@ -69,15 +69,26 @@ module AnnotateRb
         info << "#"
 
         if @options[:format_markdown]
-          info << "# Table name: `#{@model.table_name}`"
+          info << "# Table name: `#{table_name}`"
           info << "#"
           info << "# ### Columns"
         else
-          info << "# Table name: #{@model.table_name}"
+          info << "# Table name: #{table_name}"
         end
         info << "#\n" # We want the last line break
 
         info.join("\n")
+      end
+
+      def table_name
+        table_name = @model.table_name
+
+        if @options[:with_table_comments] && @model.has_table_comments?
+          table_comment = "(#{@model.table_comments.gsub(/\n/, "\\n")})"
+          table_name = "#{table_name}#{table_comment}"
+        end
+
+        table_name
       end
 
       def schema_footer_text
