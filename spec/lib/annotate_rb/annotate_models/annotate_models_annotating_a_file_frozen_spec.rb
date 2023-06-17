@@ -12,8 +12,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
       @klass = mock_class(:users,
         :id,
         [
-          mock_column(:id, :integer),
-          mock_column(:name, :string, limit: 50)
+          mock_column("id", :integer),
+          mock_column("name", :string, limit: 50)
         ])
       @schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass).build
     end
@@ -28,7 +28,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         annotate_one_file
 
         another_schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(
-          mock_class(:users, :id, [mock_column(:id, :integer)])
+          mock_class(:users, :id, [mock_column("id", :integer)])
         ).build
 
         @schema_info = another_schema_info

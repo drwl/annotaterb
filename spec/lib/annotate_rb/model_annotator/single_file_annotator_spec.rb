@@ -201,8 +201,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
             # Having `comment: nil` for id column is the "correct" test setup
             # Only MySQL and PostgreSQL adapters support comments AND ModelWrapper#with_comments?
             # expects the first column to respond to `comment` method before checking the rest.
-            mock_column(:id, :integer, comment: nil),
-            mock_column(:name, :string, limit: 50, comment: "[sensitivity: medium]")
+            mock_column("id", :integer, comment: nil),
+            mock_column("name", :string, limit: 50, comment: "[sensitivity: medium]")
           ])
       end
 
