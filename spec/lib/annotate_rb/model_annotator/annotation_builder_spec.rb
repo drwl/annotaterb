@@ -36,8 +36,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
           context "when the columns are normal" do
             let :columns do
               [
-                mock_column(:id, :integer),
-                mock_column(:name, :string, limit: 50)
+                mock_column("id", :integer),
+                mock_column("name", :string, limit: 50)
               ]
             end
 
@@ -61,8 +61,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
           context "when an enum column exists" do
             let :columns do
               [
-                mock_column(:id, :integer),
-                mock_column(:name, :enum, limit: [:enum1, :enum2])
+                mock_column("id", :integer),
+                mock_column("name", :enum, limit: [:enum1, :enum2])
               ]
             end
 
@@ -86,12 +86,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
           context "when unsigned columns exist" do
             let :columns do
               [
-                mock_column(:id, :integer),
-                mock_column(:integer, :integer, unsigned?: true),
-                mock_column(:bigint, :integer, unsigned?: true, bigint?: true),
-                mock_column(:bigint, :bigint, unsigned?: true),
-                mock_column(:float, :float, unsigned?: true),
-                mock_column(:decimal, :decimal, unsigned?: true, precision: 10, scale: 2)
+                mock_column("id", :integer),
+                mock_column("integer", :integer, unsigned?: true),
+                mock_column("bigint", :integer, unsigned?: true, bigint?: true),
+                mock_column("bigint", :bigint, unsigned?: true),
+                mock_column("float", :float, unsigned?: true),
+                mock_column("decimal", :decimal, unsigned?: true, precision: 10, scale: 2)
               ]
             end
 
@@ -126,9 +126,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
             context "when columns are normal" do
               let :columns do
                 [
-                  mock_column(:id, :integer, limit: 8),
-                  mock_column(:name, :string, limit: 50),
-                  mock_column(:notes, :text, limit: 55)
+                  mock_column("id", :integer, limit: 8),
+                  mock_column("name", :string, limit: 50),
+                  mock_column("notes", :text, limit: 55)
                 ]
               end
 
@@ -153,9 +153,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
             context "when columns have default values" do
               let :columns do
                 [
-                  mock_column(:id, :integer),
-                  mock_column(:size, :integer, default: 20),
-                  mock_column(:flag, :boolean, default: false)
+                  mock_column("id", :integer),
+                  mock_column("size", :integer, default: 20),
+                  mock_column("flag", :boolean, default: false)
                 ]
               end
 
@@ -182,10 +182,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 double("Post::Translation",
                   to_s: "Post::Translation",
                   columns: [
-                    mock_column(:id, :integer, limit: 8),
-                    mock_column(:post_id, :integer, limit: 8),
-                    mock_column(:locale, :string, limit: 50),
-                    mock_column(:title, :string, limit: 50)
+                    mock_column("id", :integer, limit: 8),
+                    mock_column("post_id", :integer, limit: 8),
+                    mock_column("locale", :string, limit: 50),
+                    mock_column("title", :string, limit: 50)
                   ])
               end
 
@@ -197,8 +197,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
               let :columns do
                 [
-                  mock_column(:id, :integer, limit: 8),
-                  mock_column(:author_name, :string, limit: 50)
+                  mock_column("id", :integer, limit: 8),
+                  mock_column("author_name", :string, limit: 50)
                 ]
               end
 
@@ -228,9 +228,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
             let :columns do
               [
-                mock_column(:a_id, :integer),
-                mock_column(:b_id, :integer),
-                mock_column(:name, :string, limit: 50)
+                mock_column("a_id", :integer),
+                mock_column("b_id", :integer),
+                mock_column("name", :string, limit: 50)
               ]
             end
 
@@ -276,8 +276,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context "when indexes are normal" do
                   let :columns do
                     [
-                      mock_column(:id, :integer),
-                      mock_column(:foreign_thing_id, :integer)
+                      mock_column("id", :integer),
+                      mock_column("foreign_thing_id", :integer)
                     ]
                   end
 
@@ -442,8 +442,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context "when index is not defined" do
                   let :columns do
                     [
-                      mock_column(:id, :integer),
-                      mock_column(:foreign_thing_id, :integer)
+                      mock_column("id", :integer),
+                      mock_column("foreign_thing_id", :integer)
                     ]
                   end
 
@@ -477,8 +477,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context "when indexes are normal" do
                   let :columns do
                     [
-                      mock_column(:id, :integer),
-                      mock_column(:foreign_thing_id, :integer)
+                      mock_column("id", :integer),
+                      mock_column("foreign_thing_id", :integer)
                     ]
                   end
 
@@ -495,8 +495,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                       #
                       # Table name: users
                       #
-                      #  id               :integer          not null, primary key
-                      #  foreign_thing_id :integer          not null
+                      #  id               :integer          not null, primary key, indexed
+                      #  foreign_thing_id :integer          not null, indexed
                       #
                       # Indexes
                       #
@@ -643,8 +643,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context "when index is not defined" do
                   let :columns do
                     [
-                      mock_column(:id, :integer),
-                      mock_column(:foreign_thing_id, :integer)
+                      mock_column("id", :integer),
+                      mock_column("foreign_thing_id", :integer)
                     ]
                   end
 
@@ -678,8 +678,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context 'when one of indexes includes "orders" clause' do
                   let :columns do
                     [
-                      mock_column(:id, :integer),
-                      mock_column(:foreign_thing_id, :integer)
+                      mock_column("id", :integer),
+                      mock_column("foreign_thing_id", :integer)
                     ]
                   end
 
@@ -698,8 +698,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                       #
                       # Table name: users
                       #
-                      #  id               :integer          not null, primary key
-                      #  foreign_thing_id :integer          not null
+                      #  id               :integer          not null, primary key, indexed
+                      #  foreign_thing_id :integer          not null, indexed
                       #
                     EOS
                   end
@@ -750,8 +750,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context 'when one of indexes includes "orders" clause' do
                   let :columns do
                     [
-                      mock_column(:id, :integer),
-                      mock_column(:foreign_thing_id, :integer)
+                      mock_column("id", :integer),
+                      mock_column("foreign_thing_id", :integer)
                     ]
                   end
 
@@ -770,8 +770,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                       #
                       # Table name: users
                       #
-                      #  id               :integer          not null, primary key
-                      #  foreign_thing_id :integer          not null
+                      #  id               :integer          not null, primary key, indexed
+                      #  foreign_thing_id :integer          not null, indexed
                       #
                       # Indexes
                       #
@@ -828,8 +828,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
             context "when foreign keys exist" do
               let :columns do
                 [
-                  mock_column(:id, :integer),
-                  mock_column(:foreign_thing_id, :integer)
+                  mock_column("id", :integer),
+                  mock_column("foreign_thing_id", :integer)
                 ]
               end
 
@@ -936,10 +936,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
             context 'when "hide_limit_column_types" is specified in options' do
               let :columns do
                 [
-                  mock_column(:id, :integer, limit: 8),
-                  mock_column(:active, :boolean, limit: 1),
-                  mock_column(:name, :string, limit: 50),
-                  mock_column(:notes, :text, limit: 55)
+                  mock_column("id", :integer, limit: 8),
+                  mock_column("active", :boolean, limit: 1),
+                  mock_column("name", :string, limit: 50),
+                  mock_column("notes", :text, limit: 55)
                 ]
               end
 
@@ -1019,9 +1019,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
             context 'when "hide_default_column_types" is specified in options' do
               let :columns do
                 [
-                  mock_column(:profile, :json, default: {}),
-                  mock_column(:settings, :jsonb, default: {}),
-                  mock_column(:parameters, :hstore, default: {})
+                  mock_column("profile", :json, default: {}),
+                  mock_column("settings", :jsonb, default: {}),
+                  mock_column("parameters", :hstore, default: {})
                 ]
               end
 
@@ -1098,9 +1098,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
             context 'when "classified_sort" is specified in options' do
               let :columns do
                 [
-                  mock_column(:active, :boolean, limit: 1),
-                  mock_column(:name, :string, limit: 50),
-                  mock_column(:notes, :text, limit: 55)
+                  mock_column("active", :boolean, limit: 1),
+                  mock_column("name", :string, limit: 50),
+                  mock_column("notes", :text, limit: 55)
                 ]
               end
 
@@ -1137,11 +1137,11 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context "when columns have comments" do
                   let :columns do
                     [
-                      mock_column(:id, :integer, limit: 8, comment: "ID"),
-                      mock_column(:active, :boolean, limit: 1, comment: "Active"),
-                      mock_column(:name, :string, limit: 50, comment: "Name"),
-                      mock_column(:notes, :text, limit: 55, comment: "Notes"),
-                      mock_column(:no_comment, :text, limit: 20, comment: nil)
+                      mock_column("id", :integer, limit: 8, comment: "ID"),
+                      mock_column("active", :boolean, limit: 1, comment: "Active"),
+                      mock_column("name", :string, limit: 50, comment: "Name"),
+                      mock_column("notes", :text, limit: 55, comment: "Notes"),
+                      mock_column("no_comment", :text, limit: 20, comment: nil)
                     ]
                   end
 
@@ -1168,15 +1168,15 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context "when columns have multibyte comments" do
                   let :columns do
                     [
-                      mock_column(:id, :integer, limit: 8, comment: "ＩＤ"),
-                      mock_column(:active, :boolean, limit: 1, comment: "ＡＣＴＩＶＥ"),
-                      mock_column(:name, :string, limit: 50, comment: "ＮＡＭＥ"),
-                      mock_column(:notes, :text, limit: 55, comment: "ＮＯＴＥＳ"),
-                      mock_column(:cyrillic, :text, limit: 30, comment: "Кириллица"),
-                      mock_column(:japanese, :text, limit: 60, comment: "熊本大学　イタリア　宝島"),
-                      mock_column(:arabic, :text, limit: 20, comment: "لغة"),
-                      mock_column(:no_comment, :text, limit: 20, comment: nil),
-                      mock_column(:location, :geometry_collection, limit: nil, comment: nil)
+                      mock_column("id", :integer, limit: 8, comment: "ＩＤ"),
+                      mock_column("active", :boolean, limit: 1, comment: "ＡＣＴＩＶＥ"),
+                      mock_column("name", :string, limit: 50, comment: "ＮＡＭＥ"),
+                      mock_column("notes", :text, limit: 55, comment: "ＮＯＴＥＳ"),
+                      mock_column("cyrillic", :text, limit: 30, comment: "Кириллица"),
+                      mock_column("japanese", :text, limit: 60, comment: "熊本大学　イタリア　宝島"),
+                      mock_column("arabic", :text, limit: 20, comment: "لغة"),
+                      mock_column("no_comment", :text, limit: 20, comment: nil),
+                      mock_column("location", :geometry_collection, limit: nil, comment: nil)
                     ]
                   end
 
@@ -1207,9 +1207,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context "when columns have multiline comments" do
                   let :columns do
                     [
-                      mock_column(:id, :integer, limit: 8, comment: "ID"),
-                      mock_column(:notes, :text, limit: 55, comment: "Notes.\nMay include things like notes."),
-                      mock_column(:no_comment, :text, limit: 20, comment: nil)
+                      mock_column("id", :integer, limit: 8, comment: "ID"),
+                      mock_column("notes", :text, limit: 55, comment: "Notes.\nMay include things like notes."),
+                      mock_column("no_comment", :text, limit: 20, comment: nil)
                     ]
                   end
 
@@ -1234,12 +1234,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
                 context "when geometry columns are included" do
                   let :columns do
                     [
-                      mock_column(:id, :integer, limit: 8),
-                      mock_column(:active, :boolean, default: false, null: false),
-                      mock_column(:geometry, :geometry,
+                      mock_column("id", :integer, limit: 8),
+                      mock_column("active", :boolean, default: false, null: false),
+                      mock_column("geometry", :geometry,
                         geometric_type: "Geometry", srid: 4326,
                         limit: {srid: 4326, type: "geometry"}),
-                      mock_column(:location, :geography,
+                      mock_column("location", :geography,
                         geometric_type: "Point", srid: 0,
                         limit: {srid: 0, type: "geometry"})
                     ]
@@ -1282,8 +1282,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
             let :columns do
               [
-                mock_column(:id, :integer),
-                mock_column(:name, :string, limit: 50)
+                mock_column("id", :integer),
+                mock_column("name", :string, limit: 50)
               ]
             end
 
@@ -1568,8 +1568,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
                 let :columns do
                   [
-                    mock_column(:id, :integer),
-                    mock_column(:foreign_thing_id, :integer)
+                    mock_column("id", :integer),
+                    mock_column("foreign_thing_id", :integer)
                   ]
                 end
 
@@ -1621,8 +1621,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
               context "when columns are normal" do
                 let :columns do
                   [
-                    mock_column(:id, :integer, comment: "ID"),
-                    mock_column(:name, :string, limit: 50, comment: "Name")
+                    mock_column("id", :integer, comment: "ID"),
+                    mock_column("name", :string, limit: 50, comment: "Name")
                   ]
                 end
 
@@ -1658,8 +1658,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
               context "when columns have comments" do
                 let :columns do
                   [
-                    mock_column(:id, :integer, comment: "ID"),
-                    mock_column(:name, :string, limit: 50, comment: "Name")
+                    mock_column("id", :integer, comment: "ID"),
+                    mock_column("name", :string, limit: 50, comment: "Name")
                   ]
                 end
 
@@ -1687,8 +1687,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
               context "when columns have multibyte comments" do
                 let :columns do
                   [
-                    mock_column(:id, :integer, comment: "ＩＤ"),
-                    mock_column(:name, :string, limit: 50, comment: "ＮＡＭＥ")
+                    mock_column("id", :integer, comment: "ＩＤ"),
+                    mock_column("name", :string, limit: 50, comment: "ＮＡＭＥ")
                   ]
                 end
 

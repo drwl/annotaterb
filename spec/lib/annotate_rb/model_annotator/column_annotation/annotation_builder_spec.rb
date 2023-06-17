@@ -11,7 +11,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
       let(:options) { AnnotateRb::Options.new({}) }
 
       context "when the column is the primary key" do
-        let(:column) { mock_column(:id, :integer) }
+        let(:column) { mock_column("id", :integer) }
         let(:model) do
           instance_double(
             AnnotateRb::ModelAnnotator::ModelWrapper,
@@ -33,7 +33,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
       end
 
       context "when the column is not the primary key" do
-        let(:column) { mock_column(:id, :integer) }
+        let(:column) { mock_column("id", :integer) }
         let(:model) do
           instance_double(
             AnnotateRb::ModelAnnotator::ModelWrapper,
@@ -57,7 +57,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
       context "when the column has a comment" do
         let(:max_size) { 20 }
 
-        let(:column) { mock_column(:id, :integer, comment: "[is commented]") }
+        let(:column) { mock_column("id", :integer, comment: "[is commented]") }
         let(:model) do
           instance_double(
             AnnotateRb::ModelAnnotator::ModelWrapper,
@@ -83,7 +83,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
       let(:options) { AnnotateRb::Options.new({format_rdoc: true}) }
 
       context "when the column is the primary key" do
-        let(:column) { mock_column(:id, :integer) }
+        let(:column) { mock_column("id", :integer) }
         let(:column_defaults) { {} }
         let(:model) do
           instance_double(
@@ -109,7 +109,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
       end
 
       context "when the column is not the primary key" do
-        let(:column) { mock_column(:id, :integer) }
+        let(:column) { mock_column("id", :integer) }
         let(:column_defaults) { {} }
         let(:model) do
           instance_double(
@@ -136,7 +136,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
       context "when the column has a comment" do
         let(:max_size) { 20 }
 
-        let(:column) { mock_column(:id, :integer, comment: "[is commented]") }
+        let(:column) { mock_column("id", :integer, comment: "[is commented]") }
         let(:column_defaults) { {} }
         let(:model) do
           instance_double(
@@ -165,7 +165,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
       let(:options) { AnnotateRb::Options.new({format_yard: true}) }
 
       context "when the column is the primary key" do
-        let(:column) { mock_column(:id, :integer) }
+        let(:column) { mock_column("id", :integer) }
         let(:column_defaults) { {} }
         let(:model) do
           instance_double(
@@ -192,7 +192,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
       end
 
       context "when the column is not the primary key" do
-        let(:column) { mock_column(:id, :integer) }
+        let(:column) { mock_column("id", :integer) }
         let(:column_defaults) { {} }
         let(:model) do
           instance_double(
@@ -218,7 +218,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
       end
 
       context "when the column has a comment" do
-        let(:column) { mock_column(:id, :integer, comment: "[is commented]") }
+        let(:column) { mock_column("id", :integer, comment: "[is commented]") }
         let(:model) do
           instance_double(
             AnnotateRb::ModelAnnotator::ModelWrapper,
@@ -247,7 +247,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
       let(:options) { AnnotateRb::Options.new({format_markdown: true}) }
 
       context "when the column is the primary key" do
-        let(:column) { mock_column(:id, :integer) }
+        let(:column) { mock_column("id", :integer) }
         let(:model) do
           instance_double(
             AnnotateRb::ModelAnnotator::ModelWrapper,
@@ -272,7 +272,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
       end
 
       context "when the column is not the primary key" do
-        let(:column) { mock_column(:id, :integer) }
+        let(:column) { mock_column("id", :integer) }
         let(:model) do
           instance_double(
             AnnotateRb::ModelAnnotator::ModelWrapper,
@@ -296,7 +296,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
       end
 
       context "when the column has a comment" do
-        let(:column) { mock_column(:id, :integer, comment: "[is commented]") }
+        let(:column) { mock_column("id", :integer, comment: "[is commented]") }
         let(:model) do
           instance_double(
             AnnotateRb::ModelAnnotator::ModelWrapper,
