@@ -51,7 +51,8 @@ module AnnotateRb
       sort: false, # ModelAnnotator
       timestamp: false, # RouteAnnotator
       trace: false, # ModelAnnotator, but is part of Core
-      with_comment: true # ModelAnnotator
+      with_comment: true, # ModelAnnotator
+      with_table_comments: true # ModelAnnotator
     }.freeze
 
     OTHER_OPTIONS = {
