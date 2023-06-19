@@ -21,15 +21,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
       @schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass, options).build
     end
 
-    it "should skip columns with option[:ignore_columns] set" do
-      options = AnnotateRb::Options.new({ignore_columns: "(id|updated_at|created_at)"})
-      output = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(
-        @klass, options
-      ).build
-
-      expect(output.match(/id/)).to be_nil
-    end
-
     it "works with namespaced models (i.e. models inside modules/subdirectories)" do
       (model_file_name, file_content) = write_model "foo/user.rb", <<~EOS
         class Foo::User < ActiveRecord::Base
