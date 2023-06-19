@@ -274,4 +274,81 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileBuilder do
       end
     end
   end
+
+  describe "#update_existing_annotations" do
+    subject { described_class.new(*params).update_existing_annotations }
+
+    let(:params) do
+      [
+        file_components,
+        annotation_position,
+        options
+      ]
+    end
+
+    let(:file_components) do
+      file_content = <<~FILE
+        # == Schema Information
+        #
+        # Table name: users
+        #
+        #  id               :integer          not null, primary key
+        #  foreign_thing_id :integer          not null
+        #
+        # Foreign Keys
+        #
+        #  fk_rails_...  (foreign_thing_id => foreign_things.id) ON DELETE => restrict
+        #
+        class User < ApplicationRecord
+        end
+      FILE
+
+      new_annotations = <<~ANNOTATIONS
+        # == Schema Information
+        #
+        # Table name: users
+        #
+        #  id               :integer          not null, primary key
+        #  foreign_thing_id :integer          not null
+        #
+        # Foreign Keys
+        #
+        #  fk_rails_...  (foreign_thing_id => foreign_things.id) ON DELETE => cascade
+        #
+      ANNOTATIONS
+
+      AnnotateRb::ModelAnnotator::FileComponents.new(
+        file_content,
+        new_annotations,
+        options
+      )
+    end
+    let(:annotation_position) { :position_in_class }
+
+    context "with a foreign key constraint change" do
+      let(:options) { AnnotateRb::Options.new({position_in_class: "before", show_foreign_keys: true}) }
+
+      let(:expected_content) do
+        <<~CONTENT
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id               :integer          not null, primary key
+          #  foreign_thing_id :integer          not null
+          #
+          # Foreign Keys
+          #
+          #  fk_rails_...  (foreign_thing_id => foreign_things.id) ON DELETE => cascade
+          #
+          class User < ApplicationRecord
+          end
+        CONTENT
+      end
+
+      it "returns the updated annotated file" do
+        is_expected.to eq(expected_content)
+      end
+    end
+  end
 end

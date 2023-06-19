@@ -21,56 +21,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
       @schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass, options).build
     end
 
-    describe "with existing annotation" do
-      context "of a foreign key" do
-        before do
-          klass = mock_class(:users,
-            :id,
-            [
-              mock_column("id", :integer),
-              mock_column("foreign_thing_id", :integer)
-            ],
-            [],
-            [
-              mock_foreign_key("fk_rails_cf2568e89e",
-                "foreign_thing_id",
-                "foreign_things",
-                "id",
-                on_delete: :cascade)
-            ])
-          @options = AnnotateRb::Options.new({show_foreign_keys: true})
-          @schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(
-            klass, @options
-          ).build
-
-          annotate_one_file
-        end
-
-        it "should update foreign key constraint" do
-          klass = mock_class(:users,
-            :id,
-            [
-              mock_column("id", :integer),
-              mock_column("foreign_thing_id", :integer)
-            ],
-            [],
-            [
-              mock_foreign_key("fk_rails_cf2568e89e",
-                "foreign_thing_id",
-                "foreign_things",
-                "id",
-                on_delete: :restrict)
-            ])
-          @schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(
-            klass, show_foreign_keys: true
-          ).build
-
-          annotate_one_file
-          expect(File.read(@model_file_name)).to eq("#{@schema_info}#{@file_content}")
-        end
-      end
-    end
-
     describe "with existing annotation => :before" do
       before do
         annotate_one_file position: :before
