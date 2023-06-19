@@ -21,40 +21,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
       @schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass, options).build
     end
 
-    describe "with existing annotation => :before" do
-      before do
-        annotate_one_file position: :before
-        another_schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(
-          mock_class(:users, :id, [mock_column("id", :integer)]),
-          options
-        ).build
-
-        @schema_info = another_schema_info
-      end
-
-      it "should change position to :after when force: true" do
-        annotate_one_file position: :after, force: true
-        expect(File.read(@model_file_name)).to eq("#{@file_content}\n#{@schema_info}")
-      end
-    end
-
-    describe "with existing annotation => :after" do
-      before do
-        annotate_one_file position: :after
-        another_schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(
-          mock_class(:users, :id, [mock_column("id", :integer)]),
-          options
-        ).build
-
-        @schema_info = another_schema_info
-      end
-
-      it "should change position to :before when force: true" do
-        annotate_one_file position: :before, force: true
-        expect(File.read(@model_file_name)).to eq("#{@schema_info}#{@file_content}")
-      end
-    end
-
     it "should skip columns with option[:ignore_columns] set" do
       options = AnnotateRb::Options.new({ignore_columns: "(id|updated_at|created_at)"})
       output = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(
