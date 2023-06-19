@@ -12,7 +12,7 @@ module AnnotateRb
       MD_NAMES_OVERHEAD = 6
       MD_TYPE_ALLOWANCE = 18
 
-      def initialize(klass, options = {})
+      def initialize(klass, options)
         @model = ModelWrapper.new(klass, options)
         @options = options
         @info = "" # TODO: Make array and build string that way

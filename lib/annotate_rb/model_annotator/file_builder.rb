@@ -4,13 +4,12 @@ module AnnotateRb
   module ModelAnnotator
     # Generates the text file content with annotations, these are then to be written to filesystem.
     class FileBuilder
-      def initialize(file_components, new_annotations, annotation_position, options)
+      def initialize(file_components, annotation_position, options)
         @file_components = file_components
-        @new_annotations = new_annotations
         @annotation_position = annotation_position
         @options = options
 
-        @new_wrapped_annotations = wrapped_content(new_annotations)
+        @new_wrapped_annotations = wrapped_content(@file_components.new_annotations)
       end
 
       def generate_content_with_new_annotations
