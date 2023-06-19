@@ -85,37 +85,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
       expect(File.read(model_file_name)).to eq("#{schema_info}#{file_content}")
     end
 
-    it "should not touch magic comments" do
-      AnnotateTestConstants::MAGIC_COMMENTS.each do |magic_comment|
-        write_model "user.rb", <<~EOS
-          #{magic_comment}
-          class User < ActiveRecord::Base
-          end
-        EOS
-
-        annotate_one_file position: :before
-
-        lines = magic_comment.split("\n")
-        File.open @model_file_name do |file|
-          lines.count.times do |index|
-            expect(file.readline).to eq "#{lines[index]}\n"
-          end
-        end
-      end
-    end
-
-    it "adds an empty line between magic comments and annotation (position :before)" do
-      content = "class User < ActiveRecord::Base\nend\n"
-      AnnotateTestConstants::MAGIC_COMMENTS.each do |magic_comment|
-        model_file_name, = write_model "user.rb", "#{magic_comment}\n#{content}"
-
-        annotate_one_file position: :before
-        schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass, options).build
-
-        expect(File.read(model_file_name)).to eq("#{magic_comment}\n\n#{schema_info}#{content}")
-      end
-    end
-
     it "only keeps a single empty line around the annotation (position :before)" do
       content = "class User < ActiveRecord::Base\nend\n"
       AnnotateTestConstants::MAGIC_COMMENTS.each do |magic_comment|

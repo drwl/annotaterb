@@ -273,6 +273,54 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileBuilder do
         is_expected.to eq(expected_content)
       end
     end
+
+    context "when file has magic comments" do
+      let(:magic_comment) { "# encoding: UTF-8" }
+
+      let(:file_components) do
+        file_content = <<~FILE
+          #{magic_comment}
+          class User < ApplicationRecord
+          end
+        FILE
+
+        new_annotations = <<~ANNOTATIONS
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+        ANNOTATIONS
+
+        AnnotateRb::ModelAnnotator::FileComponents.new(
+          file_content,
+          new_annotations,
+          options
+        )
+      end
+
+      let(:options) { AnnotateRb::Options.new({position_in_class: "before"}) }
+
+      let(:expected_content) do
+        <<~CONTENT
+          #{magic_comment}
+
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          class User < ApplicationRecord
+          end
+        CONTENT
+      end
+
+      it "returns the annotated file content with an empty line between magic comment and annotation" do
+        is_expected.to eq(expected_content)
+      end
+    end
   end
 
   describe "#update_existing_annotations" do
