@@ -206,5 +206,72 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileBuilder do
         is_expected.to eq(expected_content)
       end
     end
+
+    context "when the :wrapper_open option is specified" do
+      let(:options) { AnnotateRb::Options.new({position_in_class: "before", wrapper_open: "START"}) }
+
+      let(:expected_content) do
+        <<~CONTENT
+          # START
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          class User < ApplicationRecord
+          end
+        CONTENT
+      end
+
+      it "returns the annotated file content" do
+        is_expected.to eq(expected_content)
+      end
+    end
+
+    context "when the :wrapper_close option is specified" do
+      let(:options) { AnnotateRb::Options.new({position_in_class: "before", wrapper_close: "END"}) }
+
+      let(:expected_content) do
+        <<~CONTENT
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          # END
+          class User < ApplicationRecord
+          end
+        CONTENT
+      end
+
+      it "returns the annotated file content" do
+        is_expected.to eq(expected_content)
+      end
+    end
+
+    context "when both :wrapper_open and :wrapper_close are specified" do
+      let(:options) { AnnotateRb::Options.new({position_in_class: "before", wrapper_open: "START", wrapper_close: "END"}) }
+
+      let(:expected_content) do
+        <<~CONTENT
+          # START
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          # END
+          class User < ApplicationRecord
+          end
+        CONTENT
+      end
+
+      it "returns the annotated file content" do
+        is_expected.to eq(expected_content)
+      end
+    end
   end
 end

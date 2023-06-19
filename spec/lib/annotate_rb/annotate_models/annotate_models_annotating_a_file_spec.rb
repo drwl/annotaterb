@@ -21,11 +21,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
       @schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass, options).build
     end
 
-    it "should wrap annotation if wrapper is specified" do
-      annotate_one_file wrapper_open: "START", wrapper_close: "END"
-      expect(File.read(@model_file_name)).to eq("# START\n#{@schema_info}# END\n#{@file_content}")
-    end
-
     describe "with existing annotation" do
       context "of a foreign key" do
         before do
