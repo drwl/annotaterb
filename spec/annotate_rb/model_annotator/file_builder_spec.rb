@@ -320,6 +320,88 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileBuilder do
       it "returns the annotated file content with an empty line between magic comment and annotation" do
         is_expected.to eq(expected_content)
       end
+
+      context "when there are multiple line breaks between magic comment and the annotation" do
+        let(:file_components) do
+          file_content = <<~FILE
+            #{magic_comment}
+
+
+
+            class User < ApplicationRecord
+            end
+          FILE
+
+          new_annotations = <<~ANNOTATIONS
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+          ANNOTATIONS
+
+          AnnotateRb::ModelAnnotator::FileComponents.new(
+            file_content,
+            new_annotations,
+            options
+          )
+        end
+
+        it "only keeps a single empty line around the annotation" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context 'when there are multiple line breaks between magic comment and the annotation with position is "after"' do
+        let(:file_components) do
+          file_content = <<~FILE
+            #{magic_comment}
+
+
+            class User < ApplicationRecord
+            end
+          FILE
+
+          new_annotations = <<~ANNOTATIONS
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+          ANNOTATIONS
+
+          AnnotateRb::ModelAnnotator::FileComponents.new(
+            file_content,
+            new_annotations,
+            options
+          )
+        end
+
+        let(:options) { AnnotateRb::Options.new({position_in_class: "after"}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            #{magic_comment}
+
+
+            class User < ApplicationRecord
+            end
+
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+          CONTENT
+        end
+
+        it "does not change whitespace between magic comments and model file content" do
+          is_expected.to eq(expected_content)
+        end
+      end
     end
   end
 

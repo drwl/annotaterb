@@ -85,30 +85,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
       expect(File.read(model_file_name)).to eq("#{schema_info}#{file_content}")
     end
 
-    it "only keeps a single empty line around the annotation (position :before)" do
-      content = "class User < ActiveRecord::Base\nend\n"
-      AnnotateTestConstants::MAGIC_COMMENTS.each do |magic_comment|
-        schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass, options).build
-        model_file_name, = write_model "user.rb", "#{magic_comment}\n\n\n\n#{content}"
-
-        annotate_one_file position: :before
-
-        expect(File.read(model_file_name)).to eq("#{magic_comment}\n\n#{schema_info}#{content}")
-      end
-    end
-
-    it "does not change whitespace between magic comments and model file content (position :after)" do
-      content = "class User < ActiveRecord::Base\nend\n"
-      AnnotateTestConstants::MAGIC_COMMENTS.each do |magic_comment|
-        model_file_name, = write_model "user.rb", "#{magic_comment}\n#{content}"
-
-        annotate_one_file position: :after
-        schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass, options).build
-
-        expect(File.read(model_file_name)).to eq("#{magic_comment}\n#{content}\n#{schema_info}")
-      end
-    end
-
     describe "if a file can't be annotated" do
       before do
         allow(AnnotateRb::ModelAnnotator::ModelClassGetter).to receive(:get_loaded_model_by_path).with("user").and_return(nil)
