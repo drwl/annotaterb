@@ -123,151 +123,159 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
       end
     end
 
-    context "when option is not present" do
+    context "with primary key and normal columns" do
       let :options do
         AnnotateRb::Options.new({classified_sort: false})
       end
 
-      context 'when header is "Schema Info"' do
-        before do
-          stub_const("AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX", "Schema Info")
+      let :primary_key do
+        :id
+      end
+
+      let :columns do
+        [
+          mock_column("id", :integer, limit: 8),
+          mock_column("name", :string, limit: 50),
+          mock_column("notes", :text, limit: 55)
+        ]
+      end
+
+      let :expected_result do
+        <<~EOS
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id    :integer          not null, primary key
+          #  name  :string(50)       not null
+          #  notes :text(55)         not null
+          #
+        EOS
+      end
+
+      it "returns schema info" do
+        is_expected.to eq(expected_result)
+      end
+    end
+
+    context "with primary key and columns with default values" do
+      let :options do
+        AnnotateRb::Options.new({classified_sort: false})
+      end
+
+      let :primary_key do
+        :id
+      end
+
+      let :columns do
+        [
+          mock_column("id", :integer),
+          mock_column("size", :integer, default: 20),
+          mock_column("flag", :boolean, default: false)
+        ]
+      end
+
+      let :expected_result do
+        <<~EOS
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id   :integer          not null, primary key
+          #  size :integer          default(20), not null
+          #  flag :boolean          default(FALSE), not null
+          #
+        EOS
+      end
+
+      it "returns schema info" do
+        is_expected.to eq(expected_result)
+      end
+    end
+
+    context "with primary key and using globalize gem" do
+      let :options do
+        AnnotateRb::Options.new({classified_sort: false})
+      end
+
+      let :primary_key do
+        :id
+      end
+
+      let :translation_klass do
+        double("Post::Translation",
+          to_s: "Post::Translation",
+          columns: [
+            mock_column("id", :integer, limit: 8),
+            mock_column("post_id", :integer, limit: 8),
+            mock_column("locale", :string, limit: 50),
+            mock_column("title", :string, limit: 50)
+          ])
+      end
+
+      let :klass do
+        mock_class(:posts, primary_key, columns, indexes, foreign_keys).tap do |mock_klass|
+          allow(mock_klass).to receive(:translation_class).and_return(translation_klass)
         end
+      end
 
-        context "when the primary key is specified" do
-          context "when the primary_key is :id" do
-            let :primary_key do
-              :id
-            end
+      let :columns do
+        [
+          mock_column("id", :integer, limit: 8),
+          mock_column("author_name", :string, limit: 50)
+        ]
+      end
 
-            context "when columns are normal" do
-              let :columns do
-                [
-                  mock_column("id", :integer, limit: 8),
-                  mock_column("name", :string, limit: 50),
-                  mock_column("notes", :text, limit: 55)
-                ]
-              end
+      let :expected_result do
+        <<~EOS
+          # == Schema Information
+          #
+          # Table name: posts
+          #
+          #  id          :integer          not null, primary key
+          #  author_name :string(50)       not null
+          #  title       :string(50)       not null
+          #
+        EOS
+      end
 
-              let :expected_result do
-                <<~EOS
-                  # Schema Info
-                  #
-                  # Table name: users
-                  #
-                  #  id    :integer          not null, primary key
-                  #  name  :string(50)       not null
-                  #  notes :text(55)         not null
-                  #
-                EOS
-              end
+      it "returns schema info" do
+        is_expected.to eq(expected_result)
+      end
+    end
 
-              it "returns schema info" do
-                is_expected.to eq(expected_result)
-              end
-            end
+    context "with a composite primary key" do
+      let :options do
+        AnnotateRb::Options.new({classified_sort: false})
+      end
 
-            context "when columns have default values" do
-              let :columns do
-                [
-                  mock_column("id", :integer),
-                  mock_column("size", :integer, default: 20),
-                  mock_column("flag", :boolean, default: false)
-                ]
-              end
+      let :primary_key do
+        [:a_id, :b_id]
+      end
 
-              let :expected_result do
-                <<~EOS
-                  # Schema Info
-                  #
-                  # Table name: users
-                  #
-                  #  id   :integer          not null, primary key
-                  #  size :integer          default(20), not null
-                  #  flag :boolean          default(FALSE), not null
-                  #
-                EOS
-              end
+      let :columns do
+        [
+          mock_column("a_id", :integer),
+          mock_column("b_id", :integer),
+          mock_column("name", :string, limit: 50)
+        ]
+      end
 
-              it "returns schema info with default values" do
-                is_expected.to eq(expected_result)
-              end
-            end
+      let :expected_result do
+        <<~EOS
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  a_id :integer          not null, primary key
+          #  b_id :integer          not null, primary key
+          #  name :string(50)       not null
+          #
+        EOS
+      end
 
-            context "with Globalize gem" do
-              let :translation_klass do
-                double("Post::Translation",
-                  to_s: "Post::Translation",
-                  columns: [
-                    mock_column("id", :integer, limit: 8),
-                    mock_column("post_id", :integer, limit: 8),
-                    mock_column("locale", :string, limit: 50),
-                    mock_column("title", :string, limit: 50)
-                  ])
-              end
-
-              let :klass do
-                mock_class(:posts, primary_key, columns, indexes, foreign_keys).tap do |mock_klass|
-                  allow(mock_klass).to receive(:translation_class).and_return(translation_klass)
-                end
-              end
-
-              let :columns do
-                [
-                  mock_column("id", :integer, limit: 8),
-                  mock_column("author_name", :string, limit: 50)
-                ]
-              end
-
-              let :expected_result do
-                <<~EOS
-                  # Schema Info
-                  #
-                  # Table name: posts
-                  #
-                  #  id          :integer          not null, primary key
-                  #  author_name :string(50)       not null
-                  #  title       :string(50)       not null
-                  #
-                EOS
-              end
-
-              it "returns schema info" do
-                is_expected.to eq expected_result
-              end
-            end
-          end
-
-          context "when the primary key is an array (using composite_primary_keys)" do
-            let :primary_key do
-              [:a_id, :b_id]
-            end
-
-            let :columns do
-              [
-                mock_column("a_id", :integer),
-                mock_column("b_id", :integer),
-                mock_column("name", :string, limit: 50)
-              ]
-            end
-
-            let :expected_result do
-              <<~EOS
-                # Schema Info
-                #
-                # Table name: users
-                #
-                #  a_id :integer          not null, primary key
-                #  b_id :integer          not null, primary key
-                #  name :string(50)       not null
-                #
-              EOS
-            end
-
-            it "returns schema info" do
-              is_expected.to eq(expected_result)
-            end
-          end
-        end
+      it "returns schema info" do
+        is_expected.to eq(expected_result)
       end
     end
 
