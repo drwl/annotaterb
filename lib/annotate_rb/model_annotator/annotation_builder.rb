@@ -81,17 +81,6 @@ module AnnotateRb
         info.join("\n")
       end
 
-      def table_name
-        table_name = @model.table_name
-
-        if @options[:with_table_comments] && @model.has_table_comments?
-          table_comment = "(#{@model.table_comments.gsub(/\n/, "\\n")})"
-          table_name = "#{table_name}#{table_comment}"
-        end
-
-        table_name
-      end
-
       def schema_footer_text
         info = []
 
@@ -104,6 +93,19 @@ module AnnotateRb
         end
 
         info.join("\n")
+      end
+
+      private
+
+      def table_name
+        table_name = @model.table_name
+
+        if @options[:with_table_comments] && @model.has_table_comments?
+          table_comment = "(#{@model.table_comments.gsub(/\n/, "\\n")})"
+          table_name = "#{table_name}#{table_comment}"
+        end
+
+        table_name
       end
     end
   end
