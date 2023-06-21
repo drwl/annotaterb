@@ -107,7 +107,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
     context "with no primary key and normal columns" do
       let :options do
-        AnnotateRb::Options.new({classified_sort: false})
+        AnnotateRb::Options.new({})
       end
 
       let :primary_key do
@@ -140,7 +140,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
     context "with no primary key and with enum columns" do
       let :options do
-        AnnotateRb::Options.new({classified_sort: false})
+        AnnotateRb::Options.new({})
       end
 
       let :primary_key do
@@ -173,7 +173,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
     context "with no primary key and with unsigned columns" do
       let :options do
-        AnnotateRb::Options.new({classified_sort: false})
+        AnnotateRb::Options.new({})
       end
 
       let :primary_key do
@@ -214,7 +214,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
     context "with primary key and normal columns" do
       let :options do
-        AnnotateRb::Options.new({classified_sort: false})
+        AnnotateRb::Options.new({})
       end
 
       let :primary_key do
@@ -249,7 +249,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
     context "with primary key and columns with default values" do
       let :options do
-        AnnotateRb::Options.new({classified_sort: false})
+        AnnotateRb::Options.new({})
       end
 
       let :primary_key do
@@ -284,7 +284,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
     context "with primary key and using globalize gem" do
       let :options do
-        AnnotateRb::Options.new({classified_sort: false})
+        AnnotateRb::Options.new({})
       end
 
       let :primary_key do
@@ -335,7 +335,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
     context "with a composite primary key" do
       let :options do
-        AnnotateRb::Options.new({classified_sort: false})
+        AnnotateRb::Options.new({})
       end
 
       let :primary_key do
