@@ -19,7 +19,7 @@ module AnnotateRb
       end
 
       def build
-        @info = "# #{header}\n"
+        @info = "#{header}\n"
         @info += schema_header_text
 
         max_size = @model.max_schema_info_width
@@ -51,6 +51,7 @@ module AnnotateRb
 
       def header
         header = @options[:format_markdown] ? PREFIX_MD.dup : PREFIX.dup
+        header = "# #{header}"
         version = begin
           ActiveRecord::Migrator.current_version
         rescue
