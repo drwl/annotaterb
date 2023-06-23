@@ -552,5 +552,23 @@ module AnnotateRb # rubocop:disable Metrics/ModuleLength
         expect(result).to include(with_table_comments: false)
       end
     end
+
+    describe "--with-column-comments" do
+      let(:option) { "--with-column-comments" }
+      let(:args) { [option] }
+
+      it "sets with_column_comments to true" do
+        expect(result).to include(with_column_comments: true)
+      end
+    end
+
+    describe "--without-column-comments" do
+      let(:option) { "--without-column-comments" }
+      let(:args) { [option] }
+
+      it "sets with_column_comments to false" do
+        expect(result).to include(with_column_comments: false)
+      end
+    end
   end
 end
