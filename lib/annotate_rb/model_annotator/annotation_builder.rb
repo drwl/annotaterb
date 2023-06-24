@@ -99,8 +99,9 @@ module AnnotateRb
 
       def table_name
         table_name = @model.table_name
+        display_table_comments = @options[:with_comment] && @options[:with_table_comments]
 
-        if @options[:with_table_comments] && @model.has_table_comments?
+        if display_table_comments && @model.has_table_comments?
           table_comment = "(#{@model.table_comments.gsub(/\n/, "\\n")})"
           table_name = "#{table_name}#{table_comment}"
         end

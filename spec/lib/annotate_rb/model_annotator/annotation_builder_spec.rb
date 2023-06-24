@@ -2019,56 +2019,120 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
       end
     end
 
-    context "with `with_table_comments: true` and table has comments" do
-      let :options do
-        AnnotateRb::Options.new({with_table_comments: true})
+    context "with `with_comment: true`" do
+      context "with `with_table_comments: true` and table has comments" do
+        let :options do
+          AnnotateRb::Options.new({with_comment: true, with_table_comments: true})
+        end
+
+        let(:table_comment) { "table_comments" }
+
+        let(:expected_header) do
+          <<~HEADER
+            #
+            # Table name: users(table_comments)
+            #
+          HEADER
+        end
+
+        it "returns the header with the table comment" do
+          is_expected.to eq(expected_header)
+        end
       end
 
-      let(:table_comment) { "table_comments" }
+      context "with `with_table_comments: true` and table does not have comments" do
+        let :options do
+          AnnotateRb::Options.new({with_comment: true, with_table_comments: true})
+        end
 
-      let(:expected_header) do
-        <<~HEADER
-          #
-          # Table name: users(table_comments)
-          #
-        HEADER
+        let :klass do
+          primary_key = nil
+          columns = []
+          indexes = []
+          foreign_keys = []
+
+          mock_class(
+            :users,
+            primary_key,
+            columns,
+            indexes,
+            foreign_keys
+          )
+        end
+
+        let(:expected_header) do
+          <<~HEADER
+            #
+            # Table name: users
+            #
+          HEADER
+        end
+
+        it "returns the header without table comments" do
+          is_expected.to eq(expected_header)
+        end
       end
 
-      it "returns the header with the table comment" do
-        is_expected.to eq(expected_header)
+      context "with `with_table_comments: false` and table has comments" do
+        let :options do
+          AnnotateRb::Options.new({with_comment: true, with_table_comments: false})
+        end
+
+        let(:table_comment) { "table_comments" }
+
+        let(:expected_header) do
+          <<~HEADER
+            #
+            # Table name: users
+            #
+          HEADER
+        end
+
+        it "returns the header without the table comment" do
+          is_expected.to eq(expected_header)
+        end
       end
     end
 
-    context "with `with_table_comments: true` and table does not have comments" do
-      let :options do
-        AnnotateRb::Options.new({with_table_comments: true})
+    context "with `with_comment: false`" do
+      context "with `with_table_comments: true` and table has comments" do
+        let :options do
+          AnnotateRb::Options.new({with_comment: false, with_table_comments: true})
+        end
+
+        let(:table_comment) { "table_comments" }
+
+        let(:expected_header) do
+          <<~HEADER
+            #
+            # Table name: users
+            #
+          HEADER
+        end
+
+        it "returns the header without the table comment" do
+          is_expected.to eq(expected_header)
+        end
       end
 
-      let :klass do
-        primary_key = nil
-        columns = []
-        indexes = []
-        foreign_keys = []
+      context "with `with_table_comments: false` and table has comments" do
+        let :options do
+          AnnotateRb::Options.new({with_comment: false, with_table_comments: false})
+        end
 
-        mock_class(
-          :users,
-          primary_key,
-          columns,
-          indexes,
-          foreign_keys
-        )
-      end
+        let(:table_comment) { "table_comments" }
 
-      let(:expected_header) do
-        <<~HEADER
-          #
-          # Table name: users
-          #
-        HEADER
-      end
+        let(:expected_header) do
+          <<~HEADER
+            #
+            # Table name: users
+            #
+          HEADER
+        end
 
-      it "returns the header without table comments" do
-        is_expected.to eq(expected_header)
+        it "returns the header without the table comment" do
+          is_expected.to eq(expected_header)
+        end
       end
     end
   end
