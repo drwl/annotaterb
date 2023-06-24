@@ -45,7 +45,7 @@ RSpec.describe AnnotateRb::Options do
       end
 
       context 'when "with_comment" is false' do
-        let(:options) { {with_comment: false} }
+        let(:options) { {with_comment: false, with_column_comments: nil, with_table_comments: nil} }
 
         it 'sets "with_column_comments" and "with_table_comments"' do
           expect(subject[:with_comment]).to eq(false)
@@ -54,21 +54,21 @@ RSpec.describe AnnotateRb::Options do
         end
       end
 
-      context 'when "with_column_comments" and "with_comment" are set' do
-        let(:options) { {with_comment: false, with_column_comments: true} }
+      context 'when "with_column_comments" and "with_comment" set to true' do
+        let(:options) { {with_comment: true, with_column_comments: nil, with_table_comments: false} }
 
         it 'does not set "with_column_comments" to match "with_comment"' do
-          expect(subject[:with_comment]).to eq(false)
+          expect(subject[:with_comment]).to eq(true)
           expect(subject[:with_column_comments]).to eq(true)
           expect(subject[:with_table_comments]).to eq(false)
         end
       end
 
-      context 'when "with_table_comments" and "with_comment" are set' do
-        let(:options) { {with_comment: false, with_table_comments: true} }
+      context 'when "with_table_comments" and "with_comment" set to true' do
+        let(:options) { {with_comment: true, with_column_comments: false, with_table_comments: nil} }
 
         it 'does not set "with_table_comments" to match "with_comment"' do
-          expect(subject[:with_comment]).to eq(false)
+          expect(subject[:with_comment]).to eq(true)
           expect(subject[:with_column_comments]).to eq(false)
           expect(subject[:with_table_comments]).to eq(true)
         end

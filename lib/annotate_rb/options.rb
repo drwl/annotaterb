@@ -192,8 +192,8 @@ module AnnotateRb
       @options[:wrapper_close] ||= @options[:wrapper]
 
       # Set column and table comments to default to :with_comment, if not set
-      @options[:with_column_comments] ||= @options[:with_comment]
-      @options[:with_table_comments] ||= @options[:with_comment]
+      @options[:with_column_comments] = @options[:with_comment] if @options[:with_column_comments].nil?
+      @options[:with_table_comments] = @options[:with_comment] if @options[:with_table_comments].nil?
 
       self
     end
