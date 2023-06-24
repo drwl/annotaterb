@@ -1319,7 +1319,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
       end
 
       let :options do
-        AnnotateRb::Options.new({classified_sort: false, with_comment: true})
+        AnnotateRb::Options.new({classified_sort: false, with_comment: true, with_column_comments: true})
       end
 
       let :columns do
@@ -1358,7 +1358,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
       end
 
       let :options do
-        AnnotateRb::Options.new({classified_sort: false, with_comment: true})
+        AnnotateRb::Options.new({classified_sort: false, with_comment: true, with_column_comments: true})
       end
 
       let :columns do
@@ -1405,7 +1405,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
       end
 
       let :options do
-        AnnotateRb::Options.new({classified_sort: false, with_comment: true})
+        AnnotateRb::Options.new({classified_sort: false, with_comment: true, with_column_comments: true})
       end
 
       let :columns do
@@ -1851,7 +1851,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
       end
 
       let :options do
-        {format_rdoc: true, with_comment: true}
+        {format_rdoc: true, with_comment: true, with_column_comments: true}
       end
 
       let :columns do
@@ -1899,7 +1899,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
       end
 
       let :options do
-        {format_markdown: true, with_comment: true}
+        {format_markdown: true, with_comment: true, with_column_comments: true}
       end
 
       let :columns do

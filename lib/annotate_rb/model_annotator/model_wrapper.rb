@@ -119,8 +119,7 @@ module AnnotateRb
       end
 
       def with_comments?
-        @with_comments ||= @options[:with_comment] &&
-          raw_columns.first.respond_to?(:comment) &&
+        @with_comments ||= raw_columns.first.respond_to?(:comment) &&
           raw_columns.map(&:comment).any? { |comment| !comment.nil? }
       end
 

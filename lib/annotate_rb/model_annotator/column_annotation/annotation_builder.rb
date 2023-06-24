@@ -26,7 +26,8 @@ module AnnotateRb
           column_attributes = AttributesBuilder.new(@column, @options, is_primary_key, column_indices, column_defaults).build
           formatted_column_type = TypeBuilder.new(@column, @options, column_defaults).build
 
-          col_name = if @model.with_comments? && @column.comment
+          display_column_comments = @options[:with_comment] && @options[:with_column_comments]
+          col_name = if display_column_comments && @model.with_comments? && @column.comment
             "#{@column.name}(#{@column.comment.gsub(/\n/, '\\n')})"
           else
             @column.name
