@@ -1,5 +1,18 @@
 # Changelog
 
+## [v4.4.0](https://github.com/drwl/annotaterb/tree/v4.4.0) (2023-06-24)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.3.1...v4.4.0)
+
+**Merged pull requests:**
+
+- Bump version to v4.4.0 [\#52](https://github.com/drwl/annotaterb/pull/52) ([drwl](https://github.com/drwl))
+- Flatten tests in `annotation_builder_spec.rb` [\#51](https://github.com/drwl/annotaterb/pull/51) ([drwl](https://github.com/drwl))
+- Add support for table comments [\#50](https://github.com/drwl/annotaterb/pull/50) ([drwl](https://github.com/drwl))
+- Improve some model annotator tests [\#49](https://github.com/drwl/annotaterb/pull/49) ([drwl](https://github.com/drwl))
+- Make tests that use `mock_column` more accurate [\#48](https://github.com/drwl/annotaterb/pull/48) ([drwl](https://github.com/drwl))
+- Generate changelog for v4.3.1 [\#47](https://github.com/drwl/annotaterb/pull/47) ([drwl](https://github.com/drwl))
+
 ## [v4.3.1](https://github.com/drwl/annotaterb/tree/v4.3.1) (2023-06-15)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.3.0...v4.3.1)
