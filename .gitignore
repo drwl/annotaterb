@@ -16,3 +16,4 @@
 /spec/debug.log
 .byebug_history
 .rspec_status
+/spec/test_app/log/
