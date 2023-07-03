@@ -9,8 +9,6 @@ require "byebug"
 require "bigdecimal"
 require "tmpdir"
 
-require "annotate_rb/active_record_patch"
-
 require "annotate_rb"
 
 # Requires supporting files with custom matchers and macros, etc,
