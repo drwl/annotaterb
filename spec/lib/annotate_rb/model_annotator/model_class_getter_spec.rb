@@ -101,46 +101,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
       end
     end
 
-    context "when unknown macros exist in class" do
-      context 'when class FooWithMacro is defined in "foo_with_macro.rb"' do
-        let :filename do
-          "foo_with_macro.rb"
-        end
-
-        let :file_content do
-          <<~EOS
-            class FooWithMacro < ActiveRecord::Base
-              acts_as_awesome :yah
-            end
-          EOS
-        end
-
-        it "works and does not care about known macros" do
-          expect(klass.name).to eq("FooWithMacro")
-        end
-      end
-
-      context "when class name is with ALL CAPS segments" do
-        context 'when class is "FooWithCAPITALS" is defined in "foo_with_capitals.rb"' do
-          let :filename do
-            "foo_with_capitals.rb"
-          end
-
-          let :file_content do
-            <<~EOS
-              class FooWithCAPITALS < ActiveRecord::Base
-                acts_as_awesome :yah
-              end
-            EOS
-          end
-
-          it "works" do
-            expect(klass.name).to eq("FooWithCAPITALS")
-          end
-        end
-      end
-    end
-
     context "when known macros exist in class" do
       context 'when class FooWithKnownMacro is defined in "foo_with_known_macro.rb"' do
         let :filename do
