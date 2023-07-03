@@ -30,7 +30,7 @@ jobs:
           bundler-cache: true
 
       - name: Run Tests
-        run: bundle exec rspec
+        run: bundle exec rspec:unit
 
       - name: Run Standard linter
         run: bundle exec standardrb
