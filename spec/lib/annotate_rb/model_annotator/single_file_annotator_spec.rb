@@ -97,6 +97,109 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
     end
 
+    describe 'annotating a file with existing annotations (position: after) using position: "before" and force: false' do
+      let(:options) { AnnotateRb::Options.new({position_in_class: "before", force: false}) }
+      let(:schema_info) do
+        <<~SCHEMA
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #  name :string(50)       not null
+          #
+        SCHEMA
+      end
+      let(:starting_file_content) do
+        <<~FILE
+          class User < ApplicationRecord
+          end
+
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+        FILE
+      end
+      let(:expected_file_content) do
+        <<~FILE
+          class User < ApplicationRecord
+          end
+
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #  name :string(50)       not null
+          #
+        FILE
+      end
+
+      before do
+        @model_dir = Dir.mktmpdir("annotaterb")
+        (@model_file_name, _file_content) = write_model("user.rb", starting_file_content)
+      end
+
+      it "updates the annotations without changing the position" do
+        AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
+        expect(File.read(@model_file_name)).to eq(expected_file_content)
+      end
+    end
+
+    describe 'annotating a file with existing annotations (position: after) using position: "before" and force: true' do
+      let(:options) { AnnotateRb::Options.new({position_in_class: "before", force: true}) }
+      let(:schema_info) do
+        <<~SCHEMA
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #  name :string(50)       not null
+          #
+        SCHEMA
+      end
+      let(:starting_file_content) do
+        <<~FILE
+          class User < ApplicationRecord
+          end
+
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+        FILE
+      end
+      let(:expected_file_content) do
+        <<~FILE
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #  name :string(50)       not null
+          #
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      before do
+        @model_dir = Dir.mktmpdir("annotaterb")
+        (@model_file_name, _file_content) = write_model("user.rb", starting_file_content)
+      end
+
+      it "replaces the annotations using the new position" do
+        AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
+        expect(File.read(@model_file_name)).to eq(expected_file_content)
+      end
+    end
+
     describe "annotating a file with old annotations and magic comments" do
       let(:options) { AnnotateRb::Options.new({}) }
       let(:schema_info) do
@@ -201,8 +304,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
             # Having `comment: nil` for id column is the "correct" test setup
             # Only MySQL and PostgreSQL adapters support comments AND ModelWrapper#with_comments?
             # expects the first column to respond to `comment` method before checking the rest.
-            mock_column(:id, :integer, comment: nil),
-            mock_column(:name, :string, limit: 50, comment: "[sensitivity: medium]")
+            mock_column("id", :integer, comment: nil),
+            mock_column("name", :string, limit: 50, comment: "[sensitivity: medium]")
           ])
       end
 

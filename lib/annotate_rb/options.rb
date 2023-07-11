@@ -51,7 +51,9 @@ module AnnotateRb
       sort: false, # ModelAnnotator
       timestamp: false, # RouteAnnotator
       trace: false, # ModelAnnotator, but is part of Core
-      with_comment: true # ModelAnnotator
+      with_comment: true, # ModelAnnotator
+      with_column_comments: nil, # ModelAnnotator
+      with_table_comments: nil # ModelAnnotator
     }.freeze
 
     OTHER_OPTIONS = {
@@ -113,7 +115,9 @@ module AnnotateRb
       :sort,
       :timestamp,
       :trace,
-      :with_comment
+      :with_comment,
+      :with_column_comments,
+      :with_table_comments
     ].freeze
 
     OTHER_OPTION_KEYS = [
@@ -186,6 +190,10 @@ module AnnotateRb
       # Set wrapper to default to :wrapper
       @options[:wrapper_open] ||= @options[:wrapper]
       @options[:wrapper_close] ||= @options[:wrapper]
+
+      # Set column and table comments to default to :with_comment, if not set
+      @options[:with_column_comments] = @options[:with_comment] if @options[:with_column_comments].nil?
+      @options[:with_table_comments] = @options[:with_comment] if @options[:with_table_comments].nil?
 
       self
     end

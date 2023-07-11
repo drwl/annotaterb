@@ -8,8 +8,9 @@ module AnnotateRb
         # Example: show "integer" instead of "integer(4)"
         NO_LIMIT_COL_TYPES = %w[integer bigint boolean].freeze
 
-        def initialize(column, options)
-          @column = ColumnWrapper.new(column)
+        def initialize(column, options, column_defaults)
+          # Passing `column_defaults` for posterity, don't actually need it here since it's not used
+          @column = ColumnWrapper.new(column, column_defaults)
           @options = options
         end
 

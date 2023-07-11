@@ -43,9 +43,33 @@ module AnnotateTestHelpers
       supports_foreign_keys?: true)
   end
 
+  def mock_connection_with_table_fields(indexes, foreign_keys, table_exists, table_comment)
+    double("Conn with table fields",
+      indexes: indexes,
+      foreign_keys: foreign_keys,
+      supports_foreign_keys?: true,
+      table_exists?: table_exists,
+      table_comment: table_comment)
+  end
+
   def mock_class(table_name, primary_key, columns, indexes = [], foreign_keys = [])
     options = {
       connection: mock_connection(indexes, foreign_keys),
+      table_exists?: true,
+      table_name: table_name,
+      primary_key: primary_key,
+      column_names: columns.map { |col| col.name.to_s },
+      columns: columns,
+      column_defaults: columns.map { |col| [col.name, col.default] }.to_h,
+      table_name_prefix: ""
+    }
+
+    double("An ActiveRecord class", options)
+  end
+
+  def mock_class_with_custom_connection(table_name, primary_key, columns, connection)
+    options = {
+      connection: connection,
       table_exists?: true,
       table_name: table_name,
       primary_key: primary_key,

@@ -217,6 +217,31 @@ module AnnotateRb
         "include database comments in model annotations") do
         @options[:with_comment] = true
       end
+
+      option_parser.on("--without-comment",
+        "include database comments in model annotations") do
+        @options[:with_comment] = false
+      end
+
+      option_parser.on("--with-column-comments",
+        "include column comments in model annotations") do
+        @options[:with_column_comments] = true
+      end
+
+      option_parser.on("--without-column-comments",
+        "exclude column comments in model annotations") do
+        @options[:with_column_comments] = false
+      end
+
+      option_parser.on("--with-table-comments",
+        "include table comments in model annotations") do
+        @options[:with_table_comments] = true
+      end
+
+      option_parser.on("--without-table-comments",
+        "exclude table comments in model annotations") do
+        @options[:with_table_comments] = false
+      end
     end
 
     def add_route_options_to_parser(option_parser)
