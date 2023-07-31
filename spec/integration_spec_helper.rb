@@ -16,3 +16,9 @@ ActiveRecord::Migrator.migrations_paths = ActiveRecord::Tasks::DatabaseTasks.mig
 ActiveRecord::Tasks::DatabaseTasks.drop_current
 ActiveRecord::Tasks::DatabaseTasks.create_current
 ActiveRecord::Tasks::DatabaseTasks.migrate
+
+require 'aruba/rspec'
+
+Aruba.configure do |config|
+  config.allow_absolute_paths = true
+end
