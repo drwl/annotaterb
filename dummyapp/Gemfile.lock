@@ -116,13 +116,15 @@ GEM
     nio4r (2.5.9)
     nokogiri (1.14.3-arm64-darwin)
       racc (~> 1.4)
+    nokogiri (1.14.3-x86_64-linux)
+      racc (~> 1.4)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
     pry-byebug (3.10.1)
       byebug (~> 11.0)
       pry (>= 0.13, < 0.15)
-    puma (5.6.5)
+    puma (6.3.1)
       nio4r (~> 2.0)
     racc (1.6.2)
     rack (2.2.7)
@@ -158,6 +160,7 @@ GEM
     reline (0.3.3)
       io-console (~> 0.5)
     sqlite3 (1.6.2-arm64-darwin)
+    sqlite3 (1.6.2-x86_64-linux)
     thor (1.2.1)
     timeout (0.3.2)
     tzinfo (2.0.6)
@@ -174,6 +177,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-22
+  x86_64-linux
 
 DEPENDENCIES
   annotaterb!
@@ -181,7 +185,7 @@ DEPENDENCIES
   debug
   pry
   pry-byebug
-  puma (~> 5.0)
+  puma (~> 6.3)
   rails (~> 7.0.4, >= 7.0.4.2)
   sqlite3 (~> 1.4)
   tzinfo-data
