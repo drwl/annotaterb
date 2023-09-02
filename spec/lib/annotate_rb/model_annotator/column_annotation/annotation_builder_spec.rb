@@ -54,6 +54,30 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
         end
       end
 
+      context "when the column is an array of strings (postgres)" do
+        let(:column) { mock_column("notifications", :string, default: "{}", array: true, null: true) }
+        let(:model) do
+          instance_double(
+            AnnotateRb::ModelAnnotator::ModelWrapper,
+            primary_key: "something_else",
+            retrieve_indexes_from_table: [],
+            with_comments?: false,
+            column_defaults: {
+              "notifications" => ["something"]
+            }
+          )
+        end
+        let(:expected_result) do
+          <<~COLUMN
+            #  notifications   :string           default(["something"]), is an Array
+          COLUMN
+        end
+
+        it "returns the column annotation" do
+          is_expected.to eq(expected_result)
+        end
+      end
+
       context "when the column has a comment" do
         let(:max_size) { 20 }
 
