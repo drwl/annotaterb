@@ -65,5 +65,19 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::ColumnWrapper do
         is_expected.to eq(["1.2"])
       end
     end
+
+    context "when the value is a string" do
+      let(:value) { "some_string" }
+      it "returns the string as is" do
+        is_expected.to eq(value)
+      end
+    end
+
+    context "when the value is an array of strings" do
+      let(:value) { ["newsletter"] }
+      it "returns an array of strings unescaped" do
+        is_expected.to eq(value)
+      end
+    end
   end
 end
