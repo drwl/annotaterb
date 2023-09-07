@@ -6,8 +6,16 @@ ruby "2.7.5"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.7", ">= 7.0.7.2"
 
-# Use sqlite3 as the database for Active Record
-gem "sqlite3", "~> 1.4"
+case ENV['DATABASE_ADAPTER'] # This feels so wrong
+when 'mysql2'
+  gem 'mysql2', '>= 0.5', '< 1'
+when 'pg'
+  gem 'pg', '>= 1.5', '< 2'
+when 'sqlite3'
+  gem 'sqlite3', '>= 1.6', '< 2'
+else
+  raise 'The environment variable DATABASE_ADAPTER must be one of mysql2, pg, or sqlite3'
+end
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
