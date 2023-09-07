@@ -62,7 +62,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::ColumnWrapper do
     context "when the value is an array" do
       let(:value) { [BigDecimal("1.2")] }
       it "returns an array of which elements are converted to string" do
-        is_expected.to eq(["1.2"])
+        is_expected.to eq("[1.2]")
       end
     end
   end
