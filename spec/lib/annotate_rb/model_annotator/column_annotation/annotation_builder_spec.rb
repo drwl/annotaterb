@@ -117,7 +117,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
         end
         let(:expected_result) do
           <<~COLUMN
-            #  notifications   :string           default(\"alert\")
+            #  notifications   :string           default("alert")
           COLUMN
         end
 
