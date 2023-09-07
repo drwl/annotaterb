@@ -18,4 +18,6 @@
 .rspec_status
 /spec/test_app/log/
 /spec/dummyapp/log/
+/spec/dummyapp/db/schema.rb
+/spec/dummyapp/db/development.sqlite3
 /tmp/*
