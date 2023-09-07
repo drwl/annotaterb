@@ -7,6 +7,7 @@ module AnnotateRb
       autoload :TypeBuilder, "annotate_rb/model_annotator/column_annotation/type_builder"
       autoload :ColumnWrapper, "annotate_rb/model_annotator/column_annotation/column_wrapper"
       autoload :AnnotationBuilder, "annotate_rb/model_annotator/column_annotation/annotation_builder"
+      autoload :QuotedDefaultValueBuilder, "annotate_rb/model_annotator/column_annotation/quoted_default_value_builder"
     end
   end
 end
