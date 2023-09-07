@@ -3,13 +3,19 @@
 module AnnotateRb
   module ModelAnnotator
     module ColumnAnnotation
-      class QuotedDefaultValueBuilder
+      class DefaultValueBuilder
         def initialize(value)
           @value = value
         end
 
         # @return [String]
-        # Returns the value in escaped quoted String, to get written to file by file.puts.
+        # Returns the value to get written to file by file.puts. Strings get written to file so escaped quoted strings
+        # get written as quoted. For example, if `value: "\"some_string\""` then "some_string" gets written.
+        # Same with arrays, if `value: "[\"a\", \"b\", \"c\"]"` then `["a", "b", "c"]` gets written.
+        #
+        # @example "\"some_string\""
+        # @example "NULL"
+        # @example "1.2"
         def build
           quote(@value)
         end

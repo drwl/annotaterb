@@ -88,7 +88,7 @@ module AnnotateRb
 
         # Simple quoting for the default column value
         def quote(value)
-          QuotedDefaultValueBuilder.new(value).build
+          DefaultValueBuilder.new(value).build
         end
       end
     end
