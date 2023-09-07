@@ -17,4 +17,5 @@
 .byebug_history
 .rspec_status
 /spec/test_app/log/
+/spec/dummyapp/log/
 /tmp/*
