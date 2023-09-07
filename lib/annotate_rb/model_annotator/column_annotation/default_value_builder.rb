@@ -17,7 +17,11 @@ module AnnotateRb
         # @example "NULL"
         # @example "1.2"
         def build
-          quote(@value)
+          if @value.is_a?(Array)
+            quote_array(@value)
+          else
+            quote(@value)
+          end
         end
 
         private
@@ -30,10 +34,15 @@ module AnnotateRb
           when Float, Integer then value.to_s
           # BigDecimals need to be output in a non-normalized form and quoted.
           when BigDecimal then value.to_s("F")
-          when Array then value.map { |v| quote(v) }
+          when String then value.inspect
           else
-            value.inspect
+            value.to_s
           end
+        end
+
+        def quote_array(value)
+          content = value.map { |v| quote(v) }.join(", ")
+          "[" + content + "]"
         end
       end
     end
