@@ -4,8 +4,8 @@
 #
 # Table name: test_null_falses
 #
-#  id         :bigint           not null, primary key
-#  binary     :binary(65535)    not null
+#  id         :integer          not null, primary key
+#  binary     :binary           not null
 #  boolean    :boolean          not null
 #  date       :date             not null
 #  datetime   :datetime         not null
@@ -13,7 +13,7 @@
 #  float      :float            not null
 #  integer    :integer          not null
 #  string     :string           not null
-#  text       :text(65535)      not null
+#  text       :text             not null
 #  timestamp  :datetime         not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

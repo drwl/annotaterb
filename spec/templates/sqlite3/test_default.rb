@@ -4,7 +4,7 @@
 #
 # Table name: test_defaults
 #
-#  id         :bigint           not null, primary key
+#  id         :integer          not null, primary key
 #  boolean    :boolean          default(FALSE)
 #  date       :date             default(Tue, 04 Jul 2023)
 #  datetime   :datetime         default(Tue, 04 Jul 2023 12:34:56.000000000 UTC +00:00)
