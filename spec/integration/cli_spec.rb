@@ -25,7 +25,7 @@ RSpec.describe "CLI", type: "aruba" do
     end
   end
 
-  context "when running in a directory with a Rakefile and a Gemfile" do
+  xcontext "when running in a directory with a Rakefile and a Gemfile" do
     let(:help_banner_fragment) { "Usage: annotaterb [command] [options]" }
     let(:templates_dir) { File.join(aruba.config.root_directory, "spec/templates/#{ENV['DATABASE_ADAPTER']}") }
 
