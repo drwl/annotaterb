@@ -20,11 +20,4 @@ group :development, :test do
   end
 end
 
-group :test do
-  gem 'mysql2', '>= 0.5', '< 1', require: false
-  gem 'pg', '>= 1.5', '< 2', require: false
-  gem 'rails', '>= 6.1', '< 7.1', require: false
-  gem 'sqlite3', '>= 1.6', '< 2', require: false
-end
-
 gemspec
