@@ -1,3 +1,8 @@
+PATH
+  remote: ../..
+  specs:
+    annotaterb (4.4.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -168,6 +173,7 @@ PLATFORMS
   arm64-darwin-22
 
 DEPENDENCIES
+  annotaterb!
   debug
   puma (~> 5.0)
   rails (~> 7.0.7, >= 7.0.7.2)
