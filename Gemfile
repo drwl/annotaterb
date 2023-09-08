@@ -1,5 +1,6 @@
+# frozen_string_literal: true
+
 source "https://rubygems.org"
-gemspec
 
 gem "activerecord", require: false
 gem "rake"
@@ -18,3 +19,5 @@ group :development, :test do
     gem "pry-byebug", require: false
   end
 end
+
+gemspec

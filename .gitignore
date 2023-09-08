@@ -16,3 +16,8 @@
 /spec/debug.log
 .byebug_history
 .rspec_status
+/spec/dummyapp/Gemfile.lock
+/spec/dummyapp/log/
+/spec/dummyapp/db/schema.rb
+/spec/dummyapp/db/development.sqlite3
+/tmp/*
