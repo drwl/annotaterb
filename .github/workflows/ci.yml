@@ -37,6 +37,7 @@ jobs:
         run: |
           sudo systemctl start postgresql.service
           sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'root'"
+#          https://github.com/actions/runner-images/issues/7678
 
       - name: Run Unit tests
         run: bundle exec rake spec:unit
