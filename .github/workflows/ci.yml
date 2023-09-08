@@ -17,6 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        adapter: ['mysql2', 'pg', 'sqlite3']
         ruby: ['2.7', '3.0', '3.1', '3.2']
 
     steps:
@@ -29,8 +30,33 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
 
-      - name: Run Tests
+      - name: Start MySQL
+        run: sudo systemctl start mysql.service
+
+      - name: Start and setup Postgres
+        run: |
+          sudo systemctl start postgresql.service
+          sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'root'"
+
+      - name: Run Unit tests
         run: bundle exec rake spec:unit
+
+      - name: Install dummyapp dependencies
+        run: bundle install
+        working-directory: spec/dummyapp
+        env:
+          DATABASE_ADAPTER: ${{ matrix.adapter }}
+
+      - name: Run dummyapp migrations
+        run: bin/rails db:create && bin/rails db:migrate
+        working-directory: spec/dummyapp
+        env:
+          DATABASE_ADAPTER: ${{ matrix.adapter }}
+
+      - name: Run Integration tests
+        run: bundle exec rake spec:integration
+        env:
+          DATABASE_ADAPTER: ${{ matrix.adapter }}
 
       - name: Run Standard linter
         run: bundle exec standardrb
