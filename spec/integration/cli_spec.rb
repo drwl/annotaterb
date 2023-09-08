@@ -32,7 +32,7 @@ RSpec.describe "CLI", type: "aruba" do
 
   context "when running in a directory with a Rakefile and a Gemfile" do
     let(:help_banner_fragment) { "Usage: annotaterb [command] [options]" }
-    let(:templates_dir) { File.join(aruba.config.root_directory, "spec/templates/#{ENV["DATABASE_ADAPTER"]}") }
+    let(:templates_dir) { File.join(aruba.config.root_directory, "spec/templates/#{IntegrationTestHelper.ruby_version}/#{ENV["DATABASE_ADAPTER"]}") }
 
     it "outputs the help message" do
       _cmd = run_command("bundle exec annotaterb", fail_on_error: true, exit_timeout: command_timeout_seconds)
