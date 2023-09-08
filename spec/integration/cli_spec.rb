@@ -42,19 +42,19 @@ RSpec.describe "CLI", type: "aruba" do
     end
 
     it "annotates files that have not been annotated" do
-      expected_test_default = read(File.join(templates_dir, "test_default.rb"))
-      expected_test_null_false = read(File.join(templates_dir, "test_null_false.rb"))
+      expected_test_default = read(File.join(templates_dir, "test_default.rb")).join("\n")
+      expected_test_null_false = read(File.join(templates_dir, "test_null_false.rb")).join("\n")
 
-      original_test_default = read(File.join(models_dir, "test_default.rb"))
-      original_test_null_false = read(File.join(models_dir, "test_null_false.rb"))
+      original_test_default = read(File.join(models_dir, "test_default.rb")).join("\n")
+      original_test_null_false = read(File.join(models_dir, "test_null_false.rb")).join("\n")
 
       expect(expected_test_default).not_to eq(original_test_default)
       expect(expected_test_null_false).not_to eq(original_test_null_false)
 
       _cmd = run_command_and_stop("bundle exec annotaterb models", fail_on_error: true, exit_timeout: command_timeout_seconds)
 
-      annotated_test_default = read(File.join(models_dir, "test_default.rb"))
-      annotated_test_null_false = read(File.join(models_dir, "test_null_false.rb"))
+      annotated_test_default = read(File.join(models_dir, "test_default.rb")).join("\n")
+      annotated_test_null_false = read(File.join(models_dir, "test_null_false.rb")).join("\n")
 
       expect(last_command_started).to be_successfully_executed
       expect(expected_test_default).to eq(annotated_test_default)
