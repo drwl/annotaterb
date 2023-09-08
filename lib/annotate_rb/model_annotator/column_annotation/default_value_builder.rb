@@ -36,7 +36,7 @@ module AnnotateRb
           when BigDecimal then value.to_s("F")
           when String then value.inspect
           else
-            value.to_s
+            value.inspect
           end
         end
 
