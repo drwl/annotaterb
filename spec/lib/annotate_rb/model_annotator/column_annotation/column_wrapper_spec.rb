@@ -4,8 +4,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::ColumnWrapper do
   include AnnotateTestHelpers
 
   describe "#default_string" do
-    subject { described_class.new(column).default_string }
-    let(:column) { mock_column(nil, nil, default: value) }
+    subject { described_class.new(column, column_defaults).default_string }
+    let(:column) { mock_column("field", nil, default: value) }
+    let(:column_defaults) { {"field" => value} }
 
     context "when the value is nil" do
       let(:value) { nil }
@@ -61,7 +62,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::ColumnWrapper do
     context "when the value is an array" do
       let(:value) { [BigDecimal("1.2")] }
       it "returns an array of which elements are converted to string" do
-        is_expected.to eq(["1.2"])
+        is_expected.to eq("[1.2]")
       end
     end
   end

@@ -12,14 +12,14 @@ module AnnotateRb
       MD_NAMES_OVERHEAD = 6
       MD_TYPE_ALLOWANCE = 18
 
-      def initialize(klass, options = {})
+      def initialize(klass, options)
         @model = ModelWrapper.new(klass, options)
         @options = options
         @info = "" # TODO: Make array and build string that way
       end
 
       def build
-        @info = "# #{header}\n"
+        @info = "#{header}\n"
         @info += schema_header_text
 
         max_size = @model.max_schema_info_width
@@ -51,6 +51,7 @@ module AnnotateRb
 
       def header
         header = @options[:format_markdown] ? PREFIX_MD.dup : PREFIX.dup
+        header = "# #{header}"
         version = begin
           ActiveRecord::Migrator.current_version
         rescue
@@ -69,11 +70,11 @@ module AnnotateRb
         info << "#"
 
         if @options[:format_markdown]
-          info << "# Table name: `#{@model.table_name}`"
+          info << "# Table name: `#{table_name}`"
           info << "#"
           info << "# ### Columns"
         else
-          info << "# Table name: #{@model.table_name}"
+          info << "# Table name: #{table_name}"
         end
         info << "#\n" # We want the last line break
 
@@ -92,6 +93,20 @@ module AnnotateRb
         end
 
         info.join("\n")
+      end
+
+      private
+
+      def table_name
+        table_name = @model.table_name
+        display_table_comments = @options[:with_comment] && @options[:with_table_comments]
+
+        if display_table_comments && @model.has_table_comments?
+          table_comment = "(#{@model.table_comments.gsub(/\n/, "\\n")})"
+          table_name = "#{table_name}#{table_comment}"
+        end
+
+        table_name
       end
     end
   end

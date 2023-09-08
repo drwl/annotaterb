@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 source "https://rubygems.org"
-gemspec
 
 gem "activerecord", require: false
 gem "rake"
 gem "rspec"
 
 group :development, :test do
+  gem "aruba", "~> 2.1.0", require: false
   gem "byebug"
   gem "guard-rspec", require: false
 
-  gem "standard"
+  gem "standard", "~> 1.29.0"
   gem "terminal-notifier-guard", require: false
 
   platforms :mri, :mingw do
@@ -18,6 +20,4 @@ group :development, :test do
   end
 end
 
-group :test do
-  gem "git", require: false
-end
+gemspec

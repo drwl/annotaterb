@@ -21,41 +21,26 @@ module AnnotateRb
 
           table_indices = @model.retrieve_indexes_from_table
           column_indices = table_indices.select { |ind| ind.columns.include?(@column.name) }
+          column_defaults = @model.column_defaults
 
-          column_attributes = AttributesBuilder.new(@column, @options, is_primary_key, column_indices).build
-          formatted_column_type = TypeBuilder.new(@column, @options).build
+          column_attributes = AttributesBuilder.new(@column, @options, is_primary_key, column_indices, column_defaults).build
+          formatted_column_type = TypeBuilder.new(@column, @options, column_defaults).build
 
-          col_name = if @model.with_comments? && @column.comment
+          display_column_comments = @options[:with_comment] && @options[:with_column_comments]
+          col_name = if display_column_comments && @model.with_comments? && @column.comment
             "#{@column.name}(#{@column.comment.gsub(/\n/, '\\n')})"
           else
             @column.name
           end
 
-          if @options[:format_rdoc]
-            result += format("# %-#{@max_size}.#{@max_size}s<tt>%s</tt>",
-              "*#{col_name}*::",
-              column_attributes.unshift(formatted_column_type).join(", ")).rstrip + "\n"
+          result += if @options[:format_rdoc]
+            format_rdoc(col_name, @max_size, formatted_column_type, column_attributes)
           elsif @options[:format_yard]
-            result += sprintf("# @!attribute #{col_name}") + "\n"
-
-            ruby_class = if @column.respond_to?(:array) && @column.array
-              "Array<#{map_col_type_to_ruby_classes(formatted_column_type)}>"
-            else
-              map_col_type_to_ruby_classes(formatted_column_type)
-            end
-
-            result += sprintf("#   @return [#{ruby_class}]") + "\n"
+            format_yard(col_name, @max_size, formatted_column_type, column_attributes)
           elsif @options[:format_markdown]
-            name_remainder = @max_size - col_name.length - non_ascii_length(col_name)
-            type_remainder = (MD_TYPE_ALLOWANCE - 2) - formatted_column_type.length
-            result += format("# **`%s`**%#{name_remainder}s | `%s`%#{type_remainder}s | `%s`",
-              col_name,
-              " ",
-              formatted_column_type,
-              " ",
-              column_attributes.join(", ").rstrip).gsub("``", "  ").rstrip + "\n"
+            format_markdown(col_name, @max_size, formatted_column_type, column_attributes)
           else
-            result += format_default(col_name, @max_size, formatted_column_type, column_attributes)
+            format_default(col_name, @max_size, formatted_column_type, column_attributes)
           end
 
           result
@@ -90,11 +75,44 @@ module AnnotateRb
           end
         end
 
-        def format_default(col_name, max_size, col_type, attrs)
+        def format_rdoc(col_name, max_size, formatted_column_type, column_attributes)
+          format("# %-#{max_size}.#{max_size}s<tt>%s</tt>",
+            "*#{col_name}*::",
+            column_attributes.unshift(formatted_column_type).join(", ")).rstrip + "\n"
+        end
+
+        def format_yard(col_name, _max_size, formatted_column_type, _column_attributes)
+          res = ""
+          res += sprintf("# @!attribute #{col_name}") + "\n"
+
+          ruby_class = if @column.respond_to?(:array) && @column.array
+            "Array<#{map_col_type_to_ruby_classes(formatted_column_type)}>"
+          else
+            map_col_type_to_ruby_classes(formatted_column_type)
+          end
+
+          res += sprintf("#   @return [#{ruby_class}]") + "\n"
+
+          res
+        end
+
+        def format_markdown(col_name, max_size, formatted_column_type, column_attributes)
+          name_remainder = max_size - col_name.length - non_ascii_length(col_name)
+          type_remainder = (MD_TYPE_ALLOWANCE - 2) - formatted_column_type.length
+
+          format("# **`%s`**%#{name_remainder}s | `%s`%#{type_remainder}s | `%s`",
+            col_name,
+            " ",
+            formatted_column_type,
+            " ",
+            column_attributes.join(", ").rstrip).gsub("``", "  ").rstrip + "\n"
+        end
+
+        def format_default(col_name, max_size, formatted_column_type, column_attributes)
           format("#  %s:%s %s",
             mb_chars_ljust(col_name, max_size),
-            mb_chars_ljust(col_type, BARE_TYPE_ALLOWANCE),
-            attrs.join(", ")).rstrip + "\n"
+            mb_chars_ljust(formatted_column_type, BARE_TYPE_ALLOWANCE),
+            column_attributes.join(", ")).rstrip + "\n"
         end
 
         # TODO: Simplify this conditional

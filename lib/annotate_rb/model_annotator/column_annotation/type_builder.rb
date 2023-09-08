@@ -8,8 +8,9 @@ module AnnotateRb
         # Example: show "integer" instead of "integer(4)"
         NO_LIMIT_COL_TYPES = %w[integer bigint boolean].freeze
 
-        def initialize(column, options)
-          @column = ColumnWrapper.new(column)
+        def initialize(column, options, column_defaults)
+          # Passing `column_defaults` for posterity, don't actually need it here since it's not used
+          @column = ColumnWrapper.new(column, column_defaults)
           @options = options
         end
 
@@ -27,6 +28,7 @@ module AnnotateRb
           elsif is_special_type
             # Do nothing. Kept as a code fragment in case we need to do something here.
           elsif @column.limit && !@options[:format_yard]
+            # Unsure if Column#limit will ever be an array. May be safe to remove.
             if !@column.limit.is_a?(Array) && !hide_limit?
               formatted_column_type = column_type + "(#{@column.limit})"
             end
@@ -34,6 +36,8 @@ module AnnotateRb
 
           formatted_column_type
         end
+
+        private
 
         def hide_limit?
           excludes =

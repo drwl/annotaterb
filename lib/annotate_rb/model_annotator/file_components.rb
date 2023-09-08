@@ -6,11 +6,14 @@ module AnnotateRb
       SKIP_ANNOTATION_STRING = "# -*- SkipSchemaAnnotations"
       SOME_PATTERN = /\A(?<start>\s*).*?\n(?<end>\s*)\z/m # Unsure what this pattern is
 
+      attr_reader :new_annotations
+
       def initialize(file_content, new_annotations, options)
         @file_content = file_content
         @diff = AnnotationDiffGenerator.new(file_content, new_annotations).generate
         @options = options
         @annotation_pattern = AnnotationPatternGenerator.call(options)
+        @new_annotations = new_annotations
       end
 
       def current_file_content

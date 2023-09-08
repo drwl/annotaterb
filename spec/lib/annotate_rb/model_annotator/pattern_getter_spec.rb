@@ -2,12 +2,14 @@ RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
   describe ".call" do
     subject { described_class.call(options, pattern_type) }
 
-    let(:options) { AnnotateRb::Options.from(base_options) }
+    let(:options) { AnnotateRb::Options.new(base_options) }
 
     context 'when pattern_type is "additional_file_patterns"' do
       let(:pattern_type) { "additional_file_patterns" }
 
       context "when additional_file_patterns is specified in the options" do
+        let(:base_options) { {root_dir: [""], additional_file_patterns: additional_file_patterns} }
+
         let(:additional_file_patterns) do
           [
             "/%PLURALIZED_MODEL_NAME%/**/*.rb",
@@ -15,15 +17,13 @@ RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
           ]
         end
 
-        let(:base_options) { {additional_file_patterns: additional_file_patterns} }
-
         it 'returns additional_file_patterns in the argument "options"' do
           is_expected.to eq(additional_file_patterns)
         end
       end
 
       context "when additional_file_patterns is not specified in the options" do
-        let(:base_options) { {} }
+        let(:base_options) { {root_dir: [""]} }
 
         it "returns an empty array" do
           is_expected.to eq([])
@@ -32,7 +32,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
     end
 
     context 'when pattern_type is "test"' do
-      let(:base_options) { {} }
+      let(:base_options) { {root_dir: [""]} }
       let(:pattern_type) { "test" }
 
       it "returns patterns of test files" do
@@ -45,7 +45,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
     end
 
     context 'when pattern_type is "fixture"' do
-      let(:base_options) { {} }
+      let(:base_options) { {root_dir: [""]} }
       let(:pattern_type) { "fixture" }
 
       it "returns patterns of fixture files" do
@@ -59,7 +59,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
     end
 
     context 'when pattern_type is "scaffold"' do
-      let(:base_options) { {} }
+      let(:base_options) { {root_dir: [""]} }
       let(:pattern_type) { "scaffold" }
 
       it "returns patterns of scaffold files" do
@@ -73,7 +73,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
     end
 
     context 'when pattern_type is "factory"' do
-      let(:base_options) { {} }
+      let(:base_options) { {root_dir: [""]} }
       let(:pattern_type) { "factory" }
 
       it "returns patterns of factory files" do
@@ -95,7 +95,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
     end
 
     context 'when pattern_type is "serializer"' do
-      let(:base_options) { {} }
+      let(:base_options) { {root_dir: [""]} }
       let(:pattern_type) { "serializer" }
 
       it "returns patterns of serializer files" do
@@ -108,7 +108,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
     end
 
     context 'when pattern_type is "controller"' do
-      let(:base_options) { {} }
+      let(:base_options) { {root_dir: [""]} }
       let(:pattern_type) { "controller" }
 
       it "returns patterns of controller files" do
@@ -119,7 +119,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
     end
 
     context 'when pattern_type is "admin"' do
-      let(:base_options) { {} }
+      let(:base_options) { {root_dir: [""]} }
       let(:pattern_type) { "admin" }
 
       it "returns both singular and pluralized model names" do
@@ -128,7 +128,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
     end
 
     context 'when pattern_type is "helper"' do
-      let(:base_options) { {} }
+      let(:base_options) { {root_dir: [""]} }
       let(:pattern_type) { "helper" }
 
       it "returns patterns of helper files" do
