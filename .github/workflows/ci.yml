@@ -62,12 +62,6 @@ jobs:
           sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'root'"
       #          https://github.com/actions/runner-images/issues/7678
 
-      - name: Clean dummyapp (sqlite)
-        run: |
-          rm Gemfile.lock
-          rm db/schema.rb
-        working-directory: spec/dummyapp
-
       - name: Install dummyapp dependencies (sqlite)
         run: bundle install
         working-directory: spec/dummyapp
@@ -85,10 +79,10 @@ jobs:
         env:
           DATABASE_ADAPTER: sqlite3
 
-      - name: Clean dummyapp (mysql2)
+      - name: Clean dummyapp (sqlite)
         run: |
-          rm Gemfile.lock
-          rm db/schema.rb
+          rm -f Gemfile.lock
+          rm -f db/schema.rb
         working-directory: spec/dummyapp
 
       - name: Install dummyapp dependencies (mysql2)
@@ -108,10 +102,10 @@ jobs:
         env:
           DATABASE_ADAPTER: mysql2
 
-      - name: Clean dummyapp (pg)
+      - name: Clean dummyapp (mysql2)
         run: |
-          rm Gemfile.lock
-          rm db/schema.rb
+          rm -f Gemfile.lock
+          rm -f db/schema.rb
         working-directory: spec/dummyapp
 
       - name: Install dummyapp dependencies (pg)
@@ -130,3 +124,9 @@ jobs:
         run: bundle exec rake spec:integration
         env:
           DATABASE_ADAPTER: pg
+
+      - name: Clean dummyapp (pg)
+        run: |
+          rm -f Gemfile.lock
+          rm -f db/schema.rb
+        working-directory: spec/dummyapp
