@@ -46,6 +46,18 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::DefaultValueBuilder
       it { is_expected.to eq("1.2") }
     end
 
+    context "when value is a Date" do
+      let(:value) { Date.new(2023, 9, 7) }
+
+      it { is_expected.to eq("Thu, 07 Sep 2023") }
+    end
+
+    context "when value is a DateTime" do
+      let(:value) { DateTime.new(2023, 9, 7) }
+
+      it { is_expected.to eq("Thu, 07 Sep 2023 00:00:00 +0000") }
+    end
+
     context "when value is an Array" do
       context "array is empty" do
         let(:value) { [] }
@@ -81,6 +93,18 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::DefaultValueBuilder
         let(:value) { [true, false] }
 
         it { is_expected.to eq("[TRUE, FALSE]") }
+      end
+
+      context "when value is a Date" do
+        let(:value) { [Date.new(2023, 9, 7)] }
+
+        it { is_expected.to eq("Thu, 07 Sep 2023") }
+      end
+
+      context "when value is a DateTime" do
+        let(:value) { [DateTime.new(2023, 9, 7)] }
+
+        it { is_expected.to eq("Thu, 07 Sep 2023 00:00:00 +0000") }
       end
     end
   end
