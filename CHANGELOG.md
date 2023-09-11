@@ -1,5 +1,20 @@
 # Changelog
 
+## [v4.4.1](https://github.com/drwl/annotaterb/tree/v4.4.1) (2023-09-11)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.4.0...v4.4.1)
+
+**Merged pull requests:**
+
+- Bump version to v4.4.1 [\#62](https://github.com/drwl/annotaterb/pull/62) ([drwl](https://github.com/drwl))
+- Fix annotation for columns with `Date` and `DateTime` default values [\#61](https://github.com/drwl/annotaterb/pull/61) ([drwl](https://github.com/drwl))
+- Add integration tests [\#60](https://github.com/drwl/annotaterb/pull/60) ([drwl](https://github.com/drwl))
+- Fix the default array value from being escaped [\#58](https://github.com/drwl/annotaterb/pull/58) ([drwl](https://github.com/drwl))
+- Update dummyapp Rails version [\#56](https://github.com/drwl/annotaterb/pull/56) ([drwl](https://github.com/drwl))
+- Bump puma from 5.6.5 to 6.3.1 in /dummyapp [\#55](https://github.com/drwl/annotaterb/pull/55) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generate changelog for v4.4.0 [\#53](https://github.com/drwl/annotaterb/pull/53) ([drwl](https://github.com/drwl))
+- Add CLI specs using `aruba` gem [\#43](https://github.com/drwl/annotaterb/pull/43) ([drwl](https://github.com/drwl))
+
 ## [v4.4.0](https://github.com/drwl/annotaterb/tree/v4.4.0) (2023-06-24)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.3.1...v4.4.0)
