@@ -210,5 +210,9 @@ module AnnotateRb
     def get_state(key)
       @state[key]
     end
+
+    def print
+      # TODO: prints options and state
+    end
   end
 end

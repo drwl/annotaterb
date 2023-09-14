@@ -49,8 +49,13 @@ module AnnotateRb
 
       act_on_command
 
-      @options[:working_args] = @args
       @options
+    end
+
+    def remaining_args
+      # `@args` gets modified throughout the lifecycle of this class.
+      # It starts as a shallow clone of ARGV, then arguments matching commands and options are removed in #parse
+      @args
     end
 
     private

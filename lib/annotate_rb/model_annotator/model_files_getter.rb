@@ -41,9 +41,9 @@ module AnnotateRb
         private
 
         def list_model_files_from_argument(options)
-          return [] if options[:working_args].empty?
+          return [] if options.get_state(:working_args).empty?
 
-          specified_files = options[:working_args].map { |file| File.expand_path(file) }
+          specified_files = options.get_state(:working_args).map { |file| File.expand_path(file) }
 
           model_files = options[:model_dir].flat_map do |dir|
             absolute_dir_path = File.expand_path(dir)
