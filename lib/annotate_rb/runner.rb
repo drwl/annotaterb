@@ -9,8 +9,6 @@ module AnnotateRb
     end
 
     def run(args)
-      _original_args = args.dup
-
       config_file_options = ConfigLoader.load_config
       parsed_options = Parser.parse(args)
 
