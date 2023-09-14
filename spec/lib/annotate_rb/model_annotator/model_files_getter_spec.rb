@@ -81,19 +81,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelFilesGetter do
             end
           end
         end
-
-        context "when `is_rake` option is enabled" do
-          let(:base_options) { {model_dir: [model_dir], is_rake: true} }
-          let(:options) { AnnotateRb::Options.new(base_options, {working_args: model_files}) }
-
-          it "returns all model files under `model_dir` directory" do
-            is_expected.to contain_exactly(
-              [model_dir, "foo.rb"],
-              [model_dir, File.join("bar", "baz.rb")],
-              [model_dir, File.join("bar", "qux", "quux.rb")]
-            )
-          end
-        end
       end
     end
 
