@@ -15,4 +15,4 @@ end
 
 task spec: ["spec:unit", "spec:integration"]
 
-task default: :spec
+task default: ["spec:unit"]
