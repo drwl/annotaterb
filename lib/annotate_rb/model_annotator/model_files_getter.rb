@@ -11,7 +11,7 @@ module AnnotateRb
         def call(options)
           model_files = list_model_files_from_argument(options)
 
-          return model_files if !model_files.empty?
+          return model_files if model_files.any?
 
           options[:model_dir].each do |dir|
             Dir.chdir(dir) do
