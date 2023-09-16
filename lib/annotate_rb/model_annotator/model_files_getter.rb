@@ -9,13 +9,9 @@ module AnnotateRb
         # of model files from root dir. Otherwise we take all the model files
         # in the model_dir directory.
         def call(options)
-          model_files = []
+          model_files = list_model_files_from_argument(options)
 
-          # Note: This is currently broken as we don't set `is_rake` anywhere.
-          # It's an artifact from the old Annotate gem and how it did control flow.
-          model_files = list_model_files_from_argument(options) if !options[:is_rake]
-
-          return model_files if !model_files.empty?
+          return model_files if model_files.any?
 
           options[:model_dir].each do |dir|
             Dir.chdir(dir) do
@@ -41,9 +37,9 @@ module AnnotateRb
         private
 
         def list_model_files_from_argument(options)
-          return [] if ARGV.empty?
+          return [] if options.get_state(:working_args).empty?
 
-          specified_files = ARGV.map { |file| File.expand_path(file) }
+          specified_files = options.get_state(:working_args).map { |file| File.expand_path(file) }
 
           model_files = options[:model_dir].flat_map do |dir|
             absolute_dir_path = File.expand_path(dir)
