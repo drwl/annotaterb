@@ -35,11 +35,11 @@ module AnnotateRb
     }.freeze
 
     def initialize(args, existing_options)
-      @args = args
+      @args = args.clone
       base_options = DEFAULT_OPTIONS.dup
       @options = base_options.merge(existing_options)
       @commands = []
-      @options[:original_args] = args.dup
+      @options[:original_args] = args.clone
     end
 
     def parse
@@ -50,6 +50,12 @@ module AnnotateRb
       act_on_command
 
       @options
+    end
+
+    def remaining_args
+      # `@args` gets modified throughout the lifecycle of this class.
+      # It starts as a shallow clone of ARGV, then arguments matching commands and options are removed in #parse
+      @args
     end
 
     private
