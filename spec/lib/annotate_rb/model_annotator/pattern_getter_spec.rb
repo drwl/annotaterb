@@ -88,6 +88,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
           "spec/factories/%TABLE_NAME%.rb",
           "test/factories/%PLURALIZED_MODEL_NAME%.rb",
           "spec/factories/%PLURALIZED_MODEL_NAME%.rb",
+          "test/factories/%PLURALIZED_MODEL_NAME%_factory.rb",
+          "spec/factories/%PLURALIZED_MODEL_NAME%_factory.rb",
           "test/fabricators/%MODEL_NAME%_fabricator.rb",
           "spec/fabricators/%MODEL_NAME%_fabricator.rb"
         ])

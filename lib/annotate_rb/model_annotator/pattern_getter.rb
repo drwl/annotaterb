@@ -142,6 +142,8 @@ module AnnotateRb
           File.join(root_directory, FilePatterns::FACTORY_BOT_SPEC_DIR, "%TABLE_NAME%.rb"), # (new style)
           File.join(root_directory, FilePatterns::FACTORY_BOT_TEST_DIR, "%PLURALIZED_MODEL_NAME%.rb"), # (new style)
           File.join(root_directory, FilePatterns::FACTORY_BOT_SPEC_DIR, "%PLURALIZED_MODEL_NAME%.rb"), # (new style)
+          File.join(root_directory, FilePatterns::FACTORY_BOT_TEST_DIR, "%PLURALIZED_MODEL_NAME%_factory.rb"), # (new style)
+          File.join(root_directory, FilePatterns::FACTORY_BOT_SPEC_DIR, "%PLURALIZED_MODEL_NAME%_factory.rb"), # (new style)
           File.join(root_directory, FilePatterns::FABRICATORS_TEST_DIR, "%MODEL_NAME%_fabricator.rb"),
           File.join(root_directory, FilePatterns::FABRICATORS_SPEC_DIR, "%MODEL_NAME%_fabricator.rb")
         ]
