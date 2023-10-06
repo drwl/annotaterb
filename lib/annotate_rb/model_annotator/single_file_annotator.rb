@@ -21,7 +21,7 @@ module AnnotateRb
         #  :position_in_*<Symbol>:: where to place the annotated section in fixture or model file,
         #                           :before, :top, :after or :bottom. Default is :before.
         #
-        def call(file_name, annotation, annotation_position, options = {})
+        def call(file_name, annotation, annotation_position, options)
           return false unless File.exist?(file_name)
           old_content = File.read(file_name)
 
