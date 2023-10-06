@@ -4,11 +4,11 @@ module AnnotateRb
   module ModelAnnotator
     class Annotator
       class << self
-        def do_annotations(options = {})
+        def do_annotations(options)
           new(options).do_annotations
         end
 
-        def remove_annotations(options = {})
+        def remove_annotations(options)
           new(options).remove_annotations
         end
       end
