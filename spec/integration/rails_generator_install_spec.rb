@@ -31,4 +31,22 @@ RSpec.describe "Generator installs rake file", type: "aruba" do
     expect(last_command_started).to be_successfully_executed
     expect(installed_rake_task).to eq(actual_rake_task)
   end
+
+  context "when the rake task already exists" do
+    before do
+      touch(rake_task_file)
+    end
+
+    it "returns the Thor cli" do
+      # First check that the file exists in dummyapp
+      expect(exist?(rake_task_file)).to be_truthy
+
+      # TODO: Improve this so we don't have to rely on `exit_timeout`
+      _cmd = run_command(generator_install_command, exit_timeout: 3)
+
+      # When the file already exists, the default behavior is the Thor CLI prompts user on how to proceed
+      # https://github.com/rails/thor/blob/a4d99cfc97691504d26d0d0aefc649a8f2e89b3c/spec/actions/create_file_spec.rb#L112
+      expect(all_stdout).to include("conflict")
+    end
+  end
 end
