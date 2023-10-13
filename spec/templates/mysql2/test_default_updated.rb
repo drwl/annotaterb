@@ -4,15 +4,15 @@
 #
 # Table name: test_defaults
 #
-#  id         :integer          not null, primary key
+#  id         :bigint           not null, primary key
 #  boolean    :boolean          default(FALSE)
 #  date       :date             default(Tue, 04 Jul 2023)
 #  datetime   :datetime         default(Tue, 04 Jul 2023 12:34:56.000000000 UTC +00:00)
 #  decimal    :decimal(14, 2)   default(43.21)
-#  float      :float            default(12.34)
+#  float      :float(24)        default(12.34)
 #  int_field  :integer
 #  integer    :integer          default(99)
-#  string     :string           default("hello world!")
+#  string     :string(255)      default("hello world!")
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
