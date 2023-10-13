@@ -13,6 +13,11 @@ RSpec.describe "Annotate after running migrations", type: "aruba" do
     unset_bundler_env_vars
   end
 
+  after do
+    # Reset database schema after to avoid test pollution (for mysql and postgres)
+    _cmd = run_command_and_stop("bin/rails db:reset", fail_on_error: true, exit_timeout: command_timeout_seconds)
+  end
+
   let(:templates_dir) { File.join(aruba.config.root_directory, "spec/templates/#{ENV["DATABASE_ADAPTER"]}") }
   let(:migrations_templates_dir) { File.join(aruba.config.root_directory, "spec/templates/migrations") }
   let(:migration_file) { "20231013230731_add_int_field_to_test_defaults.rb" }
