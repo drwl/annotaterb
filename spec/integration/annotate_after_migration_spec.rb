@@ -45,4 +45,31 @@ RSpec.describe "Annotate after running migrations", type: "aruba" do
     expect(last_command_started).to be_successfully_executed
     expect(annotated_test_default).to eq(expected_test_default)
   end
+
+  context "when the rake task that hooks into database migration exists" do
+    before do
+      _cmd = run_command_and_stop("bin/rails g annotate_rb:install", fail_on_error: true, exit_timeout: command_timeout_seconds)
+    end
+
+    after do
+      remove("lib/tasks/annotate_rb.rake")
+    end
+
+    it "annotations are automatically added during migration" do
+      expected_test_default = read(File.join(templates_dir, "test_default_updated.rb")).join("\n")
+      original_test_default = read(File.join(models_dir, "test_default.rb")).join("\n")
+
+      # Check that files have been copied over correctly
+      expect(expected_test_default).not_to eq(original_test_default)
+
+      copy(File.join(migrations_templates_dir, migration_file), "db/migrate")
+
+      _run_migrations_cmd = run_command_and_stop("bin/rails db:migrate", fail_on_error: true, exit_timeout: command_timeout_seconds)
+
+      annotated_test_default = read(File.join(models_dir, "test_default.rb")).join("\n")
+
+      expect(last_command_started).to be_successfully_executed
+      expect(annotated_test_default).to eq(expected_test_default)
+    end
+  end
 end
