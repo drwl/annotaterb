@@ -6,7 +6,7 @@ module AnnotateRb
       # Should be the wrapper for an ActiveRecord model that serves as the source of truth of the model
       # of the model that we're annotating
 
-      def initialize(klass, options = {})
+      def initialize(klass, options)
         @klass = klass
         @options = options
       end
