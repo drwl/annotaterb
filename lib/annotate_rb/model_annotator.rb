@@ -22,7 +22,6 @@ module AnnotateRb
     autoload :SingleFileRemoveAnnotationInstruction, "annotate_rb/model_annotator/single_file_remove_annotation_instruction"
     autoload :AnnotationDiffGenerator, "annotate_rb/model_annotator/annotation_diff_generator"
     autoload :AnnotationDiff, "annotate_rb/model_annotator/annotation_diff"
-    autoload :FileBuilder, "annotate_rb/model_annotator/file_builder"
     autoload :MagicCommentParser, "annotate_rb/model_annotator/magic_comment_parser"
     autoload :FileComponents, "annotate_rb/model_annotator/file_components"
     autoload :ProjectAnnotator, "annotate_rb/model_annotator/project_annotator"

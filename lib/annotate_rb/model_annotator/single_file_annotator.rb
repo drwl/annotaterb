@@ -26,7 +26,6 @@ module AnnotateRb
           old_content = File.read(file_name)
 
           file_components = FileComponents.new(old_content, annotation, options)
-          builder = FileBuilder.new(file_components, annotation_position, options)
 
           return false if file_components.has_skip_string?
           return false if !file_components.annotations_changed? && !options[:force]
@@ -34,9 +33,9 @@ module AnnotateRb
           abort "AnnotateRb error. #{file_name} needs to be updated, but annotaterb was run with `--frozen`." if options[:frozen]
 
           updated_file_content = if !file_components.has_annotations? || options[:force]
-            builder.generate_content_with_new_annotations
+            AnnotatedFile::Generator.new(file_components, annotation_position, options).generate
           else
-            builder.update_existing_annotations
+            AnnotatedFile::Updater.new(file_components, annotation_position, options).update
           end
 
           File.open(file_name, "wb") { |f| f.puts updated_file_content }
