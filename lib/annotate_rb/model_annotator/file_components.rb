@@ -43,7 +43,7 @@ module AnnotateRb
       def pure_file_content
         @pure_file_content ||=
           begin
-            content_without_magic_comments = @file_content.gsub(MagicCommentParser::MAGIC_COMMENTS_REGEX, "")
+            content_without_magic_comments = @file_content.gsub(FileParser::MagicCommentParser::MAGIC_COMMENTS_REGEX, "")
             content_without_annotations = content_without_magic_comments.sub(@annotation_pattern, "")
 
             content_without_annotations
@@ -51,7 +51,7 @@ module AnnotateRb
       end
 
       def magic_comments
-        @magic_comments ||= MagicCommentParser.call(@file_content)
+        @magic_comments ||= FileParser::MagicCommentParser.call(@file_content)
       end
 
       def has_skip_string?
