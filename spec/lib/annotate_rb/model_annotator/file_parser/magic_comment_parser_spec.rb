@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::MagicCommentParser do
+RSpec.describe AnnotateRb::ModelAnnotator::FileParser::MagicCommentParser do
   describe ".call" do
     subject { described_class.call(content) }
 
