@@ -2,8 +2,6 @@
 
 module AnnotateRb
   class ConfigGenerator
-    CONFIG_FILE = ConfigFinder::DOTFILE
-
     class << self
       # Adds unset configuration key-value pairs to the config file.
       # Useful when a config file was generated an older version of gem and new
