@@ -6,8 +6,8 @@ module AnnotateRb
   module Generators
     class ConfigGenerator < ::Rails::Generators::Base
       def generate_config
-        create_file AnnotateRb::ConfigFinder::DOTFILE do
-          ConfigGenerator.default_config_yml
+        create_file ::AnnotateRb::ConfigFinder::DOTFILE do
+          ::AnnotateRb::ConfigGenerator.default_config_yml
         end
       end
     end
