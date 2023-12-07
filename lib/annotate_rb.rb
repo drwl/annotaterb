@@ -22,6 +22,7 @@ require_relative "annotate_rb/eager_loader"
 require_relative "annotate_rb/rake_bootstrapper"
 require_relative "annotate_rb/config_finder"
 require_relative "annotate_rb/config_loader"
+require_relative "annotate_rb/config_generator"
 
 module AnnotateRb
 end

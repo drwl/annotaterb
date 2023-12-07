@@ -27,4 +27,6 @@ RSpec.configure do |config|
   end
 
   config.order = :random
+
+  config.include_context "isolated environment", :isolated_environment
 end
