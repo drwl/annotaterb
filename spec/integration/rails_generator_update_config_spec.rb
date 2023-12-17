@@ -43,6 +43,6 @@ RSpec.describe "Generator appends to config file", type: "aruba" do
     changed_config_file = read(config_file).join("\n")
 
     expect(last_command_started).to be_successfully_executed
-    expect(config_file_content).to eq(changed_config_file)
+    expect(config_file_content).not_to eq(changed_config_file)
   end
 end
