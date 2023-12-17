@@ -3,12 +3,20 @@
 module AnnotateRb
   class ConfigGenerator
     class << self
-      # Adds unset configuration key-value pairs to the config file.
+      # Returns unset configuration key-value pairs as yaml.
       # Useful when a config file was generated an older version of gem and new
       #   settings get added.
       def unset_config_defaults
-        _user_defaults_hash = ConfigLoader.load_config
-        _defaults_hash = Options.from({}, {}).to_h
+        user_defaults = ConfigLoader.load_config
+        defaults = Options.from({}, {}).to_h
+
+        differences = defaults.keys - user_defaults.keys
+        result = defaults.slice(*differences)
+
+        # Generates proper YAML including the leading hyphens `---` header
+        yml_content = YAML.dump(result, StringIO.new).string
+        # Remove the header
+        yml_content.sub("---", "")
       end
 
       def default_config_yml
