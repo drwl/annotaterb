@@ -1,5 +1,33 @@
 # Changelog
 
+## [v4.5.0](https://github.com/drwl/annotaterb/tree/v4.5.0) (2024-02-08)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.4.1...v4.5.0)
+
+**Closed issues:**
+
+- Add an automated way to migrate from the old annotate gem [\#73](https://github.com/drwl/annotaterb/issues/73)
+- Default array value is double-quoted/escaped [\#57](https://github.com/drwl/annotaterb/issues/57)
+
+**Merged pull requests:**
+
+- Bump version to v4.5.0 [\#79](https://github.com/drwl/annotaterb/pull/79) ([drwl](https://github.com/drwl))
+- Update README on the new Rails generator commands [\#78](https://github.com/drwl/annotaterb/pull/78) ([drwl](https://github.com/drwl))
+- Bump github/codeql-action from 2 to 3 [\#77](https://github.com/drwl/annotaterb/pull/77) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Add command to generate a configuration file [\#76](https://github.com/drwl/annotaterb/pull/76) ([drwl](https://github.com/drwl))
+- Bump actions/checkout from 3 to 4 [\#75](https://github.com/drwl/annotaterb/pull/75) ([dependabot[bot]](https://github.com/apps/dependabot))
+- CI: Configure dependabot to update GH Actions [\#74](https://github.com/drwl/annotaterb/pull/74) ([olleolleolle](https://github.com/olleolleolle))
+- Refactor `FileBuilder` and `MagicCommentParser` [\#71](https://github.com/drwl/annotaterb/pull/71) ([drwl](https://github.com/drwl))
+- Test running annotations after a migration [\#70](https://github.com/drwl/annotaterb/pull/70) ([drwl](https://github.com/drwl))
+- Add integration test for rake task installer [\#69](https://github.com/drwl/annotaterb/pull/69) ([drwl](https://github.com/drwl))
+- Add integration test for annotating routes [\#68](https://github.com/drwl/annotaterb/pull/68) ([drwl](https://github.com/drwl))
+- Remove optional args [\#67](https://github.com/drwl/annotaterb/pull/67) ([drwl](https://github.com/drwl))
+- Remove optional arg from `AnnotationPatternGenerator` [\#66](https://github.com/drwl/annotaterb/pull/66) ([drwl](https://github.com/drwl))
+- Remove `ARGV` use during runtime [\#65](https://github.com/drwl/annotaterb/pull/65) ([drwl](https://github.com/drwl))
+- Add integration test for annotating a singular file [\#64](https://github.com/drwl/annotaterb/pull/64) ([drwl](https://github.com/drwl))
+- Generate changelog for v4.4.1 [\#63](https://github.com/drwl/annotaterb/pull/63) ([drwl](https://github.com/drwl))
+- Add support for factory\_bot's default suffixed pattern [\#59](https://github.com/drwl/annotaterb/pull/59) ([drwl](https://github.com/drwl))
+
 ## [v4.4.1](https://github.com/drwl/annotaterb/tree/v4.4.1) (2023-09-11)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.4.0...v4.4.1)
