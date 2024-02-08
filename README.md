@@ -65,6 +65,35 @@ To skip the automatic annotation that happens after a db task, pass the environm
 $ ANNOTATERB_SKIP_ON_DB_TASKS=1 bin/rails db:migrate
 ```
 
+### Added Rails generators
+The following Rails generator commands get added.
+
+```sh
+$ bin/rails generator --help
+
+...
+
+AnnotateRb:
+  annotate_rb:config
+  annotate_rb:hook
+  annotate_rb:install
+  annotate_rb:update_config
+...
+
+```
+
+`bin/rails g annotate_rb:config`
+- Generates a new configuration file, `.annotaterb.yml`, using defaults from the gem.
+
+`bin/rails g annotate_rb:hook`
+- Installs the Rake file to automatically annotate Rails models on a database task (e.g. AnnotateRb will automatically run after running `bin/rails db:migrate`).
+
+`bin/rails g annotate_rb:install`
+- Runs the `config` and `hook` generator commands
+
+`bin/rails g annotate_rb:update_config`
+- Appends to `.annotaterb.yml` any configuration key-value pairs that are used by the Gem. This is useful when there's a drift between the config file values and the gem defaults (i.e. when new features get added).
+
 ## Migrating from the annotate gem
 Refer to the [migration guide](MIGRATION_GUIDE.md).
 
