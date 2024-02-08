@@ -14,7 +14,8 @@ RSpec.describe "Generator installs rake file", type: "aruba" do
   end
 
   let(:rake_task_file) { "lib/tasks/annotate_rb.rake" }
-  let(:rake_task) { File.join(aruba.config.root_directory, "lib/generators/annotate_rb/install/templates/annotate_rb.rake") }
+  let(:rake_task) { File.join(aruba.config.root_directory, "lib/generators/annotate_rb/hook/templates/annotate_rb.rake") }
+  let(:config_file) { ".annotaterb.yml" }
 
   let(:generator_install_command) { "bin/rails generate annotate_rb:install" }
 
@@ -30,6 +31,17 @@ RSpec.describe "Generator installs rake file", type: "aruba" do
 
     expect(last_command_started).to be_successfully_executed
     expect(installed_rake_task).to eq(actual_rake_task)
+  end
+
+  it "generates a default config file" do
+    # First check that the file doesn't exist in dummyapp
+    expect(exist?(config_file)).to be_falsey
+
+    _cmd = run_command_and_stop(generator_install_command, fail_on_error: true, exit_timeout: command_timeout_seconds)
+
+    expect(exist?(config_file)).to be_truthy
+
+    expect(last_command_started).to be_successfully_executed
   end
 
   context "when the rake task already exists" do
