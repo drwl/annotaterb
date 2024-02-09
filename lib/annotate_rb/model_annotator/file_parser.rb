@@ -4,6 +4,7 @@ module AnnotateRb
   module ModelAnnotator
     module FileParser
       autoload :MagicCommentParser, "annotate_rb/model_annotator/file_parser/magic_comment_parser"
+      autoload :AnnotationFinder, "annotate_rb/model_annotator/file_parser/annotation_finder"
     end
   end
 end
