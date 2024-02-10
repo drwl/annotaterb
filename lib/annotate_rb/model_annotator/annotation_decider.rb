@@ -15,7 +15,11 @@ module AnnotateRb
         return false if file_contains_skip_annotation
 
         begin
-          klass = ModelClassGetter.call(@file, @options)
+          if Rails.autoloaders.zeitwerk_enabled?
+            klass = ZeitwerkClassGetter.call(@file, @options)
+          else
+            klass = ModelClassGetter.call(@file, @options)
+          end
 
           klass_is_a_class = klass.is_a?(Class)
           klass_inherits_active_record_base = klass < ActiveRecord::Base

@@ -37,7 +37,11 @@ module AnnotateRb
       private
 
       def build_instructions_for_file(file)
-        klass = ModelClassGetter.call(file, @options)
+        if Rails.autoloaders.zeitwerk_enabled?
+          klass = ZeitwerkClassGetter.call(file, @options)
+        else
+          klass = ModelClassGetter.call(file, @options)
+        end
 
         instructions = []
 
