@@ -15,7 +15,7 @@ RSpec.describe "Annotate after running migrations", type: "aruba" do
 
   after do
     # Rollback copied migration to avoid test pollution (for mysql and postgres)
-    _cmd = run_command_and_stop("bin/rails db:rollback", fail_on_error: true, exit_timeout: command_timeout_seconds)
+    _cmd = run_command_and_stop("bin/rails db:migrate:down VERSION=20231013230731", fail_on_error: true, exit_timeout: command_timeout_seconds)
 
     dummy_app_migration_file = File.join("db/migrate", migration_file)
     # TODO: Look into Aruba cleaning the tmp working directory between tests since we copy the dummyapp every test
