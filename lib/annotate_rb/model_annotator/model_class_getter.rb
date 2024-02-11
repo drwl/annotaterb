@@ -8,6 +8,13 @@ module AnnotateRb
         # Check for namespaced models in subdirectories as well as models
         # in subdirectories without namespacing.
         def call(file, options)
+          use_zeitwerk = defined?(::Rails) && ::Rails.try(:autoloaders).try(:zeitwerk_enabled?)
+
+          if use_zeitwerk
+            klass = ZeitwerkClassGetter.call(file, options)
+            return klass if klass
+          end
+
           model_path = file.gsub(/\.rb$/, "")
           options[:model_dir].each { |dir| model_path = model_path.gsub(/^#{dir}/, "").gsub(/^\//, "") }
 
