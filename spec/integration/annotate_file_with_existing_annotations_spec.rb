@@ -21,6 +21,9 @@ RSpec.describe "Annotate a file with existing annotations", type: "aruba" do
     before do
       # Copy file with existing annotations at the top
       copy(File.join(templates_dir, "test_default.rb"), "app/models")
+
+      reset_database
+      run_migrations
     end
 
     it "moves annotations to the bottom of the file" do
