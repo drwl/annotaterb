@@ -6,14 +6,6 @@ RSpec.describe "CLI", type: "aruba" do
   let(:models_dir) { "app/models" }
   let(:command_timeout_seconds) { 10 }
 
-  before do
-    copy(Dir[File.join(aruba.config.root_directory, "spec/dummyapp/*")], aruba.config.home_directory)
-
-    # Unset the bundler context from running annotaterb integration specs.
-    #   This way, when `run_command("bundle exec annotaterb")` runs, it runs as if it's within the context of dummyapp.
-    unset_bundler_env_vars
-  end
-
   context "when running in a non-Rails project directory" do
     before do
       remove("Rakefile") if exist?("Rakefile")
@@ -32,7 +24,6 @@ RSpec.describe "CLI", type: "aruba" do
 
   context "when running in a directory with a Rakefile and a Gemfile" do
     let(:help_banner_fragment) { "Usage: annotaterb [command] [options]" }
-    let(:templates_dir) { File.join(aruba.config.root_directory, "spec/templates/#{ENV["DATABASE_ADAPTER"]}") }
 
     it "outputs the help message" do
       _cmd = run_command("bundle exec annotaterb", fail_on_error: true, exit_timeout: command_timeout_seconds)
@@ -42,19 +33,22 @@ RSpec.describe "CLI", type: "aruba" do
     end
 
     it "annotates files that have not been annotated" do
-      expected_test_default = read(File.join(templates_dir, "test_default.rb")).join("\n")
-      expected_test_null_false = read(File.join(templates_dir, "test_null_false.rb")).join("\n")
+      reset_database
+      run_migrations
 
-      original_test_default = read(File.join(models_dir, "test_default.rb")).join("\n")
-      original_test_null_false = read(File.join(models_dir, "test_null_false.rb")).join("\n")
+      expected_test_default = read_file(model_template("test_default.rb"))
+      expected_test_null_false = read_file(model_template("test_null_false.rb"))
+
+      original_test_default = read_file(dummyapp_model("test_default.rb"))
+      original_test_null_false = read_file(dummyapp_model("test_null_false.rb"))
 
       expect(expected_test_default).not_to eq(original_test_default)
       expect(expected_test_null_false).not_to eq(original_test_null_false)
 
       _cmd = run_command_and_stop("bundle exec annotaterb models", fail_on_error: true, exit_timeout: command_timeout_seconds)
 
-      annotated_test_default = read(File.join(models_dir, "test_default.rb")).join("\n")
-      annotated_test_null_false = read(File.join(models_dir, "test_null_false.rb")).join("\n")
+      annotated_test_default = read_file(dummyapp_model("test_default.rb"))
+      annotated_test_null_false = read_file(dummyapp_model("test_null_false.rb"))
 
       expect(last_command_started).to be_successfully_executed
       expect(expected_test_default).to eq(annotated_test_default)

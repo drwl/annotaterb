@@ -5,14 +5,6 @@ require "integration_spec_helper"
 RSpec.describe "Generator appends to config file", type: "aruba" do
   let(:command_timeout_seconds) { 10 }
 
-  before do
-    copy(Dir[File.join(aruba.config.root_directory, "spec/dummyapp/*")], aruba.config.home_directory)
-
-    # Unset the bundler context from running annotaterb integration specs.
-    #   This way, when `run_command("bundle exec annotaterb")` runs, it runs as if it's within the context of dummyapp.
-    unset_bundler_env_vars
-  end
-
   let(:config_file) { ".annotaterb.yml" }
   let(:config_file_content) do
     <<~YML.strip
@@ -40,7 +32,7 @@ RSpec.describe "Generator appends to config file", type: "aruba" do
 
     _cmd = run_command_and_stop(generator_update_config_command, fail_on_error: true, exit_timeout: command_timeout_seconds)
 
-    changed_config_file = read(config_file).join("\n")
+    changed_config_file = read_file(config_file)
 
     expect(last_command_started).to be_successfully_executed
     expect(config_file_content).not_to eq(changed_config_file)
