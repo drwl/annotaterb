@@ -54,11 +54,11 @@ jobs:
           bundler-cache: true
 
       - name: Start MySQL
-        if: ${{ matrix.adapter == 'mysql2 }}
+        if: ${{ matrix.adapter == 'mysql2' }}
         run: sudo systemctl start mysql.service
 
       - name: Start and setup Postgres
-        if: ${{ matrix.adapter == 'pg }}
+        if: ${{ matrix.adapter == 'pg' }}
         run: |
           sudo systemctl start postgresql.service
           sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'root'"
