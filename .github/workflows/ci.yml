@@ -40,7 +40,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-#        adapter: [ 'mysql2', 'pg', 'sqlite3' ]
+        adapter: [ 'mysql2', 'pg', 'sqlite3' ]
         ruby: [ '2.7', '3.0', '3.1', '3.2' ]
 
     steps:
@@ -54,79 +54,29 @@ jobs:
           bundler-cache: true
 
       - name: Start MySQL
+        if: ${{ matrix.adapter == 'mysql2 }}
         run: sudo systemctl start mysql.service
 
       - name: Start and setup Postgres
+        if: ${{ matrix.adapter == 'pg }}
         run: |
           sudo systemctl start postgresql.service
           sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'root'"
       #          https://github.com/actions/runner-images/issues/7678
 
-      - name: Install dummyapp dependencies (sqlite)
+      - name: Install dummyapp dependencies (${{ matrix.adapter }})
         run: bundle install
         working-directory: spec/dummyapp
         env:
-          DATABASE_ADAPTER: sqlite3
+          DATABASE_ADAPTER: ${{ matrix.adapter }}
 
-      - name: Run dummyapp migrations (sqlite)
-        run: bin/rails db:create && bin/rails db:migrate
+      - name: Run dummyapp migrations (${{ matrix.adapter }})
+        run: bin/rails db:create
         working-directory: spec/dummyapp
         env:
-          DATABASE_ADAPTER: sqlite3
+          DATABASE_ADAPTER: ${{ matrix.adapter }}
 
-      - name: Run Integration tests (sqlite)
+      - name: Run Integration tests (${{ matrix.adapter }})
         run: bundle exec rake spec:integration
         env:
-          DATABASE_ADAPTER: sqlite3
-
-      - name: Clean dummyapp (sqlite)
-        run: |
-          rm -f Gemfile.lock
-          rm -f db/schema.rb
-        working-directory: spec/dummyapp
-
-      - name: Install dummyapp dependencies (mysql2)
-        run: bundle install
-        working-directory: spec/dummyapp
-        env:
-          DATABASE_ADAPTER: mysql2
-
-      - name: Run dummyapp migrations (mysql2)
-        run: bin/rails db:create && bin/rails db:migrate
-        working-directory: spec/dummyapp
-        env:
-          DATABASE_ADAPTER: mysql2
-
-      - name: Run Integration tests (mysql2)
-        run: bundle exec rake spec:integration
-        env:
-          DATABASE_ADAPTER: mysql2
-
-      - name: Clean dummyapp (mysql2)
-        run: |
-          rm -f Gemfile.lock
-          rm -f db/schema.rb
-        working-directory: spec/dummyapp
-
-      - name: Install dummyapp dependencies (pg)
-        run: bundle install
-        working-directory: spec/dummyapp
-        env:
-          DATABASE_ADAPTER: pg
-
-      - name: Run dummyapp migrations (pg)
-        run: bin/rails db:create && bin/rails db:migrate
-        working-directory: spec/dummyapp
-        env:
-          DATABASE_ADAPTER: pg
-
-      - name: Run Integration tests (pg)
-        run: bundle exec rake spec:integration
-        env:
-          DATABASE_ADAPTER: pg
-
-      - name: Clean dummyapp (pg)
-        run: |
-          rm -f Gemfile.lock
-          rm -f db/schema.rb
-        working-directory: spec/dummyapp
+          DATABASE_ADAPTER: ${{ matrix.adapter }}
