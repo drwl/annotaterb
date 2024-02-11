@@ -16,5 +16,13 @@ module SpecHelper
       FileUtils.rm_rf(Dir.glob("#{aruba_working_directory}/*"))
       FileUtils.cp_r(Dir.glob("#{dummy_app_directory}/*"), aruba_working_directory)
     end
+
+    def reset_database
+      run_command_and_stop("bin/rails db:reset", fail_on_error: true, exit_timeout: 10)
+    end
+
+    def run_migrations
+      run_command_and_stop("bin/rails db:migrate", fail_on_error: true, exit_timeout: 10)
+    end
   end
 end

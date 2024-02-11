@@ -42,6 +42,9 @@ RSpec.describe "CLI", type: "aruba" do
     end
 
     it "annotates files that have not been annotated" do
+      reset_database
+      run_migrations
+
       expected_test_default = read(File.join(templates_dir, "test_default.rb")).join("\n")
       expected_test_null_false = read(File.join(templates_dir, "test_null_false.rb")).join("\n")
 
