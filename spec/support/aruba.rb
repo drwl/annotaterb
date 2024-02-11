@@ -4,6 +4,11 @@ require "aruba/rspec"
 
 module SpecHelper
   module Aruba
+    def read_file(name)
+      # Aruba's #read uses File.readlines, returning an Array
+      read(name).join("\n")
+    end
+
     def aruba_working_directory
       File.expand_path("../../#{::Aruba.config.working_directory}", __dir__)
     end

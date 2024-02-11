@@ -18,8 +18,8 @@ RSpec.describe "Annotate after running migrations", type: "aruba" do
     # Start with the already annotated TestDefault model
     copy(File.join(templates_dir, "test_default.rb"), models_dir)
 
-    expected_test_default = read(File.join(templates_dir, "test_default_updated.rb")).join("\n")
-    original_test_default = read(File.join(models_dir, "test_default.rb")).join("\n")
+    expected_test_default = read_file(File.join(templates_dir, "test_default_updated.rb"))
+    original_test_default = read_file(File.join(models_dir, "test_default.rb"))
 
     # Check that files have been copied over correctly
     expect(expected_test_default).not_to eq(original_test_default)
@@ -29,7 +29,7 @@ RSpec.describe "Annotate after running migrations", type: "aruba" do
     _run_migrations_cmd = run_command_and_stop("bin/rails db:migrate VERSION=20231013230731", fail_on_error: true, exit_timeout: command_timeout_seconds)
     _run_annotations_cmd = run_command_and_stop("bundle exec annotaterb models", fail_on_error: true, exit_timeout: command_timeout_seconds)
 
-    annotated_test_default = read(File.join(models_dir, "test_default.rb")).join("\n")
+    annotated_test_default = read_file(File.join(models_dir, "test_default.rb"))
 
     expect(last_command_started).to be_successfully_executed
     expect(annotated_test_default).to eq(expected_test_default)
@@ -43,8 +43,8 @@ RSpec.describe "Annotate after running migrations", type: "aruba" do
     it "annotations are automatically added during migration" do
       reset_database
 
-      expected_test_default = read(File.join(templates_dir, "test_default_updated.rb")).join("\n")
-      original_test_default = read(File.join(models_dir, "test_default.rb")).join("\n")
+      expected_test_default = read_file(File.join(templates_dir, "test_default_updated.rb"))
+      original_test_default = read_file(File.join(models_dir, "test_default.rb"))
 
       # Check that files have been copied over correctly
       expect(expected_test_default).not_to eq(original_test_default)
@@ -53,7 +53,7 @@ RSpec.describe "Annotate after running migrations", type: "aruba" do
 
       _run_migrations_cmd = run_command_and_stop("bin/rails db:migrate", fail_on_error: true, exit_timeout: command_timeout_seconds)
 
-      annotated_test_default = read(File.join(models_dir, "test_default.rb")).join("\n")
+      annotated_test_default = read_file(File.join(models_dir, "test_default.rb"))
 
       expect(last_command_started).to be_successfully_executed
       expect(annotated_test_default).to eq(expected_test_default)

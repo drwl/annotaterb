@@ -17,9 +17,9 @@ RSpec.describe "Generator installs rake file", type: "aruba" do
 
     _cmd = run_command_and_stop(generator_install_command, fail_on_error: true, exit_timeout: command_timeout_seconds)
 
-    installed_rake_task = read(rake_task_file).join("\n")
+    installed_rake_task = read_file(rake_task_file)
     # Read the one in the actual gem
-    actual_rake_task = read(rake_task).join("\n")
+    actual_rake_task = read_file(rake_task)
 
     expect(last_command_started).to be_successfully_executed
     expect(installed_rake_task).to eq(actual_rake_task)

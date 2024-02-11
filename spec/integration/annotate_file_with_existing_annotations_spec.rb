@@ -19,8 +19,8 @@ RSpec.describe "Annotate a file with existing annotations", type: "aruba" do
     end
 
     it "moves annotations to the bottom of the file" do
-      expected_test_default = read(File.join(templates_dir, "test_default_with_bottom_annotations.rb")).join("\n")
-      original_test_default = read(File.join(models_dir, "test_default.rb")).join("\n")
+      expected_test_default = read_file(File.join(templates_dir, "test_default_with_bottom_annotations.rb"))
+      original_test_default = read_file(File.join(models_dir, "test_default.rb"))
 
       # Check that files have been copied over correctly
       expect(expected_test_default).not_to eq(original_test_default)
@@ -31,7 +31,7 @@ RSpec.describe "Annotate a file with existing annotations", type: "aruba" do
         exit_timeout: command_timeout_seconds
       )
 
-      annotated_test_default = read(File.join(models_dir, "test_default.rb")).join("\n")
+      annotated_test_default = read_file(File.join(models_dir, "test_default.rb"))
 
       expect(last_command_started).to be_successfully_executed
       expect(annotated_test_default).to eq(expected_test_default)
