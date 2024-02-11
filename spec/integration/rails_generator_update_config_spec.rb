@@ -32,7 +32,7 @@ RSpec.describe "Generator appends to config file", type: "aruba" do
 
     _cmd = run_command_and_stop(generator_update_config_command, fail_on_error: true, exit_timeout: command_timeout_seconds)
 
-    changed_config_file = read_file(name)
+    changed_config_file = read_file(config_file)
 
     expect(last_command_started).to be_successfully_executed
     expect(config_file_content).not_to eq(changed_config_file)
