@@ -12,10 +12,10 @@ RSpec.describe "Annotate after running migrations", type: "aruba" do
     run_migrations
 
     # Start with the already annotated TestDefault model
-    copy(File.join(models_template_dir, "test_default.rb"), models_dir)
+    copy(model_template("test_default.rb"), models_dir)
 
-    expected_test_default = read_file(File.join(models_template_dir, "test_default_updated.rb"))
-    original_test_default = read_file(File.join(models_dir, "test_default.rb"))
+    expected_test_default = read_file(model_template("test_default_updated.rb"))
+    original_test_default = read_file(dummyapp_model("test_default.rb"))
 
     # Check that files have been copied over correctly
     expect(expected_test_default).not_to eq(original_test_default)
@@ -25,7 +25,7 @@ RSpec.describe "Annotate after running migrations", type: "aruba" do
     _run_migrations_cmd = run_command_and_stop("bin/rails db:migrate VERSION=20231013230731", fail_on_error: true, exit_timeout: command_timeout_seconds)
     _run_annotations_cmd = run_command_and_stop("bundle exec annotaterb models", fail_on_error: true, exit_timeout: command_timeout_seconds)
 
-    annotated_test_default = read_file(File.join(models_dir, "test_default.rb"))
+    annotated_test_default = read_file(dummyapp_model("test_default.rb"))
 
     expect(last_command_started).to be_successfully_executed
     expect(annotated_test_default).to eq(expected_test_default)
@@ -39,17 +39,15 @@ RSpec.describe "Annotate after running migrations", type: "aruba" do
     it "annotations are automatically added during migration" do
       reset_database
 
-      expected_test_default = read_file(File.join(models_template_dir, "test_default_updated.rb"))
-      original_test_default = read_file(File.join(models_dir, "test_default.rb"))
+      expected_test_default = read_file(model_template("test_default.rb"))
+      original_test_default = read_file(dummyapp_model("test_default.rb"))
 
       # Check that files have been copied over correctly
       expect(expected_test_default).not_to eq(original_test_default)
 
-      copy(File.join(migrations_template_dir, migration_file), "db/migrate")
-
       _run_migrations_cmd = run_command_and_stop("bin/rails db:migrate", fail_on_error: true, exit_timeout: command_timeout_seconds)
 
-      annotated_test_default = read_file(File.join(models_dir, "test_default.rb"))
+      annotated_test_default = read_file(dummyapp_model("test_default.rb"))
 
       expect(last_command_started).to be_successfully_executed
       expect(annotated_test_default).to eq(expected_test_default)
