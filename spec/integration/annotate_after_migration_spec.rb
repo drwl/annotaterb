@@ -15,7 +15,7 @@ RSpec.describe "Annotate after running migrations", type: "aruba" do
 
   after do
     # Rollback copied migration to avoid test pollution (for mysql and postgres)
-    _cmd = run_command_and_stop("bin/rails db:rollback", fail_on_error: true, exit_timeout: command_timeout_seconds)
+    _cmd = run_command_and_stop("bin/rails db:migrate:down VERSION=20231013230731", fail_on_error: true, exit_timeout: command_timeout_seconds)
 
     dummy_app_migration_file = File.join("db/migrate", migration_file)
     # TODO: Look into Aruba cleaning the tmp working directory between tests since we copy the dummyapp every test
@@ -37,7 +37,7 @@ RSpec.describe "Annotate after running migrations", type: "aruba" do
 
     copy(File.join(migrations_templates_dir, migration_file), "db/migrate")
 
-    _run_migrations_cmd = run_command_and_stop("bin/rails db:migrate", fail_on_error: true, exit_timeout: command_timeout_seconds)
+    _run_migrations_cmd = run_command_and_stop("bin/rails db:migrate VERSION=20231013230731", fail_on_error: true, exit_timeout: command_timeout_seconds)
     _run_annotations_cmd = run_command_and_stop("bundle exec annotaterb models", fail_on_error: true, exit_timeout: command_timeout_seconds)
 
     annotated_test_default = read(File.join(models_dir, "test_default.rb")).join("\n")
@@ -53,6 +53,7 @@ RSpec.describe "Annotate after running migrations", type: "aruba" do
 
     after do
       remove("lib/tasks/annotate_rb.rake")
+      remove(".annotaterb.yml")
     end
 
     it "annotations are automatically added during migration" do
