@@ -71,7 +71,7 @@ jobs:
           DATABASE_ADAPTER: ${{ matrix.adapter }}
 
       - name: Run dummyapp migrations (${{ matrix.adapter }})
-        run: bin/rails db:create
+        run: bin/rails db:create db:migrate
         working-directory: spec/dummyapp
         env:
           DATABASE_ADAPTER: ${{ matrix.adapter }}
