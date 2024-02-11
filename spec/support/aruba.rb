@@ -9,6 +9,14 @@ module SpecHelper
       read(name).join("\n")
     end
 
+    def models_template_dir
+      File.join(::Aruba.config.root_directory, "spec/templates/#{ENV["DATABASE_ADAPTER"]}")
+    end
+
+    def migrations_template_dir
+      File.join(::Aruba.config.root_directory, "spec/templates/migrations")
+    end
+
     def aruba_working_directory
       File.expand_path("../../#{::Aruba.config.working_directory}", __dir__)
     end
