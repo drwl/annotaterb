@@ -17,6 +17,14 @@ module SpecHelper
       File.join(::Aruba.config.root_directory, "spec/templates/migrations")
     end
 
+    def model_template(name)
+      File.join(models_template_dir, name)
+    end
+
+    def dummyapp_model(name)
+      File.join(aruba_working_directory, "app/models", name)
+    end
+
     def aruba_working_directory
       File.expand_path("../../#{::Aruba.config.working_directory}", __dir__)
     end
