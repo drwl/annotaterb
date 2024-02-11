@@ -6,14 +6,6 @@ RSpec.describe "CLI", type: "aruba" do
   let(:models_dir) { "app/models" }
   let(:command_timeout_seconds) { 10 }
 
-  before do
-    copy_dummy_app_into_aruba_working_directory
-
-    # Unset the bundler context from running annotaterb integration specs.
-    #   This way, when `run_command("bundle exec annotaterb")` runs, it runs as if it's within the context of dummyapp.
-    unset_bundler_env_vars
-  end
-
   context "when running in a non-Rails project directory" do
     before do
       remove("Rakefile") if exist?("Rakefile")

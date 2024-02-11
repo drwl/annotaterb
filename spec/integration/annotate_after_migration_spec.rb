@@ -5,14 +5,6 @@ require "integration_spec_helper"
 RSpec.describe "Annotate after running migrations", type: "aruba" do
   let(:command_timeout_seconds) { 10 }
 
-  before do
-    copy_dummy_app_into_aruba_working_directory
-
-    # Unset the bundler context from running annotaterb integration specs.
-    #   This way, when `run_command("bundle exec annotaterb")` runs, it runs as if it's within the context of dummyapp.
-    unset_bundler_env_vars
-  end
-
   let(:templates_dir) { File.join(aruba.config.root_directory, "spec/templates/#{ENV["DATABASE_ADAPTER"]}") }
   let(:migrations_templates_dir) { File.join(aruba.config.root_directory, "spec/templates/migrations") }
   let(:migration_file) { "20231013230731_add_int_field_to_test_defaults.rb" }

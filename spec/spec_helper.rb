@@ -18,6 +18,14 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
 RSpec.configure do |config|
   config.include(SpecHelper::Aruba, type: :aruba)
 
+  config.before(:example, type: :aruba) do
+    copy_dummy_app_into_aruba_working_directory
+
+    # Unset the bundler context from running annotaterb integration specs.
+    #   This way, when `run_command("bundle exec annotaterb")` runs, it runs as if it's within the context of dummyapp.
+    unset_bundler_env_vars
+  end
+
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
 
