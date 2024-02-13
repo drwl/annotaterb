@@ -34,8 +34,8 @@ module SpecHelper
     end
 
     def copy_dummy_app_into_aruba_working_directory
-      FileUtils.rm_rf(Dir.glob("#{aruba_working_directory}/*"))
-      FileUtils.cp_r(Dir.glob("#{dummy_app_directory}/*"), aruba_working_directory)
+      FileUtils.rm_rf(Dir.glob("#{aruba_working_directory}/**/*"))
+      FileUtils.cp_r(Dir.glob("#{dummy_app_directory}/."), aruba_working_directory)
     end
 
     def reset_database
