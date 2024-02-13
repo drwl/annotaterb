@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "integration_spec_helper"
 
 RSpec.describe "Generator installs rake file", type: "aruba" do
@@ -47,6 +45,15 @@ RSpec.describe "Generator installs rake file", type: "aruba" do
 
       # TODO: Improve this so we don't have to rely on `exit_timeout`
       _cmd = run_command(generator_install_command, exit_timeout: 3)
+      # Because the rake task file already exists, there will be a conflict in the Rails generator.
+      # The prompt should look something like this:
+      #
+      # ...
+      #     generate  annotate_rb:hook
+      #        rails  generate annotate_rb:hook
+      #     conflict  lib/tasks/annotate_rb.rake
+      # Overwrite .../dummyapp/lib/tasks/annotate_rb.rake? (enter "h" for help) [Ynaqdhm]
+      type("q") # Quit the command
 
       # When the file already exists, the default behavior is the Thor CLI prompts user on how to proceed
       # https://github.com/rails/thor/blob/a4d99cfc97691504d26d0d0aefc649a8f2e89b3c/spec/actions/create_file_spec.rb#L112
