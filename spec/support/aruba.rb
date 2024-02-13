@@ -39,7 +39,7 @@ module SpecHelper
     end
 
     def reset_database
-      run_command_and_stop("bin/rails db:reset", fail_on_error: false, exit_timeout: 10)
+      run_command_and_stop("bin/rails db:drop db:create", fail_on_error: true, exit_timeout: 10)
     end
 
     def run_migrations
