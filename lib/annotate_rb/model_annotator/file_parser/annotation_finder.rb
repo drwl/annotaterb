@@ -17,19 +17,22 @@ module AnnotateRb
         # Returns the line index (not the line number) that the annotation ends, inclusive.
         attr_reader :annotation_end
 
+        attr_reader :parser
+
         def initialize(content, wrapper_open, wrapper_close)
           @content = content
           @wrapper_open = wrapper_open
           @wrapper_close = wrapper_close
           @annotation_start = nil
           @annotation_end = nil
+          @parser = nil
         end
 
+        # Find the annotation's line start and line end
         def run
-          # Find annotations the line start and line end of annotations
-
-          # CommentParser returns line numbers but they are 1-indexed
-          comments = CommentParser::CommentParser.parse(@content)
+          # CustomParser returns line numbers as 0-indexed
+          @parser = FileParser::CustomParser.new(@content, "", 0).tap(&:parse)
+          comments = @parser.comments
 
           start = comments.find_index { |comment, _| comment.include?(COMPAT_PREFIX) || comment.include?(COMPAT_PREFIX_MD) }
           raise NoAnnotationFound if start.nil? # Stop execution because we did not find
@@ -75,9 +78,9 @@ module AnnotateRb
             end
           end
 
-          # We want .last because we want the line indexes; also subtract by 1 because line numbers are 1-index based
-          @annotation_start = comments[start].last - 1
-          @annotation_end = comments[ending].last - 1
+          # We want .last because we want the line indexes
+          @annotation_start = comments[start].last
+          @annotation_end = comments[ending].last
 
           [@annotation_start, @annotation_end]
         end

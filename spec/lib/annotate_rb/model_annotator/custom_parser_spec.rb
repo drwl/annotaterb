@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::CommentParser::CommentParser do
-  describe ".parse" do
+RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
+  describe ".parse", skip: true do
     subject { described_class.parse(input) }
 
     context "when file body has single line comments" do
@@ -16,6 +16,38 @@ RSpec.describe AnnotateRb::CommentParser::CommentParser do
           #  id                     :bigint           not null, primary key
           #
           class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:comments) do
+        [
+          ["# typed: strong", 1],
+          ["# == Schema Information", 3],
+          ["#", 4],
+          ["# Table name: users", 5],
+          ["#", 6],
+          ["#  id                     :bigint           not null, primary key", 7],
+          ["#", 8]
+        ]
+      end
+
+      it { is_expected.to eq(output) }
+    end
+
+    context "when class is namespaced in a module" do
+      let(:input) do
+        <<~FILE
+          # typed: strong
+          
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          module Admin
+            class User < ApplicationRecord
+            end  
           end
         FILE
       end

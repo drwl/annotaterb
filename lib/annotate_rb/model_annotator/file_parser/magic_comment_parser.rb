@@ -19,7 +19,7 @@ module AnnotateRb
 
         class << self
           def call(content)
-            parsed_comments = CommentParser::CommentParser.parse(content)
+            parsed_comments = CustomParser.parse(content).comments
             comments = parsed_comments.map { |comment, _line_number| "#{comment}\n" }.join
 
             magic_comments = comments.scan(MAGIC_COMMENTS_REGEX).flatten.compact
