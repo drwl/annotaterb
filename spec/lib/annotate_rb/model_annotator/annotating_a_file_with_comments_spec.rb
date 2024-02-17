@@ -189,7 +189,7 @@ RSpec.describe "Annotating a file with comments" do
       include_examples "annotates the file"
     end
 
-    context "with magic and human comments before class declaration with a line break before class declaration", skip: "To be fixed" do
+    context "with magic and human comments before class declaration with a line break before class declaration" do
       let(:starting_file_content) do
         <<~FILE
           # frozen_string_literal: true
@@ -218,7 +218,7 @@ RSpec.describe "Annotating a file with comments" do
       include_examples "annotates the file"
     end
 
-    context "with human and magic comments before class declaration without a line break between", skip: "To be fixed" do
+    context "with human and magic comments before class declaration without a line break between" do
       let(:starting_file_content) do
         <<~FILE
           # some comment about the class
@@ -231,7 +231,6 @@ RSpec.describe "Annotating a file with comments" do
         <<~FILE
           # some comment about the class
           # frozen_string_literal: true
-
           # == Schema Information
           #
           # Table name: users
@@ -246,7 +245,7 @@ RSpec.describe "Annotating a file with comments" do
       include_examples "annotates the file"
     end
 
-    context "with human and magic comments before class declaration with a line break between them", skip: "To be fixed" do
+    context "with human and magic comments before class declaration with a line break between them" do
       let(:starting_file_content) do
         <<~FILE
           # some comment about the class
@@ -260,14 +259,13 @@ RSpec.describe "Annotating a file with comments" do
         <<~FILE
           # some comment about the class
 
+          # frozen_string_literal: true
           # == Schema Information
           #
           # Table name: users
           #
           #  id                     :bigint           not null, primary key
           #
-
-          # frozen_string_literal: true
           class User < ApplicationRecord
           end
         FILE
@@ -276,7 +274,7 @@ RSpec.describe "Annotating a file with comments" do
       include_examples "annotates the file"
     end
 
-    context "with human and magic comments before class declaration with a line break before class declaration", skip: "To be fixed" do
+    context "with human and magic comments before class declaration with a line break before class declaration" do
       let(:starting_file_content) do
         <<~FILE
           # some comment about the class
@@ -504,7 +502,7 @@ RSpec.describe "Annotating a file with comments" do
         include_examples "annotates the file"
       end
 
-      context "with human and magic comments before class declaration without a line break between", skip: "To fix" do
+      context "with human and magic comments before class declaration without a line break between" do
         let(:starting_file_content) do
           <<~FILE
             # some comment about the class
@@ -515,8 +513,8 @@ RSpec.describe "Annotating a file with comments" do
         end
         let(:expected_file_content) do
           <<~FILE
-            # frozen_string_literal: true
             # some comment about the class
+            # frozen_string_literal: true
             class User < ApplicationRecord
             end
 
@@ -532,7 +530,7 @@ RSpec.describe "Annotating a file with comments" do
         include_examples "annotates the file"
       end
 
-      context "with human and magic comments before class declaration with a line break between them", skip: "To fix" do
+      context "with human and magic comments before class declaration with a line break between them" do
         let(:starting_file_content) do
           <<~FILE
             # some comment about the class
@@ -544,9 +542,9 @@ RSpec.describe "Annotating a file with comments" do
         end
         let(:expected_file_content) do
           <<~FILE
-            # frozen_string_literal: true
             # some comment about the class
 
+            # frozen_string_literal: true
             class User < ApplicationRecord
             end
 
@@ -1015,7 +1013,7 @@ RSpec.describe "Annotating a file with comments" do
       include_examples "annotates the file"
     end
 
-    context "with human comments between annotations and class declaration", skip: "It strips the human comment, to be fixed" do
+    context "with human comments between annotations and class declaration" do
       let(:starting_file_content) do
         <<~FILE
           # frozen_string_literal: true
@@ -1049,7 +1047,7 @@ RSpec.describe "Annotating a file with comments" do
       include_examples "annotates the file"
     end
 
-    context "with human comments between annotations and class declaration with a line break", skip: "It strips the human comment, to be fixed" do
+    context "with human comments between annotations and class declaration with a line break" do
       let(:starting_file_content) do
         <<~FILE
           # frozen_string_literal: true
@@ -1123,7 +1121,7 @@ RSpec.describe "Annotating a file with comments" do
       include_examples "annotates the file"
     end
 
-    context "with human comments between annotations and class declaration with a line break before class", skip: "It strips the human comment, to be fixed" do
+    context "with human comments between annotations and class declaration with a line break before class" do
       let(:starting_file_content) do
         <<~FILE
           # frozen_string_literal: true
@@ -1202,7 +1200,7 @@ RSpec.describe "Annotating a file with comments" do
     end
   end
 
-  context "when overwriting existing annotations using force: true", focus: true do
+  context "when overwriting existing annotations using force: true" do
     let(:options) { AnnotateRb::Options.from({force: true}) }
     let(:schema_info) do
       <<~SCHEMA
@@ -1282,7 +1280,7 @@ RSpec.describe "Annotating a file with comments" do
       include_examples "annotates the file"
     end
 
-    context "with human comments before annotations with line a break between", skip: "To fix" do
+    context "with human comments before annotations with line a break between" do
       let(:starting_file_content) do
         <<~FILE
           # some comment about the class
@@ -1316,7 +1314,7 @@ RSpec.describe "Annotating a file with comments" do
       include_examples "annotates the file"
     end
 
-    context "with human comments before annotations without line a break between", skip: "To fix" do
+    context "with human comments before annotations without line a break between" do
       let(:starting_file_content) do
         <<~FILE
           # some comment about the class
@@ -1333,7 +1331,6 @@ RSpec.describe "Annotating a file with comments" do
       let(:expected_file_content) do
         <<~FILE
           # some comment about the class
-
           # == Schema Information
           #
           # Table name: users
@@ -1349,7 +1346,7 @@ RSpec.describe "Annotating a file with comments" do
       include_examples "annotates the file"
     end
 
-    context "with magic and human comments before annotations without a line break between", skip: "To fix" do
+    context "with magic and human comments before annotations without a line break between" do
       let(:starting_file_content) do
         <<~FILE
           # frozen_string_literal: true
@@ -1368,7 +1365,6 @@ RSpec.describe "Annotating a file with comments" do
         <<~FILE
           # frozen_string_literal: true
           # some comment about the class
-
           # == Schema Information
           #
           # Table name: users
@@ -1384,7 +1380,7 @@ RSpec.describe "Annotating a file with comments" do
       include_examples "annotates the file"
     end
 
-    context "with magic and human comments before annotations with a line break between them", skip: "To fix" do
+    context "with magic and human comments before annotations with a line break between them" do
       let(:starting_file_content) do
         <<~FILE
           # frozen_string_literal: true
@@ -1396,43 +1392,6 @@ RSpec.describe "Annotating a file with comments" do
           #
           #  id                     :bigint           not null, primary key
           #
-          class User < ApplicationRecord
-          end
-        FILE
-      end
-      let(:expected_file_content) do
-        <<~FILE
-          # frozen_string_literal: true
-          # some comment about the class
-
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id                     :bigint           not null, primary key
-          #  boolean                :boolean          default(FALSE)
-          #
-          class User < ApplicationRecord
-          end
-        FILE
-      end
-
-      include_examples "annotates the file"
-    end
-
-    context "with magic and human comments before annotations with a line break before class declaration", skip: "To fix" do
-      let(:starting_file_content) do
-        <<~FILE
-          # frozen_string_literal: true
-          # some comment about the class
-
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id                     :bigint           not null, primary key
-          #
-
           class User < ApplicationRecord
           end
         FILE
@@ -1457,11 +1416,120 @@ RSpec.describe "Annotating a file with comments" do
       include_examples "annotates the file"
     end
 
-    context "with human and magic comments before annotations without a line break between", skip: "To fix" do
+    context "with magic and human comments before annotations with a line break before class declaration" do
+      let(:starting_file_content) do
+        <<~FILE
+          # frozen_string_literal: true
+          # some comment about the class
+
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:expected_file_content) do
+        <<~FILE
+          # frozen_string_literal: true
+          # some comment about the class
+
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #  boolean                :boolean          default(FALSE)
+          #
+
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      include_examples "annotates the file"
+    end
+
+    context "with human and magic comments before annotations without a line break between" do
       let(:starting_file_content) do
         <<~FILE
           # some comment about the class
           # frozen_string_literal: true
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:expected_file_content) do
+        <<~FILE
+          # some comment about the class
+          # frozen_string_literal: true
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #  boolean                :boolean          default(FALSE)
+          #
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      include_examples "annotates the file"
+    end
+
+    context "with human and magic comments before annotations with a line break between them" do
+      let(:starting_file_content) do
+        <<~FILE
+          # some comment about the class
+
+          # frozen_string_literal: true
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:expected_file_content) do
+        <<~FILE
+          # some comment about the class
+
+          # frozen_string_literal: true
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #  boolean                :boolean          default(FALSE)
+          #
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      include_examples "annotates the file"
+    end
+
+    context "with human and magic comments before annotations with a line break before class declaration" do
+      let(:starting_file_content) do
+        <<~FILE
+          # some comment about the class
+          # frozen_string_literal: true
+
           # == Schema Information
           #
           # Table name: users
@@ -1492,80 +1560,7 @@ RSpec.describe "Annotating a file with comments" do
       include_examples "annotates the file"
     end
 
-    context "with human and magic comments before annotations with a line break between them", skip: "To fix" do
-      let(:starting_file_content) do
-        <<~FILE
-          # some comment about the class
-
-          # frozen_string_literal: true
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id                     :bigint           not null, primary key
-          #
-          class User < ApplicationRecord
-          end
-        FILE
-      end
-      let(:expected_file_content) do
-        <<~FILE
-          # some comment about the class
-
-          # frozen_string_literal: true
-
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id                     :bigint           not null, primary key
-          #  boolean                :boolean          default(FALSE)
-          #
-          class User < ApplicationRecord
-          end
-        FILE
-      end
-
-      include_examples "annotates the file"
-    end
-
-    context "with human and magic comments before annotations with a line break before class declaration", skip: "To fix" do
-      let(:starting_file_content) do
-        <<~FILE
-          # some comment about the class
-          # frozen_string_literal: true
-
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id                     :bigint           not null, primary key
-          #
-          class User < ApplicationRecord
-          end
-        FILE
-      end
-      let(:expected_file_content) do
-        <<~FILE
-          # some comment about the class
-          # frozen_string_literal: true
-
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id                     :bigint           not null, primary key
-          #  boolean                :boolean          default(FALSE)
-          #
-          class User < ApplicationRecord
-          end
-        FILE
-      end
-
-      include_examples "annotates the file"
-    end
-
-    context "with human comments between annotations and class declaration", skip: "To fix" do
+    context "with human comments between annotations and class declaration" do
       let(:starting_file_content) do
         <<~FILE
           # frozen_string_literal: true
@@ -1584,7 +1579,6 @@ RSpec.describe "Annotating a file with comments" do
         <<~FILE
           # frozen_string_literal: true
           # some comment about the class
-
           # == Schema Information
           #
           # Table name: users
@@ -1600,7 +1594,7 @@ RSpec.describe "Annotating a file with comments" do
       include_examples "annotates the file"
     end
 
-    context "with human comments between annotations and class declaration with a line break", skip: "To fix" do
+    context "with human comments between annotations and class declaration with a line break" do
       let(:starting_file_content) do
         <<~FILE
           # frozen_string_literal: true
@@ -1636,7 +1630,7 @@ RSpec.describe "Annotating a file with comments" do
       include_examples "annotates the file"
     end
 
-    context "with human comments between annotations and class declaration with a line break between annotation", skip: "To fix" do
+    context "with human comments between annotations and class declaration with a line break between annotation" do
       let(:starting_file_content) do
         <<~FILE
           # frozen_string_literal: true
@@ -1656,8 +1650,46 @@ RSpec.describe "Annotating a file with comments" do
       let(:expected_file_content) do
         <<~FILE
           # frozen_string_literal: true
-
           # some comment about the class
+
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #  boolean                :boolean          default(FALSE)
+          #
+
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      include_examples "annotates the file"
+    end
+
+    context "with human comments between annotations and class declaration with a line break before class" do
+      let(:starting_file_content) do
+        <<~FILE
+          # frozen_string_literal: true
+
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          # some comment about the class
+
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:expected_file_content) do
+        <<~FILE
+          # frozen_string_literal: true
+          # some comment about the class
+
 
           # == Schema Information
           #
@@ -1674,45 +1706,7 @@ RSpec.describe "Annotating a file with comments" do
       include_examples "annotates the file"
     end
 
-    context "with human comments between annotations and class declaration with a line break before class", skip: "To fix" do
-      let(:starting_file_content) do
-        <<~FILE
-          # frozen_string_literal: true
-
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id                     :bigint           not null, primary key
-          #
-          # some comment about the class
-
-          class User < ApplicationRecord
-          end
-        FILE
-      end
-      let(:expected_file_content) do
-        <<~FILE
-          # frozen_string_literal: true
-
-          # some comment about the class
-
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id                     :bigint           not null, primary key
-          #  boolean                :boolean          default(FALSE)
-          #
-          class User < ApplicationRecord
-          end
-        FILE
-      end
-
-      include_examples "annotates the file"
-    end
-
-    context "with human comments between annotations and class declaration with a line break between and before class", skip: "To fix" do
+    context "with human comments between annotations and class declaration with a line break between and before class" do
       let(:starting_file_content) do
         <<~FILE
           # frozen_string_literal: true
@@ -1733,8 +1727,8 @@ RSpec.describe "Annotating a file with comments" do
       let(:expected_file_content) do
         <<~FILE
           # frozen_string_literal: true
-
           # some comment about the class
+
 
           # == Schema Information
           #
@@ -1743,6 +1737,7 @@ RSpec.describe "Annotating a file with comments" do
           #  id                     :bigint           not null, primary key
           #  boolean                :boolean          default(FALSE)
           #
+
           class User < ApplicationRecord
           end
         FILE
