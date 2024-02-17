@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
-  describe ".parse", skip: true do
+  describe ".parse" do
     subject { described_class.parse(input) }
+
+    def check_it_parses_correctly
+      expect(subject.comments).to eq(expected_comments)
+      expect(subject.starts).to eq(expected_starts)
+      expect(subject.ends).to eq(expected_ends)
+    end
 
     context "when file body has single line comments" do
       let(:input) do
@@ -19,7 +25,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
           end
         FILE
       end
-      let(:comments) do
+      let(:expected_comments) do
         [
           ["# typed: strong", 1],
           ["# == Schema Information", 3],
@@ -30,8 +36,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
           ["#", 8]
         ]
       end
+      let(:expected_starts) { [["User", 9]] }
+      let(:expected_ends) { [["User", 10]] }
 
-      it { is_expected.to eq(output) }
+      it "parses correctly" do
+        check_it_parses_correctly
+      end
     end
 
     context "when class is namespaced in a module" do
@@ -51,7 +61,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
           end
         FILE
       end
-      let(:output) do
+      let(:expected_comments) do
         [
           ["# typed: strong", 1],
           ["# == Schema Information", 3],
@@ -62,8 +72,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
           ["#", 8]
         ]
       end
+      let(:expected_starts) { [["Admin", 9], ["User", 10]] }
+      let(:expected_ends) { [["User", 11], ["Admin", 12]] }
 
-      it { is_expected.to eq(output) }
+      it "parses correctly" do
+        check_it_parses_correctly
+      end
     end
 
     context "when file has block comments" do
@@ -82,7 +96,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
           =end
         FILE
       end
-      let(:output) do
+      let(:expected_comments) do
         [
           ["=begin", 1],
           ["This is", 2],
@@ -93,8 +107,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
           ["=end", 11]
         ]
       end
+      let(:expected_starts) { [["Foo", 6]] }
+      let(:expected_ends) { [["Foo", 7]] }
 
-      it { is_expected.to eq(output) }
+      it "parses correctly" do
+        check_it_parses_correctly
+      end
     end
 
     context "when file body has no comments" do
@@ -104,11 +122,33 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
           end
         FILE
       end
-      let(:output) do
+      let(:expected_comments) do
         []
       end
+      let(:expected_starts) { [["User", 1]] }
+      let(:expected_ends) { [["User", 2]] }
 
-      it { is_expected.to eq(output) }
+      it "parses correctly" do
+        check_it_parses_correctly
+      end
+    end
+
+    context "when class is defined on a namespace" do
+      let(:input) do
+        <<~FILE
+          class Foo::User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:expected_comments) do
+        []
+      end
+      let(:expected_starts) { [["User", 1]] }
+      let(:expected_ends) { [["Foo", 2]] }
+
+      it "parses correctly" do
+        check_it_parses_correctly
+      end
     end
 
     context "when file body has single line and block comments" do
@@ -131,7 +171,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
           end
         FILE
       end
-      let(:output) do
+      let(:expected_comments) do
         [
           ["# typed: strong", 1],
           ["=begin", 3],
@@ -146,8 +186,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
           ["#", 13]
         ]
       end
+      let(:expected_starts) { [["User", 14]] }
+      let(:expected_ends) { [["User", 15]] }
 
-      it { is_expected.to eq(output) }
+      it "parses correctly" do
+        check_it_parses_correctly
+      end
     end
   end
 end
