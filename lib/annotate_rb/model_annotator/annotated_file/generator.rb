@@ -5,15 +5,14 @@ module AnnotateRb
     module AnnotatedFile
       # Generates the file with fresh annotations
       class Generator
-        def initialize(file_components, annotation_position, options)
-          @file_components = file_components
+        def initialize(file_content, new_annotations, annotation_position, options)
           @annotation_position = annotation_position
           @options = options
 
-          @new_wrapped_annotations = wrapped_content(@file_components.new_annotations)
+          @new_wrapped_annotations = wrapped_content(new_annotations)
 
-          @new_annotations = file_components.new_annotations
-          @file_content = file_components.current_file_content
+          @new_annotations = new_annotations
+          @file_content = file_content
 
           @parsed_file = FileParser::ParsedFile.new(@file_content, @new_annotations, options).parse
         end

@@ -6,19 +6,21 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
 
     let(:params) do
       [
-        file_components,
+        file_content,
+        new_annotations,
         annotation_position,
         options
       ]
     end
 
-    let(:file_components) do
-      file_content = <<~FILE
+    let(:file_content) do
+      <<~FILE
         class User < ApplicationRecord
         end
       FILE
-
-      new_annotations = <<~ANNOTATIONS
+    end
+    let(:new_annotations) do
+      <<~ANNOTATIONS
         # == Schema Information
         #
         # Table name: users
@@ -26,12 +28,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
         #  id                     :bigint           not null, primary key
         #
       ANNOTATIONS
-
-      AnnotateRb::ModelAnnotator::FileComponents.new(
-        file_content,
-        new_annotations,
-        options
-      )
     end
     let(:annotation_position) { :position_in_class }
 
@@ -277,14 +273,15 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
     context "when file has magic comments" do
       let(:magic_comment) { "# encoding: UTF-8" }
 
-      let(:file_components) do
-        file_content = <<~FILE
+      let(:file_content) do
+        <<~FILE
           #{magic_comment}
           class User < ApplicationRecord
           end
         FILE
-
-        new_annotations = <<~ANNOTATIONS
+      end
+      let(:new_annotations) do
+        <<~ANNOTATIONS
           # == Schema Information
           #
           # Table name: users
@@ -292,12 +289,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
           #  id                     :bigint           not null, primary key
           #
         ANNOTATIONS
-
-        AnnotateRb::ModelAnnotator::FileComponents.new(
-          file_content,
-          new_annotations,
-          options
-        )
       end
 
       let(:options) { AnnotateRb::Options.new({position_in_class: "before"}) }
@@ -321,8 +312,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
       end
 
       context "when there are multiple line breaks between magic comment and the annotation" do
-        let(:file_components) do
-          file_content = <<~FILE
+        let(:file_content) do
+          <<~FILE
             #{magic_comment}
 
 
@@ -330,8 +321,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
             class User < ApplicationRecord
             end
           FILE
-
-          new_annotations = <<~ANNOTATIONS
+        end
+        let(:new_annotations) do
+          <<~ANNOTATIONS
             # == Schema Information
             #
             # Table name: users
@@ -339,12 +331,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
             #  id                     :bigint           not null, primary key
             #
           ANNOTATIONS
-
-          AnnotateRb::ModelAnnotator::FileComponents.new(
-            file_content,
-            new_annotations,
-            options
-          )
         end
 
         let(:expected_content) do
@@ -370,16 +356,17 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
       end
 
       context 'when there are multiple line breaks between magic comment and the annotation with position is "after"' do
-        let(:file_components) do
-          file_content = <<~FILE
+        let(:file_content) do
+          <<~FILE
             #{magic_comment}
 
 
             class User < ApplicationRecord
             end
           FILE
-
-          new_annotations = <<~ANNOTATIONS
+        end
+        let(:new_annotations) do
+          <<~ANNOTATIONS
             # == Schema Information
             #
             # Table name: users
@@ -387,12 +374,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
             #  id                     :bigint           not null, primary key
             #
           ANNOTATIONS
-
-          AnnotateRb::ModelAnnotator::FileComponents.new(
-            file_content,
-            new_annotations,
-            options
-          )
         end
 
         let(:options) { AnnotateRb::Options.new({position_in_class: "after"}) }
