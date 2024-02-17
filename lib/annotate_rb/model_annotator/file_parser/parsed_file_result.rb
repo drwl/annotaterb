@@ -24,7 +24,10 @@ module AnnotateRb
           @annotation_position = annotation_position
         end
 
-        attr_reader :annotations, :annotations_with_whitespace, :annotation_position
+        attr_reader :annotations, :annotation_position
+
+        # Returns annotations with new line before and after if they exist
+        attr_reader :annotations_with_whitespace
 
         def annotations_changed?
           @annotations_changed
