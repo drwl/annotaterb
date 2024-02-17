@@ -24,6 +24,8 @@ module AnnotateRb
           # New method: first remove annotations
           content_without_annotations = if @parsed_file.has_annotations?
             @file_content.sub(@parsed_file.annotations_with_whitespace, "")
+          elsif @options[:force]
+            @file_content.sub(@parsed_file.annotations_with_whitespace, "")
           else
             @file_content
           end
