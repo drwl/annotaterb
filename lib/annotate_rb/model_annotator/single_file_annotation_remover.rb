@@ -12,20 +12,21 @@ module AnnotateRb
           return false unless File.exist?(file_name)
           old_content = File.read(file_name)
 
-          file_components = FileComponents.new(old_content, "", options)
-
-          return false if file_components.has_skip_string?
-          # TODO: Uncomment below after tests are fixed
-          # return false if !file_components.has_annotations?
-
-          wrapper_open = if options[:wrapper_open]
-            "# #{options[:wrapper_open]}\n"
-          else
-            ""
+          begin
+            parsed_file = FileParser::ParsedFile.new(old_content, "", options).parse
+          rescue FileParser::AnnotationFinder::MalformedAnnotation => e
+            warn "Unable to process #{file_name}: #{e.message}"
+            warn "\t" + e.backtrace.join("\n\t") if @options[:trace]
+            return false
+            # rescue FileParser::AnnotationFinder::NoAnnotationFound => _e
+            #   return false # False since there's no annotations to remove
           end
 
-          generated_pattern = AnnotationPatternGenerator.call(options)
-          updated_file_content = old_content.sub!(/(#{wrapper_open})?#{generated_pattern}/, "")
+          return false if !parsed_file.has_annotations?
+
+          return false if parsed_file.has_skip_string?
+
+          updated_file_content = old_content.sub(parsed_file.annotations_with_whitespace, "")
 
           File.open(file_name, "wb") { |f| f.puts updated_file_content }
 

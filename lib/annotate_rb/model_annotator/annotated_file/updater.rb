@@ -5,22 +5,21 @@ module AnnotateRb
     module AnnotatedFile
       # Updates existing annotations
       class Updater
-        def initialize(file_components, annotation_position, options)
-          @file_components = file_components
-          @annotation_position = annotation_position
+        def initialize(file_content, new_annotations, _annotation_position, options)
           @options = options
 
-          @new_wrapped_annotations = wrapped_content(@file_components.new_annotations)
+          @new_annotations = new_annotations
+          @file_content = file_content
+
+          @parsed_file = FileParser::ParsedFile.new(@file_content, @new_annotations, options).parse
         end
 
         def update
-          return "" if !@file_components.has_annotations?
+          return "" if !@parsed_file.has_annotations?
 
-          annotation_pattern = AnnotationPatternGenerator.call(@options)
+          new_annotation = wrapped_content(@new_annotations)
 
-          new_annotation = @file_components.space_before_annotation + @new_wrapped_annotations + @file_components.space_after_annotation
-
-          _content = @file_components.current_file_content.sub(annotation_pattern, new_annotation)
+          _content = @file_content.sub(@parsed_file.annotations, new_annotation)
         end
 
         private

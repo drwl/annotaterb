@@ -6,7 +6,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
 
     let(:params) do
       [
-        file_components,
+        file_content,
+        new_annotations,
         annotation_position,
         options
       ]
@@ -15,8 +16,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
     let(:annotation_position) { :position_in_class }
 
     context "with a foreign key constraint change" do
-      let(:file_components) do
-        file_content = <<~FILE
+      let(:file_content) do
+        <<~FILE
           # == Schema Information
           #
           # Table name: users
@@ -31,8 +32,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
           class User < ApplicationRecord
           end
         FILE
-
-        new_annotations = <<~ANNOTATIONS
+      end
+      let(:new_annotations) do
+        <<~ANNOTATIONS
           # == Schema Information
           #
           # Table name: users
@@ -45,12 +47,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
           #  fk_rails_...  (foreign_thing_id => foreign_things.id) ON DELETE => cascade
           #
         ANNOTATIONS
-
-        AnnotateRb::ModelAnnotator::FileComponents.new(
-          file_content,
-          new_annotations,
-          options
-        )
       end
 
       let(:options) { AnnotateRb::Options.new({position_in_class: "before", show_foreign_keys: true}) }
@@ -79,8 +75,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
     end
 
     context 'when position is "after" for the existing annotation but position is "before" for the new annotation' do
-      let(:file_components) do
-        file_content = <<~FILE
+      let(:file_content) do
+        <<~FILE
           class User < ApplicationRecord
           end
 
@@ -92,8 +88,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
           #  name :string(50)       not null
           #
         FILE
-
-        new_annotations = <<~ANNOTATIONS
+      end
+      let(:new_annotations) do
+        <<~ANNOTATIONS
           # == Schema Information
           #
           # Table name: users
@@ -101,12 +98,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
           #  id                     :bigint           not null, primary key
           #
         ANNOTATIONS
-
-        AnnotateRb::ModelAnnotator::FileComponents.new(
-          file_content,
-          new_annotations,
-          options
-        )
       end
 
       let(:options) { AnnotateRb::Options.new({position_in_class: "before"}) }
@@ -131,8 +122,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
     end
 
     context 'when position is "before" for the existing annotation but "after" for the new annotation' do
-      let(:file_components) do
-        file_content = <<~FILE
+      let(:file_content) do
+        <<~FILE
           # == Schema Information
           #
           # Table name: users
@@ -143,8 +134,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
           class User < ApplicationRecord
           end
         FILE
-
-        new_annotations = <<~ANNOTATIONS
+      end
+      let(:new_annotations) do
+        <<~ANNOTATIONS
           # == Schema Information
           #
           # Table name: users
@@ -152,12 +144,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
           #  id                     :bigint           not null, primary key
           #
         ANNOTATIONS
-
-        AnnotateRb::ModelAnnotator::FileComponents.new(
-          file_content,
-          new_annotations,
-          options
-        )
       end
 
       let(:options) { AnnotateRb::Options.new({position_in_class: "after"}) }

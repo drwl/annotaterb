@@ -25,17 +25,27 @@ module AnnotateRb
           return false unless File.exist?(file_name)
           old_content = File.read(file_name)
 
-          file_components = FileComponents.new(old_content, annotation, options)
+          begin
+            parsed_file = FileParser::ParsedFile.new(old_content, annotation, options).parse
+          rescue FileParser::AnnotationFinder::MalformedAnnotation => e
+            warn "Unable to process #{file_name}: #{e.message}"
+            warn "\t" + e.backtrace.join("\n\t") if @options[:trace]
+            return false
+            # rescue FileParser::AnnotationFinder::NoAnnotationFound => _e
+            #   return false # False since there's no annotations to remove
+          end
 
-          return false if file_components.has_skip_string?
-          return false if !file_components.annotations_changed? && !options[:force]
+          return false if parsed_file.has_skip_string?
+          return false if !parsed_file.annotations_changed? && !options[:force]
 
           abort "AnnotateRb error. #{file_name} needs to be updated, but annotaterb was run with `--frozen`." if options[:frozen]
 
-          updated_file_content = if !file_components.has_annotations? || options[:force]
-            AnnotatedFile::Generator.new(file_components, annotation_position, options).generate
+          updated_file_content = if !parsed_file.has_annotations?
+            AnnotatedFile::Generator.new(old_content, annotation, annotation_position, options).generate
+          elsif options[:force]
+            AnnotatedFile::Generator.new(old_content, annotation, annotation_position, options).generate
           else
-            AnnotatedFile::Updater.new(file_components, annotation_position, options).update
+            AnnotatedFile::Updater.new(old_content, annotation, annotation_position, options).update
           end
 
           File.open(file_name, "wb") { |f| f.puts updated_file_content }
