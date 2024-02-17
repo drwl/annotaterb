@@ -13,14 +13,16 @@ module AnnotateRb
           old_content = File.read(file_name)
 
           begin
-            parsed_file = FileParser::ParsedFile.new(old_content, "", options).tap(&:parse)
+            parsed_file = FileParser::ParsedFile.new(old_content, "", options).parse
           rescue FileParser::AnnotationFinder::MalformedAnnotation => e
             warn "Unable to process #{file_name}: #{e.message}"
             warn "\t" + e.backtrace.join("\n\t") if @options[:trace]
             return false
-          rescue FileParser::AnnotationFinder::NoAnnotationFound => _e
-            return false # False since there's no annotations to remove
+            # rescue FileParser::AnnotationFinder::NoAnnotationFound => _e
+            #   return false # False since there's no annotations to remove
           end
+
+          return false if !parsed_file.has_annotations?
 
           return false if parsed_file.has_skip_string?
 

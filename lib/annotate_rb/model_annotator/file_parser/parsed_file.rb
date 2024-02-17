@@ -13,29 +13,25 @@ module AnnotateRb
           @options = options
         end
 
+        # standard:disable Lint/UnderscorePrefixedVariableName
         def parse
           @finder = AnnotationFinder.new(@file_content, @options[:wrapper_open], @options[:wrapper_close])
-          @finder.run
+          _has_annotations = false
 
-          @diff = AnnotationDiffGenerator.new(annotations, @new_annotations).generate
+          begin
+            @finder.run
+            _has_annotations = @finder.annotated?
+          rescue AnnotationFinder::NoAnnotationFound => _e
+          end
+
+          _annotations = @file_lines[(@finder.annotation_start)..(@finder.annotation_end)].join
+
+          @diff = AnnotationDiffGenerator.new(_annotations, @new_annotations).generate
           @file_parser = @finder.parser
-        end
 
-        def has_skip_string?
-          @has_skip_string ||= @file_parser.comments.any? { |comment, _lineno| comment.include?(SKIP_ANNOTATION_STRING) }
-        end
-
-        def annotations_changed?
-          @annotations_changed ||= @diff.changed?
-        end
-
-        def has_annotations?
-          @finder.annotated?
-        end
-
-        # Returns annotations with new line before and after if they exist
-        def annotations_with_whitespace
-          @annotations_trailing_line ||=
+          _has_skip_string = @file_parser.comments.any? { |comment, _lineno| comment.include?(SKIP_ANNOTATION_STRING) }
+          _annotations_changed = @diff.changed?
+          _annotations_with_whitespace =
             begin
               annotation_start = @finder.annotation_start
               annotation_end = @finder.annotation_end
@@ -50,10 +46,36 @@ module AnnotateRb
 
               @file_lines[annotation_start..annotation_end].join
             end
+
+          @result = ParsedFileResult.new(
+            has_annotations: _has_annotations,
+            has_skip_string: _has_skip_string,
+            annotations_changed: _annotations_changed,
+            annotations: _annotations,
+            annotations_with_whitespace: _annotations_with_whitespace
+          )
+        end
+        # standard:enable Lint/UnderscorePrefixedVariableName
+
+        def has_skip_string?
+          @result.has_skip_string?
+        end
+
+        def annotations_changed?
+          @result.annotations_changed?
+        end
+
+        def has_annotations?
+          @result.has_annotations?
+        end
+
+        # Returns annotations with new line before and after if they exist
+        def annotations_with_whitespace
+          @result.annotations_with_whitespace
         end
 
         def annotations
-          @annotations ||= @file_lines[(@finder.annotation_start)..(@finder.annotation_end)].join
+          @result.annotations
         end
       end
     end
