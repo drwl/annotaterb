@@ -2,11 +2,13 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotationRemover do
   describe ".call" do
     subject { described_class.call(path) }
 
-    let :tmpdir do
-      Dir.mktmpdir("annotate_models")
+    let(:tmpdir) do
+      Dir.mktmpdir("annotaterb")
     end
 
-    let :path do
+    let(:filename) { "some_file.rb" }
+
+    let(:path) do
       File.join(tmpdir, filename).tap do |path|
         File.open(path, "w") do |f|
           f.puts(file_content)
@@ -14,12 +16,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotationRemover do
       end
     end
 
-    let :file_content_after_removal do
+    let(:file_content_after_removal) do
       subject
       File.read(path)
     end
 
-    let :expected_result do
+    let(:expected_result) do
       <<~EOS
         class Foo < ActiveRecord::Base
         end
@@ -27,11 +29,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotationRemover do
     end
 
     context "when annotation is before main content" do
-      let :filename do
-        "before.rb"
-      end
-
-      let :file_content do
+      let(:file_content) do
         <<~EOS
           # == Schema Information
           #
@@ -53,11 +51,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotationRemover do
     end
 
     context "when annotation is before main content and CRLF is used for line breaks" do
-      let :filename do
-        "before.rb"
-      end
-
-      let :file_content do
+      let(:file_content) do
         <<~EOS
           # == Schema Information
           #
@@ -72,17 +66,21 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotationRemover do
         EOS
       end
 
-      it "removes annotation" do
+      let(:expected_result) do
+        <<~EOS
+
+          class Foo < ActiveRecord::Base
+          end
+        EOS
+      end
+
+      it "removes annotation and leaves the extra new line" do
         expect(file_content_after_removal).to eq expected_result
       end
     end
 
     context "when annotation is before main content and with opening wrapper" do
-      let :filename do
-        "opening_wrapper.rb"
-      end
-
-      let :file_content do
+      let(:file_content) do
         <<~EOS
           # wrapper
           # == Schema Information
@@ -107,11 +105,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotationRemover do
     end
 
     context "when annotation is before main content and with opening wrapper" do
-      let :filename do
-        "opening_wrapper.rb"
-      end
-
-      let :file_content do
+      let(:file_content) do
         <<~EOS
           # wrapper\r\n# == Schema Information
           #
@@ -135,11 +129,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotationRemover do
     end
 
     context "when annotation is after main content" do
-      let :filename do
-        "after.rb"
-      end
-
-      let :file_content do
+      let(:file_content) do
         <<~EOS
           class Foo < ActiveRecord::Base
           end
@@ -162,11 +152,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotationRemover do
     end
 
     context "when annotation is after main content and with closing wrapper" do
-      let :filename do
-        "closing_wrapper.rb"
-      end
-
-      let :file_content do
+      let(:file_content) do
         <<~EOS
           class Foo < ActiveRecord::Base
           end
@@ -192,11 +178,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotationRemover do
     end
 
     context 'when annotation is before main content and with comment "-*- SkipSchemaAnnotations"' do
-      let :filename do
-        "skip.rb"
-      end
-
-      let :file_content do
+      let(:file_content) do
         <<~EOS
           # -*- SkipSchemaAnnotations
           # == Schema Information
@@ -213,7 +195,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotationRemover do
         EOS
       end
 
-      let :expected_result do
+      let(:expected_result) do
         file_content
       end
 
