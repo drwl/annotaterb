@@ -5,11 +5,11 @@ module AnnotateRb
     module AnnotatedFile
       # Updates existing annotations
       class Updater
-        def initialize(file_components, _annotation_position, options)
+        def initialize(file_content, new_annotations, _annotation_position, options)
           @options = options
 
-          @new_annotations = file_components.new_annotations
-          @file_content = file_components.current_file_content
+          @new_annotations = new_annotations
+          @file_content = file_content
 
           @parsed_file = FileParser::ParsedFile.new(@file_content, @new_annotations, options).parse
         end
