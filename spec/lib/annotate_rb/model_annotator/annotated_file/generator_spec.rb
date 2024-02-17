@@ -305,7 +305,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
       let(:expected_content) do
         <<~CONTENT
           #{magic_comment}
-
           # == Schema Information
           #
           # Table name: users
@@ -348,7 +347,24 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
           )
         end
 
-        it "only keeps a single empty line around the annotation" do
+        let(:expected_content) do
+          <<~CONTENT
+            #{magic_comment}
+
+
+
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+            class User < ApplicationRecord
+            end
+          CONTENT
+        end
+
+        it "only preserves the empty linebreaks before the annotation" do
           is_expected.to eq(expected_content)
         end
       end

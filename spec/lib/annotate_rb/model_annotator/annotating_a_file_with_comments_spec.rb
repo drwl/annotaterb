@@ -11,7 +11,7 @@ RSpec.describe "Annotating a file with comments" do
     end
   end
 
-  let(:options) { AnnotateRb::Options.new({}) }
+  let(:options) { AnnotateRb::Options.from({}) }
   let(:schema_info) do
     <<~SCHEMA
       # == Schema Information
@@ -67,7 +67,6 @@ RSpec.describe "Annotating a file with comments" do
       let(:expected_file_content) do
         <<~FILE
           # typed: strong
-
           # == Schema Information
           #
           # Table name: users
@@ -93,14 +92,14 @@ RSpec.describe "Annotating a file with comments" do
       end
       let(:expected_file_content) do
         <<~FILE
+          # some comment about the class
+
           # == Schema Information
           #
           # Table name: users
           #
           #  id                     :bigint           not null, primary key
           #
-          # some comment about the class
-
           class User < ApplicationRecord
           end
         FILE
@@ -119,13 +118,13 @@ RSpec.describe "Annotating a file with comments" do
       end
       let(:expected_file_content) do
         <<~FILE
+          # some comment about the class
           # == Schema Information
           #
           # Table name: users
           #
           #  id                     :bigint           not null, primary key
           #
-          # some comment about the class
           class User < ApplicationRecord
           end
         FILE
@@ -146,14 +145,13 @@ RSpec.describe "Annotating a file with comments" do
       let(:expected_file_content) do
         <<~FILE
           # frozen_string_literal: true
-
+          # some comment about the class
           # == Schema Information
           #
           # Table name: users
           #
           #  id                     :bigint           not null, primary key
           #
-          # some comment about the class
           class User < ApplicationRecord
           end
         FILE
@@ -176,13 +174,13 @@ RSpec.describe "Annotating a file with comments" do
         <<~FILE
           # frozen_string_literal: true
 
+          # some comment about the class
           # == Schema Information
           #
           # Table name: users
           #
           #  id                     :bigint           not null, primary key
           #
-          # some comment about the class
           class User < ApplicationRecord
           end
         FILE
@@ -576,8 +574,8 @@ RSpec.describe "Annotating a file with comments" do
         end
         let(:expected_file_content) do
           <<~FILE
-            # frozen_string_literal: true
             # some comment about the class
+            # frozen_string_literal: true
 
             class User < ApplicationRecord
             end
@@ -610,7 +608,6 @@ RSpec.describe "Annotating a file with comments" do
 
             class User < ApplicationRecord
             end
-            # some comment about the class
 
             # == Schema Information
             #
@@ -618,6 +615,7 @@ RSpec.describe "Annotating a file with comments" do
             #
             #  id                     :bigint           not null, primary key
             #
+            # some comment about the class
           FILE
         end
 
@@ -642,14 +640,14 @@ RSpec.describe "Annotating a file with comments" do
             class User < ApplicationRecord
             end
 
-            # some comment about the class
-
             # == Schema Information
             #
             # Table name: users
             #
             #  id                     :bigint           not null, primary key
             #
+
+            # some comment about the class
           FILE
         end
 
@@ -1204,8 +1202,8 @@ RSpec.describe "Annotating a file with comments" do
     end
   end
 
-  context "when overwriting existing annotations using force: true" do
-    let(:options) { AnnotateRb::Options.new({force: true}) }
+  context "when overwriting existing annotations using force: true", focus: true do
+    let(:options) { AnnotateRb::Options.from({force: true}) }
     let(:schema_info) do
       <<~SCHEMA
         # == Schema Information
@@ -1269,7 +1267,6 @@ RSpec.describe "Annotating a file with comments" do
       let(:expected_file_content) do
         <<~FILE
           # typed: strong
-
           # == Schema Information
           #
           # Table name: users

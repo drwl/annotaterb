@@ -3,7 +3,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
   include AnnotateTestConstants
 
   describe "annotating a file" do
-    let(:options) { AnnotateRb::Options.new({position: :before}) }
+    let(:options) { AnnotateRb::Options.from({position: :before}) }
 
     before do
       @model_dir = Dir.mktmpdir("annotate_models")
@@ -38,7 +38,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         options
       ).build
 
-      AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(model_file_name, schema_info, :before, options)
+      AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(model_file_name, schema_info, :position_in_class, options)
       expect(File.read(model_file_name)).to eq("#{schema_info}#{file_content}")
     end
 

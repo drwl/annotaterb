@@ -17,8 +17,9 @@ module AnnotateRb
 
         attr_reader :comments
 
-        def initialize(...)
+        def initialize(input, ...)
           super
+          @_input = input
           @comments = []
           @block_starts = []
           @block_ends = []
@@ -47,6 +48,12 @@ module AnnotateRb
         end
 
         def on_const_ref(const)
+          @block_starts << [const, lineno]
+          super
+        end
+
+        # Used for `class Foo::User`
+        def on_const_path_ref(_left, const)
           @block_starts << [const, lineno]
           super
         end
