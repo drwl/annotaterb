@@ -138,13 +138,8 @@ module AnnotateRb
         # ```
         def on_do_block(block_var, bodystmt)
           if block_var.blank? && bodystmt.blank?
-            _const, last_lineno = @block_ends.last
-
-            # Minor optimization, only add "end" when a closing block isn't added by #on_method_add_block
-            if last_lineno != lineno
-              @block_ends << ["end", lineno]
-              add_event(__method__, "end", lineno)
-            end
+            @block_ends << ["end", lineno]
+            add_event(__method__, "end", lineno)
           end
           super
         end
