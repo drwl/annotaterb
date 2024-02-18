@@ -165,5 +165,123 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
         is_expected.to eq(expected_content)
       end
     end
+
+    context "when updating annotations for a FactoryBot factory" do
+      let(:file_content) do
+        <<~FILE
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id               :integer          not null, primary key
+          #
+          FactoryBot.define do
+            factory :user do
+              admin { false }
+            end
+          end
+        FILE
+      end
+      let(:new_annotations) do
+        <<~ANNOTATIONS
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id               :integer          not null, primary key
+          #  foreign_thing_id :integer          not null
+          #
+          # Foreign Keys
+          #
+          #  fk_rails_...  (foreign_thing_id => foreign_things.id) ON DELETE => cascade
+          #
+        ANNOTATIONS
+      end
+
+      let(:options) { AnnotateRb::Options.new({position_in_class: "before", show_foreign_keys: true}) }
+
+      let(:expected_content) do
+        <<~CONTENT
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id               :integer          not null, primary key
+          #  foreign_thing_id :integer          not null
+          #
+          # Foreign Keys
+          #
+          #  fk_rails_...  (foreign_thing_id => foreign_things.id) ON DELETE => cascade
+          #
+          FactoryBot.define do
+            factory :user do
+              admin { false }
+            end
+          end
+        CONTENT
+      end
+
+      it "returns the updated annotated file" do
+        is_expected.to eq(expected_content)
+      end
+    end
+
+    context "when updating annotations for a Fabrication fabricator" do
+      let(:file_content) do
+        <<~FILE
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id               :integer          not null, primary key
+          #
+          Fabricator(:user) do
+            name
+            reminder_at { 1.day.from_now.iso8601 }
+          end
+        FILE
+      end
+      let(:new_annotations) do
+        <<~ANNOTATIONS
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id               :integer          not null, primary key
+          #  foreign_thing_id :integer          not null
+          #
+          # Foreign Keys
+          #
+          #  fk_rails_...  (foreign_thing_id => foreign_things.id) ON DELETE => cascade
+          #
+        ANNOTATIONS
+      end
+
+      let(:options) { AnnotateRb::Options.new({position_in_class: "before", show_foreign_keys: true}) }
+
+      let(:expected_content) do
+        <<~CONTENT
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id               :integer          not null, primary key
+          #  foreign_thing_id :integer          not null
+          #
+          # Foreign Keys
+          #
+          #  fk_rails_...  (foreign_thing_id => foreign_things.id) ON DELETE => cascade
+          #
+          Fabricator(:user) do
+            name
+            reminder_at { 1.day.from_now.iso8601 }
+          end
+        CONTENT
+      end
+
+      it "returns the updated annotated file" do
+        is_expected.to eq(expected_content)
+      end
+    end
   end
 end
