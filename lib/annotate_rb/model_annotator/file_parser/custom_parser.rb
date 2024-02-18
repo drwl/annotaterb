@@ -7,7 +7,7 @@ module AnnotateRb
     module FileParser
       class CustomParser < Ripper
         # Overview of Ripper: https://kddnewton.com/2022/02/14/formatting-ruby-part-1.html
-        # Ripper API: https://kddnewton.com/ripper-docs/events
+        # Ripper API: https://kddnewton.com/ripper-docs/
 
         class << self
           def parse(string)
@@ -19,7 +19,10 @@ module AnnotateRb
 
         def initialize(input, ...)
           super
+          @_stack_code_block = []
           @_input = input
+          @_const_event_map = {}
+
           @comments = []
           @block_starts = []
           @block_ends = []
@@ -48,46 +51,136 @@ module AnnotateRb
         end
 
         def on_const_ref(const)
+          add_event(__method__, const, lineno)
           @block_starts << [const, lineno]
           super
         end
 
         # Used for `class Foo::User`
         def on_const_path_ref(_left, const)
+          add_event(__method__, const, lineno)
           @block_starts << [const, lineno]
           super
         end
 
         def on_module(const, _bodystmt)
+          add_event(__method__, const, lineno)
           @const_type_map[const] = :module unless @const_type_map[const]
           @block_ends << [const, lineno]
           super
         end
 
         def on_class(const, _superclass, _bodystmt)
+          add_event(__method__, const, lineno)
           @const_type_map[const] = :class unless @const_type_map[const]
           @block_ends << [const, lineno]
           super
         end
 
+        def on_method_add_block(method, block)
+          add_event(__method__, method, lineno)
+
+          if @_stack_code_block.last == method
+            @block_ends << [method, lineno]
+            @_stack_code_block.pop
+          else
+            @block_starts << [method, lineno]
+          end
+          super
+        end
+
+        def on_method_add_arg(method, args)
+          add_event(__method__, method, lineno)
+          @block_starts << [method, lineno]
+
+          # We keep track of blocks using a stack
+          @_stack_code_block << method
+          super
+        end
+
+        # Gets the `FactoryBot` line in:
+        # ```ruby
+        # FactoryBot.define do
+        #   factory :user do
+        #     ...
+        #   end
+        # end
+        # ```
+        def on_call(receiver, operator, message)
+          # We only want to add the parsed line if the beginning of the Ruby
+          if @block_starts.empty?
+            add_event(__method__, receiver, lineno)
+            @block_starts << [receiver, lineno]
+          end
+
+          super
+        end
+
+        # Gets the `factory` block start in:
+        # ```ruby
+        # factory :user, aliases: [:author, :commenter] do
+        #   ...
+        # end
+        # ```
+        def on_command(message, args)
+          add_event(__method__, message, lineno)
+          @block_starts << [message, lineno]
+          super
+        end
+
+        # Matches the `end` in:
+        # ```ruby
+        # factory :user, aliases: [:author, :commenter] do
+        #   first_name { "John" }
+        #   last_name { "Doe" }
+        #   date_of_birth { 18.years.ago }
+        # end
+        # ```
+        def on_do_block(block_var, bodystmt)
+          if block_var.blank? && bodystmt.blank?
+            _const, last_lineno = @block_ends.last
+
+            # Minor optimization, only add "end" when a closing block isn't added by #on_method_add_block
+            if last_lineno != lineno
+              @block_ends << ["end", lineno]
+              add_event(__method__, "end", lineno)
+            end
+          end
+          super
+        end
+
         def on_embdoc_beg(value)
+          add_event(__method__, value, lineno)
           @comments << [value.strip, lineno]
           super
         end
 
         def on_embdoc_end(value)
+          add_event(__method__, value, lineno)
           @comments << [value.strip, lineno]
           super
         end
 
         def on_embdoc(value)
+          add_event(__method__, value, lineno)
           @comments << [value.strip, lineno]
           super
         end
 
         def on_comment(value)
+          add_event(__method__, value, lineno)
           @comments << [value.strip, lineno]
           super
+        end
+
+        private
+
+        def add_event(event, const, lineno)
+          if !@_const_event_map[lineno]
+            @_const_event_map[lineno] = []
+          end
+
+          @_const_event_map[lineno] << [const, event]
         end
       end
     end
