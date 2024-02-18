@@ -400,5 +400,139 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
         end
       end
     end
+
+    context 'when position is "before" for a FactoryBot factory' do
+      let(:options) { AnnotateRb::Options.new({position_in_class: "before"}) }
+
+      let(:file_content) do
+        <<~FILE
+          FactoryBot.define do
+            factory :user do
+              admin { false }
+            end
+          end
+        FILE
+      end
+
+      let(:expected_content) do
+        <<~CONTENT
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          FactoryBot.define do
+            factory :user do
+              admin { false }
+            end
+          end
+        CONTENT
+      end
+
+      it "returns the annotated file content" do
+        is_expected.to eq(expected_content)
+      end
+    end
+
+    context 'when position is "after" for a FactoryBot factory' do
+      let(:options) { AnnotateRb::Options.new({position_in_class: "after"}) }
+
+      let(:file_content) do
+        <<~FILE
+          FactoryBot.define do
+            factory :user do
+              admin { false }
+            end
+          end
+        FILE
+      end
+
+      let(:expected_content) do
+        <<~CONTENT
+          FactoryBot.define do
+            factory :user do
+              admin { false }
+            end
+          end
+
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+        CONTENT
+      end
+
+      it "returns the annotated file content" do
+        is_expected.to eq(expected_content)
+      end
+    end
+
+    context 'when position is "before" for a Fabrication fabricator' do
+      let(:options) { AnnotateRb::Options.new({position_in_class: "before"}) }
+
+      let(:file_content) do
+        <<~FILE
+          Fabricator(:user) do
+            name
+            reminder_at { 1.day.from_now.iso8601 }
+          end
+        FILE
+      end
+
+      let(:expected_content) do
+        <<~CONTENT
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          Fabricator(:user) do
+            name
+            reminder_at { 1.day.from_now.iso8601 }
+          end
+        CONTENT
+      end
+
+      it "returns the annotated file content" do
+        is_expected.to eq(expected_content)
+      end
+    end
+
+    context 'when position is "after" for a Fabrication fabricator' do
+      let(:options) { AnnotateRb::Options.new({position_in_class: "after"}) }
+
+      let(:file_content) do
+        <<~FILE
+          Fabricator(:user) do
+            name
+            reminder_at { 1.day.from_now.iso8601 }
+          end
+        FILE
+      end
+
+      let(:expected_content) do
+        <<~CONTENT
+          Fabricator(:user) do
+            name
+            reminder_at { 1.day.from_now.iso8601 }
+          end
+
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+        CONTENT
+      end
+
+      it "returns the annotated file content" do
+        is_expected.to eq(expected_content)
+      end
+    end
   end
 end
