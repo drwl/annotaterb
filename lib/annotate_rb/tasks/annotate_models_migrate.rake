@@ -6,6 +6,10 @@
 
 # Migration tasks are tasks that we'll "hook" into
 migration_tasks = %w[db:migrate db:migrate:up db:migrate:down db:migrate:reset db:migrate:redo db:rollback]
+
+# Support for data_migrate gem (https://github.com/ilyakatz/data-migrate)
+migration_tasks = migration_tasks.map { |task| "#{task} #{task}:with_data" }
+
 if defined?(Rails::Application) && Rails.version.split(".").first.to_i >= 6
   require "active_record"
 
