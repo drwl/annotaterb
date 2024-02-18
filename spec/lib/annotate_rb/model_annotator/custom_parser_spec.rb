@@ -18,8 +18,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
         FILE
       end
       let(:expected_comments) { [] }
-      let(:expected_starts) { [["User", 1]] }
-      let(:expected_ends) { [["User", 2]] }
+      let(:expected_starts) { [["User", 0]] }
+      let(:expected_ends) { [["User", 1]] }
 
       it "parses correctly" do
         check_it_parses_correctly
@@ -43,17 +43,17 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
       end
       let(:expected_comments) do
         [
-          ["# typed: strong", 1],
-          ["# == Schema Information", 3],
-          ["#", 4],
-          ["# Table name: users", 5],
-          ["#", 6],
-          ["#  id                     :bigint           not null, primary key", 7],
-          ["#", 8]
+          ["# typed: strong", 0],
+          ["# == Schema Information", 2],
+          ["#", 3],
+          ["# Table name: users", 4],
+          ["#", 5],
+          ["#  id                     :bigint           not null, primary key", 6],
+          ["#", 7]
         ]
       end
-      let(:expected_starts) { [["User", 9]] }
-      let(:expected_ends) { [["User", 10]] }
+      let(:expected_starts) { [["User", 8]] }
+      let(:expected_ends) { [["User", 9]] }
 
       it "parses correctly" do
         check_it_parses_correctly
@@ -70,8 +70,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
         FILE
       end
       let(:expected_comments) { [] }
-      let(:expected_starts) { [["Admin", 1], ["User", 2]] }
-      let(:expected_ends) { [["User", 3], ["Admin", 4]] }
+      let(:expected_starts) { [["Admin", 0], ["User", 1]] }
+      let(:expected_ends) { [["User", 2], ["Admin", 3]] }
 
       it "parses correctly" do
         check_it_parses_correctly
@@ -97,17 +97,17 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
       end
       let(:expected_comments) do
         [
-          ["# typed: strong", 1],
-          ["# == Schema Information", 3],
-          ["#", 4],
-          ["# Table name: users", 5],
-          ["#", 6],
-          ["#  id                     :bigint           not null, primary key", 7],
-          ["#", 8]
+          ["# typed: strong", 0],
+          ["# == Schema Information", 2],
+          ["#", 3],
+          ["# Table name: users", 4],
+          ["#", 5],
+          ["#  id                     :bigint           not null, primary key", 6],
+          ["#", 7]
         ]
       end
-      let(:expected_starts) { [["Admin", 9], ["User", 10]] }
-      let(:expected_ends) { [["User", 11], ["Admin", 12]] }
+      let(:expected_starts) { [["Admin", 8], ["User", 9]] }
+      let(:expected_ends) { [["User", 10], ["Admin", 11]] }
 
       it "parses correctly" do
         check_it_parses_correctly
@@ -132,17 +132,17 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
       end
       let(:expected_comments) do
         [
-          ["=begin", 1],
-          ["This is", 2],
-          ["commented out", 3],
-          ["=end", 4],
-          ["=begin some_tag", 9],
-          ["this works, too", 10],
-          ["=end", 11]
+          ["=begin", 0],
+          ["This is", 1],
+          ["commented out", 2],
+          ["=end", 3],
+          ["=begin some_tag", 8],
+          ["this works, too", 9],
+          ["=end", 10]
         ]
       end
-      let(:expected_starts) { [["Foo", 6]] }
-      let(:expected_ends) { [["Foo", 7]] }
+      let(:expected_starts) { [["Foo", 5]] }
+      let(:expected_ends) { [["Foo", 6]] }
 
       it "parses correctly" do
         check_it_parses_correctly
@@ -157,8 +157,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
         FILE
       end
       let(:expected_comments) { [] }
-      let(:expected_starts) { [["User", 1]] }
-      let(:expected_ends) { [["Foo", 2]] }
+      let(:expected_starts) { [["User", 0]] }
+      let(:expected_ends) { [["Foo", 1]] }
 
       it "parses correctly" do
         check_it_parses_correctly
@@ -175,8 +175,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
         FILE
       end
       let(:expected_comments) { [] }
-      let(:expected_starts) { [["Fabricator", 1], ["reminder_at", 3]] }
-      let(:expected_ends) { [["reminder_at", 3], ["end", 4], ["Fabricator", 4]] }
+      let(:expected_starts) { [["Fabricator", 0], ["reminder_at", 2]] }
+      let(:expected_ends) { [["reminder_at", 2], ["end", 3], ["Fabricator", 3]] }
 
       it "parses correctly" do
         check_it_parses_correctly
@@ -194,8 +194,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
         FILE
       end
       let(:expected_comments) { [] }
-      let(:expected_starts) { [["FactoryBot", 1], ["factory", 2], ["admin", 3], ["factory", 4], ["FactoryBot", 5]] }
-      let(:expected_ends) { [["admin", 3], ["end", 4], ["end", 5]] }
+      let(:expected_starts) { [["FactoryBot", 0], ["factory", 1], ["admin", 2], ["factory", 3], ["FactoryBot", 4]] }
+      let(:expected_ends) { [["admin", 2], ["end", 3], ["end", 4]] }
 
       it "parses correctly" do
         check_it_parses_correctly
@@ -214,9 +214,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
       end
       let(:expected_comments) { [] }
       let(:expected_starts) {
-        [["factory", 1], ["first_name", 2], ["last_name", 3], ["date_of_birth", 4], ["factory", 5]]
+        [["factory", 0], ["first_name", 1], ["last_name", 2], ["date_of_birth", 3], ["factory", 4]]
       }
-      let(:expected_ends) { [["first_name", 2], ["last_name", 3], ["date_of_birth", 4], ["end", 5]] }
+      let(:expected_ends) { [["first_name", 1], ["last_name", 2], ["date_of_birth", 3], ["end", 4]] }
 
       it "parses correctly" do
         check_it_parses_correctly
@@ -234,9 +234,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
           end
         FILE
       end
-      let(:expected_comments) { [["# typed: strong", 1]] }
-      let(:expected_starts) { [["factory", 2], ["first_name", 3], ["last_name", 4], ["date_of_birth", 5], ["factory", 6]] }
-      let(:expected_ends) { [["first_name", 3], ["last_name", 4], ["date_of_birth", 5], ["end", 6]] }
+      let(:expected_comments) { [["# typed: strong", 0]] }
+      let(:expected_starts) { [["factory", 1], ["first_name", 2], ["last_name", 3], ["date_of_birth", 4], ["factory", 5]] }
+      let(:expected_ends) { [["first_name", 2], ["last_name", 3], ["date_of_birth", 4], ["end", 5]] }
 
       it "parses correctly" do
         check_it_parses_correctly
@@ -265,21 +265,21 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
       end
       let(:expected_comments) do
         [
-          ["# typed: strong", 1],
-          ["=begin", 3],
-          ["first line", 4],
-          ["second line", 5],
-          ["=end", 6],
-          ["# == Schema Information", 8],
-          ["#", 9],
-          ["# Table name: users", 10],
-          ["#", 11],
-          ["#  id                     :bigint           not null, primary key", 12],
-          ["#", 13]
+          ["# typed: strong", 0],
+          ["=begin", 2],
+          ["first line", 3],
+          ["second line", 4],
+          ["=end", 5],
+          ["# == Schema Information", 7],
+          ["#", 8],
+          ["# Table name: users", 9],
+          ["#", 10],
+          ["#  id                     :bigint           not null, primary key", 11],
+          ["#", 12]
         ]
       end
-      let(:expected_starts) { [["User", 14]] }
-      let(:expected_ends) { [["User", 15]] }
+      let(:expected_starts) { [["User", 13]] }
+      let(:expected_ends) { [["User", 14]] }
 
       it "parses correctly" do
         check_it_parses_correctly

@@ -11,7 +11,7 @@ module AnnotateRb
 
         class << self
           def parse(string)
-            _parser = new(string).tap(&:parse)
+            _parser = new(string, "", 0).tap(&:parse)
           end
         end
 
