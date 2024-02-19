@@ -21,7 +21,6 @@ module AnnotateRb
           end
 
           return false if !parsed_file.has_annotations?
-
           return false if parsed_file.has_skip_string?
 
           updated_file_content = old_content.sub(parsed_file.annotations_with_whitespace, "")
