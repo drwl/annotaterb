@@ -31,8 +31,6 @@ module AnnotateRb
             warn "Unable to process #{file_name}: #{e.message}"
             warn "\t" + e.backtrace.join("\n\t") if @options[:trace]
             return false
-            # rescue FileParser::AnnotationFinder::NoAnnotationFound => _e
-            #   return false # False since there's no annotations to remove
           end
 
           return false if parsed_file.has_skip_string?
