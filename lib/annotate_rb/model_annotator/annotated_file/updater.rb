@@ -14,6 +14,7 @@ module AnnotateRb
           @parsed_file = FileParser::ParsedFile.new(@file_content, @new_annotations, options).parse
         end
 
+        # @return [String] Returns the annotated file content to be written back to a file
         def update
           return "" if !@parsed_file.has_annotations?
 

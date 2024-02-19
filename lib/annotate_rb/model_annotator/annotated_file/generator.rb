@@ -17,6 +17,7 @@ module AnnotateRb
           @parsed_file = FileParser::ParsedFile.new(@file_content, @new_annotations, options).parse
         end
 
+        # @return [String] Returns the annotated file content to be written back to a file
         def generate
           # Need to keep `.to_s` for now since the it can be either a String or Symbol
           annotation_write_position = @options[@annotation_position].to_s
