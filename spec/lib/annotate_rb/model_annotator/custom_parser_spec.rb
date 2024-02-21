@@ -194,8 +194,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
         FILE
       end
       let(:expected_comments) { [] }
-      let(:expected_starts) { [["FactoryBot", 0], ["factory", 1], ["admin", 2], ["factory", 3], ["FactoryBot", 4]] }
-      let(:expected_ends) { [["admin", 2], ["end", 3], ["end", 4]] }
+      let(:expected_starts) { [["FactoryBot", 0], ["factory", 1], ["admin", 2], ["FactoryBot", 4]] }
+      let(:expected_ends) { [["admin", 2], ["end", 3], ["factory", 3], ["end", 4]] }
 
       it "parses correctly" do
         check_it_parses_correctly
@@ -214,9 +214,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
       end
       let(:expected_comments) { [] }
       let(:expected_starts) {
-        [["factory", 0], ["first_name", 1], ["last_name", 2], ["date_of_birth", 3], ["factory", 4]]
+        [["factory", 0], ["first_name", 1], ["last_name", 2], ["date_of_birth", 3]]
       }
-      let(:expected_ends) { [["first_name", 1], ["last_name", 2], ["date_of_birth", 3], ["end", 4]] }
+      let(:expected_ends) { [["first_name", 1], ["last_name", 2], ["date_of_birth", 3], ["end", 4], ["factory", 4]] }
 
       it "parses correctly" do
         check_it_parses_correctly
@@ -235,8 +235,44 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
         FILE
       end
       let(:expected_comments) { [["# typed: strong", 0]] }
-      let(:expected_starts) { [["factory", 1], ["first_name", 2], ["last_name", 3], ["date_of_birth", 4], ["factory", 5]] }
-      let(:expected_ends) { [["first_name", 2], ["last_name", 3], ["date_of_birth", 4], ["end", 5]] }
+      let(:expected_starts) { [["factory", 1], ["first_name", 2], ["last_name", 3], ["date_of_birth", 4]] }
+      let(:expected_ends) { [["first_name", 2], ["last_name", 3], ["date_of_birth", 4], ["end", 5], ["factory", 5]] }
+
+      it "parses correctly" do
+        check_it_parses_correctly
+      end
+    end
+
+    context "when using an RSpec file" do
+      let(:input) do
+        <<~FILE
+          RSpec.describe "Collapsed::TestModel" do
+            # Deliberately left empty
+          end
+        FILE
+      end
+      let(:expected_comments) { [["# Deliberately left empty", 1]] }
+      let(:expected_starts) { [["RSpec", 0]] }
+      let(:expected_ends) { [["end", 2], ["RSpec", 2]] }
+
+      it "parses correctly" do
+        check_it_parses_correctly
+      end
+    end
+
+    context "when using an RSpec file with monkeypatching" do
+      # Should be removed by RSpec 4+
+      # https://github.com/rspec/rspec-core/issues/2301
+      let(:input) do
+        <<~FILE
+          describe "Collapsed::TestModel" do
+            # Deliberately left empty
+          end
+        FILE
+      end
+      let(:expected_comments) { [["# Deliberately left empty", 1]] }
+      let(:expected_starts) { [["describe", 0]] }
+      let(:expected_ends) { [["end", 2], ["describe", 2]] }
 
       it "parses correctly" do
         check_it_parses_correctly
