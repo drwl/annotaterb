@@ -27,7 +27,7 @@ module AnnotateRb
         add_related_admin_files if !@options[:active_admin]
         add_additional_file_patterns if @options[:additional_file_patterns].present?
 
-        @list
+        @list.uniq
       end
 
       private
