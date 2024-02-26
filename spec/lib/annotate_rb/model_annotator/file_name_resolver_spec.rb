@@ -53,5 +53,18 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileNameResolver do
         end
       end
     end
+
+    context 'When model_name is "collapsed/test_model" and table_name is "collapsed_test_model"' do
+      let(:model_name) { "collapsed/test_model" }
+      let(:table_name) { "collapsed_test_models" }
+
+      context "when filename_template is 'spec/models/collapsed/example/%MODEL_NAME_WITHOUT_NS%_spec.rb'" do
+        let(:filename_template) { "spec/models/collapsed/example/%MODEL_NAME_WITHOUT_NS%_spec.rb" }
+
+        it "returns the custom spec path for a collapsed model" do
+          is_expected.to eq "spec/models/collapsed/example/test_model_spec.rb"
+        end
+      end
+    end
   end
 end
