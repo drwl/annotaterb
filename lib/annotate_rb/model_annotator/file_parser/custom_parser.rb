@@ -77,7 +77,38 @@ module AnnotateRb
           super
         end
 
+        # Gets the `RSpec` opening in:
+        # ```ruby
+        # RSpec.describe "Collapsed::TestModel" do
+        #   # Deliberately left empty
+        # end
+        # ```
+        # receiver: "RSpec", operator: ".", method: "describe"
+        def on_command_call(receiver, operator, method, args)
+          add_event(__method__, receiver, lineno)
+          @block_starts << [receiver, lineno]
+
+          # We keep track of blocks using a stack
+          @_stack_code_block << receiver
+          super
+        end
+
         def on_method_add_block(method, block)
+          # When parsing a line with no explicit receiver, the method will be presented in an Array.
+          # It's not immediately clear why.
+          #
+          # Example:
+          # ```ruby
+          # describe "Collapsed::TestModel" do
+          #   # Deliberately left empty
+          # end
+          # ```
+          #
+          # => method = ["describe"]
+          if method.is_a?(Array) && method.size == 1
+            method = method.first
+          end
+
           add_event(__method__, method, lineno)
 
           if @_stack_code_block.last == method
@@ -125,6 +156,9 @@ module AnnotateRb
         def on_command(message, args)
           add_event(__method__, message, lineno)
           @block_starts << [message, lineno]
+
+          # We keep track of blocks using a stack
+          @_stack_code_block << message
           super
         end
 
