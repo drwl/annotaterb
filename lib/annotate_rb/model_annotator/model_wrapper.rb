@@ -115,7 +115,16 @@ module AnnotateRb
 
         # Try to search the table without prefix
         table_name_without_prefix = table_name.to_s.sub(@klass.table_name_prefix, "")
-        @klass.connection.indexes(table_name_without_prefix)
+        begin
+          @klass.connection.indexes(table_name_without_prefix)
+        rescue ActiveRecord::StatementInvalid => _e
+          # Mysql2 adapter behaves differently than Sqlite3 and Postgres adapter.
+          # If `table_name_without_prefix` does not exist, Mysql2 will raise,
+          # the other adapters will return an empty array.
+          #
+          # See: https://github.com/rails/rails/issues/51205
+          []
+        end
       end
 
       def with_comments?
