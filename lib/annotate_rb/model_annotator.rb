@@ -25,5 +25,6 @@ module AnnotateRb
     autoload :ProjectAnnotationRemover, "annotate_rb/model_annotator/project_annotation_remover"
     autoload :AnnotatedFile, "annotate_rb/model_annotator/annotated_file"
     autoload :FileParser, "annotate_rb/model_annotator/file_parser"
+    autoload :ZeitwerkClassGetter, "annotate_rb/model_annotator/zeitwerk_class_getter"
   end
 end

@@ -8,8 +8,12 @@ module AnnotateRb
         options[:require].count > 0 && options[:require].each { |path| require path }
 
         if defined?(::Rails::Application)
-          klass = ::Rails::Application.send(:subclasses).first
-          klass.eager_load!
+          if defined?(::Zeitwerk)
+            # Delegate to Zeitwerk to load stuff as needed
+          else
+            klass = ::Rails::Application.send(:subclasses).first
+            klass.eager_load!
+          end
         else
           options[:model_dir].each do |dir|
             ::Rake::FileList["#{dir}/**/*.rb"].each do |fname|
