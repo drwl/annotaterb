@@ -1,5 +1,34 @@
 # Changelog
 
+## [v4.6.0](https://github.com/drwl/annotaterb/tree/v4.6.0) (2024-02-27)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.5.0...v4.6.0)
+
+Adds two big changes: Fix annotations swallowing comments [\#72](https://github.com/drwl/annotaterb/pull/72) and 
+Add Zeitwerk support [\#85](https://github.com/drwl/annotaterb/pull/85).  
+Please report any issues you encounter. 
+
+**Closed issues:**
+
+- Add support for `data_migrate` gem [\#89](https://github.com/drwl/annotaterb/issues/89)
+
+**Merged pull requests:**
+
+- Bump version to v4.6.0 [\#95](https://github.com/drwl/annotaterb/pull/95) ([drwl](https://github.com/drwl))
+- Add support for parsing RSpec files [\#94](https://github.com/drwl/annotaterb/pull/94) ([drwl](https://github.com/drwl))
+- Add support for model name without namespace in resolver [\#93](https://github.com/drwl/annotaterb/pull/93) ([drwl](https://github.com/drwl))
+- Fixes for `RelatedFilesListBuilder` [\#92](https://github.com/drwl/annotaterb/pull/92) ([drwl](https://github.com/drwl))
+- Refactor `AnnotatedFile` classes [\#91](https://github.com/drwl/annotaterb/pull/91) ([drwl](https://github.com/drwl))
+- Add support for data\_migrate gem [\#90](https://github.com/drwl/annotaterb/pull/90) ([cmer](https://github.com/cmer))
+- Support non-model files in `CustomParser` [\#88](https://github.com/drwl/annotaterb/pull/88) ([drwl](https://github.com/drwl))
+- Fix flakey integration test [\#87](https://github.com/drwl/annotaterb/pull/87) ([drwl](https://github.com/drwl))
+- Improve integration tests [\#86](https://github.com/drwl/annotaterb/pull/86) ([drwl](https://github.com/drwl))
+- Add Zeitwerk support [\#85](https://github.com/drwl/annotaterb/pull/85) ([drwl](https://github.com/drwl))
+- Improve annotate after adding new migration integration test [\#84](https://github.com/drwl/annotaterb/pull/84) ([drwl](https://github.com/drwl))
+- Add integration test using force [\#81](https://github.com/drwl/annotaterb/pull/81) ([drwl](https://github.com/drwl))
+- Generate changelog for v4.5.0 [\#80](https://github.com/drwl/annotaterb/pull/80) ([drwl](https://github.com/drwl))
+- Fix annotations swallowing comments [\#72](https://github.com/drwl/annotaterb/pull/72) ([drwl](https://github.com/drwl))
+
 ## [v4.5.0](https://github.com/drwl/annotaterb/tree/v4.5.0) (2024-02-08)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.4.1...v4.5.0)
