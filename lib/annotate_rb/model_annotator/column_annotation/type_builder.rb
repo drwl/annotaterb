@@ -10,7 +10,7 @@ module AnnotateRb
 
         def initialize(column, options, column_defaults)
           # Passing `column_defaults` for posterity, don't actually need it here since it's not used
-          @column = ColumnWrapper.new(column, column_defaults)
+          @column = ColumnWrapper.new(column, column_defaults, options)
           @options = options
         end
 

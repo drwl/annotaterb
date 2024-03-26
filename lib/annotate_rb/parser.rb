@@ -9,7 +9,7 @@ module AnnotateRb
 
     BANNER_STRING = <<~BANNER.freeze
       Usage: annotaterb [command] [options]
-      
+
       Commands:
           models [options]
           routes [options]
@@ -125,6 +125,15 @@ module AnnotateRb
         "--wrapper-open STR",
         "Annotation wrapper opening.") do |wrapper_open|
         @options[:wrapper_open] = wrapper_open
+      end
+
+      option_parser.on("--classes-default-to-s class",
+        "Custom classes to be represented with `to_s`, may be used multiple times") do |klass|
+        @options[:classes_default_to_s] = if @options[:classes_default_to_s].present?
+          [@options[:classes_default_to_s], ::Object.const_get(klass)]
+        else
+          [Object.const_get(klass)]
+        end
       end
 
       option_parser.on("--wc",

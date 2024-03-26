@@ -76,7 +76,8 @@ module AnnotateRb
       target_action: :do_annotations, # Core; Possible values: :do_annotations, :remove_annotations
       wrapper: nil, # ModelAnnotator, RouteAnnotator
       wrapper_close: nil, # ModelAnnotator, RouteAnnotator
-      wrapper_open: nil # ModelAnnotator, RouteAnnotator
+      wrapper_open: nil, # ModelAnnotator, RouteAnnotator,
+      classes_default_to_s: [] # ModelAnnotator
     }.freeze
 
     PATH_OPTIONS = {

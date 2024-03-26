@@ -4,9 +4,10 @@ module AnnotateRb
   module ModelAnnotator
     module ColumnAnnotation
       class ColumnWrapper
-        def initialize(column, column_defaults)
+        def initialize(column, column_defaults, options)
           @column = column
           @column_defaults = column_defaults
+          @options = options
         end
 
         def raw_default
@@ -88,7 +89,7 @@ module AnnotateRb
 
         # Simple quoting for the default column value
         def quote(value)
-          DefaultValueBuilder.new(value).build
+          DefaultValueBuilder.new(value, @options).build
         end
       end
     end

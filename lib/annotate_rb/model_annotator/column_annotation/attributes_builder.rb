@@ -8,7 +8,7 @@ module AnnotateRb
         NO_DEFAULT_COL_TYPES = %w[json jsonb hstore].freeze
 
         def initialize(column, options, is_primary_key, column_indices, column_defaults)
-          @column = ColumnWrapper.new(column, column_defaults)
+          @column = ColumnWrapper.new(column, column_defaults, options)
           @options = options
           @is_primary_key = is_primary_key
           @column_indices = column_indices
