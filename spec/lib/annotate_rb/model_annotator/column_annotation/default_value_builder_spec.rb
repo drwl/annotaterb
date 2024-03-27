@@ -2,7 +2,8 @@
 
 RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::DefaultValueBuilder do
   describe "#build" do
-    subject { described_class.new(value).build }
+    subject { described_class.new(value, config).build }
+    let(:config) { {} }
 
     context "when value is a String" do
       let(:value) { "a random string" }
@@ -81,6 +82,16 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::DefaultValueBuilder
         let(:value) { [true, false] }
 
         it { is_expected.to eq("[TRUE, FALSE]") }
+      end
+    end
+
+    context "with specified `classes_default_to_s` config option" do
+      let(:config) { { classes_default_to_s: [Integer] } }
+
+      context "when value is an Integer" do
+        let(:value) { 42 }
+
+        it { is_expected.to eq("\"42\"") }
       end
     end
   end
