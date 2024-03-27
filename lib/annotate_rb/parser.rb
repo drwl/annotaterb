@@ -127,15 +127,6 @@ module AnnotateRb
         @options[:wrapper_open] = wrapper_open
       end
 
-      option_parser.on("--classes-default-to-s class",
-        "Custom classes to be represented with `to_s`, may be used multiple times") do |klass|
-        @options[:classes_default_to_s] = if @options[:classes_default_to_s].present?
-          [@options[:classes_default_to_s], ::Object.const_get(klass)]
-        else
-          [Object.const_get(klass)]
-        end
-      end
-
       option_parser.on("--wc",
         "--wrapper-close STR",
         "Annotation wrapper closing") do |wrapper_close|
@@ -256,6 +247,15 @@ module AnnotateRb
       option_parser.on("--without-table-comments",
         "exclude table comments in model annotations") do
         @options[:with_table_comments] = false
+      end
+
+      option_parser.on("--classes-default-to-s class",
+        "Custom classes to be represented with `to_s`, may be used multiple times") do |klass|
+        @options[:classes_default_to_s] = if @options[:classes_default_to_s].present?
+          [*@options[:classes_default_to_s], klass]
+        else
+          [klass]
+        end
       end
     end
 

@@ -136,7 +136,8 @@ module AnnotateRb
       :target_action,
       :wrapper,
       :wrapper_close,
-      :wrapper_open
+      :wrapper_open,
+      :classes_default_to_s
     ].freeze
 
     PATH_OPTION_KEYS = [

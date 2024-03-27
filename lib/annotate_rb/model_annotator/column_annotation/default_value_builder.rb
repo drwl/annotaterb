@@ -28,8 +28,9 @@ module AnnotateRb
         private
 
         def quote(value)
+          return value.to_s.inspect if @options[:classes_default_to_s]&.include?(value.class.name)
+
           case value
-          when *@options[:classes_default_to_s] then value.to_s.inspect
           when NilClass then "NULL"
           when TrueClass then "TRUE"
           when FalseClass then "FALSE"

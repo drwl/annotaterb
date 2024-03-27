@@ -86,12 +86,21 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::DefaultValueBuilder
     end
 
     context "with specified `classes_default_to_s` config option" do
-      let(:config) { { classes_default_to_s: [Integer] } }
+      let(:config) { {classes_default_to_s: ["Integer"]} }
 
       context "when value is an Integer" do
         let(:value) { 42 }
 
         it { is_expected.to eq("\"42\"") }
+      end
+
+      context "when config option includes unloaded class" do
+        let(:config) { {classes_default_to_s: ["Locale", "Float"]} }
+        let(:value) { 42 }
+
+        it "does not fail" do
+          expect(subject).to eq("42")
+        end
       end
     end
   end
