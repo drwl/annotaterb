@@ -1,12 +1,23 @@
 # Changelog
 
+## [v4.7.0](https://github.com/drwl/anno
+taterb/tree/v4.7.0) (2024-03-27)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.6.0...v4.7.0)
+
+**Closed issues:**
+
+- Feature request: better custom type representation [\#97](https://github.com/drwl/annotaterb/issues/97)
+
+**Merged pull requests:**
+
+- Bump version to v4.7.0 [\#100](https://github.com/drwl/annotaterb/pull/100) ([drwl](https://github.com/drwl))
+- Add configurable classes list with `to_s` representation [\#98](https://github.com/drwl/annotaterb/pull/98) ([viralpraxis](https://github.com/viralpraxis))
+- Generate changelog for v4.6.0 [\#96](https://github.com/drwl/annotaterb/pull/96) ([drwl](https://github.com/drwl))
+
 ## [v4.6.0](https://github.com/drwl/annotaterb/tree/v4.6.0) (2024-02-27)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.5.0...v4.6.0)
-
-Adds two big changes: Fix annotations swallowing comments [\#72](https://github.com/drwl/annotaterb/pull/72) and 
-Add Zeitwerk support [\#85](https://github.com/drwl/annotaterb/pull/85).  
-Please report any issues you encounter. 
 
 **Closed issues:**
 
