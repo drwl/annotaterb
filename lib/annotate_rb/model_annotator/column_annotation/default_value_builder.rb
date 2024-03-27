@@ -4,8 +4,9 @@ module AnnotateRb
   module ModelAnnotator
     module ColumnAnnotation
       class DefaultValueBuilder
-        def initialize(value)
+        def initialize(value, options)
           @value = value
+          @options = options
         end
 
         # @return [String]
@@ -27,6 +28,8 @@ module AnnotateRb
         private
 
         def quote(value)
+          return value.to_s.inspect if @options[:classes_default_to_s]&.include?(value.class.name)
+
           case value
           when NilClass then "NULL"
           when TrueClass then "TRUE"
