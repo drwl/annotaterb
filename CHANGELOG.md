@@ -1,7 +1,6 @@
 # Changelog
 
-## [v4.7.0](https://github.com/drwl/anno
-taterb/tree/v4.7.0) (2024-03-27)
+## [v4.7.0](https://github.com/drwl/annotaterb/tree/v4.7.0) (2024-03-27)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.6.0...v4.7.0)
 
