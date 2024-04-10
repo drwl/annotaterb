@@ -1967,6 +1967,77 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
         end
       end
     end
+
+    context 'when "show_check_constraints" is true' do
+      let :klass do
+        mock_class_with_custom_connection(:users, primary_key, columns, custom_connection)
+      end
+
+      let :custom_connection do
+        check_constraints = [
+          mock_check_constraint("must_be_us_adult", "age >= 18")
+        ]
+
+        mock_connection([], [], check_constraints)
+      end
+
+      let :primary_key do
+        :id
+      end
+
+      let :options do
+        {show_check_constraints: true}
+      end
+
+      let :columns do
+        [
+          mock_column("id", :integer),
+          mock_column("age", :integer)
+        ]
+      end
+
+      let :expected_result do
+        <<~EOS
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id  :integer          not null, primary key
+          #  age :integer          not null
+          #
+          # Check Constraints
+          #
+          #  must_be_us_adult  (age >= 18)
+          #
+        EOS
+      end
+
+      it "returns schema info with check constraints" do
+        is_expected.to eq expected_result
+      end
+
+      context "when option is set to false" do
+        let(:options) do
+          {show_check_constraints: false}
+        end
+
+        let :expected_result do
+          <<~EOS
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id  :integer          not null, primary key
+            #  age :integer          not null
+            #
+          EOS
+        end
+
+        it "returns schema info without check constraints" do
+          is_expected.to eq expected_result
+        end
+      end
+    end
   end
 
   describe "#schema_header_text" do
