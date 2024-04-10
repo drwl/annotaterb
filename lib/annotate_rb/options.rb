@@ -45,6 +45,7 @@ module AnnotateRb
       ignore_unknown_models: false, # ModelAnnotator
       include_version: false, # ModelAnnotator
       show_complete_foreign_keys: false, # ModelAnnotator
+      show_check_constraints: false, # ModelAnnotator
       show_foreign_keys: true, # ModelAnnotator
       show_indexes: true, # ModelAnnotator
       simple_indexes: false, # ModelAnnotator
@@ -109,6 +110,7 @@ module AnnotateRb
       :ignore_model_sub_dir,
       :ignore_unknown_models,
       :include_version,
+      :show_check_constraints,
       :show_complete_foreign_keys,
       :show_foreign_keys,
       :show_indexes,
