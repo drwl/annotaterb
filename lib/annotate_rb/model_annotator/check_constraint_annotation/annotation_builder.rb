@@ -16,12 +16,10 @@ module AnnotateRb
             "#\n# Check Constraints\n#\n"
           end
 
-          klass = @model.instance_variable_get(:@klass)
+          return "" unless @model.connection.respond_to?(:supports_check_constraints?) &&
+            @model.connection.supports_check_constraints? && @model.connection.respond_to?(:check_constraints)
 
-          return "" unless klass.connection.respond_to?(:supports_check_constraints?) &&
-            klass.connection.supports_check_constraints? && klass.connection.respond_to?(:check_constraints)
-
-          check_constraints = klass.connection.check_constraints(klass.table_name)
+          check_constraints = @model.connection.check_constraints(@model.table_name)
           return "" if check_constraints.empty?
 
           max_size = check_constraints.map { |check_constraint| check_constraint.name.size }.max + 1
@@ -49,7 +47,9 @@ module AnnotateRb
         end
 
         def cc_info_string(name, expression, max_size)
+          # standard:disable Lint/FormatParameterMismatch
           sprintf("#  %-#{max_size}.#{max_size}s %s", name, expression).rstrip + "\n"
+          # standard:enable Lint/FormatParameterMismatch
         end
       end
     end
