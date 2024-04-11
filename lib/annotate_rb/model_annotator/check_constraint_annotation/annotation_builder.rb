@@ -29,15 +29,9 @@ module AnnotateRb
             expression = check_constraint.expression ? "(#{check_constraint.expression.squish})" : nil
 
             constraint_info += if @options[:format_markdown]
-              cc_info_markdown = sprintf("# * `%s`", check_constraint.name)
-              cc_info_markdown += sprintf(": `%s`", expression) if expression
-              cc_info_markdown += "\n"
-
-              cc_info_markdown
+              cc_info_in_markdown(check_constraint.name, expression)
             else
-              # standard:disable Lint/FormatParameterMismatch
-              sprintf("#  %-#{max_size}.#{max_size}s %s", check_constraint.name, expression).rstrip + "\n"
-              # standard:enable Lint/FormatParameterMismatch
+              cc_info_string(check_constraint.name, expression, max_size)
             end
           end
 
@@ -45,6 +39,18 @@ module AnnotateRb
         end
 
         private
+
+        def cc_info_in_markdown(name, expression)
+          cc_info_markdown = sprintf("# * `%s`", name)
+          cc_info_markdown += sprintf(": `%s`", expression) if expression
+          cc_info_markdown += "\n"
+
+          cc_info_markdown
+        end
+
+        def cc_info_string(name, expression, max_size)
+          sprintf("#  %-#{max_size}.#{max_size}s %s", name, expression).rstrip + "\n"
+        end
       end
     end
   end
