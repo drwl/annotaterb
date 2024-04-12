@@ -44,6 +44,10 @@ module AnnotateRb
           @info += ForeignKeyAnnotation::AnnotationBuilder.new(@model, @options).build
         end
 
+        if @options[:show_check_constraints] && @model.table_exists?
+          @info += CheckConstraintAnnotation::AnnotationBuilder.new(@model, @options).build
+        end
+
         @info += schema_footer_text
 
         @info

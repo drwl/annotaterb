@@ -198,6 +198,12 @@ module AnnotateRb
         @options[:simple_indexes] = true
       end
 
+      option_parser.on("-c",
+        "--show-check-constraints",
+        "List the table's check constraints in the annotation") do
+        @options[:show_check_constraints] = true
+      end
+
       option_parser.on("--hide-limit-column-types VALUES",
         "don't show limit for given column types, separated by commas (i.e., `integer,boolean,text`)") do |values|
         @options[:hide_limit_column_types] = values.to_s

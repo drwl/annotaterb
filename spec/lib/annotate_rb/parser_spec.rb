@@ -295,6 +295,16 @@ module AnnotateRb # rubocop:disable Metrics/ModuleLength
       end
     end
 
+    %w[-c --show-check-constraints].each do |option|
+      describe option do
+        let(:args) { [option] }
+
+        it "sets show_check_constraints to true" do
+          expect(result).to include(show_check_constraints: true)
+        end
+      end
+    end
+
     describe "--model-dir" do
       let(:option) { "--model-dir" }
       let(:set_value) { "some_dir/" }
