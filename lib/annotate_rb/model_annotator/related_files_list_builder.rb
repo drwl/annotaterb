@@ -21,7 +21,10 @@ module AnnotateRb
         add_related_fixture_files if !@options[:exclude_fixtures]
         add_related_factory_files if !@options[:exclude_factories]
         add_related_serializer_files if !@options[:exclude_serializers]
-        add_related_scaffold_files if !@options[:exclude_scaffolds]
+        add_related_serializer_test_files if !@options[:exclude_serializers]
+        add_related_controller_test_files if !@options[:exclude_scaffolds]
+        add_related_request_spec_files if !@options[:exclude_scaffolds]
+        add_related_routing_spec_files if !@options[:exclude_scaffolds]
         add_related_controller_files if !@options[:exclude_controllers]
         add_related_helper_files if !@options[:exclude_helpers]
         add_related_admin_files if @options[:active_admin]
@@ -81,9 +84,9 @@ module AnnotateRb
         @list.concat(files_with_position_key)
       end
 
-      def add_related_scaffold_files
-        position_key = :position_in_scaffold # Key does not exist
-        pattern_type = "scaffold"
+      def add_related_serializer_test_files
+        position_key = :position_in_serializer
+        pattern_type = "serializer_test"
 
         related_files = related_files_for_pattern(pattern_type)
         files_with_position_key = related_files.map { |f| [f, position_key] }
@@ -94,6 +97,36 @@ module AnnotateRb
       def add_related_controller_files
         position_key = :position_in_controller # Key does not exist
         pattern_type = "controller"
+
+        related_files = related_files_for_pattern(pattern_type)
+        files_with_position_key = related_files.map { |f| [f, position_key] }
+
+        @list.concat(files_with_position_key)
+      end
+
+      def add_related_controller_test_files
+        position_key = :position_in_scaffold # Key does not exist
+        pattern_type = "controller_test"
+
+        related_files = related_files_for_pattern(pattern_type)
+        files_with_position_key = related_files.map { |f| [f, position_key] }
+
+        @list.concat(files_with_position_key)
+      end
+
+      def add_related_request_spec_files
+        position_key = :position_in_scaffold # Key does not exist
+        pattern_type = "request_spec"
+
+        related_files = related_files_for_pattern(pattern_type)
+        files_with_position_key = related_files.map { |f| [f, position_key] }
+
+        @list.concat(files_with_position_key)
+      end
+
+      def add_related_routing_spec_files
+        position_key = :position_in_scaffold # Key does not exist
+        pattern_type = "routing_spec"
 
         related_files = related_files_for_pattern(pattern_type)
         files_with_position_key = related_files.map { |f| [f, position_key] }

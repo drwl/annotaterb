@@ -152,12 +152,50 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
       end
     end
 
-    context "when including scaffolds", :isolated_environment do
+    context "when including scaffolds (request specs)", :isolated_environment do
       let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_scaffolds: false})) }
 
       let(:model_name) { "test_default" }
       let(:scaffolded_requests_directory) { "spec/requests" }
       let(:scaffolded_request_spec_file_name) { "test_defaults_spec.rb" }
+      let(:relative_file_path) { File.join(scaffolded_requests_directory, scaffolded_request_spec_file_name) }
+      let(:position_key) { :position_in_scaffold }
+
+      before do
+        FileUtils.mkdir_p(scaffolded_requests_directory)
+        FileUtils.touch(relative_file_path)
+      end
+
+      it "returns the test file and the position key" do
+        expect(subject).to eq([[relative_file_path, position_key]])
+      end
+    end
+
+    context "when including scaffolds (routing specs)", :isolated_environment do
+      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_scaffolds: false})) }
+
+      let(:model_name) { "test_default" }
+      let(:scaffolded_requests_directory) { "spec/routing" }
+      let(:scaffolded_request_spec_file_name) { "test_defaults_routing_spec.rb" }
+      let(:relative_file_path) { File.join(scaffolded_requests_directory, scaffolded_request_spec_file_name) }
+      let(:position_key) { :position_in_scaffold }
+
+      before do
+        FileUtils.mkdir_p(scaffolded_requests_directory)
+        FileUtils.touch(relative_file_path)
+      end
+
+      it "returns the test file and the position key" do
+        expect(subject).to eq([[relative_file_path, position_key]])
+      end
+    end
+
+    context "when including scaffolds (controller test)", :isolated_environment do
+      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_scaffolds: false})) }
+
+      let(:model_name) { "test_default" }
+      let(:scaffolded_requests_directory) { "test/controllers" }
+      let(:scaffolded_request_spec_file_name) { "test_defaults_controller_test.rb" }
       let(:relative_file_path) { File.join(scaffolded_requests_directory, scaffolded_request_spec_file_name) }
       let(:position_key) { :position_in_scaffold }
 
