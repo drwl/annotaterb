@@ -103,6 +103,13 @@ module AnnotateRb
         ]
       end
 
+      def controller_tests_files(root_directory)
+        [
+          File.join(root_directory, FilePatterns::CONTROLLER_TEST_DIR, "%PLURALIZED_MODEL_NAME%_controller_test.rb"),
+          File.join(root_directory, FilePatterns::CONTROLLER_SPEC_DIR, "%PLURALIZED_MODEL_NAME%_controller_spec.rb")
+        ]
+      end
+
       def additional_file_patterns
         [
           @options[:additional_file_patterns] || []
@@ -140,17 +147,19 @@ module AnnotateRb
       end
 
       def scaffold_files(root_directory)
-        scaffold_controller_tests = [
-          File.join(root_directory, FilePatterns::CONTROLLER_TEST_DIR, "%PLURALIZED_MODEL_NAME%_controller_test.rb"),
-          File.join(root_directory, FilePatterns::CONTROLLER_SPEC_DIR, "%PLURALIZED_MODEL_NAME%_controller_spec.rb")
-        ]
+        controller_tests_files(root_directory) + request_spec_files(root_directory) + routing_spec_files(root_directory)
+      end
 
-        other_scaffold_tests = [
-          File.join(root_directory, FilePatterns::REQUEST_SPEC_DIR, "%PLURALIZED_MODEL_NAME%_spec.rb"),
+      def request_spec_files(root_directory)
+        [
+          File.join(root_directory, FilePatterns::REQUEST_SPEC_DIR, "%PLURALIZED_MODEL_NAME%_spec.rb")
+        ]
+      end
+
+      def routing_spec_files(root_directory)
+        [
           File.join(root_directory, FilePatterns::ROUTING_SPEC_DIR, "%PLURALIZED_MODEL_NAME%_routing_spec.rb")
         ]
-
-        scaffold_controller_tests + other_scaffold_tests
       end
 
       def factory_files(root_directory)
