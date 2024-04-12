@@ -76,8 +76,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
       it { is_expected.to be_empty }
     end
 
-    context "when including tests", :isolated_environment do
-      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_tests: false})) }
+    context "when including model tests", :isolated_environment do
+      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_tests: exclude_tests_option})) }
+      let(:exclude_tests_option) { false }
 
       let(:model_name) { "test_default" }
       let(:test_directory) { "spec/models" }
@@ -92,6 +93,26 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
 
       it "returns the test file and the position key" do
         expect(subject).to eq([[relative_file_path, position_key]])
+      end
+
+      context "when exclude_tests is an empty Array" do
+        let(:exclude_tests_option) { [] }
+
+        it { is_expected.to be_empty }
+      end
+
+      context "when exclude_tests includes :model" do
+        let(:exclude_tests_option) { [:model] }
+
+        it "returns the test file and the position key" do
+          expect(subject).to eq([[relative_file_path, position_key]])
+        end
+      end
+
+      context "when exclude_tests includes a non-:model option" do
+        let(:exclude_tests_option) { [:controller] }
+
+        it { is_expected.to be_empty }
       end
     end
 

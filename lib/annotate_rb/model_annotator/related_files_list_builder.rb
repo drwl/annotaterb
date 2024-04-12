@@ -7,6 +7,9 @@ module AnnotateRb
     class RelatedFilesListBuilder
       RELATED_TYPES = %w[test fixture factory serializer scaffold controller helper].freeze
 
+      # Valid options when `:exclude_tests` is an Array, note that symbols are expected
+      EXCLUDE_TEST_OPTIONS = %i[model controller serializer request routing].freeze
+
       def initialize(file, model_name, table_name, options)
         @file = file
         @model_name = model_name
@@ -17,7 +20,7 @@ module AnnotateRb
       def build
         @list = []
 
-        add_related_test_files if !@options[:exclude_tests]
+        add_related_test_files if include_model_test_files?
         add_related_fixture_files if !@options[:exclude_fixtures]
         add_related_factory_files if !@options[:exclude_factories]
         add_related_serializer_files if !@options[:exclude_serializers]
@@ -34,6 +37,16 @@ module AnnotateRb
       end
 
       private
+
+      def include_model_test_files?
+        option = @options[:exclude_tests]
+
+        if option.is_a?(Array)
+          option.include?(:model)
+        else
+          !option
+        end
+      end
 
       def related_files_for_pattern(pattern_type)
         patterns = PatternGetter.call(@options, pattern_type)
