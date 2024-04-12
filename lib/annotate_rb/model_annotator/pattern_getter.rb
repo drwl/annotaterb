@@ -88,6 +88,7 @@ module AnnotateRb
         when "scaffold" then scaffold_files(root_directory)
         when "factory" then factory_files(root_directory)
         when "serializer" then serialize_files(root_directory)
+        when "serializer_test" then serializer_test_files(root_directory)
         when "additional_file_patterns" then additional_file_patterns
         when "controller" then controller_files(root_directory)
         when "controller_test" then controller_test_files(root_directory)
@@ -183,16 +184,16 @@ module AnnotateRb
       end
 
       def serialize_files(root_directory)
-        serializer_files = [
+        [
           File.join(root_directory, FilePatterns::SERIALIZERS_DIR, "%MODEL_NAME%_serializer.rb")
         ]
+      end
 
-        serializer_test_files = [
+      def serializer_test_files(root_directory)
+        [
           File.join(root_directory, FilePatterns::SERIALIZERS_TEST_DIR, "%MODEL_NAME%_serializer_test.rb"),
           File.join(root_directory, FilePatterns::SERIALIZERS_SPEC_DIR, "%MODEL_NAME%_serializer_spec.rb")
         ]
-
-        serializer_files + serializer_test_files
       end
     end
   end
