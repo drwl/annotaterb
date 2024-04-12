@@ -90,6 +90,7 @@ module AnnotateRb
         when "serializer" then serialize_files(root_directory)
         when "additional_file_patterns" then additional_file_patterns
         when "controller" then controller_files(root_directory)
+        when "controller_test" then controller_test_files(root_directory)
         when "admin" then active_admin_files(root_directory)
         when "helper" then helper_files(root_directory)
         else
@@ -103,7 +104,7 @@ module AnnotateRb
         ]
       end
 
-      def controller_tests_files(root_directory)
+      def controller_test_files(root_directory)
         [
           File.join(root_directory, FilePatterns::CONTROLLER_TEST_DIR, "%PLURALIZED_MODEL_NAME%_controller_test.rb"),
           File.join(root_directory, FilePatterns::CONTROLLER_SPEC_DIR, "%PLURALIZED_MODEL_NAME%_controller_spec.rb")
@@ -147,7 +148,7 @@ module AnnotateRb
       end
 
       def scaffold_files(root_directory)
-        controller_tests_files(root_directory) + request_spec_files(root_directory) + routing_spec_files(root_directory)
+        controller_test_files(root_directory) + request_spec_files(root_directory) + routing_spec_files(root_directory)
       end
 
       def request_spec_files(root_directory)
