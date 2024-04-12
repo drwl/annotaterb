@@ -20,7 +20,7 @@ module AnnotateRb
       def build
         @list = []
 
-        add_related_test_files if include_model_test_files?
+        add_related_test_files if !exclude_model_test_files?
         add_related_fixture_files if !@options[:exclude_fixtures]
         add_related_factory_files if !@options[:exclude_factories]
         add_related_serializer_files if !@options[:exclude_serializers]
@@ -38,13 +38,16 @@ module AnnotateRb
 
       private
 
-      def include_model_test_files?
+      def exclude_model_test_files?
         option = @options[:exclude_tests]
 
+        # If exclude_tests: [:model] then
+        # 1) we want to exclude model test files, and
+        # 2) we don't want to include model test files
         if option.is_a?(Array)
           option.include?(:model)
         else
-          !option
+          option
         end
       end
 

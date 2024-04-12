@@ -98,21 +98,23 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
       context "when exclude_tests is an empty Array" do
         let(:exclude_tests_option) { [] }
 
-        it { is_expected.to be_empty }
-      end
-
-      context "when exclude_tests includes :model" do
-        let(:exclude_tests_option) { [:model] }
-
         it "returns the test file and the position key" do
           expect(subject).to eq([[relative_file_path, position_key]])
         end
       end
 
+      context "when exclude_tests includes :model" do
+        let(:exclude_tests_option) { [:model] }
+
+        it { is_expected.to be_empty }
+      end
+
       context "when exclude_tests includes a non-:model option" do
         let(:exclude_tests_option) { [:controller] }
 
-        it { is_expected.to be_empty }
+        it "returns the test file and the position key" do
+          expect(subject).to eq([[relative_file_path, position_key]])
+        end
       end
     end
 
