@@ -94,6 +94,8 @@ module AnnotateRb
         when "controller_test" then controller_test_files(root_directory)
         when "admin" then active_admin_files(root_directory)
         when "helper" then helper_files(root_directory)
+        when "request_spec" then request_spec_files(root_directory)
+        when "routing_spec" then routing_spec_files(root_directory)
         else
           []
         end

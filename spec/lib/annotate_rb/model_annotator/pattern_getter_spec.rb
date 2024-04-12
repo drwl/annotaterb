@@ -72,6 +72,24 @@ RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
       end
     end
 
+    context 'when pattern_type is "request_spec"' do
+      let(:base_options) { {root_dir: [""]} }
+      let(:pattern_type) { "request_spec" }
+
+      it "returns patterns of scaffold files" do
+        is_expected.to eq(["spec/requests/%PLURALIZED_MODEL_NAME%_spec.rb"])
+      end
+    end
+
+    context 'when pattern_type is "routing_spec"' do
+      let(:base_options) { {root_dir: [""]} }
+      let(:pattern_type) { "routing_spec" }
+
+      it "returns patterns of scaffold files" do
+        is_expected.to eq(["spec/routing/%PLURALIZED_MODEL_NAME%_routing_spec.rb"])
+      end
+    end
+
     context 'when pattern_type is "factory"' do
       let(:base_options) { {root_dir: [""]} }
       let(:pattern_type) { "factory" }
