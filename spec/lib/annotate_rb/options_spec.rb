@@ -10,6 +10,49 @@ RSpec.describe AnnotateRb::Options do
     it { is_expected.to be_a(described_class) }
   end
 
+  describe ".new" do
+    subject { described_class.new(options, state) }
+    let(:state) { {} }
+
+    context ":exclude_tests option is an Array of strings" do
+      let(:options) { {exclude_tests: ["serializers", "controllers"]} }
+      let(:expected_symbols) { [:serializers, :controllers] }
+
+      it "symbolizes the elements" do
+        expect(subject[:exclude_tests]).to match_array(expected_symbols)
+      end
+    end
+
+    context ":exclude_tests option is an Array of symbols" do
+      let(:options) { {exclude_tests: expected_symbols} }
+      let(:expected_symbols) { [:serializers, :controllers] }
+
+      it "changes nothing" do
+        expect(subject[:exclude_tests]).to match_array(expected_symbols)
+      end
+    end
+
+    context ":exclude_tests option is an empty Array" do
+      let(:options) { {exclude_tests: []} }
+
+      it "changes nothing" do
+        expect(subject[:exclude_tests]).to be_empty
+      end
+    end
+
+    context ":exclude_tests option is true" do
+      let(:options) { {exclude_tests: true} }
+
+      it { expect(subject[:exclude_tests]).to eq(true) }
+    end
+
+    context ":exclude_tests option is false" do
+      let(:options) { {exclude_tests: false} }
+
+      it { expect(subject[:exclude_tests]).to eq(false) }
+    end
+  end
+
   describe ".load_defaults" do
     subject { described_class.new(options, state).load_defaults }
 
