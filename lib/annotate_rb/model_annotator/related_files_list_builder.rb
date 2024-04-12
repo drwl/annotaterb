@@ -24,10 +24,10 @@ module AnnotateRb
         add_related_fixture_files if !@options[:exclude_fixtures]
         add_related_factory_files if !@options[:exclude_factories]
         add_related_serializer_files if !@options[:exclude_serializers]
-        add_related_serializer_test_files if !@options[:exclude_serializers]
-        add_related_controller_test_files if !@options[:exclude_scaffolds]
-        add_related_request_spec_files if !@options[:exclude_scaffolds]
-        add_related_routing_spec_files if !@options[:exclude_scaffolds]
+        add_related_serializer_test_files if !exclude_serializer_tests?
+        add_related_controller_test_files if !exclude_controller_tests?
+        add_related_request_spec_files if !exclude_request_specs?
+        add_related_routing_spec_files if !exclude_routing_specs?
         add_related_controller_files if !@options[:exclude_controllers]
         add_related_helper_files if !@options[:exclude_helpers]
         add_related_admin_files if @options[:active_admin]
@@ -48,6 +48,38 @@ module AnnotateRb
           option.include?(:model)
         else
           option
+        end
+      end
+
+      def exclude_serializer_tests?
+        if @options[:exclude_tests].is_a?(Array)
+          @options[:exclude_tests].include?(:serializer)
+        else
+          @options[:exclude_serializers]
+        end
+      end
+
+      def exclude_controller_tests?
+        if @options[:exclude_tests].is_a?(Array)
+          @options[:exclude_tests].include?(:controller)
+        else
+          @options[:exclude_scaffolds]
+        end
+      end
+
+      def exclude_routing_specs?
+        if @options[:exclude_tests].is_a?(Array)
+          @options[:exclude_tests].include?(:routing)
+        else
+          @options[:exclude_scaffolds]
+        end
+      end
+
+      def exclude_request_specs?
+        if @options[:exclude_tests].is_a?(Array)
+          @options[:exclude_tests].include?(:request)
+        else
+          @options[:exclude_scaffolds]
         end
       end
 
