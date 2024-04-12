@@ -36,13 +36,16 @@ module AnnotateTestHelpers
       on_update: constraints[:on_update])
   end
 
-  def mock_connection(indexes = [], foreign_keys = [], check_constraints = [])
-    double("Conn",
+  def mock_connection(indexes = [], foreign_keys = [], check_constraints = [], options = {})
+    double_options = {
       indexes: indexes,
       check_constraints: check_constraints,
       foreign_keys: foreign_keys,
       supports_foreign_keys?: true,
-      supports_check_constraints?: true)
+      supports_check_constraints?: true
+    }.merge(options)
+
+    double("Conn", double_options)
   end
 
   def mock_connection_with_table_fields(indexes, foreign_keys, table_exists, table_comment)
