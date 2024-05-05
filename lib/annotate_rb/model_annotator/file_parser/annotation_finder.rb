@@ -19,19 +19,17 @@ module AnnotateRb
 
         attr_reader :parser
 
-        def initialize(content, wrapper_open, wrapper_close)
+        def initialize(content, wrapper_open, wrapper_close, parser)
           @content = content
           @wrapper_open = wrapper_open
           @wrapper_close = wrapper_close
           @annotation_start = nil
           @annotation_end = nil
-          @parser = nil
+          @parser = parser
         end
 
         # Find the annotation's line start and line end
         def run
-          # CustomParser returns line numbers as 0-indexed
-          @parser = FileParser::CustomParser.parse(@content)
           comments = @parser.comments
 
           start = comments.find_index { |comment, _| comment.include?(COMPAT_PREFIX) || comment.include?(COMPAT_PREFIX_MD) }

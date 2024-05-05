@@ -2,7 +2,8 @@
 
 RSpec.describe AnnotateRb::ModelAnnotator::FileParser::AnnotationFinder do
   describe "#run" do
-    subject { described_class.new(content, wrapper_open, wrapper_close) }
+    subject { described_class.new(content, wrapper_open, wrapper_close, parser) }
+    let(:parser) { AnnotateRb::ModelAnnotator::FileParser::CustomParser.parse(content) }
     let(:wrapper_open) { nil }
     let(:wrapper_close) { nil }
 

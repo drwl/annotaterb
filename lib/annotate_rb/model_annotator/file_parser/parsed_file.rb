@@ -14,7 +14,8 @@ module AnnotateRb
         end
 
         def parse
-          @finder = AnnotationFinder.new(@file_content, @options[:wrapper_open], @options[:wrapper_close])
+          @file_parser = CustomParser.parse(@file_content)
+          @finder = AnnotationFinder.new(@file_content, @options[:wrapper_open], @options[:wrapper_close], @file_parser)
           has_annotations = false
 
           begin
@@ -30,7 +31,6 @@ module AnnotateRb
           end
 
           @diff = AnnotationDiffGenerator.new(annotations, @new_annotations).generate
-          @file_parser = @finder.parser
 
           has_skip_string = @file_parser.comments.any? { |comment, _lineno| comment.include?(SKIP_ANNOTATION_STRING) }
           annotations_changed = @diff.changed?
