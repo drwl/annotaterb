@@ -321,9 +321,5 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
         check_it_parses_correctly
       end
     end
-
-    context "with a fixture yml file" do
-      
-    end
   end
 end
