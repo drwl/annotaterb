@@ -87,7 +87,7 @@ module AnnotateRb
             has_trailing_whitespace: has_trailing_whitespace,
             annotation_position: annotation_position,
             starts: @file_parser.starts,
-            ends: @file_parser.ends,
+            ends: @file_parser.ends
           )
         end
       end
