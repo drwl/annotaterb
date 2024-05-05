@@ -12,8 +12,10 @@ module AnnotateRb
           return false unless File.exist?(file_name)
           old_content = File.read(file_name)
 
+          parser_klass = FileParser::CustomParser
+
           begin
-            parsed_file = FileParser::ParsedFile.new(old_content, "", options).parse
+            parsed_file = FileParser::ParsedFile.new(old_content, "", parser_klass, options).parse
           rescue FileParser::AnnotationFinder::MalformedAnnotation => e
             warn "Unable to process #{file_name}: #{e.message}"
             warn "\t" + e.backtrace.join("\n\t") if @options[:trace]

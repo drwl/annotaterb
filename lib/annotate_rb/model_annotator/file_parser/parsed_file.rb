@@ -6,15 +6,16 @@ module AnnotateRb
       class ParsedFile
         SKIP_ANNOTATION_STRING = "# -*- SkipSchemaAnnotations"
 
-        def initialize(file_content, new_annotations, options)
+        def initialize(file_content, new_annotations, parser_klass, options)
           @file_content = file_content
           @file_lines = @file_content.lines
           @new_annotations = new_annotations
+          @parser_klass = parser_klass
           @options = options
         end
 
         def parse
-          @file_parser = CustomParser.parse(@file_content)
+          @file_parser = @parser_klass.parse(@file_content)
           @finder = AnnotationFinder.new(@file_content, @options[:wrapper_open], @options[:wrapper_close], @file_parser)
           has_annotations = false
 

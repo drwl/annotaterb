@@ -16,7 +16,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
 
     let(:annotation_position) { :position_in_class }
     let(:parsed_file) do
-      AnnotateRb::ModelAnnotator::FileParser::ParsedFile.new(file_content, new_annotations, options).parse
+      parser_klass = AnnotateRb::ModelAnnotator::FileParser::CustomParser
+      AnnotateRb::ModelAnnotator::FileParser::ParsedFile.new(file_content, new_annotations, parser_klass, options).parse
     end
 
     context "with a foreign key constraint change" do
