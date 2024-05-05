@@ -121,5 +121,5 @@ When running the install generator command, `bin/rails g annotate_rb:install`, a
 
 It _should_ match the old Annotate defaults however there may be differences.
 
-**Note: there were bugs in Annotate that may have lead to options not actually being used for some of the `exclude_*` options. If you experience different behavior despite using the same defaults then this may be why.**
+**Note: there were bugs in Annotate that may have led to options not actually being used for some of the `exclude_*` options. If you experience different behavior despite using the same defaults then this may be why.**
 
