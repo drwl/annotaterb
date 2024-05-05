@@ -85,7 +85,9 @@ module AnnotateRb
             annotations_with_whitespace: annotations_with_whitespace,
             has_leading_whitespace: has_leading_whitespace,
             has_trailing_whitespace: has_trailing_whitespace,
-            annotation_position: annotation_position
+            annotation_position: annotation_position,
+            starts: @file_parser.starts,
+            ends: @file_parser.ends,
           )
         end
       end
