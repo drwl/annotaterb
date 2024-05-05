@@ -12,7 +12,7 @@ module AnnotateRb
           return false unless File.exist?(file_name)
           old_content = File.read(file_name)
 
-          parser_klass = FileParser::CustomParser
+          parser_klass = FileToParserMapper.map(file_name)
 
           begin
             parsed_file = FileParser::ParsedFile.new(old_content, "", parser_klass, options).parse
