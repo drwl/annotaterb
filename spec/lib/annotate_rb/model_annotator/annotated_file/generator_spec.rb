@@ -9,6 +9,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
         file_content,
         new_annotations,
         annotation_position,
+        parsed_file,
         options
       ]
     end
@@ -30,6 +31,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
       ANNOTATIONS
     end
     let(:annotation_position) { :position_in_class }
+    let(:parsed_file) do
+      AnnotateRb::ModelAnnotator::FileParser::ParsedFile.new(file_content, new_annotations, options).parse
+    end
 
     context 'when position is "before"' do
       let(:options) { AnnotateRb::Options.new({position_in_class: "before"}) }
