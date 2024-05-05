@@ -25,6 +25,8 @@ module AnnotateRb
           return false unless File.exist?(file_name)
           old_content = File.read(file_name)
 
+          parser_klass = FileParser::CustomParser
+
           begin
             parsed_file = FileParser::ParsedFile.new(old_content, annotation, options).parse
           rescue FileParser::AnnotationFinder::MalformedAnnotation => e
@@ -39,9 +41,9 @@ module AnnotateRb
           abort "AnnotateRb error. #{file_name} needs to be updated, but annotaterb was run with `--frozen`." if options[:frozen]
 
           updated_file_content = if !parsed_file.has_annotations?
-            AnnotatedFile::Generator.new(old_content, annotation, annotation_position, parsed_file, options).generate
+            AnnotatedFile::Generator.new(old_content, annotation, annotation_position, parser_klass, parsed_file, options).generate
           elsif options[:force]
-            AnnotatedFile::Generator.new(old_content, annotation, annotation_position, parsed_file, options).generate
+            AnnotatedFile::Generator.new(old_content, annotation, annotation_position, parser_klass, parsed_file, options).generate
           else
             AnnotatedFile::Updater.new(old_content, annotation, annotation_position, options).update
           end
