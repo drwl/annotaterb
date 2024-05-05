@@ -6,7 +6,8 @@ module AnnotateRb
       class UnsupportedFileTypeError < StandardError; end
 
       MAP = {
-        ".rb" => FileParser::CustomParser
+        ".rb" => FileParser::CustomParser,
+        ".yml" => FileParser::YmlParser
       }.freeze
 
       class << self
