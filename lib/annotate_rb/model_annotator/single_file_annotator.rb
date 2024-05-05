@@ -45,7 +45,7 @@ module AnnotateRb
           elsif options[:force]
             AnnotatedFile::Generator.new(old_content, annotation, annotation_position, parser_klass, parsed_file, options).generate
           else
-            AnnotatedFile::Updater.new(old_content, annotation, annotation_position, options).update
+            AnnotatedFile::Updater.new(old_content, annotation, annotation_position, parsed_file, options).update
           end
 
           File.open(file_name, "wb") { |f| f.puts updated_file_content }
