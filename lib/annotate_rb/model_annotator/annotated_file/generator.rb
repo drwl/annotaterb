@@ -32,7 +32,7 @@ module AnnotateRb
           end
 
           # We need to get class start and class end depending on the position
-          parsed = FileParser::CustomParser.new(content_without_annotations, "", 0).tap(&:parse)
+          parsed = FileParser::CustomParser.parse(content_without_annotations)
 
           _content = if %w[after bottom].include?(annotation_write_position)
             content_annotated_after(parsed, content_without_annotations)

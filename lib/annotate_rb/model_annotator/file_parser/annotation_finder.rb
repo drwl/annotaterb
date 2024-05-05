@@ -31,7 +31,7 @@ module AnnotateRb
         # Find the annotation's line start and line end
         def run
           # CustomParser returns line numbers as 0-indexed
-          @parser = FileParser::CustomParser.new(@content, "", 0).tap(&:parse)
+          @parser = FileParser::CustomParser.parse(@content)
           comments = @parser.comments
 
           start = comments.find_index { |comment, _| comment.include?(COMPAT_PREFIX) || comment.include?(COMPAT_PREFIX_MD) }
