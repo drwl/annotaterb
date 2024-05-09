@@ -56,11 +56,18 @@ module AnnotateRb
       def header
         header = @options[:format_markdown] ? PREFIX_MD.dup : PREFIX.dup
         header = "# #{header}"
-        version = begin
-          ActiveRecord::Migrator.current_version
-        rescue
-          0
+
+        if @options.get_state(:current_version).nil?
+          migration_version = begin
+            ActiveRecord::Migrator.current_version
+          rescue
+            0
+          end
+
+          @options.set_state(:current_version, migration_version)
         end
+
+        version = @options.get_state(:current_version)
 
         if @options[:include_version] && version > 0
           header += "\n# Schema version: #{version}"

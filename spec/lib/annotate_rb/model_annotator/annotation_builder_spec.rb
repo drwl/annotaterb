@@ -1481,7 +1481,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
       end
 
       let :options do
-        {format_rdoc: true}
+        AnnotateRb::Options.new({format_rdoc: true})
       end
 
       let :columns do
@@ -1516,7 +1516,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
       end
 
       let :options do
-        {format_yard: true}
+        AnnotateRb::Options.new({format_yard: true})
       end
 
       let :columns do
@@ -1851,7 +1851,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
       end
 
       let :options do
-        {format_rdoc: true, with_comment: true, with_column_comments: true}
+        AnnotateRb::Options.new({format_rdoc: true, with_comment: true, with_column_comments: true})
       end
 
       let :columns do
@@ -1899,7 +1899,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
       end
 
       let :options do
-        {format_markdown: true, with_comment: true, with_column_comments: true}
+        AnnotateRb::Options.new({format_markdown: true, with_comment: true, with_column_comments: true})
       end
 
       let :columns do
@@ -1986,7 +1986,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
       end
 
       let :options do
-        {show_check_constraints: true}
+        AnnotateRb::Options.new({show_check_constraints: true})
       end
 
       let :columns do
@@ -2018,7 +2018,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
       context "when option is set to false" do
         let(:options) do
-          {show_check_constraints: false}
+          AnnotateRb::Options.new({show_check_constraints: false})
         end
 
         let :expected_result do
