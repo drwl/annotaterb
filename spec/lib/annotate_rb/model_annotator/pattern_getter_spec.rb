@@ -72,6 +72,24 @@ RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
       end
     end
 
+    context 'when pattern_type is "request_spec"' do
+      let(:base_options) { {root_dir: [""]} }
+      let(:pattern_type) { "request_spec" }
+
+      it "returns patterns of scaffold files" do
+        is_expected.to eq(["spec/requests/%PLURALIZED_MODEL_NAME%_spec.rb"])
+      end
+    end
+
+    context 'when pattern_type is "routing_spec"' do
+      let(:base_options) { {root_dir: [""]} }
+      let(:pattern_type) { "routing_spec" }
+
+      it "returns patterns of scaffold files" do
+        is_expected.to eq(["spec/routing/%PLURALIZED_MODEL_NAME%_routing_spec.rb"])
+      end
+    end
+
     context 'when pattern_type is "factory"' do
       let(:base_options) { {root_dir: [""]} }
       let(:pattern_type) { "factory" }
@@ -102,7 +120,17 @@ RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
 
       it "returns patterns of serializer files" do
         is_expected.to eq([
-          "app/serializers/%MODEL_NAME%_serializer.rb",
+          "app/serializers/%MODEL_NAME%_serializer.rb"
+        ])
+      end
+    end
+
+    context 'when pattern_type is "serializer_test"' do
+      let(:base_options) { {root_dir: [""]} }
+      let(:pattern_type) { "serializer_test" }
+
+      it "returns patterns of serializer test files" do
+        is_expected.to eq([
           "test/serializers/%MODEL_NAME%_serializer_test.rb",
           "spec/serializers/%MODEL_NAME%_serializer_spec.rb"
         ])
@@ -120,12 +148,26 @@ RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
       end
     end
 
+    context 'when pattern_type is "controller_test"' do
+      let(:base_options) { {root_dir: [""]} }
+      let(:pattern_type) { "controller_test" }
+
+      it "returns patterns of controller files" do
+        is_expected.to eq([
+          "test/controllers/%PLURALIZED_MODEL_NAME%_controller_test.rb",
+          "spec/controllers/%PLURALIZED_MODEL_NAME%_controller_spec.rb"
+        ])
+      end
+    end
+
     context 'when pattern_type is "admin"' do
       let(:base_options) { {root_dir: [""]} }
       let(:pattern_type) { "admin" }
 
       it "returns both singular and pluralized model names" do
-        is_expected.to eq(["app/admin/%MODEL_NAME%.rb", "app/admin/%PLURALIZED_MODEL_NAME%.rb"])
+        is_expected.to eq([
+          "app/admin/%MODEL_NAME%.rb", "app/admin/%PLURALIZED_MODEL_NAME%.rb"
+        ])
       end
     end
 

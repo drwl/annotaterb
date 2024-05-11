@@ -76,8 +76,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
       it { is_expected.to be_empty }
     end
 
-    context "when including tests", :isolated_environment do
-      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_tests: false})) }
+    context "when including model tests", :isolated_environment do
+      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_tests: exclude_tests_option})) }
+      let(:exclude_tests_option) { false }
 
       let(:model_name) { "test_default" }
       let(:test_directory) { "spec/models" }
@@ -92,6 +93,28 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
 
       it "returns the test file and the position key" do
         expect(subject).to eq([[relative_file_path, position_key]])
+      end
+
+      context "when exclude_tests is an empty Array" do
+        let(:exclude_tests_option) { [] }
+
+        it "returns the test file and the position key" do
+          expect(subject).to eq([[relative_file_path, position_key]])
+        end
+      end
+
+      context "when exclude_tests includes :model" do
+        let(:exclude_tests_option) { [:model] }
+
+        it { is_expected.to be_empty }
+      end
+
+      context "when exclude_tests includes a non-:model option" do
+        let(:exclude_tests_option) { [:controller] }
+
+        it "returns the test file and the position key" do
+          expect(subject).to eq([[relative_file_path, position_key]])
+        end
       end
     end
 
@@ -137,22 +160,71 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
       let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_serializers: false})) }
 
       let(:model_name) { "test_default" }
-      let(:serializer_directory) { "spec/serializers" }
-      let(:serializer_file_name) { "test_default_serializer_spec.rb" }
-      let(:relative_file_path) { File.join(serializer_directory, serializer_file_name) }
+
+      let(:serializer_spec_directory) { "spec/serializers" }
+      let(:serializer_test_file) do
+        File.join(serializer_spec_directory, "test_default_serializer_spec.rb")
+      end
+
+      let(:serializer_directory) { "app/serializers" }
+      let(:serializer_file) do
+        File.join(serializer_directory, "test_default_serializer.rb")
+      end
+
       let(:position_key) { :position_in_serializer }
 
       before do
+        FileUtils.mkdir_p(serializer_spec_directory)
+        FileUtils.touch(serializer_test_file)
+
         FileUtils.mkdir_p(serializer_directory)
-        FileUtils.touch(relative_file_path)
+        FileUtils.touch(serializer_file)
       end
 
       it "returns the test file and the position key" do
-        expect(subject).to eq([[relative_file_path, position_key]])
+        expect(subject).to match_array([
+          [serializer_test_file, position_key],
+          [serializer_file, position_key]
+        ])
+      end
+
+      context "when exclude_tests includes :serializer" do
+        let(:options) do
+          AnnotateRb::Options.new(**include_nothing_options.merge(
+            {
+              exclude_serializers: false,
+              exclude_tests: [:serializer]
+            }
+          ))
+        end
+
+        it "returns only the serializer file" do
+          expect(subject).to match_array([
+            [serializer_file, position_key]
+          ])
+        end
+      end
+
+      context "when exclude_tests does not include :serializer" do
+        let(:options) do
+          AnnotateRb::Options.new(**include_nothing_options.merge(
+            {
+              exclude_serializers: false,
+              exclude_tests: []
+            }
+          ))
+        end
+
+        it "returns both the serializer and serializer test" do
+          expect(subject).to match_array([
+            [serializer_test_file, position_key],
+            [serializer_file, position_key]
+          ])
+        end
       end
     end
 
-    context "when including scaffolds", :isolated_environment do
+    context "when including scaffolds (request specs)", :isolated_environment do
       let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_scaffolds: false})) }
 
       let(:model_name) { "test_default" }
@@ -168,6 +240,128 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
 
       it "returns the test file and the position key" do
         expect(subject).to eq([[relative_file_path, position_key]])
+      end
+
+      context "when exclude_tests includes :request" do
+        let(:options) do
+          AnnotateRb::Options.new(**include_nothing_options.merge(
+            {
+              exclude_scaffolds: false,
+              exclude_tests: [:request]
+            }
+          ))
+        end
+
+        it { is_expected.to be_empty }
+      end
+
+      context "when exclude_tests does not include :request" do
+        let(:options) do
+          AnnotateRb::Options.new(**include_nothing_options.merge(
+            {
+              exclude_scaffolds: false,
+              exclude_tests: []
+            }
+          ))
+        end
+
+        it "returns the test file and the position key" do
+          expect(subject).to eq([[relative_file_path, position_key]])
+        end
+      end
+    end
+
+    context "when including scaffolds (routing specs)", :isolated_environment do
+      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_scaffolds: false})) }
+
+      let(:model_name) { "test_default" }
+      let(:scaffolded_requests_directory) { "spec/routing" }
+      let(:scaffolded_request_spec_file_name) { "test_defaults_routing_spec.rb" }
+      let(:relative_file_path) { File.join(scaffolded_requests_directory, scaffolded_request_spec_file_name) }
+      let(:position_key) { :position_in_scaffold }
+
+      before do
+        FileUtils.mkdir_p(scaffolded_requests_directory)
+        FileUtils.touch(relative_file_path)
+      end
+
+      it "returns the test file and the position key" do
+        expect(subject).to eq([[relative_file_path, position_key]])
+      end
+
+      context "when exclude_tests includes :routing" do
+        let(:options) do
+          AnnotateRb::Options.new(**include_nothing_options.merge(
+            {
+              exclude_scaffolds: false,
+              exclude_tests: [:routing]
+            }
+          ))
+        end
+
+        it { is_expected.to be_empty }
+      end
+
+      context "when exclude_tests does not include :routing" do
+        let(:options) do
+          AnnotateRb::Options.new(**include_nothing_options.merge(
+            {
+              exclude_scaffolds: false,
+              exclude_tests: []
+            }
+          ))
+        end
+
+        it "returns the test file and the position key" do
+          expect(subject).to eq([[relative_file_path, position_key]])
+        end
+      end
+    end
+
+    context "when including scaffolds (controller test)", :isolated_environment do
+      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_scaffolds: false})) }
+
+      let(:model_name) { "test_default" }
+      let(:scaffolded_requests_directory) { "test/controllers" }
+      let(:scaffolded_request_spec_file_name) { "test_defaults_controller_test.rb" }
+      let(:relative_file_path) { File.join(scaffolded_requests_directory, scaffolded_request_spec_file_name) }
+      let(:position_key) { :position_in_scaffold }
+
+      before do
+        FileUtils.mkdir_p(scaffolded_requests_directory)
+        FileUtils.touch(relative_file_path)
+      end
+
+      it "returns the test file and the position key" do
+        expect(subject).to eq([[relative_file_path, position_key]])
+      end
+
+      context "when exclude_tests includes :controller" do
+        let(:options) do
+          AnnotateRb::Options.new(**include_nothing_options.merge(
+            {
+              exclude_scaffolds: false,
+              exclude_tests: [:controller]
+            }
+          ))
+        end
+
+        it { is_expected.to be_empty }
+      end
+
+      context "when exclude_tests does not include :controller" do
+        let(:options) do
+          AnnotateRb::Options.new(**include_nothing_options.merge(
+            {
+              exclude_scaffolds: false,
+              exclude_tests: []
+            }
+          ))
+        end
+
+        it "returns the test file and the position key" do
+          expect(subject).to eq([[relative_file_path, position_key]])
+        end
       end
     end
 
