@@ -2,7 +2,9 @@
 
 RSpec.describe AnnotateRb::ModelAnnotator::FileParser::AnnotationFinder do
   describe "#run" do
-    subject { described_class.new(content, wrapper_open, wrapper_close) }
+    subject { described_class.new(content, wrapper_open, wrapper_close, parser) }
+    let(:parser) { AnnotateRb::ModelAnnotator::FileParser::CustomParser.parse(content) }
+    let(:yml_parser) { AnnotateRb::ModelAnnotator::FileParser::YmlParser.parse(content) }
     let(:wrapper_open) { nil }
     let(:wrapper_close) { nil }
 
@@ -330,6 +332,106 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::AnnotationFinder do
           #  id                     :bigint           not null, primary key
           #
           # END
+        ANNOTATION
+      end
+
+      include_examples "finds and extracts the annotation"
+    end
+
+    context "with a yml file without annotations" do
+      subject { described_class.new(content, wrapper_open, wrapper_close, yml_parser) }
+
+      let(:content) do
+        <<~FILE
+          rubyonrails:
+            id: 1
+            name: Ruby on Rails
+            url: http://www.rubyonrails.org
+          
+          google:
+            id: 2
+            name: Google
+            url: http://www.google.com
+        FILE
+      end
+
+      it "raises NoAnnotationFound" do
+        expect { subject.run }.to raise_error(described_class::NoAnnotationFound)
+      end
+    end
+
+    context "with a yaml file with annotations" do
+      subject { described_class.new(content, wrapper_open, wrapper_close, yml_parser) }
+
+      let(:content) do
+        <<~FILE
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          rubyonrails:
+            id: 1
+            name: Ruby on Rails
+            url: http://www.rubyonrails.org
+          
+          google:
+            id: 2
+            name: Google
+            url: http://www.google.com
+        FILE
+      end
+      let(:annotation_start) { 0 }
+      let(:annotation_end) { 5 }
+      let(:annotation) do
+        <<~ANNOTATION
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+        ANNOTATION
+      end
+
+      include_examples "finds and extracts the annotation"
+    end
+
+    context "with a yaml file with comment before annotations" do
+      subject { described_class.new(content, wrapper_open, wrapper_close, yml_parser) }
+
+      let(:content) do
+        <<~FILE
+          # some comment about this file
+
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          rubyonrails:
+            id: 1
+            name: Ruby on Rails
+            url: http://www.rubyonrails.org
+          
+          google:
+            id: 2
+            name: Google
+            url: http://www.google.com
+        FILE
+      end
+      let(:annotation_start) { 2 }
+      let(:annotation_end) { 7 }
+      let(:annotation) do
+        <<~ANNOTATION
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
         ANNOTATION
       end
 

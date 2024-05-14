@@ -12,7 +12,9 @@ module AnnotateRb
           annotations_with_whitespace:,
           has_leading_whitespace:,
           has_trailing_whitespace:,
-          annotation_position:
+          annotation_position:,
+          starts:,
+          ends:
         )
           @has_annotations = has_annotations
           @has_skip_string = has_skip_string
@@ -22,9 +24,11 @@ module AnnotateRb
           @has_leading_whitespace = has_leading_whitespace
           @has_trailing_whitespace = has_trailing_whitespace
           @annotation_position = annotation_position
+          @starts = starts
+          @ends = ends
         end
 
-        attr_reader :annotations, :annotation_position
+        attr_reader :annotations, :annotation_position, :starts, :ends
 
         # Returns annotations with new line before and after if they exist
         attr_reader :annotations_with_whitespace

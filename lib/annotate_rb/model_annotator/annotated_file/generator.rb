@@ -5,7 +5,7 @@ module AnnotateRb
     module AnnotatedFile
       # Generates the file with fresh annotations
       class Generator
-        def initialize(file_content, new_annotations, annotation_position, options)
+        def initialize(file_content, new_annotations, annotation_position, parser_klass, parsed_file, options)
           @annotation_position = annotation_position
           @options = options
 
@@ -14,7 +14,8 @@ module AnnotateRb
           @new_annotations = new_annotations
           @file_content = file_content
 
-          @parsed_file = FileParser::ParsedFile.new(@file_content, @new_annotations, options).parse
+          @parser = parser_klass
+          @parsed_file = parsed_file
         end
 
         # @return [String] Returns the annotated file content to be written back to a file
@@ -32,7 +33,7 @@ module AnnotateRb
           end
 
           # We need to get class start and class end depending on the position
-          parsed = FileParser::CustomParser.new(content_without_annotations, "", 0).tap(&:parse)
+          parsed = @parser.parse(content_without_annotations)
 
           _content = if %w[after bottom].include?(annotation_write_position)
             content_annotated_after(parsed, content_without_annotations)

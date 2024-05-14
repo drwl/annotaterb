@@ -6,15 +6,17 @@ module AnnotateRb
       class ParsedFile
         SKIP_ANNOTATION_STRING = "# -*- SkipSchemaAnnotations"
 
-        def initialize(file_content, new_annotations, options)
+        def initialize(file_content, new_annotations, parser_klass, options)
           @file_content = file_content
           @file_lines = @file_content.lines
           @new_annotations = new_annotations
+          @parser_klass = parser_klass
           @options = options
         end
 
         def parse
-          @finder = AnnotationFinder.new(@file_content, @options[:wrapper_open], @options[:wrapper_close])
+          @file_parser = @parser_klass.parse(@file_content)
+          @finder = AnnotationFinder.new(@file_content, @options[:wrapper_open], @options[:wrapper_close], @file_parser)
           has_annotations = false
 
           begin
@@ -30,7 +32,6 @@ module AnnotateRb
           end
 
           @diff = AnnotationDiffGenerator.new(annotations, @new_annotations).generate
-          @file_parser = @finder.parser
 
           has_skip_string = @file_parser.comments.any? { |comment, _lineno| comment.include?(SKIP_ANNOTATION_STRING) }
           annotations_changed = @diff.changed?
@@ -85,7 +86,9 @@ module AnnotateRb
             annotations_with_whitespace: annotations_with_whitespace,
             has_leading_whitespace: has_leading_whitespace,
             has_trailing_whitespace: has_trailing_whitespace,
-            annotation_position: annotation_position
+            annotation_position: annotation_position,
+            starts: @file_parser.starts,
+            ends: @file_parser.ends
           )
         end
       end
