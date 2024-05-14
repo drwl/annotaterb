@@ -1,5 +1,23 @@
 # Changelog
 
+## [v4.7.1](https://github.com/drwl/annotaterb/tree/v4.7.1) (2024-05-09)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.7.0...v4.7.1)
+
+**Closed issues:**
+
+- Check constraint support [\#104](https://github.com/drwl/annotaterb/issues/104)
+
+**Merged pull requests:**
+
+- Bump version to v4.7.1 [\#113](https://github.com/drwl/annotaterb/pull/113) ([drwl](https://github.com/drwl))
+- Change AnnotationDecider to return false early [\#112](https://github.com/drwl/annotaterb/pull/112) ([drwl](https://github.com/drwl))
+- Memoize ActiveRecord migrator version calls [\#111](https://github.com/drwl/annotaterb/pull/111) ([drwl](https://github.com/drwl))
+- Fix misspelling in migration guide [\#109](https://github.com/drwl/annotaterb/pull/109) ([RobinDaugherty](https://github.com/RobinDaugherty))
+- Annotate model check constraints [\#105](https://github.com/drwl/annotaterb/pull/105) ([drwl](https://github.com/drwl))
+- Fix CHANGELOG.md [\#102](https://github.com/drwl/annotaterb/pull/102) ([drwl](https://github.com/drwl))
+- Generate changelog for v4.7.0 [\#101](https://github.com/drwl/annotaterb/pull/101) ([drwl](https://github.com/drwl))
+
 ## [v4.7.0](https://github.com/drwl/annotaterb/tree/v4.7.0) (2024-03-27)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.6.0...v4.7.0)

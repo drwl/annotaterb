@@ -18,6 +18,10 @@ module AnnotateRb
           klass = ModelClassGetter.call(@file, @options)
 
           klass_is_a_class = klass.is_a?(Class)
+          # Methods such as #superclass only exist on a class. Because of how the code is structured, `klass` could be a
+          #  module that does not support the #superclass method, so we want to return early.
+          return false if !klass_is_a_class
+
           klass_inherits_active_record_base = klass < ActiveRecord::Base
           klass_is_not_abstract = klass.respond_to?(:abstract_class) && !klass.abstract_class?
           klass_table_exists = klass.respond_to?(:abstract_class) && klass.table_exists?

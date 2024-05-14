@@ -163,6 +163,8 @@ module AnnotateRb
 
       # For now, state is a hash to store state that we need but is not a configuration option
       @state = state
+
+      symbolize_exclude_tests
     end
 
     def to_h
@@ -217,6 +219,22 @@ module AnnotateRb
 
     def print
       # TODO: prints options and state
+    end
+
+    private
+
+    # Guard against user inputting strings instead of symbols
+    def symbolize_exclude_tests
+      # `:exclude_tests` option is being expanded to function as a boolean OR an array of symbols
+      # https://github.com/drwl/annotaterb/issues/103
+
+      if @options[:exclude_tests].is_a?(Array)
+        @options[:exclude_tests].map! do |item|
+          item = item.strip if item.respond_to?(:strip)
+
+          item.to_sym
+        end
+      end
     end
   end
 end
