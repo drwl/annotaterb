@@ -1,5 +1,20 @@
 # Changelog
 
+## [v4.8.0](https://github.com/drwl/annotaterb/tree/v4.8.0) (2024-05-14)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.7.1...v4.8.0)
+
+**Closed issues:**
+
+- Nested module models and unexpected annotations [\#106](https://github.com/drwl/annotaterb/issues/106)
+
+**Merged pull requests:**
+
+- Bump version to v4.8.0 [\#115](https://github.com/drwl/annotaterb/pull/115) ([drwl](https://github.com/drwl))
+- Generate changelog for v4.7.1 [\#114](https://github.com/drwl/annotaterb/pull/114) ([drwl](https://github.com/drwl))
+- Support annotating model fixture files [\#110](https://github.com/drwl/annotaterb/pull/110) ([drwl](https://github.com/drwl))
+- Make `exclude_tests` option able to override other exclude options [\#107](https://github.com/drwl/annotaterb/pull/107) ([drwl](https://github.com/drwl))
+
 ## [v4.7.1](https://github.com/drwl/annotaterb/tree/v4.7.1) (2024-05-09)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.7.0...v4.7.1)
