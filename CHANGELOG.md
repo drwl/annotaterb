@@ -1,5 +1,20 @@
 # Changelog
 
+## [v4.9.0](https://github.com/drwl/annotaterb/tree/v4.9.0) (2024-05-29)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.8.0...v4.9.0)
+
+**Closed issues:**
+
+- Duplicate content in fixtures when annotating models [\#108](https://github.com/drwl/annotaterb/issues/108)
+- Cannot exclude annotations from serializer specs [\#103](https://github.com/drwl/annotaterb/issues/103)
+
+**Merged pull requests:**
+
+- Bump version to v4.9.0 [\#119](https://github.com/drwl/annotaterb/pull/119) ([drwl](https://github.com/drwl))
+- Add support for `NOT VALID` constraints [\#118](https://github.com/drwl/annotaterb/pull/118) ([gmcabrita](https://github.com/gmcabrita))
+- Generate changelog for v4.8.0 [\#116](https://github.com/drwl/annotaterb/pull/116) ([drwl](https://github.com/drwl))
+
 ## [v4.8.0](https://github.com/drwl/annotaterb/tree/v4.8.0) (2024-05-14)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.7.1...v4.8.0)
