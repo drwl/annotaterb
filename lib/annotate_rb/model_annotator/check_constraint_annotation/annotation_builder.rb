@@ -24,7 +24,13 @@ module AnnotateRb
 
           max_size = check_constraints.map { |check_constraint| check_constraint.name.size }.max + 1
           check_constraints.sort_by(&:name).each do |check_constraint|
-            expression = check_constraint.expression ? "(#{check_constraint.expression.squish})" : nil
+            expression = if check_constraint.expression
+              not_validated = if !check_constraint.validated?
+                "NOT VALID"
+              end
+
+              "(#{check_constraint.expression.squish}) #{not_validated}".squish
+            end
 
             constraint_info += if @options[:format_markdown]
               cc_info_in_markdown(check_constraint.name, expression)

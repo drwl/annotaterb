@@ -103,9 +103,10 @@ module AnnotateTestHelpers
     double("Column", stubs)
   end
 
-  def mock_check_constraint(name, expression)
+  def mock_check_constraint(name, expression, validated = true)
     double("CheckConstraintDefinition",
       name: name,
-      expression: expression)
+      expression: expression,
+      validated?: validated)
   end
 end
