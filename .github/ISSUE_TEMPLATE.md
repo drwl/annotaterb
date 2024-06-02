@@ -11,3 +11,5 @@ $ show your commands here.
 - annotaterb version
 - rails version
 - ruby version
+- database version
+- database adapter version (if available)
