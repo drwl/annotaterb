@@ -30,6 +30,7 @@ migration_tasks.each do |task|
 
     Rake::Task[task_name].enhance do
       ::AnnotateRb::Runner.run(["models"])
+      ::AnnotateRb::Runner.run(["routes"])
     end
   end
 end
