@@ -5,34 +5,19 @@ module AnnotateRb
     module IndexAnnotation
       class AnnotationBuilder
         Index = Struct.new(:index, :max_size) do
-          INDEX_CLAUSES = {
-            unique: {
-              default: "UNIQUE",
-              markdown: "_unique_"
-            },
-            where: {
-              default: "WHERE",
-              markdown: "_where_"
-            },
-            using: {
-              default: "USING",
-              markdown: "_using_"
-            }
-          }.freeze
-
           def to_default
-            unique_info = index.unique ? " #{INDEX_CLAUSES[:unique][:default]}" : ""
+            unique_info = index.unique ? " UNIQUE" : ""
 
             value = index.try(:where).try(:to_s)
             where_info = if value.blank?
               ""
             else
-              " #{INDEX_CLAUSES[:where][:default]} #{value}"
+              " WHERE #{value}"
             end
 
             value = index.try(:using) && index.using.try(:to_sym)
             using_info = if !value.blank? && value != :btree
-              " #{INDEX_CLAUSES[:using][:default]} #{value}"
+              " USING #{value}"
             else
               ""
             end
@@ -48,18 +33,18 @@ module AnnotateRb
           end
 
           def to_markdown
-            unique_info = index.unique ? " #{INDEX_CLAUSES[:unique][:markdown]}" : ""
+            unique_info = index.unique ? " _unique_" : ""
 
             value = index.try(:where).try(:to_s)
             where_info = if value.blank?
               ""
             else
-              " #{INDEX_CLAUSES[:where][:markdown]} #{value}"
+              " _where_ #{value}"
             end
 
             value = index.try(:using) && index.using.try(:to_sym)
             using_info = if !value.blank? && value != :btree
-              " #{INDEX_CLAUSES[:using][:markdown]} #{value}"
+              " _using_ #{value}"
             else
               ""
             end
