@@ -90,11 +90,11 @@ module AnnotateRb
 
           constraints = check_constraints.sort_by(&:name).map do |check_constraint|
             expression = if check_constraint.expression
-              not_validated = if !check_constraint.validated?
-                "NOT VALID"
+              if check_constraint.validated?
+                "(#{check_constraint.expression.squish})"
+              else
+                "(#{check_constraint.expression.squish}) NOT VALID".squish
               end
-
-              "(#{check_constraint.expression.squish}) #{not_validated}".squish
             end
 
             CheckConstraint.new(check_constraint.name, expression, max_size)
