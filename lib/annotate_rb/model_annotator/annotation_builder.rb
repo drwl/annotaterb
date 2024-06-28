@@ -25,6 +25,8 @@ module AnnotateRb
         max_size = @model.max_schema_info_width
 
         if @options[:format_markdown]
+          @info += "# ### Columns\n"
+          @info += "#\n"
           @info += format("# %-#{max_size + MD_NAMES_OVERHEAD}.#{max_size + MD_NAMES_OVERHEAD}s | %-#{MD_TYPE_ALLOWANCE}.#{MD_TYPE_ALLOWANCE}s | %s\n",
             "Name",
             "Type",
@@ -80,12 +82,10 @@ module AnnotateRb
         info = []
         info << "#"
 
-        if @options[:format_markdown]
-          info << "# Table name: `#{table_name}`"
-          info << "#"
-          info << "# ### Columns"
+        info << if @options[:format_markdown]
+          "# Table name: `#{table_name}`"
         else
-          info << "# Table name: #{table_name}"
+          "# Table name: #{table_name}"
         end
         info << "#\n" # We want the last line break
 
