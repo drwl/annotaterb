@@ -9,23 +9,23 @@ module AnnotateRb
             unique_info = index.unique ? " UNIQUE" : ""
 
             value = index.try(:where).try(:to_s)
-            where_info = if value.blank?
-              ""
-            else
+            where_info = if value.present?
               " WHERE #{value}"
+            else
+              ""
             end
 
-            value = index.try(:using) && index.using.try(:to_sym)
-            using_info = if !value.blank? && value != :btree
+            value = index.try(:using).try(:to_sym)
+            using_info = if value.present? && value != :btree
               " USING #{value}"
             else
               ""
             end
 
-            format(
+            sprintf(
               "#  %-#{max_size}.#{max_size}s %s%s%s%s",
               index.name,
-              "(#{index_columns_info(index).join(",")})",
+              "(#{columns_info.join(",")})",
               unique_info,
               where_info,
               using_info
@@ -36,20 +36,20 @@ module AnnotateRb
             unique_info = index.unique ? " _unique_" : ""
 
             value = index.try(:where).try(:to_s)
-            where_info = if value.blank?
-              ""
-            else
+            where_info = if value.present?
               " _where_ #{value}"
+            else
+              ""
             end
 
-            value = index.try(:using) && index.using.try(:to_sym)
-            using_info = if !value.blank? && value != :btree
+            value = index.try(:using).try(:to_sym)
+            using_info = if value.present? && value != :btree
               " _using_ #{value}"
             else
               ""
             end
 
-            details = format(
+            details = sprintf(
               "%s%s%s",
               unique_info,
               where_info,
@@ -57,17 +57,17 @@ module AnnotateRb
             ).strip
             details = " (#{details})" unless details.blank?
 
-            format(
+            sprintf(
               "# * `%s`%s:\n#     * **`%s`**",
               index.name,
               details,
-              index_columns_info(index).join("`**\n#     * **`")
+              columns_info.join("`**\n#     * **`")
             )
           end
 
           private
 
-          def index_columns_info(index)
+          def columns_info
             Array(index.columns).map do |col|
               if index.try(:orders) && index.orders[col.to_s]
                 "#{col} #{index.orders[col.to_s].upcase}"
