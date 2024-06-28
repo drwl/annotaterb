@@ -4,20 +4,120 @@ module AnnotateRb
   module ModelAnnotator
     module IndexAnnotation
       class AnnotationBuilder
-        INDEX_CLAUSES = {
-          unique: {
-            default: "UNIQUE",
-            markdown: "_unique_"
-          },
-          where: {
-            default: "WHERE",
-            markdown: "_where_"
-          },
-          using: {
-            default: "USING",
-            markdown: "_using_"
-          }
-        }.freeze
+        Index = Struct.new(:index, :max_size) do
+          INDEX_CLAUSES = {
+            unique: {
+              default: "UNIQUE",
+              markdown: "_unique_"
+            },
+            where: {
+              default: "WHERE",
+              markdown: "_where_"
+            },
+            using: {
+              default: "USING",
+              markdown: "_using_"
+            }
+          }.freeze
+
+          def to_default
+            unique_info = index.unique ? " #{INDEX_CLAUSES[:unique][:default]}" : ""
+
+            value = index.try(:where).try(:to_s)
+            where_info = if value.blank?
+              ""
+            else
+              " #{INDEX_CLAUSES[:where][:default]} #{value}"
+            end
+
+            value = index.try(:using) && index.using.try(:to_sym)
+            using_info = if !value.blank? && value != :btree
+              " #{INDEX_CLAUSES[:using][:default]} #{value}"
+            else
+              ""
+            end
+
+            format(
+              "#  %-#{max_size}.#{max_size}s %s%s%s%s",
+              index.name,
+              "(#{index_columns_info(index).join(",")})",
+              unique_info,
+              where_info,
+              using_info
+            ).rstrip
+          end
+
+          def to_markdown
+            unique_info = index.unique ? " #{INDEX_CLAUSES[:unique][:markdown]}" : ""
+
+            value = index.try(:where).try(:to_s)
+            where_info = if value.blank?
+              ""
+            else
+              " #{INDEX_CLAUSES[:where][:markdown]} #{value}"
+            end
+
+            value = index.try(:using) && index.using.try(:to_sym)
+            using_info = if !value.blank? && value != :btree
+              " #{INDEX_CLAUSES[:using][:markdown]} #{value}"
+            else
+              ""
+            end
+
+            details = format(
+              "%s%s%s",
+              unique_info,
+              where_info,
+              using_info
+            ).strip
+            details = " (#{details})" unless details.blank?
+
+            format(
+              "# * `%s`%s:\n#     * **`%s`**",
+              index.name,
+              details,
+              index_columns_info(index).join("`**\n#     * **`")
+            )
+          end
+
+          private
+
+          def index_columns_info(index)
+            Array(index.columns).map do |col|
+              if index.try(:orders) && index.orders[col.to_s]
+                "#{col} #{index.orders[col.to_s].upcase}"
+              else
+                col.to_s.gsub("\r", '\r').gsub("\n", '\n')
+              end
+            end
+          end
+        end
+
+        class Annotation
+          HEADER_TEXT = "Indexes"
+
+          def initialize(indexes)
+            @indexes = indexes
+          end
+
+          def body
+            [
+              Components::BlankLine.new,
+              Components::Header.new(HEADER_TEXT),
+              Components::BlankLine.new,
+              *@indexes,
+              Components::LineBreak.new
+            ]
+          end
+
+          def to_markdown
+            body.map(&:to_markdown).join("\n")
+          end
+
+          def to_default
+            body.map(&:to_default).join("\n")
+          end
+        end
 
         def initialize(model, options)
           @model = model
@@ -25,86 +125,19 @@ module AnnotateRb
         end
 
         def build
-          index_info = if @options[:format_markdown]
-            "#\n# ### Indexes\n#\n"
-          else
-            "#\n# Indexes\n#\n"
-          end
-
           indexes = @model.retrieve_indexes_from_table
           return "" if indexes.empty?
 
-          max_size = indexes.collect { |index| index.name.size }.max + 1
-          indexes.sort_by(&:name).each do |index|
-            index_info += if @options[:format_markdown]
-              final_index_string_in_markdown(index)
-            else
-              final_index_string(index, max_size)
-            end
+          max_size = indexes.map { |index| index.name.size }.max + 1
+
+          indexes = indexes.sort_by(&:name).map do |index|
+            Index.new(index, max_size)
           end
 
-          index_info
-        end
-
-        private
-
-        def index_using_info(index, format = :default)
-          value = index.try(:using) && index.using.try(:to_sym)
-          if !value.blank? && value != :btree
-            " #{INDEX_CLAUSES[:using][format]} #{value}"
+          if @options[:format_markdown]
+            Annotation.new(indexes).to_markdown
           else
-            ""
-          end
-        end
-
-        def index_where_info(index, format = :default)
-          value = index.try(:where).try(:to_s)
-          if value.blank?
-            ""
-          else
-            " #{INDEX_CLAUSES[:where][format]} #{value}"
-          end
-        end
-
-        def index_unique_info(index, format = :default)
-          index.unique ? " #{INDEX_CLAUSES[:unique][format]}" : ""
-        end
-
-        def final_index_string_in_markdown(index)
-          details = format(
-            "%s%s%s",
-            index_unique_info(index, :markdown),
-            index_where_info(index, :markdown),
-            index_using_info(index, :markdown)
-          ).strip
-          details = " (#{details})" unless details.blank?
-
-          format(
-            "# * `%s`%s:\n#     * **`%s`**\n",
-            index.name,
-            details,
-            index_columns_info(index).join("`**\n#     * **`")
-          )
-        end
-
-        def final_index_string(index, max_size)
-          format(
-            "#  %-#{max_size}.#{max_size}s %s%s%s%s",
-            index.name,
-            "(#{index_columns_info(index).join(",")})",
-            index_unique_info(index),
-            index_where_info(index),
-            index_using_info(index)
-          ).rstrip + "\n"
-        end
-
-        def index_columns_info(index)
-          Array(index.columns).map do |col|
-            if index.try(:orders) && index.orders[col.to_s]
-              "#{col} #{index.orders[col.to_s].upcase}"
-            else
-              col.to_s.gsub("\r", '\r').gsub("\n", '\n')
-            end
+            Annotation.new(indexes).to_default
           end
         end
       end
