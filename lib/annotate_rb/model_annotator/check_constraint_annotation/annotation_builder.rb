@@ -4,36 +4,6 @@ module AnnotateRb
   module ModelAnnotator
     module CheckConstraintAnnotation
       class AnnotationBuilder
-        class LineBreak
-          def to_default
-            ""
-          end
-
-          def to_markdown
-            ""
-          end
-        end
-
-        class BlankLine
-          def to_default
-            "#"
-          end
-
-          def to_markdown
-            "#"
-          end
-        end
-
-        class Header
-          def to_default
-            "# Check Constraints"
-          end
-
-          def to_markdown
-            "# ### Check Constraints"
-          end
-        end
-
         CheckConstraint = Struct.new(:name, :expression, :max_size) do
           def to_default
             # standard:disable Lint/FormatParameterMismatch
@@ -51,17 +21,19 @@ module AnnotateRb
         end
 
         class Annotation
+          HEADER_TEXT = "Check Constraints"
+
           def initialize(constraints)
             @constraints = constraints
           end
 
           def body
             [
-              BlankLine.new,
-              Header.new,
-              BlankLine.new,
+              Components::BlankLine.new,
+              Components::Header.new(HEADER_TEXT),
+              Components::BlankLine.new,
               *@constraints,
-              LineBreak.new
+              Components::LineBreak.new
             ]
           end
 

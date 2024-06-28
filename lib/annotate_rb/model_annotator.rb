@@ -28,5 +28,6 @@ module AnnotateRb
     autoload :ZeitwerkClassGetter, "annotate_rb/model_annotator/zeitwerk_class_getter"
     autoload :CheckConstraintAnnotation, "annotate_rb/model_annotator/check_constraint_annotation"
     autoload :FileToParserMapper, "annotate_rb/model_annotator/file_to_parser_mapper"
+    autoload :Components, "annotate_rb/model_annotator/components"
   end
 end
