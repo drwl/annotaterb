@@ -1,5 +1,22 @@
 # Changelog
 
+## [v4.10.0](https://github.com/drwl/annotaterb/tree/v4.10.0) (2024-06-28)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.9.0...v4.10.0)
+
+**Closed issues:**
+
+- Feature Request: add support for arrays when using StoreModel [\#125](https://github.com/drwl/annotaterb/issues/125)
+- Error on composite foreign key constraints [\#121](https://github.com/drwl/annotaterb/issues/121)
+
+**Merged pull requests:**
+
+- Bump version to v4.10.0 [\#128](https://github.com/drwl/annotaterb/pull/128) ([drwl](https://github.com/drwl))
+- Support composite foreign keys [\#126](https://github.com/drwl/annotaterb/pull/126) ([drwl](https://github.com/drwl))
+- Add files to improve other's ability to help the project [\#123](https://github.com/drwl/annotaterb/pull/123) ([drwl](https://github.com/drwl))
+- Add database and adapter to issue template [\#122](https://github.com/drwl/annotaterb/pull/122) ([drwl](https://github.com/drwl))
+- Generate changelog for v4.9.0 [\#120](https://github.com/drwl/annotaterb/pull/120) ([drwl](https://github.com/drwl))
+
 ## [v4.9.0](https://github.com/drwl/annotaterb/tree/v4.9.0) (2024-05-29)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.8.0...v4.9.0)
