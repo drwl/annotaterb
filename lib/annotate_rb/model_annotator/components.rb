@@ -4,27 +4,44 @@ module AnnotateRb
   module ModelAnnotator
     # Shared annotation components
     module Components
-      class LineBreak
-        def to_default
-          ""
+      class Base
+        # Methods default to #to_default, unless overridden by sub class
+        def to_markdown
+          to_default
         end
 
-        def to_markdown
+        def to_rdoc
+          to_default
+        end
+
+        def to_yard
+          to_default
+        end
+
+        def to_default
+          raise NoMethodError, "Not implemented by class #{self.class}"
+        end
+      end
+
+      class LineBreak < Base
+        def to_default
           ""
         end
       end
 
-      class BlankLine
+      class BlankLine < Base
         def to_default
-          "#"
-        end
-
-        def to_markdown
           "#"
         end
       end
 
-      Header = Struct.new(:header) do
+      class Header < Base
+        attr_reader :header
+
+        def initialize(header)
+          @header = header
+        end
+
         def to_default
           "# #{header}"
         end
