@@ -4,48 +4,6 @@ module AnnotateRb
   module ModelAnnotator
     module CheckConstraintAnnotation
       class AnnotationBuilder
-        CheckConstraint = Struct.new(:name, :expression, :max_size) do
-          def to_default
-            # standard:disable Lint/FormatParameterMismatch
-            sprintf("#  %-#{max_size}.#{max_size}s %s", name, expression).rstrip
-            # standard:enable Lint/FormatParameterMismatch
-          end
-
-          def to_markdown
-            if expression
-              sprintf("# * `%s`: `%s`", name, expression)
-            else
-              sprintf("# * `%s`", name)
-            end
-          end
-        end
-
-        class Annotation
-          HEADER_TEXT = "Check Constraints"
-
-          def initialize(constraints)
-            @constraints = constraints
-          end
-
-          def body
-            [
-              Components::BlankLine.new,
-              Components::Header.new(HEADER_TEXT),
-              Components::BlankLine.new,
-              *@constraints,
-              Components::LineBreak.new
-            ]
-          end
-
-          def to_markdown
-            body.map(&:to_markdown).join("\n")
-          end
-
-          def to_default
-            body.map(&:to_default).join("\n")
-          end
-        end
-
         def initialize(model, options)
           @model = model
           @options = options
@@ -69,7 +27,7 @@ module AnnotateRb
               end
             end
 
-            CheckConstraint.new(check_constraint.name, expression, max_size)
+            CheckConstraintComponent.new(check_constraint.name, expression, max_size)
           end
 
           if @options[:format_markdown]
