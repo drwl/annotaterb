@@ -1,5 +1,15 @@
 # Changelog
 
+## [v4.10.1](https://github.com/drwl/annotaterb/tree/v4.10.1) (2024-07-07)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.10.0...v4.10.1)
+
+**Merged pull requests:**
+
+- Bump version to v4.10.1 [\#132](https://github.com/drwl/annotaterb/pull/132) ([drwl](https://github.com/drwl))
+- Correct uses of `respond_to` in AnnotationDecider [\#131](https://github.com/drwl/annotaterb/pull/131) ([andreccosta](https://github.com/andreccosta))
+- Generate changelog for v4.10.0 [\#129](https://github.com/drwl/annotaterb/pull/129) ([drwl](https://github.com/drwl))
+
 ## [v4.10.0](https://github.com/drwl/annotaterb/tree/v4.10.0) (2024-06-28)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.9.0...v4.10.0)
