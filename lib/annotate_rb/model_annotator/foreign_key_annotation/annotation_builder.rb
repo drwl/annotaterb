@@ -4,6 +4,97 @@ module AnnotateRb
   module ModelAnnotator
     module ForeignKeyAnnotation
       class AnnotationBuilder
+        class Annotation
+          HEADER_TEXT = "Foreign Keys"
+
+          def initialize(foreign_keys)
+            @foreign_keys = foreign_keys
+          end
+
+          def body
+            [
+              Components::BlankLine.new,
+              Components::Header.new(HEADER_TEXT),
+              Components::BlankLine.new,
+              *@foreign_keys,
+              Components::LineBreak.new
+            ]
+          end
+
+          def to_markdown
+            body.map(&:to_markdown).join("\n")
+          end
+
+          def to_default
+            body.map(&:to_default).join("\n")
+          end
+        end
+
+        class ForeignKeyComponent < Components::Base
+          attr_reader :foreign_key, :max_size
+
+          def initialize(foreign_key, max_size, options)
+            @foreign_key = foreign_key
+            @max_size = max_size
+            @options = options
+          end
+
+          private
+
+          def format_name
+            return foreign_key.column if foreign_key.name.blank?
+
+            @options[:show_complete_foreign_keys] ? foreign_key.name : foreign_key.name.gsub(/(?<=^fk_rails_)[0-9a-f]{10}$/, "...")
+          end
+
+          # The fk columns might be composite keys, so format them into a string for the annotation
+          def stringify_columns(columns)
+            columns.is_a?(Array) ? "[#{columns.join(", ")}]" : columns
+          end
+        end
+
+        Foo = Struct.new(:foreign_key, :options) do
+          def formatted_name
+            @formatted_name ||= if foreign_key.name.blank?
+              foreign_key.column
+            else
+              options[:show_complete_foreign_keys] ? foreign_key.name : foreign_key.name.gsub(/(?<=^fk_rails_)[0-9a-f]{10}$/, "...")
+            end
+          end
+
+          def stringified_columns
+            @stringified_columns ||= begin
+              # The fk columns might be composite keys, so format them into a string for the annotation
+              columns = foreign_key.column
+              columns.is_a?(Array) ? "[#{columns.join(", ")}]" : columns
+            end
+          end
+
+          def stringified_primary_key
+            @stringified_primary_key ||= begin
+              columns = foreign_key.primary_key
+              columns.is_a?(Array) ? "[#{columns.join(", ")}]" : columns
+            end
+          end
+
+          def constraints_info
+            @constraints_info ||= begin
+              constraints_info = ""
+              constraints_info += "ON DELETE => #{foreign_key.on_delete} " if foreign_key.on_delete
+              constraints_info += "ON UPDATE => #{foreign_key.on_update} " if foreign_key.on_update
+              constraints_info.strip
+            end
+          end
+
+          def ref_info
+            if foreign_key.column.is_a?(Array) # Composite foreign key using multiple columns
+              "#{stringified_columns} => #{foreign_key.to_table}#{stringified_primary_key}"
+            else
+              "#{foreign_key.column} => #{foreign_key.to_table}.#{foreign_key.primary_key}"
+            end
+          end
+        end
+
         def initialize(model, options)
           @model = model
           @options = options
@@ -22,35 +113,23 @@ module AnnotateRb
           foreign_keys = @model.connection.foreign_keys(@model.table_name)
           return "" if foreign_keys.empty?
 
-          format_name = lambda do |fk|
-            return fk.column if fk.name.blank?
-
-            @options[:show_complete_foreign_keys] ? fk.name : fk.name.gsub(/(?<=^fk_rails_)[0-9a-f]{10}$/, "...")
+          fks = foreign_keys.map do |fk|
+            Foo.new(fk, @options)
           end
 
-          max_size = foreign_keys.map(&format_name).map(&:size).max + 1
-          foreign_keys.sort_by { |fk| [format_name.call(fk), stringify_columns(fk.column)] }.each do |fk|
-            ref_info = if fk.column.is_a?(Array) # Composite foreign key using multiple columns
-              "#{stringify_columns(fk.column)} => #{fk.to_table}#{stringify_columns(fk.primary_key)}"
-            else
-              "#{fk.column} => #{fk.to_table}.#{fk.primary_key}"
-            end
+          max_size = fks.map(&:formatted_name).map(&:size).max + 1
 
-            constraints_info = ""
-            constraints_info += "ON DELETE => #{fk.on_delete} " if fk.on_delete
-            constraints_info += "ON UPDATE => #{fk.on_update} " if fk.on_update
-            constraints_info = constraints_info.strip
-
+          fks.sort_by { |fk| [fk.formatted_name, fk.stringified_columns] }.each do |fk|
             fk_info += if @options[:format_markdown]
               format("# * `%s`%s:\n#     * **`%s`**\n",
-                format_name.call(fk),
-                constraints_info.blank? ? "" : " (_#{constraints_info}_)",
-                ref_info)
+                fk.formatted_name,
+                fk.constraints_info.blank? ? "" : " (_#{fk.constraints_info}_)",
+                fk.ref_info)
             else
               format("#  %-#{max_size}.#{max_size}s %s %s",
-                format_name.call(fk),
-                "(#{ref_info})",
-                constraints_info).rstrip + "\n"
+                fk.formatted_name,
+                "(#{fk.ref_info})",
+                fk.constraints_info).rstrip + "\n"
             end
           end
 
