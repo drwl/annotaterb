@@ -28,6 +28,7 @@ module AnnotateRb
             ""
           end
 
+          # standard:disable Lint/FormatParameterMismatch
           sprintf(
             "#  %-#{max_size}.#{max_size}s %s%s%s%s",
             index.name,
@@ -36,6 +37,7 @@ module AnnotateRb
             where_info,
             using_info
           ).rstrip
+          # standard:enable Lint/FormatParameterMismatch
         end
 
         def to_markdown
