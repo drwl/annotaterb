@@ -31,50 +31,52 @@ module AnnotateRb
         end
 
         class ForeignKeyComponent < Components::Base
-          attr_reader :foreign_key, :max_size
+          attr_reader :formatted_name, :constraints_info, :ref_info, :max_size
 
-          def initialize(foreign_key, max_size, options)
-            @foreign_key = foreign_key
+          def initialize(formatted_name, constraints_info, ref_info, max_size)
+            @formatted_name = formatted_name
+            @constraints_info = constraints_info
+            @ref_info = ref_info
             @max_size = max_size
-            @options = options
           end
 
-          private
-
-          def format_name
-            return foreign_key.column if foreign_key.name.blank?
-
-            @options[:show_complete_foreign_keys] ? foreign_key.name : foreign_key.name.gsub(/(?<=^fk_rails_)[0-9a-f]{10}$/, "...")
+          def to_markdown
+            format("# * `%s`%s:\n#     * **`%s`**",
+              formatted_name,
+              constraints_info.blank? ? "" : " (_#{constraints_info}_)",
+              ref_info)
           end
 
-          # The fk columns might be composite keys, so format them into a string for the annotation
-          def stringify_columns(columns)
-            columns.is_a?(Array) ? "[#{columns.join(", ")}]" : columns
+          def to_default
+            format("#  %-#{max_size}.#{max_size}s %s %s",
+              formatted_name,
+              "(#{ref_info})",
+              constraints_info).rstrip
           end
         end
 
-        Foo = Struct.new(:foreign_key, :options) do
+        class ForeignKeyComponentBuilder
+          attr_reader :foreign_key
+
+          def initialize(foreign_key, options)
+            @foreign_key = foreign_key
+            @options = options
+          end
+
           def formatted_name
             @formatted_name ||= if foreign_key.name.blank?
               foreign_key.column
             else
-              options[:show_complete_foreign_keys] ? foreign_key.name : foreign_key.name.gsub(/(?<=^fk_rails_)[0-9a-f]{10}$/, "...")
+              @options[:show_complete_foreign_keys] ? foreign_key.name : foreign_key.name.gsub(/(?<=^fk_rails_)[0-9a-f]{10}$/, "...")
             end
           end
 
           def stringified_columns
-            @stringified_columns ||= begin
-              # The fk columns might be composite keys, so format them into a string for the annotation
-              columns = foreign_key.column
-              columns.is_a?(Array) ? "[#{columns.join(", ")}]" : columns
-            end
+            @stringified_columns ||= stringify(foreign_key.column)
           end
 
           def stringified_primary_key
-            @stringified_primary_key ||= begin
-              columns = foreign_key.primary_key
-              columns.is_a?(Array) ? "[#{columns.join(", ")}]" : columns
-            end
+            @stringified_primary_key ||= stringify(foreign_key.primary_key)
           end
 
           def constraints_info
@@ -93,6 +95,13 @@ module AnnotateRb
               "#{foreign_key.column} => #{foreign_key.to_table}.#{foreign_key.primary_key}"
             end
           end
+
+          private
+
+          # The fk columns or primary key might be composite (an Array), so format them into a string for the annotation
+          def stringify(columns)
+            columns.is_a?(Array) ? "[#{columns.join(", ")}]" : columns
+          end
         end
 
         def initialize(model, options)
@@ -101,12 +110,6 @@ module AnnotateRb
         end
 
         def build
-          fk_info = if @options[:format_markdown]
-            "#\n# ### Foreign Keys\n#\n"
-          else
-            "#\n# Foreign Keys\n#\n"
-          end
-
           return "" unless @model.connection.respond_to?(:supports_foreign_keys?) &&
             @model.connection.supports_foreign_keys? && @model.connection.respond_to?(:foreign_keys)
 
@@ -114,33 +117,22 @@ module AnnotateRb
           return "" if foreign_keys.empty?
 
           fks = foreign_keys.map do |fk|
-            Foo.new(fk, @options)
+            ForeignKeyComponentBuilder.new(fk, @options)
           end
 
           max_size = fks.map(&:formatted_name).map(&:size).max + 1
 
-          fks.sort_by { |fk| [fk.formatted_name, fk.stringified_columns] }.each do |fk|
-            fk_info += if @options[:format_markdown]
-              format("# * `%s`%s:\n#     * **`%s`**\n",
-                fk.formatted_name,
-                fk.constraints_info.blank? ? "" : " (_#{fk.constraints_info}_)",
-                fk.ref_info)
-            else
-              format("#  %-#{max_size}.#{max_size}s %s %s",
-                fk.formatted_name,
-                "(#{fk.ref_info})",
-                fk.constraints_info).rstrip + "\n"
-            end
+          foreign_key_components = fks.sort_by { |fk| [fk.formatted_name, fk.stringified_columns] }.map do |fk|
+            # fk is a ForeignKeyComponentBuilder
+
+            ForeignKeyComponent.new(fk.formatted_name, fk.constraints_info, fk.ref_info, max_size)
           end
 
-          fk_info
-        end
-
-        private
-
-        # The fk columns might be composite keys, so format them into a string for the annotation
-        def stringify_columns(columns)
-          columns.is_a?(Array) ? "[#{columns.join(", ")}]" : columns
+          if @options[:format_markdown]
+            Annotation.new(foreign_key_components).to_markdown
+          else
+            Annotation.new(foreign_key_components).to_default
+          end
         end
       end
     end
