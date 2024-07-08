@@ -41,6 +41,10 @@ module AnnotateRb
         klass.reset_column_information
         annotation = AnnotationBuilder.new(klass, @options).build
         model_name = klass.name.underscore
+
+        # In multi-database configurations, it is possible for different models to have the same table name but live
+        #   in different databases. Here we are opting to use the table name to find related files only when the model
+        #   is using the primary connection.
         table_name = klass.table_name if klass.connection_specification_name == ActiveRecord::Base.name
 
         model_instruction = SingleFileAnnotatorInstruction.new(file, annotation, :position_in_class, @options)
