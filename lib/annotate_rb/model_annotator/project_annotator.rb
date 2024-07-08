@@ -41,7 +41,7 @@ module AnnotateRb
         klass.reset_column_information
         annotation = AnnotationBuilder.new(klass, @options).build
         model_name = klass.name.underscore
-        table_name = klass.table_name
+        table_name = klass.table_name if klass.connection_specification_name == ActiveRecord::Base.name
 
         model_instruction = SingleFileAnnotatorInstruction.new(file, annotation, :position_in_class, @options)
         instructions << model_instruction
