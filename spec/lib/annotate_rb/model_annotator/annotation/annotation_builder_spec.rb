@@ -1894,10 +1894,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
         :id
       end
 
-      before do
-        stub_const("AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder::PREFIX_MD", "== Schema Information")
-      end
-
       let :options do
         AnnotateRb::Options.new({format_markdown: true, with_comment: true, with_column_comments: true})
       end
@@ -1919,7 +1915,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
 
         let :expected_result do
           <<~EOS
-            # == Schema Information
+            # ## Schema Information
             #
             # Table name: `users`
             #
@@ -1948,7 +1944,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
 
         let :expected_result do
           <<~EOS
-            # == Schema Information
+            # ## Schema Information
             #
             # Table name: `users`
             #
