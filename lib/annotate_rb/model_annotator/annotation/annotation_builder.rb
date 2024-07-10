@@ -3,38 +3,38 @@
 module AnnotateRb
   module ModelAnnotator
     module Annotation
-      class MainHeader < Components::Base
-        # Annotate Models plugin use this header
-        PREFIX = "== Schema Information"
-        PREFIX_MD = "## Schema Information"
-
-        attr_reader :version
-
-        def initialize(version, options)
-          @version = version
-          @options = options
-        end
-
-        def to_markdown
-          header = "# #{PREFIX_MD}"
-          if @options[:include_version] && version > 0
-            header += "\n# Schema version: #{version}"
-          end
-
-          header
-        end
-
-        def to_default
-          header = "# #{PREFIX}"
-          if @options[:include_version] && version > 0
-            header += "\n# Schema version: #{version}"
-          end
-
-          header
-        end
-      end
-
       class AnnotationBuilder
+        class MainHeader < Components::Base
+          # Annotate Models plugin use this header
+          PREFIX = "== Schema Information"
+          PREFIX_MD = "## Schema Information"
+
+          attr_reader :version
+
+          def initialize(version, include_version)
+            @version = version
+            @include_version = include_version
+          end
+
+          def to_markdown
+            header = "# #{PREFIX_MD}"
+            if @include_version && version > 0
+              header += "\n# Schema version: #{version}"
+            end
+
+            header
+          end
+
+          def to_default
+            header = "# #{PREFIX}"
+            if @include_version && version > 0
+              header += "\n# Schema version: #{version}"
+            end
+
+            header
+          end
+        end
+
         END_MARK = "== Schema Information End"
 
         MD_NAMES_OVERHEAD = 6
@@ -47,7 +47,19 @@ module AnnotateRb
         end
 
         def build
-          @info = "#{header}\n"
+          if @options.get_state(:current_version).nil?
+            migration_version = begin
+              ActiveRecord::Migrator.current_version
+            rescue
+              0
+            end
+
+            @options.set_state(:current_version, migration_version)
+          end
+
+          version = @options.get_state(:current_version)
+
+          @info = "#{header(version)}\n"
           @info += schema_header_text
 
           max_size = @model.max_schema_info_width
@@ -85,23 +97,11 @@ module AnnotateRb
           @info
         end
 
-        def header
-          if @options.get_state(:current_version).nil?
-            migration_version = begin
-              ActiveRecord::Migrator.current_version
-            rescue
-              0
-            end
-
-            @options.set_state(:current_version, migration_version)
-          end
-
-          version = @options.get_state(:current_version)
-
+        def header(version)
           if @options[:format_markdown]
-            MainHeader.new(version, @options).to_markdown
+            MainHeader.new(version, @options[:include_version]).to_markdown
           else
-            MainHeader.new(version, @options).to_default
+            MainHeader.new(version, @options[:include_version]).to_default
           end
         end
 
