@@ -1,4 +1,4 @@
-RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
+RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
   include AnnotateTestHelpers
 
   describe "#header" do
@@ -1895,7 +1895,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
       end
 
       before do
-        stub_const("AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX_MD", "== Schema Information")
+        stub_const("AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder::PREFIX_MD", "== Schema Information")
       end
 
       let :options do

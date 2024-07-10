@@ -29,5 +29,6 @@ module AnnotateRb
     autoload :CheckConstraintAnnotation, "annotate_rb/model_annotator/check_constraint_annotation"
     autoload :FileToParserMapper, "annotate_rb/model_annotator/file_to_parser_mapper"
     autoload :Components, "annotate_rb/model_annotator/components"
+    autoload :Annotation, "annotate_rb/model_annotator/annotation"
   end
 end
