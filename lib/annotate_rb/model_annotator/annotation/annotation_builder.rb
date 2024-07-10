@@ -3,11 +3,38 @@
 module AnnotateRb
   module ModelAnnotator
     module Annotation
-      class AnnotationBuilder
+      class MainHeader < Components::Base
         # Annotate Models plugin use this header
         PREFIX = "== Schema Information"
         PREFIX_MD = "## Schema Information"
 
+        attr_reader :version
+
+        def initialize(version, options)
+          @version = version
+          @options = options
+        end
+
+        def to_markdown
+          header = "# #{PREFIX_MD}"
+          if @options[:include_version] && version > 0
+            header += "\n# Schema version: #{version}"
+          end
+
+          header
+        end
+
+        def to_default
+          header = "# #{PREFIX}"
+          if @options[:include_version] && version > 0
+            header += "\n# Schema version: #{version}"
+          end
+
+          header
+        end
+      end
+
+      class AnnotationBuilder
         END_MARK = "== Schema Information End"
 
         MD_NAMES_OVERHEAD = 6
@@ -59,9 +86,6 @@ module AnnotateRb
         end
 
         def header
-          header = @options[:format_markdown] ? PREFIX_MD.dup : PREFIX.dup
-          header = "# #{header}"
-
           if @options.get_state(:current_version).nil?
             migration_version = begin
               ActiveRecord::Migrator.current_version
@@ -74,11 +98,11 @@ module AnnotateRb
 
           version = @options.get_state(:current_version)
 
-          if @options[:include_version] && version > 0
-            header += "\n# Schema version: #{version}"
+          if @options[:format_markdown]
+            MainHeader.new(version, @options).to_markdown
+          else
+            MainHeader.new(version, @options).to_default
           end
-
-          header
         end
 
         def schema_header_text
