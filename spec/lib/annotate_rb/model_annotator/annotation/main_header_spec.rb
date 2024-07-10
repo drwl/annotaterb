@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder::MainHeader do
+RSpec.describe AnnotateRb::ModelAnnotator::Annotation::MainHeader do
   describe "#to_default" do
     subject { described_class.new(version, include_version).to_default }
 
