@@ -59,7 +59,13 @@ module AnnotateRb
 
           version = @options.get_state(:current_version)
 
-          @info = "#{header(version)}\n"
+          @info = if @options[:format_markdown]
+            MainHeader.new(version, @options[:include_version]).to_markdown
+          else
+            MainHeader.new(version, @options[:include_version]).to_default
+          end
+
+          @info += "\n"
           @info += schema_header_text
 
           max_size = @model.max_schema_info_width
@@ -95,14 +101,6 @@ module AnnotateRb
           @info += schema_footer_text
 
           @info
-        end
-
-        def header(version)
-          if @options[:format_markdown]
-            MainHeader.new(version, @options[:include_version]).to_markdown
-          else
-            MainHeader.new(version, @options[:include_version]).to_default
-          end
         end
 
         def schema_header_text
