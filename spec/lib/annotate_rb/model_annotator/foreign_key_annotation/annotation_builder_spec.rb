@@ -42,7 +42,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
         ]
       end
       let(:expected_output) do
-        <<~OUTPUT
+        <<~OUTPUT.strip
           #
           # Foreign Keys
           #
@@ -56,7 +56,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
 
       context "in markdown format" do
         let(:expected_output) do
-          <<~OUTPUT
+          <<~OUTPUT.strip
             #
             # ### Foreign Keys
             #
@@ -81,7 +81,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
         ]
       end
       let(:expected_output) do
-        <<~OUTPUT
+        <<~OUTPUT.strip
           #
           # Foreign Keys
           #
@@ -94,7 +94,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
 
       context "in markdown format" do
         let(:expected_output) do
-          <<~OUTPUT
+          <<~OUTPUT.strip
             #
             # ### Foreign Keys
             #
