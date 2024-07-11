@@ -50,7 +50,13 @@ module AnnotateRb
           end.join
 
           if @options[:show_indexes] && @model.table_exists?
-            @info += IndexAnnotation::AnnotationBuilder.new(@model, @options).build
+            index_annotation = IndexAnnotation::AnnotationBuilder.new(@model, @options).build
+
+            @info += if @options[:format_markdown]
+              index_annotation.to_markdown || ""
+            else
+              index_annotation.to_default || ""
+            end
           end
 
           if @options[:show_foreign_keys] && @model.table_exists?

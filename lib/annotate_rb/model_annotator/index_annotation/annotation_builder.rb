@@ -11,7 +11,7 @@ module AnnotateRb
 
         def build
           indexes = @model.retrieve_indexes_from_table
-          return "" if indexes.empty?
+          return Components::NilComponent.new if indexes.empty?
 
           max_size = indexes.map { |index| index.name.size }.max + 1
 
@@ -19,11 +19,7 @@ module AnnotateRb
             IndexComponent.new(index, max_size)
           end
 
-          if @options[:format_markdown]
-            Annotation.new(indexes).to_markdown
-          else
-            Annotation.new(indexes).to_default
-          end
+          _annotation = Annotation.new(indexes)
         end
       end
     end
