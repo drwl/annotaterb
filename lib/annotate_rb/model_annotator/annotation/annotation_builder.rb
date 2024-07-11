@@ -4,11 +4,6 @@ module AnnotateRb
   module ModelAnnotator
     module Annotation
       class AnnotationBuilder
-        END_MARK = "== Schema Information End"
-
-        MD_NAMES_OVERHEAD = 6
-        MD_TYPE_ALLOWANCE = 18
-
         def initialize(klass, options)
           @model = ModelWrapper.new(klass, options)
           @options = options
@@ -40,15 +35,7 @@ module AnnotateRb
           max_size = @model.max_schema_info_width
 
           if @options[:format_markdown]
-            @info += "# ### Columns\n"
-            @info += "#\n"
-            # standard:disable Lint/FormatParameterMismatch
-            @info += format("# %-#{max_size + MD_NAMES_OVERHEAD}.#{max_size + MD_NAMES_OVERHEAD}s | %-#{MD_TYPE_ALLOWANCE}.#{MD_TYPE_ALLOWANCE}s | %s\n",
-              "Name",
-              "Type",
-              "Attributes")
-            # standard:enable Lint/FormatParameterMismatch
-            @info += "# #{"-" * (max_size + MD_NAMES_OVERHEAD)} | #{"-" * MD_TYPE_ALLOWANCE} | #{"-" * 27}\n"
+            @info += MarkdownHeader.new(max_size).to_markdown
           end
 
           @info += @model.columns.map do |col|
@@ -67,7 +54,11 @@ module AnnotateRb
             @info += CheckConstraintAnnotation::AnnotationBuilder.new(@model, @options).build
           end
 
-          @info += schema_footer_text
+          @info += if @options[:format_rdoc]
+            SchemaFooter.new.to_rdoc
+          else
+            SchemaFooter.new.to_default
+          end
 
           @info
         end
@@ -78,20 +69,6 @@ module AnnotateRb
           else
             SchemaHeader.new(table_name).to_default
           end
-        end
-
-        def schema_footer_text
-          info = []
-
-          if @options[:format_rdoc]
-            info << "#--"
-            info << "# #{END_MARK}"
-            info << "#++\n"
-          else
-            info << "#\n"
-          end
-
-          info.join("\n")
         end
 
         private
