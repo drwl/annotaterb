@@ -10,11 +10,11 @@ module AnnotateRb
         end
 
         def build
-          return "" unless @model.connection.respond_to?(:supports_foreign_keys?) &&
+          return Components::NilComponent.new unless @model.connection.respond_to?(:supports_foreign_keys?) &&
             @model.connection.supports_foreign_keys? && @model.connection.respond_to?(:foreign_keys)
 
           foreign_keys = @model.connection.foreign_keys(@model.table_name)
-          return "" if foreign_keys.empty?
+          return Components::NilComponent.new if foreign_keys.empty?
 
           fks = foreign_keys.map do |fk|
             ForeignKeyComponentBuilder.new(fk, @options)
@@ -28,11 +28,7 @@ module AnnotateRb
             ForeignKeyComponent.new(fk.formatted_name, fk.constraints_info, fk.ref_info, max_size)
           end
 
-          if @options[:format_markdown]
-            Annotation.new(foreign_key_components).to_markdown
-          else
-            Annotation.new(foreign_key_components).to_default
-          end
+          _annotation = Annotation.new(foreign_key_components)
         end
       end
     end

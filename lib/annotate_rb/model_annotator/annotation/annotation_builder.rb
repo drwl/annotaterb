@@ -54,16 +54,22 @@ module AnnotateRb
           end
 
           if @options[:show_foreign_keys] && @model.table_exists?
-            @info += ForeignKeyAnnotation::AnnotationBuilder.new(@model, @options).build
+            foreign_key_annotation = ForeignKeyAnnotation::AnnotationBuilder.new(@model, @options).build
+
+            @info += if @options[:format_markdown]
+              foreign_key_annotation.to_markdown || ""
+            else
+              foreign_key_annotation.to_default || ""
+            end
           end
 
           if @options[:show_check_constraints] && @model.table_exists?
             check_constraint_annotation = CheckConstraintAnnotation::AnnotationBuilder.new(@model, @options).build
 
             @info += if @options[:format_markdown]
-              check_constraint_annotation.to_markdown
+              check_constraint_annotation.to_markdown || ""
             else
-              check_constraint_annotation.to_default
+              check_constraint_annotation.to_default || ""
             end
           end
 

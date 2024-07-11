@@ -5,6 +5,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
 
   describe "#build" do
     subject { described_class.new(model, options).build }
+    let(:default_format) { subject.to_default }
+    let(:markdown_format) { subject.to_markdown }
 
     let(:model) do
       klass = begin
@@ -28,7 +30,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
     context "without foreign keys" do
       let(:foreign_keys) { [] }
 
-      it { is_expected.to be_blank }
+      it { expect(default_format).to be_nil }
     end
 
     context "with foreign keys" do
@@ -50,7 +52,25 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
         OUTPUT
       end
 
-      it { is_expected.to eq(expected_output) }
+      it { expect(default_format).to eq(expected_output) }
+
+      context "in markdown format" do
+        let(:expected_output) do
+          <<~OUTPUT
+            #
+            # ### Foreign Keys
+            #
+            # * `custom_fk_name`:
+            #     * **`other_thing_id => other_things.id`**
+            # * `fk_rails_a70234b26c`:
+            #     * **`third_thing_id => third_things.id`**
+            # * `fk_rails_cf2568e89e`:
+            #     * **`foreign_thing_id => foreign_things.id`**
+          OUTPUT
+        end
+
+        it { expect(markdown_format).to eq(expected_output) }
+      end
     end
 
     context "with a composite foreign key" do
@@ -70,7 +90,23 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
         OUTPUT
       end
 
-      it { is_expected.to eq(expected_output) }
+      it { expect(default_format).to eq(expected_output) }
+
+      context "in markdown format" do
+        let(:expected_output) do
+          <<~OUTPUT
+            #
+            # ### Foreign Keys
+            #
+            # * `custom_fk_name`:
+            #     * **`[tenant_id, customer_id] => customers[tenant_id, id]`**
+            # * `fk_rails_cf2568e89e`:
+            #     * **`foreign_thing_id => foreign_things.id`**
+          OUTPUT
+        end
+
+        it { expect(markdown_format).to eq(expected_output) }
+      end
     end
   end
 end
