@@ -20,7 +20,7 @@ module AnnotateRb
           # standard:disable Lint/FormatParameterMismatch
           format("# %-#{max_size}.#{max_size}s<tt>%s</tt>",
             "*#{name}*::",
-            attributes.unshift(type).join(", ")).rstrip + "\n"
+            attributes.unshift(type).join(", ")).rstrip
           # standard:enable Lint/FormatParameterMismatch
         end
 
@@ -34,7 +34,7 @@ module AnnotateRb
             map_col_type_to_ruby_classes(type)
           end
 
-          res += sprintf("#   @return [#{ruby_class}]") + "\n"
+          res += sprintf("#   @return [#{ruby_class}]")
 
           res
         end
@@ -49,7 +49,7 @@ module AnnotateRb
             " ",
             type,
             " ",
-            attributes.join(", ").rstrip).gsub("``", "  ").rstrip + "\n"
+            attributes.join(", ").rstrip).gsub("``", "  ").rstrip
           # standard:enable Lint/FormatParameterMismatch
         end
 
@@ -57,7 +57,7 @@ module AnnotateRb
           format("#  %s:%s %s",
             mb_chars_ljust(name, max_size),
             mb_chars_ljust(type, BARE_TYPE_ALLOWANCE),
-            attributes.join(", ")).rstrip + "\n"
+            attributes.join(", ")).rstrip
         end
 
         private

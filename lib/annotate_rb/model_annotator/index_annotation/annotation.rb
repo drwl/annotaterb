@@ -15,8 +15,7 @@ module AnnotateRb
             Components::BlankCommentLine.new,
             Components::Header.new(HEADER_TEXT),
             Components::BlankCommentLine.new,
-            *@indexes,
-            Components::LineBreak.new
+            *@indexes
           ]
         end
 

@@ -13,7 +13,7 @@ module AnnotateRb
         end
 
         def to_markdown
-          <<~OUTPUT
+          <<~OUTPUT.strip
             #
             # Table name: `#{name}`
             #
@@ -21,7 +21,7 @@ module AnnotateRb
         end
 
         def to_default
-          <<~OUTPUT
+          <<~OUTPUT.strip
             #
             # Table name: #{name}
             #

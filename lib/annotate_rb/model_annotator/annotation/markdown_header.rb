@@ -22,7 +22,7 @@ module AnnotateRb
             "Type",
             "Attributes")
           # standard:enable Lint/FormatParameterMismatch
-          info += "# #{"-" * (max_size + MD_NAMES_OVERHEAD)} | #{"-" * MD_TYPE_ALLOWANCE} | #{"-" * 27}\n"
+          info += "# #{"-" * (max_size + MD_NAMES_OVERHEAD)} | #{"-" * MD_TYPE_ALLOWANCE} | #{"-" * 27}"
 
           info
         end

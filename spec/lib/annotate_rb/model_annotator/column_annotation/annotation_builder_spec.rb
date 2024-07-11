@@ -23,7 +23,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
           )
         end
         let(:expected_result) do
-          <<~COLUMN
+          <<~COLUMN.strip
             #  id              :integer          not null, primary key
           COLUMN
         end
@@ -45,7 +45,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
           )
         end
         let(:expected_result) do
-          <<~COLUMN
+          <<~COLUMN.strip
             #  id              :integer          not null
           COLUMN
         end
@@ -69,7 +69,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
           )
         end
         let(:expected_result) do
-          <<~COLUMN
+          <<~COLUMN.strip
             #  notifications   :string           default([]), is an Array
           COLUMN
         end
@@ -93,7 +93,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
           )
         end
         let(:expected_result) do
-          <<~COLUMN
+          <<~COLUMN.strip
             #  notifications   :string           default(["something"]), is an Array
           COLUMN
         end
@@ -117,7 +117,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
           )
         end
         let(:expected_result) do
-          <<~COLUMN
+          <<~COLUMN.strip
             #  notifications   :string           default("alert")
           COLUMN
         end
@@ -141,7 +141,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
           )
         end
         let(:expected_result) do
-          <<~COLUMN
+          <<~COLUMN.strip
             #  id([is commented])  :integer          not null
           COLUMN
         end
@@ -166,7 +166,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
           )
         end
         let(:expected_result) do
-          <<~COLUMN
+          <<~COLUMN.strip
             #  id                  :integer          not null
           COLUMN
         end
@@ -191,7 +191,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
           )
         end
         let(:expected_result) do
-          <<~COLUMN
+          <<~COLUMN.strip
             #  id                  :integer          not null
           COLUMN
         end
@@ -216,7 +216,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
           )
         end
         let(:expected_result) do
-          <<~COLUMN
+          <<~COLUMN.strip
             #  id                  :integer          not null
           COLUMN
         end
@@ -248,7 +248,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
         let(:expected_result) do
           # Unsure if this is even proper rdoc.
           # TODO: Check and fix if this is incorrect.
-          <<~COLUMN
+          <<~COLUMN.strip
             # *id*::          <tt>integer, not null, primary key</tt>
           COLUMN
         end
@@ -273,7 +273,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
         let(:expected_result) do
           # Unsure if this is even proper rdoc.
           # TODO: Check and fix if this is incorrect.
-          <<~COLUMN
+          <<~COLUMN.strip
             # *id*::          <tt>integer, not null</tt>
           COLUMN
         end
@@ -300,7 +300,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
         let(:expected_result) do
           # Unsure if this is even proper rdoc.
           # TODO: Check and fix if this is incorrect.
-          <<~COLUMN
+          <<~COLUMN.strip
             # *id([is commented])*<tt>integer, not null</tt>
           COLUMN
         end
@@ -332,7 +332,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
         let(:expected_result) do
           # Unsure if this is even proper yard.
           # TODO: Check and fix if this is incorrect.
-          <<~COLUMN
+          <<~COLUMN.strip
             # @!attribute id
             #   @return [Integer]
           COLUMN
@@ -358,7 +358,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
         let(:expected_result) do
           # Unsure if this is even proper rdoc.
           # TODO: Check and fix if this is incorrect.
-          <<~COLUMN
+          <<~COLUMN.strip
             # @!attribute id
             #   @return [Integer]
           COLUMN
@@ -383,7 +383,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
         let(:expected_result) do
           # Unsure if this is even proper rdoc.
           # TODO: Check and fix if this is incorrect.
-          <<~COLUMN
+          <<~COLUMN.strip
             # @!attribute id([is commented])
             #   @return [Integer]
           COLUMN
@@ -415,7 +415,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
         let(:expected_result) do
           # Unsure if this is even proper markdown.
           # TODO: Check and fix if this is incorrect.
-          <<~COLUMN
+          <<~COLUMN.strip
             # **`id`**               | `integer`          | `not null, primary key`
           COLUMN
         end
@@ -439,7 +439,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
         let(:expected_result) do
           # Unsure if this is even proper markdown.
           # TODO: Check and fix if this is incorrect.
-          <<~COLUMN
+          <<~COLUMN.strip
             # **`id`**               | `integer`          | `not null`
           COLUMN
         end
@@ -463,7 +463,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
         let(:expected_result) do
           # Unsure if this is even proper markdown.
           # TODO: Check and fix if this is incorrect.
-          <<~COLUMN
+          <<~COLUMN.strip
             # **`id([is commented])`**   | `integer`          | `not null`
           COLUMN
         end
