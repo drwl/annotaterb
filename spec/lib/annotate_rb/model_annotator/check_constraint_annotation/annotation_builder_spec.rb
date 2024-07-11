@@ -35,7 +35,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::CheckConstraintAnnotation::Annotation
 
     context "using default format" do
       let(:expected_result) do
-        <<~RESULT
+        <<~RESULT.strip
           #
           # Check Constraints
           #
@@ -53,7 +53,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::CheckConstraintAnnotation::Annotation
 
     context "using markdown format" do
       let(:expected_result) do
-        <<~RESULT
+        <<~RESULT.strip
           #
           # ### Check Constraints
           #
