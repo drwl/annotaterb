@@ -5,6 +5,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::CheckConstraintAnnotation::Annotation
 
   describe "#build" do
     subject { described_class.new(model, options).build }
+    let(:default_format) { subject.to_default }
+    let(:markdown_format) { subject.to_markdown }
 
     let(:model) do
       instance_double(
@@ -31,44 +33,25 @@ RSpec.describe AnnotateRb::ModelAnnotator::CheckConstraintAnnotation::Annotation
       ]
     end
 
-    let(:expected_result) do
-      <<~RESULT
-        #
-        # Check Constraints
-        #
-        #  alive               (age < 150)
-        #  missing_expression
-        #  multiline_test      (CASE WHEN (age >= 18) THEN (age <= 21) ELSE true END)
-        #  must_be_adult       (age >= 18)
-      RESULT
-    end
-
-    it "annotates the check constraints" do
-      is_expected.to eq(expected_result)
-    end
-
-    context "when model connection does not support check constraints" do
-      let(:connection) do
-        conn_options = {supports_check_constraints?: false}
-
-        mock_connection([], [], [], conn_options)
+    context "using default format" do
+      let(:expected_result) do
+        <<~RESULT
+          #
+          # Check Constraints
+          #
+          #  alive               (age < 150)
+          #  missing_expression
+          #  multiline_test      (CASE WHEN (age >= 18) THEN (age <= 21) ELSE true END)
+          #  must_be_adult       (age >= 18)
+        RESULT
       end
 
-      it { is_expected.to be_empty }
-    end
-
-    context "when check constraints is empty" do
-      let(:connection) do
-        conn_options = {supports_check_constraints?: true}
-
-        mock_connection([], [], [], conn_options)
+      it "annotates the check constraints" do
+        expect(default_format).to eq(expected_result)
       end
-
-      it { is_expected.to be_empty }
     end
 
-    context "when there are check constraints using markdown" do
-      let(:options) { AnnotateRb::Options.new({format_markdown: true}) }
+    context "using markdown format" do
       let(:expected_result) do
         <<~RESULT
           #
@@ -81,16 +64,29 @@ RSpec.describe AnnotateRb::ModelAnnotator::CheckConstraintAnnotation::Annotation
         RESULT
       end
 
-      it { is_expected.to eq(expected_result) }
+      it "annotates the check constraints" do
+        expect(markdown_format).to eq(expected_result)
+      end
     end
 
-    context "when it is just the header using markdown" do
-      let(:options) { AnnotateRb::Options.new({format_markdown: true}) }
+    context "when model connection does not support check constraints" do
       let(:connection) do
-        mock_connection([], [], [])
+        conn_options = {supports_check_constraints?: false}
+
+        mock_connection([], [], [], conn_options)
       end
 
-      it { is_expected.to be_empty }
+      it { expect(default_format).to be_nil }
+    end
+
+    context "when check constraints is empty" do
+      let(:connection) do
+        conn_options = {supports_check_constraints?: true}
+
+        mock_connection([], [], [], conn_options)
+      end
+
+      it { expect(default_format).to be_nil }
     end
   end
 end

@@ -58,7 +58,13 @@ module AnnotateRb
           end
 
           if @options[:show_check_constraints] && @model.table_exists?
-            @info += CheckConstraintAnnotation::AnnotationBuilder.new(@model, @options).build
+            check_constraint_annotation = CheckConstraintAnnotation::AnnotationBuilder.new(@model, @options).build
+
+            @info += if @options[:format_markdown]
+              check_constraint_annotation.to_markdown
+            else
+              check_constraint_annotation.to_default
+            end
           end
 
           @info += if @options[:format_rdoc]
