@@ -30,7 +30,14 @@ module AnnotateRb
           end
 
           @info += "\n"
-          @info += schema_header_text
+
+          table_comment = @model.connection.try(:table_comment, @model.table_name)
+
+          @info += if @options[:format_markdown]
+            SchemaHeader.new(@model.table_name, table_comment, @options).to_markdown
+          else
+            SchemaHeader.new(@model.table_name, table_comment, @options).to_default
+          end
 
           max_size = @model.max_schema_info_width
 
@@ -61,31 +68,6 @@ module AnnotateRb
           end
 
           @info
-        end
-
-        def schema_header_text
-          table_comment = @model.connection.try(:table_comment, @model.table_name)
-
-          if @options[:format_markdown]
-            SchemaHeader.new(@model.table_name, table_comment, @options).to_markdown
-          else
-            SchemaHeader.new(@model.table_name, table_comment, @options).to_default
-          end
-        end
-
-        private
-
-        def table_name
-          table_name = @model.table_name
-          display_table_comments = @options[:with_comment] && @options[:with_table_comments]
-          table_comment = @model.connection.try(:table_comment, table_name)
-
-          if display_table_comments && table_comment
-            table_comment = "(#{table_comment.gsub(/\n/, "\\n")})"
-            table_name = "#{table_name}#{table_comment}"
-          end
-
-          table_name
         end
       end
     end
