@@ -23,6 +23,14 @@ module AnnotateRb
         end
       end
 
+      class NilComponent < Base
+        # Used when we want to return a component, but does not affect annotation generation.
+        # It will get ignored when the consuming object calls Array#compact
+        def to_default
+          nil
+        end
+      end
+
       class LineBreak < Base
         def to_default
           ""
