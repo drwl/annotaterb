@@ -64,10 +64,12 @@ module AnnotateRb
         end
 
         def schema_header_text
+          table_comment = @model.connection.try(:table_comment, @model.table_name)
+
           if @options[:format_markdown]
-            SchemaHeader.new(table_name).to_markdown
+            SchemaHeader.new(@model.table_name, table_comment, @options).to_markdown
           else
-            SchemaHeader.new(table_name).to_default
+            SchemaHeader.new(@model.table_name, table_comment, @options).to_default
           end
         end
 
