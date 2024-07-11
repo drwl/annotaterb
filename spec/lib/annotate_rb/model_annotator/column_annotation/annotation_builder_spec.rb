@@ -4,10 +4,11 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
   include AnnotateTestHelpers
 
   describe "#build" do
-    subject { described_class.new(column, model, max_size, options).build }
     let(:max_size) { 16 }
 
     describe "bare format" do
+      subject { described_class.new(column, model, max_size, options).build.to_default }
+
       let(:options) { AnnotateRb::Options.new({with_comment: true, with_column_comments: true}) }
 
       context "when the column is the primary key" do
@@ -227,6 +228,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
     end
 
     describe "rdoc format" do
+      subject { described_class.new(column, model, max_size, options).build.to_rdoc }
+
       let(:options) { AnnotateRb::Options.new({format_rdoc: true, with_comment: true, with_column_comments: true}) }
 
       context "when the column is the primary key" do
@@ -309,6 +312,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
     end
 
     describe "yard format" do
+      subject { described_class.new(column, model, max_size, options).build.to_yard }
+
       let(:options) { AnnotateRb::Options.new({format_yard: true, with_comment: true, with_column_comments: true}) }
 
       context "when the column is the primary key" do
@@ -391,6 +396,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
     end
 
     describe "markdown format" do
+      subject { described_class.new(column, model, max_size, options).build.to_markdown }
+
       let(:options) { AnnotateRb::Options.new({format_markdown: true, with_comment: true, with_column_comments: true}) }
 
       context "when the column is the primary key" do

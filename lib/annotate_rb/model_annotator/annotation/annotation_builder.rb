@@ -46,7 +46,17 @@ module AnnotateRb
           end
 
           @info += @model.columns.map do |col|
-            ColumnAnnotation::AnnotationBuilder.new(col, @model, max_size, @options).build
+            component = ColumnAnnotation::AnnotationBuilder.new(col, @model, max_size, @options).build
+
+            if @options[:format_rdoc]
+              component.to_rdoc
+            elsif @options[:format_yard]
+              component.to_yard
+            elsif @options[:format_markdown]
+              component.to_markdown
+            else
+              component.to_default
+            end
           end.join
 
           if @options[:show_indexes] && @model.table_exists?
