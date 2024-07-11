@@ -73,17 +73,11 @@ module AnnotateRb
         end
 
         def schema_header_text
-          info = []
-          info << "#"
-
-          info << if @options[:format_markdown]
-            "# Table name: `#{table_name}`"
+          if @options[:format_markdown]
+            SchemaHeader.new(table_name).to_markdown
           else
-            "# Table name: #{table_name}"
+            SchemaHeader.new(table_name).to_default
           end
-          info << "#\n" # We want the last line break
-
-          info.join("\n")
         end
 
         def schema_footer_text
