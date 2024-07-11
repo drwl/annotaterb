@@ -18,7 +18,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
           mock_column("id", :integer),
           mock_column("name", :string, limit: 50)
         ])
-      @schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(@klass, options).build
+      @schema_info = AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder.new(@klass, options).build
     end
 
     it "works with namespaced models (i.e. models inside modules/subdirectories)" do
@@ -33,7 +33,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
           mock_column("id", :integer),
           mock_column("name", :string, limit: 50)
         ])
-      schema_info = AnnotateRb::ModelAnnotator::AnnotationBuilder.new(
+      schema_info = AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder.new(
         klass,
         options
       ).build

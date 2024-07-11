@@ -10,12 +10,6 @@ module AnnotateRb
         end
 
         def build
-          constraint_info = if @options[:format_markdown]
-            "#\n# ### Check Constraints\n#\n"
-          else
-            "#\n# Check Constraints\n#\n"
-          end
-
           return "" unless @model.connection.respond_to?(:supports_check_constraints?) &&
             @model.connection.supports_check_constraints? && @model.connection.respond_to?(:check_constraints)
 
@@ -23,39 +17,24 @@ module AnnotateRb
           return "" if check_constraints.empty?
 
           max_size = check_constraints.map { |check_constraint| check_constraint.name.size }.max + 1
-          check_constraints.sort_by(&:name).each do |check_constraint|
+
+          constraints = check_constraints.sort_by(&:name).map do |check_constraint|
             expression = if check_constraint.expression
-              not_validated = if !check_constraint.validated?
-                "NOT VALID"
+              if check_constraint.validated?
+                "(#{check_constraint.expression.squish})"
+              else
+                "(#{check_constraint.expression.squish}) NOT VALID".squish
               end
-
-              "(#{check_constraint.expression.squish}) #{not_validated}".squish
             end
 
-            constraint_info += if @options[:format_markdown]
-              cc_info_in_markdown(check_constraint.name, expression)
-            else
-              cc_info_string(check_constraint.name, expression, max_size)
-            end
+            CheckConstraintComponent.new(check_constraint.name, expression, max_size)
           end
 
-          constraint_info
-        end
-
-        private
-
-        def cc_info_in_markdown(name, expression)
-          cc_info_markdown = sprintf("# * `%s`", name)
-          cc_info_markdown += sprintf(": `%s`", expression) if expression
-          cc_info_markdown += "\n"
-
-          cc_info_markdown
-        end
-
-        def cc_info_string(name, expression, max_size)
-          # standard:disable Lint/FormatParameterMismatch
-          sprintf("#  %-#{max_size}.#{max_size}s %s", name, expression).rstrip + "\n"
-          # standard:enable Lint/FormatParameterMismatch
+          if @options[:format_markdown]
+            Annotation.new(constraints).to_markdown
+          else
+            Annotation.new(constraints).to_default
+          end
         end
       end
     end

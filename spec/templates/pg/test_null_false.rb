@@ -18,5 +18,10 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
+# Indexes
+#
+#  by_compound_bool_and_int        (boolean,integer)
+#  index_test_null_falses_on_date  (date)
+#
 class TestNullFalse < ApplicationRecord
 end

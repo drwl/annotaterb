@@ -1,94 +1,5 @@
-RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
+RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
   include AnnotateTestHelpers
-
-  describe "#header" do
-    subject do
-      described_class.new(klass, options).header
-    end
-
-    let :klass do
-      primary_key = nil
-      columns = []
-      indexes = []
-      foreign_keys = []
-
-      mock_class(
-        :users,
-        primary_key,
-        columns,
-        indexes,
-        foreign_keys
-      )
-    end
-
-    describe "with no options set" do
-      let :options do
-        AnnotateRb::Options.new({})
-      end
-
-      let(:expected_header) do
-        <<~HEADER.strip
-          # == Schema Information
-        HEADER
-      end
-
-      it "returns a header" do
-        is_expected.to eq(expected_header)
-      end
-    end
-
-    describe "with :include_version option set" do
-      let :options do
-        AnnotateRb::Options.new({include_version: true})
-      end
-
-      let(:version) { 123 }
-      let(:expected_header) do
-        <<~HEADER.strip
-          # == Schema Information
-          # Schema version: #{version}
-        HEADER
-      end
-
-      before do
-        allow(ActiveRecord::Migrator).to receive(:current_version).and_return(version)
-      end
-
-      it "returns a header" do
-        is_expected.to eq(expected_header)
-      end
-
-      context "when version is 0" do
-        let(:version) { 0 }
-
-        let(:expected_header) do
-          <<~HEADER.strip
-            # == Schema Information
-          HEADER
-        end
-
-        it "returns a header" do
-          is_expected.to eq(expected_header)
-        end
-      end
-    end
-
-    describe "with markdown format" do
-      let :options do
-        AnnotateRb::Options.new({format_markdown: true})
-      end
-
-      let(:expected_header) do
-        <<~HEADER.strip
-          # ## Schema Information
-        HEADER
-      end
-
-      it "returns a header" do
-        is_expected.to eq(expected_header)
-      end
-    end
-  end
 
   describe "#build" do
     subject do
@@ -1894,10 +1805,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
         :id
       end
 
-      before do
-        stub_const("AnnotateRb::ModelAnnotator::AnnotationBuilder::PREFIX_MD", "== Schema Information")
-      end
-
       let :options do
         AnnotateRb::Options.new({format_markdown: true, with_comment: true, with_column_comments: true})
       end
@@ -1919,7 +1826,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
         let :expected_result do
           <<~EOS
-            # == Schema Information
+            # ## Schema Information
             #
             # Table name: `users`
             #
@@ -1948,7 +1855,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
         let :expected_result do
           <<~EOS
-            # == Schema Information
+            # ## Schema Information
             #
             # Table name: `users`
             #
@@ -2064,174 +1971,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationBuilder do
 
         it "returns schema info without check constraints" do
           is_expected.to eq expected_result
-        end
-      end
-    end
-  end
-
-  describe "#schema_header_text" do
-    subject do
-      described_class.new(klass, options).schema_header_text
-    end
-
-    let(:table_exists) { true }
-    let(:table_comment) { "" }
-
-    let(:connection) do
-      indexes = []
-      foreign_keys = []
-
-      mock_connection_with_table_fields(
-        indexes,
-        foreign_keys,
-        table_exists,
-        table_comment
-      )
-    end
-
-    let :klass do
-      primary_key = nil
-      columns = []
-
-      mock_class_with_custom_connection(
-        :users,
-        primary_key,
-        columns,
-        connection
-      )
-    end
-
-    context "with no options set" do
-      let :options do
-        AnnotateRb::Options.new({})
-      end
-
-      let(:expected_header) do
-        <<~HEADER
-          #
-          # Table name: users
-          #
-        HEADER
-      end
-
-      it "returns the schema header" do
-        is_expected.to eq(expected_header)
-      end
-    end
-
-    context "with `with_comment: true`" do
-      context "with `with_table_comments: true` and table has comments" do
-        let :options do
-          AnnotateRb::Options.new({with_comment: true, with_table_comments: true})
-        end
-
-        let(:table_comment) { "table_comments" }
-
-        let(:expected_header) do
-          <<~HEADER
-            #
-            # Table name: users(table_comments)
-            #
-          HEADER
-        end
-
-        it "returns the header with the table comment" do
-          is_expected.to eq(expected_header)
-        end
-      end
-
-      context "with `with_table_comments: true` and table does not have comments" do
-        let :options do
-          AnnotateRb::Options.new({with_comment: true, with_table_comments: true})
-        end
-
-        let :klass do
-          primary_key = nil
-          columns = []
-          indexes = []
-          foreign_keys = []
-
-          mock_class(
-            :users,
-            primary_key,
-            columns,
-            indexes,
-            foreign_keys
-          )
-        end
-
-        let(:expected_header) do
-          <<~HEADER
-            #
-            # Table name: users
-            #
-          HEADER
-        end
-
-        it "returns the header without table comments" do
-          is_expected.to eq(expected_header)
-        end
-      end
-
-      context "with `with_table_comments: false` and table has comments" do
-        let :options do
-          AnnotateRb::Options.new({with_comment: true, with_table_comments: false})
-        end
-
-        let(:table_comment) { "table_comments" }
-
-        let(:expected_header) do
-          <<~HEADER
-            #
-            # Table name: users
-            #
-          HEADER
-        end
-
-        it "returns the header without the table comment" do
-          is_expected.to eq(expected_header)
-        end
-      end
-    end
-
-    context "with `with_comment: false`" do
-      context "with `with_table_comments: true` and table has comments" do
-        let :options do
-          AnnotateRb::Options.new({with_comment: false, with_table_comments: true})
-        end
-
-        let(:table_comment) { "table_comments" }
-
-        let(:expected_header) do
-          <<~HEADER
-            #
-            # Table name: users
-            #
-          HEADER
-        end
-
-        it "returns the header without the table comment" do
-          is_expected.to eq(expected_header)
-        end
-      end
-
-      context "with `with_table_comments: false` and table has comments" do
-        let :options do
-          AnnotateRb::Options.new({with_comment: false, with_table_comments: false})
-        end
-
-        let(:table_comment) { "table_comments" }
-
-        let(:expected_header) do
-          <<~HEADER
-            #
-            # Table name: users
-            #
-          HEADER
-        end
-
-        it "returns the header without the table comment" do
-          is_expected.to eq(expected_header)
         end
       end
     end
