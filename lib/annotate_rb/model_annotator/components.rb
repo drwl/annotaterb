@@ -29,7 +29,7 @@ module AnnotateRb
         end
       end
 
-      class BlankLine < Base
+      class BlankCommentLine < Base
         def to_default
           "#"
         end
