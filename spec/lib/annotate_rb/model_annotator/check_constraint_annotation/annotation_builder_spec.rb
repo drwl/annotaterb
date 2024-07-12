@@ -18,7 +18,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::CheckConstraintAnnotation::Annotation
     let(:connection) do
       mock_connection([], [], check_constraints)
     end
-    let(:options) { AnnotateRb::Options.new }
+    let(:options) { AnnotateRb::Options.new({show_check_constraints: true}) }
     let(:check_constraints) do
       [
         mock_check_constraint("alive", "age < 150"),
@@ -31,6 +31,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::CheckConstraintAnnotation::Annotation
           END
         SQL
       ]
+    end
+
+    context "when show_check_constraints option is false" do
+      let(:options) { AnnotateRb::Options.new({show_check_constraints: false}) }
+
+      it { is_expected.to be_a(AnnotateRb::ModelAnnotator::Components::NilComponent) }
     end
 
     context "using default format" do

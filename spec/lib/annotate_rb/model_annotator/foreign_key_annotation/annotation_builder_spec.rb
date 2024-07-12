@@ -25,7 +25,14 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
 
       ::AnnotateRb::ModelAnnotator::ModelWrapper.new(klass, options)
     end
-    let(:options) { ::AnnotateRb::Options.new({show_complete_foreign_keys: true}) }
+    let(:options) { ::AnnotateRb::Options.new({show_foreign_keys: true, show_complete_foreign_keys: true}) }
+
+    context "when show_foreign_keys option is false" do
+      let(:foreign_keys) { [] }
+      let(:options) { ::AnnotateRb::Options.new({show_foreign_keys: false}) }
+
+      it { is_expected.to be_a(AnnotateRb::ModelAnnotator::Components::NilComponent) }
+    end
 
     context "without foreign keys" do
       let(:foreign_keys) { [] }
