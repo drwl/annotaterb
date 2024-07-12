@@ -10,6 +10,8 @@ module AnnotateRb
         end
 
         def build
+          return Components::NilComponent.new if !@options[:show_indexes]
+
           indexes = @model.retrieve_indexes_from_table
           return Components::NilComponent.new if indexes.empty?
 

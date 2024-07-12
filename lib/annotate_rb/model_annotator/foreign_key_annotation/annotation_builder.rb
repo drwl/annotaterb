@@ -10,6 +10,7 @@ module AnnotateRb
         end
 
         def build
+          return Components::NilComponent.new if !@options[:show_foreign_keys]
           return Components::NilComponent.new unless @model.connection.respond_to?(:supports_foreign_keys?) &&
             @model.connection.supports_foreign_keys? && @model.connection.respond_to?(:foreign_keys)
 

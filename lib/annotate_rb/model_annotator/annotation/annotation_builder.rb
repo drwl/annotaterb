@@ -23,9 +23,9 @@ module AnnotateRb
               SchemaHeader.new(table_name, table_comment, @options),
               MarkdownHeader.new(max_size),
               *columns,
-              indexes,
-              foreign_keys,
-              check_constraints,
+              IndexAnnotation::AnnotationBuilder.new(@model, @options).build,
+              ForeignKeyAnnotation::AnnotationBuilder.new(@model, @options).build,
+              CheckConstraintAnnotation::AnnotationBuilder.new(@model, @options).build,
               SchemaFooter.new
             ]
           end
@@ -49,30 +49,6 @@ module AnnotateRb
           def columns
             @model.columns.map do |col|
               _component = ColumnAnnotation::AnnotationBuilder.new(col, @model, max_size, @options).build
-            end
-          end
-
-          def indexes
-            if @options[:show_indexes] && @model.table_exists?
-              _index_annotation = IndexAnnotation::AnnotationBuilder.new(@model, @options).build
-            else
-              Components::NilComponent.new
-            end
-          end
-
-          def foreign_keys
-            if @options[:show_foreign_keys] && @model.table_exists?
-              _foreign_key_annotation = ForeignKeyAnnotation::AnnotationBuilder.new(@model, @options).build
-            else
-              Components::NilComponent.new
-            end
-          end
-
-          def check_constraints
-            if @options[:show_check_constraints] && @model.table_exists?
-              _check_constraint_annotation = CheckConstraintAnnotation::AnnotationBuilder.new(@model, @options).build
-            else
-              Components::NilComponent.new
             end
           end
         end
