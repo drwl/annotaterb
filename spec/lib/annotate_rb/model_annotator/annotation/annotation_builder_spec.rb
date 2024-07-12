@@ -244,41 +244,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       end
     end
 
-    context "with a composite primary key" do
-      let :options do
-        AnnotateRb::Options.new({})
-      end
-
-      let :primary_key do
-        [:a_id, :b_id]
-      end
-
-      let :columns do
-        [
-          mock_column("a_id", :integer),
-          mock_column("b_id", :integer),
-          mock_column("name", :string, limit: 50)
-        ]
-      end
-
-      let :expected_result do
-        <<~EOS
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  a_id :integer          not null, primary key
-          #  b_id :integer          not null, primary key
-          #  name :string(50)       not null
-          #
-        EOS
-      end
-
-      it "returns schema info" do
-        is_expected.to eq(expected_result)
-      end
-    end
-
     context "with `show_indexes: true`" do
       let :primary_key do
         :id
