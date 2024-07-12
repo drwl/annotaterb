@@ -1189,13 +1189,13 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       end
     end
 
-    context 'when "classified_sort" is "yes"' do
+    context 'when "classified_sort" is true' do
       let :primary_key do
         :id
       end
 
       let :options do
-        AnnotateRb::Options.new({classified_sort: "yes"})
+        AnnotateRb::Options.new({classified_sort: true})
       end
 
       let :columns do
