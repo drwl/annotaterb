@@ -80,7 +80,6 @@ module AnnotateRb
         def initialize(klass, options)
           @model = ModelWrapper.new(klass, options)
           @options = options
-          @info = "" # TODO: Make array and build string that way
         end
 
         def build
