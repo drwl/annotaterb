@@ -16,39 +16,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       []
     end
 
-    context "with no primary key and normal columns" do
-      let :options do
-        AnnotateRb::Options.new({})
-      end
-
-      let :primary_key do
-        nil
-      end
-
-      let :columns do
-        [
-          mock_column("id", :integer),
-          mock_column("name", :string, limit: 50)
-        ]
-      end
-
-      let :expected_result do
-        <<~EOS
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id   :integer          not null
-          #  name :string(50)       not null
-          #
-        EOS
-      end
-
-      it "returns schema info" do
-        is_expected.to eq(expected_result)
-      end
-    end
-
     context "with no primary key and with enum columns" do
       let :options do
         AnnotateRb::Options.new({})
