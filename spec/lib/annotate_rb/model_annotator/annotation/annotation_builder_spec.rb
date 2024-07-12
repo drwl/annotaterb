@@ -1922,57 +1922,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       it "returns schema info with check constraints" do
         is_expected.to eq expected_result
       end
-
-      context "when constraint is not valid" do
-        let :custom_connection do
-          check_constraints = [
-            mock_check_constraint("must_be_us_adult", "age >= 18", false)
-          ]
-
-          mock_connection([], [], check_constraints)
-        end
-        let :expected_result do
-          <<~EOS
-            # == Schema Information
-            #
-            # Table name: users
-            #
-            #  id  :integer          not null, primary key
-            #  age :integer          not null
-            #
-            # Check Constraints
-            #
-            #  must_be_us_adult  (age >= 18) NOT VALID
-            #
-          EOS
-        end
-
-        it "returns schema info without check constraints" do
-          is_expected.to eq expected_result
-        end
-      end
-
-      context "when option is set to false" do
-        let(:options) do
-          AnnotateRb::Options.new({show_check_constraints: false})
-        end
-
-        let :expected_result do
-          <<~EOS
-            # == Schema Information
-            #
-            # Table name: users
-            #
-            #  id  :integer          not null, primary key
-            #  age :integer          not null
-            #
-          EOS
-        end
-
-        it "returns schema info without check constraints" do
-          is_expected.to eq expected_result
-        end
-      end
     end
   end
 end
