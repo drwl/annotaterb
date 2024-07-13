@@ -14,17 +14,20 @@ module AnnotateRb
         end
 
         def to_markdown
-          info = "# ### Columns\n"
-          info += "#\n"
+          name_padding = max_size + MD_NAMES_OVERHEAD
           # standard:disable Lint/FormatParameterMismatch
-          info += format("# %-#{max_size + MD_NAMES_OVERHEAD}.#{max_size + MD_NAMES_OVERHEAD}s | %-#{MD_TYPE_ALLOWANCE}.#{MD_TYPE_ALLOWANCE}s | %s\n",
+          formatted_headers = format("# %-#{name_padding}.#{name_padding}s | %-#{MD_TYPE_ALLOWANCE}.#{MD_TYPE_ALLOWANCE}s | %s",
             "Name",
             "Type",
             "Attributes")
           # standard:enable Lint/FormatParameterMismatch
-          info += "# #{"-" * (max_size + MD_NAMES_OVERHEAD)} | #{"-" * MD_TYPE_ALLOWANCE} | #{"-" * 27}\n"
 
-          info
+          <<~HEADER.strip
+            # ### Columns
+            #
+            #{formatted_headers}
+            # #{"-" * name_padding} | #{"-" * MD_TYPE_ALLOWANCE} | #{"-" * 27}
+          HEADER
         end
 
         def to_default

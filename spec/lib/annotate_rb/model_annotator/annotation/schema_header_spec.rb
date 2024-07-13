@@ -11,7 +11,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
     end
 
     let(:expected_header) do
-      <<~HEADER
+      <<~HEADER.strip
         #
         # Table name: users
         #
@@ -29,7 +29,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
         let(:table_comment) { "table_comments" }
 
         let(:expected_header) do
-          <<~HEADER
+          <<~HEADER.strip
             #
             # Table name: users(table_comments)
             #
@@ -49,7 +49,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
         let(:table_comment) {}
 
         let(:expected_header) do
-          <<~HEADER
+          <<~HEADER.strip
             #
             # Table name: users
             #
@@ -69,7 +69,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
         let(:table_comment) { "table_comments" }
 
         let(:expected_header) do
-          <<~HEADER
+          <<~HEADER.strip
             #
             # Table name: users
             #
@@ -91,7 +91,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
         let(:table_comment) { "table_comments" }
 
         let(:expected_header) do
-          <<~HEADER
+          <<~HEADER.strip
             #
             # Table name: users
             #
@@ -111,7 +111,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
         let(:table_comment) { "table_comments" }
 
         let(:expected_header) do
-          <<~HEADER
+          <<~HEADER.strip
             #
             # Table name: users
             #
@@ -135,7 +135,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
     end
 
     let(:expected_header) do
-      <<~HEADER
+      <<~HEADER.strip
         #
         # Table name: `users`
         #

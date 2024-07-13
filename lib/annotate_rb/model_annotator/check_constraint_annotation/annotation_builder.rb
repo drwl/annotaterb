@@ -10,11 +10,12 @@ module AnnotateRb
         end
 
         def build
-          return "" unless @model.connection.respond_to?(:supports_check_constraints?) &&
+          return Components::NilComponent.new if !@options[:show_check_constraints]
+          return Components::NilComponent.new unless @model.connection.respond_to?(:supports_check_constraints?) &&
             @model.connection.supports_check_constraints? && @model.connection.respond_to?(:check_constraints)
 
           check_constraints = @model.connection.check_constraints(@model.table_name)
-          return "" if check_constraints.empty?
+          return Components::NilComponent.new if check_constraints.empty?
 
           max_size = check_constraints.map { |check_constraint| check_constraint.name.size }.max + 1
 
@@ -30,11 +31,7 @@ module AnnotateRb
             CheckConstraintComponent.new(check_constraint.name, expression, max_size)
           end
 
-          if @options[:format_markdown]
-            Annotation.new(constraints).to_markdown
-          else
-            Annotation.new(constraints).to_default
-          end
+          _annotation = Annotation.new(constraints)
         end
       end
     end

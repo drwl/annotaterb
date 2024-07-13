@@ -12,11 +12,10 @@ module AnnotateRb
 
         def body
           [
-            Components::BlankLine.new,
+            Components::BlankCommentLine.new,
             Components::Header.new(HEADER_TEXT),
-            Components::BlankLine.new,
-            *@foreign_keys,
-            Components::LineBreak.new
+            Components::BlankCommentLine.new,
+            *@foreign_keys
           ]
         end
 

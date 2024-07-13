@@ -64,7 +64,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
       end
     end
 
-    context "when a column has an index and simple index option is on" do
+    context "when a column has an index and simple_indexes option is true" do
       let(:is_primary_key) { true }
       let(:options) { AnnotateRb::Options.new({simple_indexes: true}) }
 
@@ -74,13 +74,140 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
 
         let(:column_indices) do
           [
-            mock_index("index_rails_02e851e3b7", columns: ["id"]),
+            mock_index("index_rails_02e851e3b7", columns: ["id"])
+          ]
+        end
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with a column including an index" do
+        let(:column) { mock_column("firstname", :string) }
+        let(:expected_result) { ["indexed => [surname]", "not null", "primary key"] }
+
+        let(:column_indices) do
+          [
+            mock_index("index_rails_02e851e3b8",
+              columns: %w[firstname surname],
+              where: "value IS NOT NULL")
+          ]
+        end
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with a column includes an ordered index key 1" do
+        let(:column) { mock_column("firstname", :string) }
+        let(:expected_result) { ["indexed => [surname, value]", "not null", "primary key"] }
+
+        let(:column_indices) do
+          [
+            mock_index("index_rails_02e851e3b8",
+              columns: %w[firstname surname value],
+              orders: {"surname" => :asc, "value" => :desc})
+          ]
+        end
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with a column includes an ordered index key 2" do
+        let(:column) { mock_column("surname", :string) }
+        let(:expected_result) { ["indexed => [firstname, value]", "not null", "primary key"] }
+
+        let(:column_indices) do
+          [
+            mock_index("index_rails_02e851e3b8",
+              columns: %w[firstname surname value],
+              orders: {"surname" => :asc, "value" => :desc})
+          ]
+        end
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with a column includes an ordered index key 3" do
+        let(:column) { mock_column("value", :string) }
+        let(:expected_result) { ["indexed => [firstname, surname]", "not null", "primary key"] }
+
+        let(:column_indices) do
+          [
+            mock_index("index_rails_02e851e3b8",
+              columns: %w[firstname surname value],
+              orders: {"surname" => :asc, "value" => :desc})
+          ]
+        end
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with a column including an index in string form" do
+        let(:column) { mock_column("name", :string) }
+        let(:expected_result) { ["not null", "primary key"] }
+
+        let(:column_indices) do
+          [
             mock_index("index_rails_02e851e3b8", columns: "LOWER(name)")
           ]
         end
 
         it { is_expected.to match_array(expected_result) }
       end
+    end
+
+    context "when the hide_default_column_types option is 'skip' with a json column" do
+      let(:options) { AnnotateRb::Options.new({hide_default_column_types: "skip"}) }
+      let(:column_defaults) { {"profile" => {}} }
+
+      let(:is_primary_key) { false }
+      let(:column) { mock_column("profile", :json, default: {}) }
+      let(:expected_result) { ["default({})", "not null"] }
+
+      it { is_expected.to match_array(expected_result) }
+    end
+
+    context "when the hide_default_column_types option is 'skip' with a jsonb column" do
+      let(:options) { AnnotateRb::Options.new({hide_default_column_types: "skip"}) }
+      let(:column_defaults) { {"settings" => {}} }
+
+      let(:is_primary_key) { false }
+      let(:column) { mock_column("settings", :jsonb, default: {}) }
+      let(:expected_result) { ["default({})", "not null"] }
+
+      it { is_expected.to match_array(expected_result) }
+    end
+
+    context "when the hide_default_column_types option is 'skip' with a hstore column" do
+      let(:options) { AnnotateRb::Options.new({hide_default_column_types: "skip"}) }
+      let(:column_defaults) { {"parameters" => {}} }
+
+      let(:is_primary_key) { false }
+      let(:column) { mock_column("parameters", :hstore, default: {}) }
+      let(:expected_result) { ["default({})", "not null"] }
+
+      it { is_expected.to match_array(expected_result) }
+    end
+
+    context "when the hide_default_column_types option is 'json' with a json column" do
+      let(:options) { AnnotateRb::Options.new({hide_default_column_types: "json"}) }
+      let(:column_defaults) { {"profile" => {}} }
+
+      let(:is_primary_key) { false }
+      let(:column) { mock_column("profile", :json, default: {}) }
+      let(:expected_result) { ["not null"] }
+
+      it { is_expected.to match_array(expected_result) }
+    end
+
+    context "when the hide_default_column_types option is 'json' with a non-json column" do
+      let(:options) { AnnotateRb::Options.new({hide_default_column_types: "json"}) }
+      let(:column_defaults) { {"settings" => {}} }
+
+      let(:is_primary_key) { false }
+      let(:column) { mock_column("settings", :jsonb, default: {}) }
+      let(:expected_result) { ["default({})", "not null"] }
+
+      it { is_expected.to match_array(expected_result) }
     end
 
     context "column defaults in sqlite" do

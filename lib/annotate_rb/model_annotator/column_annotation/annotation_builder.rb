@@ -28,17 +28,7 @@ module AnnotateRb
             @column.name
           end
 
-          component = ColumnComponent.new(col_name, @max_size, formatted_column_type, column_attributes)
-
-          if @options[:format_rdoc]
-            component.to_rdoc
-          elsif @options[:format_yard]
-            component.to_yard
-          elsif @options[:format_markdown]
-            component.to_markdown
-          else
-            component.to_default
-          end
+          _component = ColumnComponent.new(col_name, @max_size, formatted_column_type, column_attributes)
         end
 
         private

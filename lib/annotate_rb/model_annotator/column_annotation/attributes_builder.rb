@@ -88,6 +88,8 @@ module AnnotateRb
           _sorted_indices = sorted_indices.reject { |ind| ind.columns.is_a?(String) }
         end
 
+        # Historically, the old gem looked for the option being set to "skip"
+        # e.g. hide_default_column_types: "skip"
         def hide_default?
           excludes =
             if @options[:hide_default_column_types].blank?

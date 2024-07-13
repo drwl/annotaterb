@@ -4,10 +4,58 @@ module AnnotateRb
   module ModelAnnotator
     module Annotation
       class AnnotationBuilder
+        class Annotation < Components::Base
+          attr_reader :version, :table_name, :table_comment, :max_size
+
+          def initialize(options, **input)
+            @options = options
+
+            @version = input[:version]
+            @table_name = input[:table_name]
+            @table_comment = input[:table_comment]
+            @max_size = input[:max_size]
+            @model = input[:model]
+          end
+
+          def body
+            [
+              MainHeader.new(version, @options[:include_version]),
+              SchemaHeader.new(table_name, table_comment, @options),
+              MarkdownHeader.new(max_size),
+              *columns,
+              IndexAnnotation::AnnotationBuilder.new(@model, @options).build,
+              ForeignKeyAnnotation::AnnotationBuilder.new(@model, @options).build,
+              CheckConstraintAnnotation::AnnotationBuilder.new(@model, @options).build,
+              SchemaFooter.new
+            ]
+          end
+
+          def build
+            components = body.flatten
+
+            if @options[:format_rdoc]
+              components.map(&:to_rdoc).compact.join("\n")
+            elsif @options[:format_yard]
+              components.map(&:to_yard).compact.join("\n")
+            elsif @options[:format_markdown]
+              components.map(&:to_markdown).compact.join("\n")
+            else
+              components.map(&:to_default).compact.join("\n")
+            end
+          end
+
+          private
+
+          def columns
+            @model.columns.map do |col|
+              _component = ColumnAnnotation::AnnotationBuilder.new(col, @model, max_size, @options).build
+            end
+          end
+        end
+
         def initialize(klass, options)
           @model = ModelWrapper.new(klass, options)
           @options = options
-          @info = "" # TODO: Make array and build string that way
         end
 
         def build
@@ -22,52 +70,13 @@ module AnnotateRb
           end
 
           version = @options.get_state(:current_version)
-
-          @info = if @options[:format_markdown]
-            MainHeader.new(version, @options[:include_version]).to_markdown
-          else
-            MainHeader.new(version, @options[:include_version]).to_default
-          end
-
-          @info += "\n"
-
+          table_name = @model.table_name
           table_comment = @model.connection.try(:table_comment, @model.table_name)
-
-          @info += if @options[:format_markdown]
-            SchemaHeader.new(@model.table_name, table_comment, @options).to_markdown
-          else
-            SchemaHeader.new(@model.table_name, table_comment, @options).to_default
-          end
-
           max_size = @model.max_schema_info_width
 
-          if @options[:format_markdown]
-            @info += MarkdownHeader.new(max_size).to_markdown
-          end
-
-          @info += @model.columns.map do |col|
-            ColumnAnnotation::AnnotationBuilder.new(col, @model, max_size, @options).build
-          end.join
-
-          if @options[:show_indexes] && @model.table_exists?
-            @info += IndexAnnotation::AnnotationBuilder.new(@model, @options).build
-          end
-
-          if @options[:show_foreign_keys] && @model.table_exists?
-            @info += ForeignKeyAnnotation::AnnotationBuilder.new(@model, @options).build
-          end
-
-          if @options[:show_check_constraints] && @model.table_exists?
-            @info += CheckConstraintAnnotation::AnnotationBuilder.new(@model, @options).build
-          end
-
-          @info += if @options[:format_rdoc]
-            SchemaFooter.new.to_rdoc
-          else
-            SchemaFooter.new.to_default
-          end
-
-          @info
+          _annotation = Annotation.new(@options,
+            version: version, table_name: table_name, table_comment: table_comment,
+            max_size: max_size, model: @model).build
         end
       end
     end

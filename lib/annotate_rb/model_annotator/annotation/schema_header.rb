@@ -4,6 +4,22 @@ module AnnotateRb
   module ModelAnnotator
     module Annotation
       class SchemaHeader < Components::Base
+        class TableName < Components::Base
+          attr_reader :name
+
+          def initialize(name)
+            @name = name
+          end
+
+          def to_default
+            "# Table name: #{name}"
+          end
+
+          def to_markdown
+            "# Table name: `#{name}`"
+          end
+        end
+
         attr_reader :table_name, :table_comment
 
         def initialize(table_name, table_comment, options)
@@ -12,20 +28,20 @@ module AnnotateRb
           @options = options
         end
 
-        def to_markdown
-          <<~OUTPUT
-            #
-            # Table name: `#{name}`
-            #
-          OUTPUT
+        def body
+          [
+            Components::BlankCommentLine.new,
+            TableName.new(name),
+            Components::BlankCommentLine.new
+          ]
         end
 
         def to_default
-          <<~OUTPUT
-            #
-            # Table name: #{name}
-            #
-          OUTPUT
+          body.map(&:to_default).join("\n")
+        end
+
+        def to_markdown
+          body.map(&:to_markdown).join("\n")
         end
 
         private
