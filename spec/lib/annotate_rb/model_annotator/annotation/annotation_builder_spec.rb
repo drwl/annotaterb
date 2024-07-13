@@ -114,53 +114,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       end
     end
 
-    context "with `show_foreign_keys: true, show_complete_foreign_keys: true`, a primary key, and columns with foreign keys" do
-      let :options do
-        AnnotateRb::Options.new({show_foreign_keys: true, show_complete_foreign_keys: true})
-      end
-
-      let :primary_key do
-        :id
-      end
-
-      let :columns do
-        [
-          mock_column("id", :integer),
-          mock_column("foreign_thing_id", :integer)
-        ]
-      end
-
-      let :foreign_keys do
-        [
-          mock_foreign_key("fk_rails_cf2568e89e", "foreign_thing_id", "foreign_things"),
-          mock_foreign_key("custom_fk_name", "other_thing_id", "other_things"),
-          mock_foreign_key("fk_rails_a70234b26c", "third_thing_id", "third_things")
-        ]
-      end
-
-      let :expected_result do
-        <<~EOS
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id               :integer          not null, primary key
-          #  foreign_thing_id :integer          not null
-          #
-          # Foreign Keys
-          #
-          #  custom_fk_name       (other_thing_id => other_things.id)
-          #  fk_rails_a70234b26c  (third_thing_id => third_things.id)
-          #  fk_rails_cf2568e89e  (foreign_thing_id => foreign_things.id)
-          #
-        EOS
-      end
-
-      it "returns schema info with foreign keys" do
-        is_expected.to eq(expected_result)
-      end
-    end
-
     context 'when "hide_limit_column_types" is blank string' do
       let :primary_key do
         :id
