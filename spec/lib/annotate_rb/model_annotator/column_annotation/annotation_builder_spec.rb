@@ -200,6 +200,26 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
         end
       end
 
+      context "when the column has a multi-line comment" do
+        let(:max_size) { 45 }
+        let(:model) do
+          instance_double(
+            AnnotateRb::ModelAnnotator::ModelWrapper,
+            primary_key: "something_else",
+            retrieve_indexes_from_table: [],
+            with_comments?: true,
+            column_defaults: {}
+          )
+        end
+
+        let(:column) { mock_column("notes", :text, limit: 55, comment: "Notes.\nMay include things like notes.") }
+        let(:expected_result) { "#  notes(Notes.\\nMay include things like notes.):text(55)         not null" }
+
+        it "returns the column annotation" do
+          is_expected.to eq(expected_result)
+        end
+      end
+
       context "when the column has a comment and without comment options" do
         let(:options) { AnnotateRb::Options.new({with_comment: false, with_column_comments: false}) }
         let(:max_size) { 20 }
