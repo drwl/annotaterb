@@ -155,7 +155,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
       end
     end
 
-    context "when the hide_default_column_types option is specified with a json column" do
+    context "when the hide_default_column_types option is 'skip' with a json column" do
       let(:options) { AnnotateRb::Options.new({hide_default_column_types: "skip"}) }
       let(:column_defaults) { {"profile" => {}} }
 
@@ -166,7 +166,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
       it { is_expected.to match_array(expected_result) }
     end
 
-    context "when the hide_default_column_types option is specified with a jsonb column" do
+    context "when the hide_default_column_types option is 'skip' with a jsonb column" do
       let(:options) { AnnotateRb::Options.new({hide_default_column_types: "skip"}) }
       let(:column_defaults) { {"settings" => {}} }
 
@@ -177,7 +177,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
       it { is_expected.to match_array(expected_result) }
     end
 
-    context "when the hide_default_column_types option is specified with a hstore column" do
+    context "when the hide_default_column_types option is 'skip' with a hstore column" do
       let(:options) { AnnotateRb::Options.new({hide_default_column_types: "skip"}) }
       let(:column_defaults) { {"parameters" => {}} }
 
