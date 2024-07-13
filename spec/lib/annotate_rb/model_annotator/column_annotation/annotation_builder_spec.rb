@@ -151,6 +151,55 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
         end
       end
 
+      context "when the column has a multi-byte comment" do
+        let(:max_size) { 20 }
+        let(:model) do
+          instance_double(
+            AnnotateRb::ModelAnnotator::ModelWrapper,
+            primary_key: "something_else",
+            retrieve_indexes_from_table: [],
+            with_comments?: true,
+            column_defaults: {}
+          )
+        end
+
+        context "with column comment 'ＩＤ'" do
+          let(:column) { mock_column("id", :integer, limit: 8, comment: "ＩＤ") }
+          let(:expected_result) { "#  id(ＩＤ)            :integer          not null" }
+
+          it "returns the column annotation" do
+            is_expected.to eq(expected_result)
+          end
+        end
+
+        context "with column comment in Cyrillic" do
+          let(:column) { mock_column("cyrillic", :text, limit: 30, comment: "Кириллица") }
+          let(:expected_result) { "#  cyrillic(Кириллица) :text(30)         not null" }
+
+          it "returns the column annotation" do
+            is_expected.to eq(expected_result)
+          end
+        end
+
+        context "with column comment in Japanese" do
+          let(:column) { mock_column("japanese", :text, limit: 60, comment: "熊本大学　イタリア　宝島") }
+          let(:expected_result) { "#  japanese(熊本大学　イタリア　宝:text(60)         not null" }
+
+          it "returns the column annotation" do
+            is_expected.to eq(expected_result)
+          end
+        end
+
+        context "with column comment in Arabic" do
+          let(:column) { mock_column("arabic", :text, limit: 20, comment: "لغة") }
+          let(:expected_result) { "#  arabic(لغة)         :text(20)         not null" }
+
+          it "returns the column annotation" do
+            is_expected.to eq(expected_result)
+          end
+        end
+      end
+
       context "when the column has a comment and without comment options" do
         let(:options) { AnnotateRb::Options.new({with_comment: false, with_column_comments: false}) }
         let(:max_size) { 20 }

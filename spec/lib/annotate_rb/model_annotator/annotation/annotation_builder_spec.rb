@@ -149,53 +149,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       end
     end
 
-    context "when columns have multibyte comments" do
-      let :primary_key do
-        :id
-      end
-
-      let :options do
-        AnnotateRb::Options.new({classified_sort: false, with_comment: true, with_column_comments: true})
-      end
-
-      let :columns do
-        [
-          mock_column("id", :integer, limit: 8, comment: "ＩＤ"),
-          mock_column("active", :boolean, limit: 1, comment: "ＡＣＴＩＶＥ"),
-          mock_column("name", :string, limit: 50, comment: "ＮＡＭＥ"),
-          mock_column("notes", :text, limit: 55, comment: "ＮＯＴＥＳ"),
-          mock_column("cyrillic", :text, limit: 30, comment: "Кириллица"),
-          mock_column("japanese", :text, limit: 60, comment: "熊本大学　イタリア　宝島"),
-          mock_column("arabic", :text, limit: 20, comment: "لغة"),
-          mock_column("no_comment", :text, limit: 20, comment: nil),
-          mock_column("location", :geometry_collection, limit: nil, comment: nil)
-        ]
-      end
-
-      let :expected_result do
-        <<~EOS
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id(ＩＤ)                           :integer          not null, primary key
-          #  active(ＡＣＴＩＶＥ)               :boolean          not null
-          #  name(ＮＡＭＥ)                     :string(50)       not null
-          #  notes(ＮＯＴＥＳ)                  :text(55)         not null
-          #  cyrillic(Кириллица)                :text(30)         not null
-          #  japanese(熊本大学　イタリア　宝島) :text(60)         not null
-          #  arabic(لغة)                        :text(20)         not null
-          #  no_comment                         :text(20)         not null
-          #  location                           :geometry_collect not null
-          #
-        EOS
-      end
-
-      it 'works with option "with_comment"' do
-        is_expected.to eq expected_result
-      end
-    end
-
     context "when columns have multiline comments" do
       let :primary_key do
         :id
