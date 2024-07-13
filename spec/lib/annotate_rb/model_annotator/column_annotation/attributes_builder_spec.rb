@@ -64,7 +64,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
       end
     end
 
-    context "when a column has an index and simple index option is on" do
+    context "when a column has an index and simple_indexes option is true" do
       let(:is_primary_key) { true }
       let(:options) { AnnotateRb::Options.new({simple_indexes: true}) }
 
@@ -75,6 +75,21 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
         let(:column_indices) do
           [
             mock_index("index_rails_02e851e3b7", columns: ["id"])
+          ]
+        end
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with a column including an index" do
+        let(:column) { mock_column("firstname", :string) }
+        let(:expected_result) { ["indexed => [surname]", "not null", "primary key"] }
+
+        let(:column_indices) do
+          [
+            mock_index("index_rails_02e851e3b8",
+              columns: %w[firstname surname],
+              where: "value IS NOT NULL")
           ]
         end
 

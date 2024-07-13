@@ -114,57 +114,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       end
     end
 
-    context 'with `show_indexes: true, simple_indexes: true` and one of indexes includes "where" clause' do
-      let :primary_key do
-        :id
-      end
-
-      let :options do
-        AnnotateRb::Options.new({show_indexes: true, simple_indexes: true})
-      end
-
-      let :columns do
-        [
-          mock_column("id", :integer),
-          mock_column("firstname", :string),
-          mock_column("surname", :string),
-          mock_column("value", :string)
-        ]
-      end
-
-      let :indexes do
-        [
-          mock_index("index_rails_02e851e3b7", columns: ["id"]),
-          mock_index("index_rails_02e851e3b8",
-            columns: %w[firstname surname],
-            where: "value IS NOT NULL")
-        ]
-      end
-
-      let :expected_result do
-        <<~EOS
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id        :integer          not null, primary key, indexed
-          #  firstname :string           not null, indexed => [surname]
-          #  surname   :string           not null, indexed => [firstname]
-          #  value     :string           not null
-          #
-          # Indexes
-          #
-          #  index_rails_02e851e3b7  (id)
-          #  index_rails_02e851e3b8  (firstname,surname) WHERE value IS NOT NULL
-          #
-        EOS
-      end
-
-      it "returns schema info with index information" do
-        is_expected.to eq expected_result
-      end
-    end
-
     context 'with `show_indexes: true, simple_indexes: true` and one of indexes includes "using" clause other than "btree"' do
       let :primary_key do
         :id
