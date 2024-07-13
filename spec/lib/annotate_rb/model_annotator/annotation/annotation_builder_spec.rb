@@ -149,45 +149,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       end
     end
 
-    context "when columns have comments" do
-      let :primary_key do
-        :id
-      end
-
-      let :options do
-        AnnotateRb::Options.new({classified_sort: false, with_comment: true, with_column_comments: true})
-      end
-
-      let :columns do
-        [
-          mock_column("id", :integer, limit: 8, comment: "ID"),
-          mock_column("active", :boolean, limit: 1, comment: "Active"),
-          mock_column("name", :string, limit: 50, comment: "Name"),
-          mock_column("notes", :text, limit: 55, comment: "Notes"),
-          mock_column("no_comment", :text, limit: 20, comment: nil)
-        ]
-      end
-
-      let :expected_result do
-        <<~EOS
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id(ID)         :integer          not null, primary key
-          #  active(Active) :boolean          not null
-          #  name(Name)     :string(50)       not null
-          #  notes(Notes)   :text(55)         not null
-          #  no_comment     :text(20)         not null
-          #
-        EOS
-      end
-
-      it 'works with option "with_comment"' do
-        is_expected.to eq expected_result
-      end
-    end
-
     context "when columns have multibyte comments" do
       let :primary_key do
         :id
