@@ -161,6 +161,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
         [
           mock_column("active", :boolean, limit: 1),
           mock_column("name", :string, limit: 50),
+          mock_column("user_id", :integer, limit: 8),
           mock_column("notes", :text, limit: 55)
         ]
       end
@@ -171,9 +172,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
           #
           # Table name: users
           #
-          #  active :boolean          not null
-          #  name   :string(50)       not null
-          #  notes  :text(55)         not null
+          #  active  :boolean          not null
+          #  name    :string(50)       not null
+          #  notes   :text(55)         not null
+          #  user_id :integer          not null
           #
         EOS
       end
