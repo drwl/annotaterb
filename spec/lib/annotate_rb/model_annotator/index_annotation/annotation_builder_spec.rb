@@ -114,5 +114,28 @@ RSpec.describe AnnotateRb::ModelAnnotator::IndexAnnotation::AnnotationBuilder do
         expect(default_format).to eq(expected_result)
       end
     end
+
+    context "index includes has a string form" do
+      let(:indexes) do
+        [
+          mock_index("index_rails_02e851e3b7", columns: ["id"]),
+          mock_index("index_rails_02e851e3b8", columns: "LOWER(name)")
+        ]
+      end
+
+      let(:expected_result) do
+        <<~EOS.strip
+          #
+          # Indexes
+          #
+          #  index_rails_02e851e3b7  (id)
+          #  index_rails_02e851e3b8  (LOWER(name))
+        EOS
+      end
+
+      it "matches the expected result" do
+        expect(default_format).to eq(expected_result)
+      end
+    end
   end
 end

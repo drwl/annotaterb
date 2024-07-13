@@ -140,6 +140,19 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
 
         it { is_expected.to match_array(expected_result) }
       end
+
+      context "with a column including an index in string form" do
+        let(:column) { mock_column("name", :string) }
+        let(:expected_result) { ["not null", "primary key"] }
+
+        let(:column_indices) do
+          [
+            mock_index("index_rails_02e851e3b8", columns: "LOWER(name)")
+          ]
+        end
+
+        it { is_expected.to match_array(expected_result) }
+      end
     end
 
     context "column defaults in sqlite" do
