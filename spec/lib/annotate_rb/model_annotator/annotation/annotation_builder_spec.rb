@@ -16,6 +16,53 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       []
     end
 
+    context "happy path" do
+      let :primary_key do
+        :id
+      end
+
+      let :options do
+        AnnotateRb::Options.new({
+          show_indexes: true
+        })
+      end
+
+      let :columns do
+        [
+          mock_column("id", :integer),
+          mock_column("foreign_thing_id", :integer)
+        ]
+      end
+
+      let :indexes do
+        [
+          mock_index("index_rails_02e851e3b7", columns: ["id"]),
+          mock_index("index_rails_02e851e3b8", columns: ["foreign_thing_id"])
+        ]
+      end
+
+      let :expected_result do
+        <<~EOS
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id               :integer          not null, primary key
+          #  foreign_thing_id :integer          not null
+          #
+          # Indexes
+          #
+          #  index_rails_02e851e3b7  (id)
+          #  index_rails_02e851e3b8  (foreign_thing_id)
+          #
+        EOS
+      end
+
+      it "returns schema info with index information" do
+        is_expected.to eq expected_result
+      end
+    end
+
     context "with primary key and using globalize gem" do
       let :options do
         AnnotateRb::Options.new({})
@@ -64,337 +111,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
 
       it "returns schema info" do
         is_expected.to eq(expected_result)
-      end
-    end
-
-    context "with `show_indexes: true`" do
-      let :primary_key do
-        :id
-      end
-
-      let :options do
-        AnnotateRb::Options.new({show_indexes: true})
-      end
-
-      let :columns do
-        [
-          mock_column("id", :integer),
-          mock_column("foreign_thing_id", :integer)
-        ]
-      end
-
-      let :indexes do
-        [
-          mock_index("index_rails_02e851e3b7", columns: ["id"]),
-          mock_index("index_rails_02e851e3b8", columns: ["foreign_thing_id"])
-        ]
-      end
-
-      let :expected_result do
-        <<~EOS
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id               :integer          not null, primary key
-          #  foreign_thing_id :integer          not null
-          #
-          # Indexes
-          #
-          #  index_rails_02e851e3b7  (id)
-          #  index_rails_02e851e3b8  (foreign_thing_id)
-          #
-        EOS
-      end
-
-      it "returns schema info with index information" do
-        is_expected.to eq expected_result
-      end
-    end
-
-    context "with `show_indexes: true` and the index includes an ordered index key" do
-      let :primary_key do
-        :id
-      end
-
-      let :options do
-        AnnotateRb::Options.new({show_indexes: true})
-      end
-
-      let :columns do
-        [
-          mock_column("id", :integer),
-          mock_column("firstname", :string),
-          mock_column("surname", :string),
-          mock_column("value", :string)
-        ]
-      end
-
-      let :indexes do
-        [
-          mock_index("index_rails_02e851e3b7", columns: ["id"]),
-          mock_index("index_rails_02e851e3b8",
-            columns: %w[firstname surname value],
-            orders: {"surname" => :asc, "value" => :desc})
-        ]
-      end
-
-      let :expected_result do
-        <<~EOS
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id        :integer          not null, primary key
-          #  firstname :string           not null
-          #  surname   :string           not null
-          #  value     :string           not null
-          #
-          # Indexes
-          #
-          #  index_rails_02e851e3b7  (id)
-          #  index_rails_02e851e3b8  (firstname,surname ASC,value DESC)
-          #
-        EOS
-      end
-
-      it "returns schema info with index information" do
-        is_expected.to eq expected_result
-      end
-    end
-
-    context "with `show_indexes: true` and the index includes a where clause" do
-      let :primary_key do
-        :id
-      end
-
-      let :options do
-        AnnotateRb::Options.new({show_indexes: true})
-      end
-
-      let :columns do
-        [
-          mock_column("id", :integer),
-          mock_column("firstname", :string),
-          mock_column("surname", :string),
-          mock_column("value", :string)
-        ]
-      end
-
-      let :indexes do
-        [
-          mock_index("index_rails_02e851e3b7", columns: ["id"]),
-          mock_index("index_rails_02e851e3b8",
-            columns: %w[firstname surname],
-            where: "value IS NOT NULL")
-        ]
-      end
-
-      let :expected_result do
-        <<~EOS
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id        :integer          not null, primary key
-          #  firstname :string           not null
-          #  surname   :string           not null
-          #  value     :string           not null
-          #
-          # Indexes
-          #
-          #  index_rails_02e851e3b7  (id)
-          #  index_rails_02e851e3b8  (firstname,surname) WHERE value IS NOT NULL
-          #
-        EOS
-      end
-
-      it "returns schema info with index information" do
-        is_expected.to eq expected_result
-      end
-    end
-
-    context 'with `show_indexes: true` and the index includes a "using" clause other than "btree"' do
-      let :primary_key do
-        :id
-      end
-
-      let :options do
-        AnnotateRb::Options.new({show_indexes: true})
-      end
-
-      let :columns do
-        [
-          mock_column("id", :integer),
-          mock_column("firstname", :string),
-          mock_column("surname", :string),
-          mock_column("value", :string)
-        ]
-      end
-
-      let :indexes do
-        [
-          mock_index("index_rails_02e851e3b7", columns: ["id"]),
-          mock_index("index_rails_02e851e3b8",
-            columns: %w[firstname surname],
-            using: "hash")
-        ]
-      end
-
-      let :expected_result do
-        <<~EOS
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id        :integer          not null, primary key
-          #  firstname :string           not null
-          #  surname   :string           not null
-          #  value     :string           not null
-          #
-          # Indexes
-          #
-          #  index_rails_02e851e3b7  (id)
-          #  index_rails_02e851e3b8  (firstname,surname) USING hash
-          #
-        EOS
-      end
-
-      it "returns schema info with index information" do
-        is_expected.to eq expected_result
-      end
-    end
-
-    context "with `show_indexes: true` and with an undefined index" do
-      let :primary_key do
-        :id
-      end
-
-      let :options do
-        AnnotateRb::Options.new({show_indexes: true})
-      end
-
-      let :columns do
-        [
-          mock_column("id", :integer),
-          mock_column("foreign_thing_id", :integer)
-        ]
-      end
-
-      let :indexes do
-        []
-      end
-
-      let :expected_result do
-        <<~EOS
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id               :integer          not null, primary key
-          #  foreign_thing_id :integer          not null
-          #
-        EOS
-      end
-
-      it "returns schema info without index information" do
-        is_expected.to eq expected_result
-      end
-    end
-
-    context "with `show_indexes: true, simple_indexes: true` and with normal indexes" do
-      let :primary_key do
-        :id
-      end
-
-      let :options do
-        AnnotateRb::Options.new({show_indexes: true, simple_indexes: true})
-      end
-
-      let :columns do
-        [
-          mock_column("id", :integer),
-          mock_column("foreign_thing_id", :integer)
-        ]
-      end
-
-      let :indexes do
-        [
-          mock_index("index_rails_02e851e3b7", columns: ["id"]),
-          mock_index("index_rails_02e851e3b8", columns: ["foreign_thing_id"])
-        ]
-      end
-
-      let :expected_result do
-        <<~EOS
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id               :integer          not null, primary key, indexed
-          #  foreign_thing_id :integer          not null, indexed
-          #
-          # Indexes
-          #
-          #  index_rails_02e851e3b7  (id)
-          #  index_rails_02e851e3b8  (foreign_thing_id)
-          #
-        EOS
-      end
-
-      it "returns schema info with index information" do
-        is_expected.to eq expected_result
-      end
-    end
-
-    context "with `show_indexes: true, simple_indexes: true` and one of indexes includes ordered index key" do
-      let :primary_key do
-        :id
-      end
-
-      let :options do
-        AnnotateRb::Options.new({show_indexes: true, simple_indexes: true})
-      end
-
-      let :columns do
-        [
-          mock_column("id", :integer),
-          mock_column("firstname", :string),
-          mock_column("surname", :string),
-          mock_column("value", :string)
-        ]
-      end
-
-      let :indexes do
-        [
-          mock_index("index_rails_02e851e3b7", columns: ["id"]),
-          mock_index("index_rails_02e851e3b8",
-            columns: %w[firstname surname value],
-            orders: {"surname" => :asc, "value" => :desc})
-        ]
-      end
-
-      let :expected_result do
-        <<~EOS
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id        :integer          not null, primary key, indexed
-          #  firstname :string           not null, indexed => [surname, value]
-          #  surname   :string           not null, indexed => [firstname, value]
-          #  value     :string           not null, indexed => [firstname, surname]
-          #
-          # Indexes
-          #
-          #  index_rails_02e851e3b7  (id)
-          #  index_rails_02e851e3b8  (firstname,surname ASC,value DESC)
-          #
-        EOS
-      end
-
-      it "returns schema info with index information" do
-        is_expected.to eq expected_result
       end
     end
 

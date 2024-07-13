@@ -74,8 +74,52 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
 
         let(:column_indices) do
           [
-            mock_index("index_rails_02e851e3b7", columns: ["id"]),
-            mock_index("index_rails_02e851e3b8", columns: "LOWER(name)")
+            mock_index("index_rails_02e851e3b7", columns: ["id"])
+          ]
+        end
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with a column includes an ordered index key 1" do
+        let(:column) { mock_column("firstname", :string) }
+        let(:expected_result) { ["indexed => [surname, value]", "not null", "primary key"] }
+
+        let(:column_indices) do
+          [
+            mock_index("index_rails_02e851e3b8",
+              columns: %w[firstname surname value],
+              orders: {"surname" => :asc, "value" => :desc})
+          ]
+        end
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with a column includes an ordered index key 2" do
+        let(:column) { mock_column("surname", :string) }
+        let(:expected_result) { ["indexed => [firstname, value]", "not null", "primary key"] }
+
+        let(:column_indices) do
+          [
+            mock_index("index_rails_02e851e3b8",
+              columns: %w[firstname surname value],
+              orders: {"surname" => :asc, "value" => :desc})
+          ]
+        end
+
+        it { is_expected.to match_array(expected_result) }
+      end
+
+      context "with a column includes an ordered index key 3" do
+        let(:column) { mock_column("value", :string) }
+        let(:expected_result) { ["indexed => [firstname, surname]", "not null", "primary key"] }
+
+        let(:column_indices) do
+          [
+            mock_index("index_rails_02e851e3b8",
+              columns: %w[firstname surname value],
+              orders: {"surname" => :asc, "value" => :desc})
           ]
         end
 
