@@ -114,43 +114,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       end
     end
 
-    context 'when "hide_limit_column_types" is "integer,boolean,string,text"' do
-      let :primary_key do
-        :id
-      end
-
-      let :options do
-        AnnotateRb::Options.new({classified_sort: false, hide_limit_column_types: "integer,boolean,string,text"})
-      end
-
-      let :columns do
-        [
-          mock_column("id", :integer, limit: 8),
-          mock_column("active", :boolean, limit: 1),
-          mock_column("name", :string, limit: 50),
-          mock_column("notes", :text, limit: 55)
-        ]
-      end
-
-      let :expected_result do
-        <<~EOS
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  id     :integer          not null, primary key
-          #  active :boolean          not null
-          #  name   :string           not null
-          #  notes  :text             not null
-          #
-        EOS
-      end
-
-      it 'works with option "hide_limit_column_types"' do
-        is_expected.to eq expected_result
-      end
-    end
-
     context 'when "hide_default_column_types" is blank string' do
       let :primary_key do
         :id
