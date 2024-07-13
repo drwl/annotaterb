@@ -162,7 +162,89 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
           mock_column("active", :boolean, limit: 1),
           mock_column("name", :string, limit: 50),
           mock_column("user_id", :integer, limit: 8),
-          mock_column("notes", :text, limit: 55)
+          mock_column("notes", :text, limit: 55),
+          mock_column("id", :integer, limit: 8),
+        ]
+      end
+
+      let :expected_result do
+        <<~EOS
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id      :integer          not null, primary key
+          #  active  :boolean          not null
+          #  name    :string(50)       not null
+          #  notes   :text(55)         not null
+          #  user_id :integer          not null
+          #
+        EOS
+      end
+
+      it 'works with option "classified_sort"' do
+        is_expected.to eq expected_result
+      end
+    end
+
+    context 'when "separate_associations" and "classified_sort" are true' do
+      let :primary_key do
+        :id
+      end
+
+      let :options do
+        AnnotateRb::Options.new({classified_sort: true, separate_associations: true})
+      end
+
+      let :columns do
+        [
+          mock_column("active", :boolean, limit: 1),
+          mock_column("name", :string, limit: 50),
+          mock_column("user_id", :integer, limit: 8),
+          mock_column("notes", :text, limit: 55),
+          mock_column("id", :integer, limit: 8),
+        ]
+      end
+
+      let :expected_result do
+        <<~EOS
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id      :integer          not null, primary key
+          #  active  :boolean          not null
+          #  name    :string(50)       not null
+          #  notes   :text(55)         not null
+          #
+          # Associations
+          #
+          #  user_id :integer          not null
+          #
+        EOS
+      end
+
+      it 'works with options "separate_associations" and "classified_sort"' do
+        is_expected.to eq expected_result
+      end
+    end
+
+    context 'when "separate_associations" is true and "classified_sort" is false' do
+      let :primary_key do
+        :id
+      end
+
+      let :options do
+        AnnotateRb::Options.new({classified_sort: false, separate_associations: true})
+      end
+
+      let :columns do
+        [
+          mock_column("active", :boolean, limit: 1),
+          mock_column("name", :string, limit: 50),
+          mock_column("user_id", :integer, limit: 8),
+          mock_column("notes", :text, limit: 55),
+          mock_column("id", :integer, limit: 8),
         ]
       end
 
@@ -175,12 +257,16 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
           #  active  :boolean          not null
           #  name    :string(50)       not null
           #  notes   :text(55)         not null
+          #  id      :integer          not null, primary key
+          #
+          # Associations
+          #
           #  user_id :integer          not null
           #
         EOS
       end
 
-      it 'works with option "classified_sort"' do
+      it 'works with options "separate_associations" and without "classified_sort"' do
         is_expected.to eq expected_result
       end
     end
