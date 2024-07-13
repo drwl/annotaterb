@@ -188,6 +188,28 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
       it { is_expected.to match_array(expected_result) }
     end
 
+    context "when the hide_default_column_types option is 'json' with a json column" do
+      let(:options) { AnnotateRb::Options.new({hide_default_column_types: "json"}) }
+      let(:column_defaults) { {"profile" => {}} }
+
+      let(:is_primary_key) { false }
+      let(:column) { mock_column("profile", :json, default: {}) }
+      let(:expected_result) { ["not null"] }
+
+      it { is_expected.to match_array(expected_result) }
+    end
+
+    context "when the hide_default_column_types option is 'json' with a non-json column" do
+      let(:options) { AnnotateRb::Options.new({hide_default_column_types: "json"}) }
+      let(:column_defaults) { {"settings" => {}} }
+
+      let(:is_primary_key) { false }
+      let(:column) { mock_column("settings", :jsonb, default: {}) }
+      let(:expected_result) { ["default({})", "not null"] }
+
+      it { is_expected.to match_array(expected_result) }
+    end
+
     context "column defaults in sqlite" do
       # Mocked representations when using the sqlite adapter
       context "with an integer default value of 0" do

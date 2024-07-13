@@ -114,41 +114,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       end
     end
 
-    context 'when "hide_default_column_types" is "json"' do
-      let :primary_key do
-        :id
-      end
-
-      let :options do
-        AnnotateRb::Options.new({classified_sort: false, hide_default_column_types: "json"})
-      end
-
-      let :columns do
-        [
-          mock_column("profile", :json, default: {}),
-          mock_column("settings", :jsonb, default: {}),
-          mock_column("parameters", :hstore, default: {})
-        ]
-      end
-
-      let :expected_result do
-        <<~EOS
-          # == Schema Information
-          #
-          # Table name: users
-          #
-          #  profile    :json             not null
-          #  settings   :jsonb            default({}), not null
-          #  parameters :hstore           default({}), not null
-          #
-        EOS
-      end
-
-      it 'works with option "hide_limit_column_types"' do
-        is_expected.to eq expected_result
-      end
-    end
-
     context 'when "classified_sort" is true' do
       let :primary_key do
         :id
