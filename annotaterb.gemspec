@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = "annotaterb"
-  spec.version = File.read("VERSION").strip
+  spec.version = File.read(__dir__ + "/VERSION").strip
   spec.authors = ["Andrew W. Lee"]
   spec.email = ["git@drewlee.com"]
 
@@ -21,6 +21,6 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir["VERSION", "CHANGELOG.md", "LICENSE.txt", "README.md", "lib/**/*"]
   spec.bindir = "exe"
-  spec.executables = Dir["exe/*"].map { |exe| File.basename(exe) }
+  spec.executables = Dir[__dir__ + "/exe/*"].map { |exe| File.basename(exe) }
   spec.require_paths = ["lib"]
 end
