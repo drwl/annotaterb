@@ -26,6 +26,7 @@ module AnnotateRb
     }.freeze
 
     FLAG_OPTIONS = {
+      separate_associations: false, # ModelAnnotator
       classified_sort: true, # ModelAnnotator
       exclude_controllers: true, # ModelAnnotator
       exclude_factories: false, # ModelAnnotator
@@ -93,6 +94,7 @@ module AnnotateRb
     DEFAULT_OPTIONS = {}.merge(POSITION_OPTIONS, FLAG_OPTIONS, OTHER_OPTIONS, PATH_OPTIONS).freeze
 
     FLAG_OPTION_KEYS = [
+      :separate_associations,
       :classified_sort,
       :exclude_controllers,
       :exclude_factories,

@@ -18,16 +18,31 @@ module AnnotateRb
           end
 
           def body
-            [
-              MainHeader.new(version, @options[:include_version]),
-              SchemaHeader.new(table_name, table_comment, @options),
-              MarkdownHeader.new(max_size),
-              *columns,
-              IndexAnnotation::AnnotationBuilder.new(@model, @options).build,
-              ForeignKeyAnnotation::AnnotationBuilder.new(@model, @options).build,
-              CheckConstraintAnnotation::AnnotationBuilder.new(@model, @options).build,
-              SchemaFooter.new
-            ]
+            if @options[:separate_associations] and not associations.empty?
+              [
+                MainHeader.new(version, @options[:include_version]),
+                SchemaHeader.new(table_name, table_comment, @options),
+                MarkdownHeader.new(max_size),
+                *columns,
+                AssociationsHeader.new,
+                *associations,
+                IndexAnnotation::AnnotationBuilder.new(@model, @options).build,
+                ForeignKeyAnnotation::AnnotationBuilder.new(@model, @options).build,
+                CheckConstraintAnnotation::AnnotationBuilder.new(@model, @options).build,
+                SchemaFooter.new
+              ]
+            else
+              [
+                MainHeader.new(version, @options[:include_version]),
+                SchemaHeader.new(table_name, table_comment, @options),
+                MarkdownHeader.new(max_size),
+                *columns,
+                IndexAnnotation::AnnotationBuilder.new(@model, @options).build,
+                ForeignKeyAnnotation::AnnotationBuilder.new(@model, @options).build,
+                CheckConstraintAnnotation::AnnotationBuilder.new(@model, @options).build,
+                SchemaFooter.new
+              ]
+            end
           end
 
           def build
@@ -49,6 +64,12 @@ module AnnotateRb
           def columns
             @model.columns.map do |col|
               _component = ColumnAnnotation::AnnotationBuilder.new(col, @model, max_size, @options).build
+            end
+          end
+
+          def associations
+            @model.associations.map do |assoc|
+              _component = ColumnAnnotation::AnnotationBuilder.new(assoc, @model, max_size, @options).build
             end
           end
         end

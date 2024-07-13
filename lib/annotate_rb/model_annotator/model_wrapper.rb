@@ -11,9 +11,8 @@ module AnnotateRb
         @options = options
       end
 
-      # Gets the columns of the ActiveRecord model, processes them, and then returns them.
-      def columns
-        @columns ||=
+      def columns_before_sort
+        @columns_before_sort ||=
           begin
             cols = raw_columns
             cols += translated_columns
@@ -25,10 +24,33 @@ module AnnotateRb
               end
             end
 
+            cols
+          end
+      end
+
+      # Gets the columns of the ActiveRecord model, processes them, and then returns them.
+      def columns
+        @columns ||=
+          begin
+            cols = columns_before_sort
+            cols = cols.reject{ |c| c.name[-3, 3].eql?("_id") } if @options[:separate_associations]
+
             cols = cols.sort_by(&:name) if @options[:sort]
             cols = classified_sort(cols) if @options[:classified_sort]
 
             cols
+          end
+      end
+
+      def associations
+        @associations ||= 
+          begin
+            cols = columns_before_sort
+            assocs = cols.select{ |c| c.name[-3, 3].eql?("_id") }
+
+            assocs = assocs.sort_by(&:name) if @options[:sort] or @options[:classified_sort]
+
+            assocs
           end
       end
 
@@ -87,7 +109,7 @@ module AnnotateRb
       def max_schema_info_width
         @max_schema_info_width ||=
           begin
-            cols = columns
+            cols = columns + associations
 
             if with_comments?
               column_widths = cols.map do |column|
