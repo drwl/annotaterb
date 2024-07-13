@@ -16,29 +16,49 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       []
     end
 
-    context "happy path" do
-      let :primary_key do
-        :id
-      end
-
-      let :options do
-        AnnotateRb::Options.new({
-          show_indexes: true
-        })
-      end
-
-      let :columns do
-        [
+    context "integration test" do
+      let(:klass) do
+        primary_key = :id
+        columns = [
           mock_column("id", :integer),
+          mock_column("age", :integer),
           mock_column("foreign_thing_id", :integer)
         ]
-      end
-
-      let :indexes do
-        [
+        indexes = [
           mock_index("index_rails_02e851e3b7", columns: ["id"]),
           mock_index("index_rails_02e851e3b8", columns: ["foreign_thing_id"])
         ]
+        foreign_keys = [
+          mock_foreign_key("fk_rails_cf2568e89e", "foreign_thing_id", "foreign_things"),
+          mock_foreign_key("custom_fk_name", "other_thing_id", "other_things"),
+          mock_foreign_key("fk_rails_a70234b26c", "third_thing_id", "third_things")
+        ]
+
+        check_constraints = [
+          mock_check_constraint("alive", "age < 150"),
+          mock_check_constraint("must_be_adult", "age >= 18"),
+          mock_check_constraint("missing_expression", nil),
+          mock_check_constraint("multiline_test", <<~SQL)
+            CASE
+              WHEN (age >= 18) THEN (age <= 21)
+              ELSE true
+            END
+          SQL
+        ]
+
+        custom_connection = mock_connection(indexes, foreign_keys, check_constraints)
+        mock_class_with_custom_connection(:users, primary_key, columns, custom_connection)
+      end
+
+      let(:options) do
+        AnnotateRb::Options.new({
+          show_indexes: true,
+          with_comment: true,
+          with_table_comments: true,
+          with_column_comments: true,
+          show_foreign_keys: true,
+          show_check_constraints: true
+        })
       end
 
       let :expected_result do
@@ -48,6 +68,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
           # Table name: users
           #
           #  id               :integer          not null, primary key
+          #  age              :integer          not null
           #  foreign_thing_id :integer          not null
           #
           # Indexes
@@ -55,10 +76,23 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
           #  index_rails_02e851e3b7  (id)
           #  index_rails_02e851e3b8  (foreign_thing_id)
           #
+          # Foreign Keys
+          #
+          #  custom_fk_name  (other_thing_id => other_things.id)
+          #  fk_rails_...    (foreign_thing_id => foreign_things.id)
+          #  fk_rails_...    (third_thing_id => third_things.id)
+          #
+          # Check Constraints
+          #
+          #  alive               (age < 150)
+          #  missing_expression
+          #  multiline_test      (CASE WHEN (age >= 18) THEN (age <= 21) ELSE true END)
+          #  must_be_adult       (age >= 18)
+          #
         EOS
       end
 
-      it "returns schema info with index information" do
+      it "matches the expected result" do
         is_expected.to eq expected_result
       end
     end
