@@ -163,7 +163,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
           mock_column("name", :string, limit: 50),
           mock_column("user_id", :integer, limit: 8),
           mock_column("notes", :text, limit: 55),
-          mock_column("id", :integer, limit: 8),
+          mock_column("id", :integer, limit: 8)
         ]
       end
 
@@ -202,7 +202,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
           mock_column("name", :string, limit: 50),
           mock_column("user_id", :integer, limit: 8),
           mock_column("notes", :text, limit: 55),
-          mock_column("id", :integer, limit: 8),
+          mock_column("id", :integer, limit: 8)
         ]
       end
 
@@ -244,7 +244,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
           mock_column("name", :string, limit: 50),
           mock_column("user_id", :integer, limit: 8),
           mock_column("notes", :text, limit: 55),
-          mock_column("id", :integer, limit: 8),
+          mock_column("id", :integer, limit: 8)
         ]
       end
 

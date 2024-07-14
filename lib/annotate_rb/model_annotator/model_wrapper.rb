@@ -33,7 +33,7 @@ module AnnotateRb
         @columns ||=
           begin
             cols = columns_before_sort
-            cols = cols.reject{ |c| c.name[-3, 3].eql?("_id") } if @options[:separate_associations]
+            cols = cols.reject { |c| c.name[-3, 3].eql?("_id") } if @options[:separate_associations]
 
             cols = cols.sort_by(&:name) if @options[:sort]
             cols = classified_sort(cols) if @options[:classified_sort]
@@ -43,12 +43,12 @@ module AnnotateRb
       end
 
       def associations
-        @associations ||= 
+        @associations ||=
           begin
             cols = columns_before_sort
-            assocs = cols.select{ |c| c.name[-3, 3].eql?("_id") }
+            assocs = cols.select { |c| c.name[-3, 3].eql?("_id") }
 
-            assocs = assocs.sort_by(&:name) if @options[:sort] or @options[:classified_sort]
+            assocs = assocs.sort_by(&:name) if @options[:sort] || @options[:classified_sort]
 
             assocs
           end

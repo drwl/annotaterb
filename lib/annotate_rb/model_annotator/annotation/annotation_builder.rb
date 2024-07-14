@@ -18,7 +18,7 @@ module AnnotateRb
           end
 
           def body
-            if @options[:separate_associations] and not associations.empty?
+            if @options[:separate_associations] && !associations.empty?
               [
                 MainHeader.new(version, @options[:include_version]),
                 SchemaHeader.new(table_name, table_comment, @options),

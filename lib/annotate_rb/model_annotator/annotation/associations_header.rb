@@ -4,9 +4,6 @@ module AnnotateRb
   module ModelAnnotator
     module Annotation
       class AssociationsHeader < Components::Base
-        def initialize
-        end
-
         def to_default
           "#\n# Associations\n#"
         end
