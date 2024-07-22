@@ -5,7 +5,7 @@ module AnnotateRb
     class << self
       def call(options)
         require "rake"
-        load "./Rakefile" if File.exist?("./Rakefile")
+        load "./Rakefile" if File.exist?("./Rakefile") && !Rake::Task.task_defined?(:environment)
 
         begin
           Rake::Task[:environment].invoke
