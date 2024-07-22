@@ -4,29 +4,13 @@ module AnnotateRb
   class RakeBootstrapper
     class << self
       def call(options)
-        begin
-          require "rake/dsl_definition"
-        rescue => e
-          # We might just be on an old version of Rake...
-          warn e.message
-          exit e.status_code
-        end
-
         require "rake"
-        load "./Rakefile" if File.exist?("./Rakefile")
+        load "./Rakefile" if File.exist?("./Rakefile") && !Rake::Task.task_defined?(:environment)
 
         begin
           Rake::Task[:environment].invoke
         rescue
           nil
-        end
-
-        unless defined?(Rails)
-          # Not in a Rails project, so time to load up the parts of
-          # ActiveSupport we need.
-          require "active_support"
-          require "active_support/core_ext/class/subclasses"
-          require "active_support/core_ext/string/inflections"
         end
       end
     end
