@@ -4,14 +4,6 @@ module AnnotateRb
   class RakeBootstrapper
     class << self
       def call(options)
-        begin
-          require "rake/dsl_definition"
-        rescue => e
-          # We might just be on an old version of Rake...
-          warn e.message
-          exit e.status_code
-        end
-
         require "rake"
         load "./Rakefile" if File.exist?("./Rakefile")
 
