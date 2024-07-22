@@ -12,14 +12,6 @@ module AnnotateRb
         rescue
           nil
         end
-
-        unless defined?(Rails)
-          # Not in a Rails project, so time to load up the parts of
-          # ActiveSupport we need.
-          require "active_support"
-          require "active_support/core_ext/class/subclasses"
-          require "active_support/core_ext/string/inflections"
-        end
       end
     end
   end
