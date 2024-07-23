@@ -1,5 +1,21 @@
 # Changelog
 
+## [v4.10.2](https://github.com/drwl/annotaterb/tree/v4.10.2) (2024-07-23)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.10.1...v4.10.2)
+
+**Closed issues:**
+
+- Composite primary keys are unsupported [\#138](https://github.com/drwl/annotaterb/issues/138)
+
+**Merged pull requests:**
+
+- Bump version to v4.10.2 [\#141](https://github.com/drwl/annotaterb/pull/141) ([drwl](https://github.com/drwl))
+- Fix double-loading of Rakefile [\#140](https://github.com/drwl/annotaterb/pull/140) ([dmke](https://github.com/dmke))
+- Change structure of model annotation builder [\#136](https://github.com/drwl/annotaterb/pull/136) ([drwl](https://github.com/drwl))
+- Refactor model annotation components [\#134](https://github.com/drwl/annotaterb/pull/134) ([drwl](https://github.com/drwl))
+- Generate changelog for v4.10.1 [\#133](https://github.com/drwl/annotaterb/pull/133) ([drwl](https://github.com/drwl))
+
 ## [v4.10.1](https://github.com/drwl/annotaterb/tree/v4.10.1) (2024-07-07)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.10.0...v4.10.1)
