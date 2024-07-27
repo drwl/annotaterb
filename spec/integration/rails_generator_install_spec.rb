@@ -44,7 +44,7 @@ RSpec.describe "Generator installs rake file", type: "aruba" do
       expect(exist?(rake_task_file)).to be_truthy
 
       # TODO: Improve this so we don't have to rely on `exit_timeout`
-      _cmd = run_command(generator_install_command, exit_timeout: 3)
+      _cmd = run_command(generator_install_command, exit_timeout: 5)
       # Because the rake task file already exists, there will be a conflict in the Rails generator.
       # The prompt should look something like this:
       #
