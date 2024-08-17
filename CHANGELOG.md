@@ -1,5 +1,21 @@
 # Changelog
 
+## [v4.11.0](https://github.com/drwl/annotaterb/tree/v4.11.0) (2024-08-16)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.10.2...v4.11.0)
+
+**Closed issues:**
+
+- Include the length of comments in max\_schema\_info\_width only when the with\_column\_comments option is true. [\#144](https://github.com/drwl/annotaterb/issues/144)
+- Rakefile seems to be loaded twice [\#130](https://github.com/drwl/annotaterb/issues/130)
+
+**Merged pull requests:**
+
+- Bump version to v4.11.0 [\#146](https://github.com/drwl/annotaterb/pull/146) ([drwl](https://github.com/drwl))
+- Include the length of comments in max\_schema\_info\_width only when the with\_comment and with\_column\_comments option is true. [\#145](https://github.com/drwl/annotaterb/pull/145) ([shibaaaa](https://github.com/shibaaaa))
+- Add Ruby 3.3 to CI [\#143](https://github.com/drwl/annotaterb/pull/143) ([drwl](https://github.com/drwl))
+- Generate changelog for v4.10.2 [\#142](https://github.com/drwl/annotaterb/pull/142) ([drwl](https://github.com/drwl))
+
 ## [v4.10.2](https://github.com/drwl/annotaterb/tree/v4.10.2) (2024-07-23)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.10.1...v4.10.2)
