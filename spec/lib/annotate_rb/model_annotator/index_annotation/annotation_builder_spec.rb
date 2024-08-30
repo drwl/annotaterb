@@ -137,5 +137,31 @@ RSpec.describe AnnotateRb::ModelAnnotator::IndexAnnotation::AnnotationBuilder do
         expect(default_format).to eq(expected_result)
       end
     end
+
+    context "index includes a unique nulls not distinct clause" do
+      let(:indexes) do
+        [
+          mock_index("index_rails_02e851e3b7", columns: ["id"]),
+          mock_index("index_rails_02e851e3b8",
+            columns: %w[firstname surname],
+            unique: true,
+            nulls_not_distinct: true)
+        ]
+      end
+
+      let(:expected_result) do
+        <<~EOS.strip
+          #
+          # Indexes
+          #
+          #  index_rails_02e851e3b7  (id)
+          #  index_rails_02e851e3b8  (firstname,surname) UNIQUE NULLS NOT DISTINCT
+        EOS
+      end
+
+      it "matches the expected result" do
+        expect(default_format).to eq(expected_result)
+      end
+    end
   end
 end

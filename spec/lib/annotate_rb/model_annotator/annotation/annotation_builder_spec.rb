@@ -422,6 +422,45 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
           end
         end
 
+        context 'when one of indexes includes "unique" clause with "not null distinct"' do
+          let :indexes do
+            [
+              mock_index("index_rails_02e851e3b7", columns: ["id"]),
+              mock_index("index_rails_02e851e3b8",
+                columns: ["foreign_thing_id"],
+                unique: true,
+                nulls_not_distinct: true)
+            ]
+          end
+
+          let :expected_result do
+            <<~EOS
+              # ## Schema Information
+              #
+              # Table name: `users`
+              #
+              # ### Columns
+              #
+              # Name        | Type               | Attributes
+              # ----------- | ------------------ | ---------------------------
+              # **`id`**    | `integer`          | `not null, primary key`
+              # **`name`**  | `string(50)`       | `not null`
+              #
+              # ### Indexes
+              #
+              # * `index_rails_02e851e3b7`:
+              #     * **`id`**
+              # * `index_rails_02e851e3b8` (_unique_ _nulls_not_distinct_):
+              #     * **`foreign_thing_id`**
+              #
+            EOS
+          end
+
+          it "returns schema info with index information in Markdown format" do
+            is_expected.to eq expected_result
+          end
+        end
+
         context "when one of indexes includes ordered index key" do
           let :indexes do
             [

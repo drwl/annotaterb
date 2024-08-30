@@ -21,6 +21,7 @@ module AnnotateTestHelpers
       name: name,
       columns: params[:columns] || [],
       unique: params[:unique] || false,
+      nulls_not_distinct: params[:nulls_not_distinct] || false,
       orders: params[:orders] || {},
       where: params[:where],
       using: params[:using])

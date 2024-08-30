@@ -14,6 +14,12 @@ module AnnotateRb
         def to_default
           unique_info = index.unique ? " UNIQUE" : ""
 
+          nulls_not_distinct_info = if index.try(:nulls_not_distinct)
+            " NULLS NOT DISTINCT"
+          else
+            ""
+          end
+
           value = index.try(:where).try(:to_s)
           where_info = if value.present?
             " WHERE #{value}"
@@ -30,10 +36,11 @@ module AnnotateRb
 
           # standard:disable Lint/FormatParameterMismatch
           sprintf(
-            "#  %-#{max_size}.#{max_size}s %s%s%s%s",
+            "#  %-#{max_size}.#{max_size}s %s%s%s%s%s",
             index.name,
             "(#{columns_info.join(",")})",
             unique_info,
+            nulls_not_distinct_info,
             where_info,
             using_info
           ).rstrip
@@ -42,6 +49,12 @@ module AnnotateRb
 
         def to_markdown
           unique_info = index.unique ? " _unique_" : ""
+
+          nulls_not_distinct_info = if index.try(:nulls_not_distinct)
+            " _nulls_not_distinct_"
+          else
+            ""
+          end
 
           value = index.try(:where).try(:to_s)
           where_info = if value.present?
@@ -58,8 +71,9 @@ module AnnotateRb
           end
 
           details = sprintf(
-            "%s%s%s",
+            "%s%s%s%s",
             unique_info,
+            nulls_not_distinct_info,
             where_info,
             using_info
           ).strip
