@@ -1,5 +1,15 @@
 # Changelog
 
+## [v4.12.0](https://github.com/drwl/annotaterb/tree/v4.12.0) (2024-09-15)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.11.0...v4.12.0)
+
+**Merged pull requests:**
+
+- Bump version to v4.12.0 [\#151](https://github.com/drwl/annotaterb/pull/151) ([drwl](https://github.com/drwl))
+- Support postgres NULLS NOT DISTINCT clause in unique index [\#148](https://github.com/drwl/annotaterb/pull/148) ([ENewmeration](https://github.com/ENewmeration))
+- Generate changelog for v4.11.0 [\#147](https://github.com/drwl/annotaterb/pull/147) ([drwl](https://github.com/drwl))
+
 ## [v4.11.0](https://github.com/drwl/annotaterb/tree/v4.11.0) (2024-08-16)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.10.2...v4.11.0)
