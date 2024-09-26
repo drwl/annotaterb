@@ -20,7 +20,7 @@ module AnnotateRb
 
           new_annotation = wrapped_content(@new_annotations)
 
-          _content = @file_content.sub(@parsed_file.annotations, new_annotation)
+          _content = @file_content.sub(@parsed_file.annotations) { new_annotation }
         end
 
         private

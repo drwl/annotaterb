@@ -79,6 +79,61 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
       end
     end
 
+    context "with an index change containing escaped characters" do
+      let(:file_content) do
+        <<~FILE
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id               :integer          not null, primary key
+          #  foreign_thing_id :integer          not null
+          #
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:new_annotations) do
+        <<~ANNOTATIONS
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id               :integer          not null, primary key
+          #  foreign_thing_id :integer          not null
+          #
+          # Indexes
+          #
+          #  index_rails_02e851e3b8  (another_column) WHERE value IS LIKE '\\\\%'
+          #
+        ANNOTATIONS
+      end
+
+      let(:options) { AnnotateRb::Options.new({position_in_class: "before", show_foreign_keys: true}) }
+
+      let(:expected_content) do
+        <<~CONTENT
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id               :integer          not null, primary key
+          #  foreign_thing_id :integer          not null
+          #
+          # Indexes
+          #
+          #  index_rails_02e851e3b8  (another_column) WHERE value IS LIKE '\\\\%'
+          #
+          class User < ApplicationRecord
+          end
+        CONTENT
+      end
+
+      it "returns the updated annotated file" do
+        is_expected.to eq(expected_content)
+      end
+    end
+
     context 'when position is "after" for the existing annotation but position is "before" for the new annotation' do
       let(:file_content) do
         <<~FILE
