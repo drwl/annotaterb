@@ -109,6 +109,32 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::YmlParser do
     end
   end
 
+  context "with a yml file that has erb" do
+    let(:input) do
+      <<~FILE
+        # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+        <% 1.upto(100) do |i| %>
+        user_<%= i %>:
+          name: User <%= i %>
+          email: user_<%= i %>@example.com
+        <% end %>
+
+      FILE
+    end
+    let(:expected_comments) do
+      [
+        ["# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html", 0]
+      ]
+    end
+    let(:expected_starts) { [[nil, 3]] }
+    let(:expected_ends) { [[nil, 404]] }
+
+    it "parses without errors" do
+      check_it_parses_correctly
+    end
+  end
+
   context "with an empty yml file" do
     let(:input) do
       <<~FILE
