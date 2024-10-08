@@ -74,7 +74,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::YmlParser do
     end
   end
 
-  context "with a yml file that only has comments", focus: true do
+  context "with a yml file that only has comments" do
     let(:input) do
       <<~FILE
         #
