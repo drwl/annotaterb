@@ -40,7 +40,14 @@ module AnnotateRb
         def parse_yml
           # https://docs.ruby-lang.org/en/master/Psych.html#module-Psych-label-Reading+to+Psych-3A-3ANodes-3A-3AStream+structure
           parser = Psych.parser
-          parser.parse(@input)
+          begin
+            parser.parse(@input)
+          rescue Psych::SyntaxError => _e
+            # "Dynamic fixtures with ERB" exist in Rails, and will cause Psych.parser to error
+            # This is a hacky solution to get around this and still have it parse
+            erb_yml = ERB.new(@input).result
+            parser.parse(erb_yml)
+          end
 
           stream = parser.handler.root
 
