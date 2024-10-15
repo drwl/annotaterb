@@ -38,7 +38,7 @@ module AnnotateRb
 
         def ref_info
           if foreign_key.column.is_a?(Array) # Composite foreign key using multiple columns
-            "#{stringified_columns} => #{foreign_key.to_table}#{stringified_primary_key}"
+            "#{stringified_columns} => #{foreign_key.to_table}.#{stringified_primary_key}"
           else
             "#{foreign_key.column} => #{foreign_key.to_table}.#{foreign_key.primary_key}"
           end
