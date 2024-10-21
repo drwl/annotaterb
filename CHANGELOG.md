@@ -1,5 +1,22 @@
 # Changelog
 
+## [v4.13.0](https://github.com/drwl/annotaterb/tree/v4.13.0) (2024-10-21)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.12.0...v4.13.0)
+
+**Closed issues:**
+
+- Bug: Bigint are reported as integer [\#157](https://github.com/drwl/annotaterb/issues/157)
+- Bug \(apparently\): :ignore\_columns does not work \(with any syntax I've tried\) [\#154](https://github.com/drwl/annotaterb/issues/154)
+
+**Merged pull requests:**
+
+- Bump version to v4.13.0 [\#159](https://github.com/drwl/annotaterb/pull/159) ([drwl](https://github.com/drwl))
+- Support parsing of dynamic fixture erb yml files [\#158](https://github.com/drwl/annotaterb/pull/158) ([drwl](https://github.com/drwl))
+- Fix updating of indexes containing escaped characters [\#156](https://github.com/drwl/annotaterb/pull/156) ([antonivanopoulos](https://github.com/antonivanopoulos))
+- Add model with association and foreign key to dummyapp [\#153](https://github.com/drwl/annotaterb/pull/153) ([drwl](https://github.com/drwl))
+- Generate changelog for v4.12.0 [\#152](https://github.com/drwl/annotaterb/pull/152) ([drwl](https://github.com/drwl))
+
 ## [v4.12.0](https://github.com/drwl/annotaterb/tree/v4.12.0) (2024-09-15)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.11.0...v4.12.0)
