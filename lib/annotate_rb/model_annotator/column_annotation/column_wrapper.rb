@@ -85,6 +85,10 @@ module AnnotateRb
           @column.name
         end
 
+        def virtual?
+          @column.respond_to?(:virtual?) && @column.virtual?
+        end
+
         private
 
         # Simple quoting for the default column value

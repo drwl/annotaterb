@@ -25,6 +25,8 @@ module AnnotateRb
 
           if is_decimal_type
             formatted_column_type = "decimal(#{@column.precision}, #{@column.scale})"
+          elsif @column.virtual?
+            formatted_column_type = "virtual(#{column_type})"
           elsif is_special_type
             # Do nothing. Kept as a code fragment in case we need to do something here.
           elsif @column.limit && !@options[:format_yard]

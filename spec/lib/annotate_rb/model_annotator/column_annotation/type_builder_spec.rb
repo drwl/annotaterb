@@ -77,6 +77,13 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::TypeBuilder do
       it { is_expected.to eq(expected_result) }
     end
 
+    context "with a virtual column" do
+      let(:column) { mock_column("name", :string, virtual?: true) }
+      let(:expected_result) { "virtual(string)" }
+
+      it { is_expected.to eq(expected_result) }
+    end
+
     context 'when "format_yard" is specified in options' do
       context "with a string column with a limit" do
         let(:column) { mock_column("name", :string, limit: 50) }
