@@ -77,11 +77,26 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::TypeBuilder do
       it { is_expected.to eq(expected_result) }
     end
 
-    context "with a virtual column" do
-      let(:column) { mock_column("name", :string, virtual?: true) }
-      let(:expected_result) { "virtual(string)" }
+    context "with a virtual column without option enabled" do
+      context "when show_virtual_columns if false" do
+        let(:column) { mock_column("name", :string, virtual?: true) }
+        let(:options) do
+          AnnotateRb::Options.new({show_virtual_columns: false})
+        end
+        let(:expected_result) { "string" }
 
-      it { is_expected.to eq(expected_result) }
+        it { is_expected.to eq(expected_result) }
+      end
+
+      context "when show_virtual_columns if true" do
+        let(:column) { mock_column("name", :string, virtual?: true) }
+        let(:options) do
+          AnnotateRb::Options.new({show_virtual_columns: true})
+        end
+        let(:expected_result) { "virtual(string)" }
+
+        it { is_expected.to eq(expected_result) }
+      end
     end
 
     context 'when "format_yard" is specified in options' do
