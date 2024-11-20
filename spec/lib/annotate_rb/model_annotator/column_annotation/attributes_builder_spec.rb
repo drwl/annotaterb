@@ -210,6 +210,26 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
       it { is_expected.to match_array(expected_result) }
     end
 
+    context "when the show_virtual_columns option is false with a virtual column" do
+      let(:column) { mock_column("name", :string, virtual?: true, default_function: "first_name || ' ' || last_name") }
+      let(:options) do
+        AnnotateRb::Options.new({show_virtual_columns: false})
+      end
+      let(:expected_result) { ["not null"] }
+
+      it { is_expected.to match_array(expected_result) }
+    end
+
+    context "when the show_virtual_columns option is true with a virtual column" do
+      let(:column) { mock_column("name", :string, virtual?: true, default_function: "first_name || ' ' || last_name") }
+      let(:options) do
+        AnnotateRb::Options.new({show_virtual_columns: true})
+      end
+      let(:expected_result) { ["first_name || ' ' || last_name", "not null"] }
+
+      it { is_expected.to match_array(expected_result) }
+    end
+
     context "column defaults in sqlite" do
       # Mocked representations when using the sqlite adapter
       context "with an integer default value of 0" do
