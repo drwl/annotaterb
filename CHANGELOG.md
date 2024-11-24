@@ -293,7 +293,7 @@
 - Fix the default behavior for model annotator [\#20](https://github.com/drwl/annotaterb/pull/20) ([drwl](https://github.com/drwl))
 - Refactor model annotator [\#19](https://github.com/drwl/annotaterb/pull/19) ([drwl](https://github.com/drwl))
 - Removed unused helper methods and `Env` class [\#18](https://github.com/drwl/annotaterb/pull/18) ([drwl](https://github.com/drwl))
-- Update dummy app depdencies [\#17](https://github.com/drwl/annotaterb/pull/17) ([drwl](https://github.com/drwl))
+- Update dummy app dependencies [\#17](https://github.com/drwl/annotaterb/pull/17) ([drwl](https://github.com/drwl))
 
 ## [v4.0.0](https://github.com/drwl/annotaterb/tree/v4.0.0) (2023-05-03)
 
