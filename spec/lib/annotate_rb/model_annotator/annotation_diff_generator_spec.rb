@@ -142,5 +142,55 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
         expect(subject.changed?).to eq(true)
       end
     end
+
+    context "when a new column with metadata in parentheses is added" do
+      let(:annotation_block) do
+        <<~SCHEMA
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                               :bigint           not null, primary key
+          #  name([sensitivity: medium])      :string(50)       not null
+          #  status(active/pending/inactive)  :string           not null
+          #
+        SCHEMA
+      end
+      let(:file_content) do
+        <<~FILE
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                               :bigint           not null, primary key
+          #  name([sensitivity: medium])      :string(50)       not null
+          #
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      let(:current_columns) do
+        [
+          "#  id                               :bigint           not null, primary key",
+          "#  name([sensitivity: medium])      :string(50)       not null",
+          "# Table name: users"
+        ]
+      end
+      let(:new_columns) do
+        [
+          "#  id                               :bigint           not null, primary key",
+          "#  name([sensitivity: medium])      :string(50)       not null",
+          "#  status(active/pending/inactive)  :string           not null",
+          "# Table name: users"
+        ]
+      end
+
+      it "returns an AnnotationDiff object with the expected old and new columns" do
+        test_columns_match_expected
+
+        expect(subject.changed?).to eq(true)
+      end
+    end
   end
 end
