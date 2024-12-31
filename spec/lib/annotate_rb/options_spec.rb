@@ -51,12 +51,6 @@ RSpec.describe AnnotateRb::Options do
 
       it { expect(subject[:exclude_tests]).to eq(false) }
     end
-  end
-
-  describe ".load_defaults" do
-    subject { described_class.new(options, state).load_defaults }
-
-    let(:state) { {} }
 
     context 'when default value of "show_complete_foreign_keys" is not set' do
       let(:key) { :show_complete_foreign_keys }

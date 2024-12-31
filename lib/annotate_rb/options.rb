@@ -10,7 +10,7 @@ module AnnotateRb
 
     class << self
       def from(options = {}, state = {})
-        new(options, state).load_defaults
+        new(options, state)
       end
     end
 
@@ -36,7 +36,6 @@ module AnnotateRb
       exclude_sti_subclasses: false, # ModelAnnotator
       exclude_tests: false, # ModelAnnotator
       force: false, # ModelAnnotator, but should be used by both
-      format_bare: true, # Unused
       format_markdown: false, # ModelAnnotator, RouteAnnotator
       format_rdoc: false, # ModelAnnotator
       format_yard: false, # ModelAnnotator
@@ -92,71 +91,10 @@ module AnnotateRb
 
     DEFAULT_OPTIONS = {}.merge(POSITION_OPTIONS, FLAG_OPTIONS, OTHER_OPTIONS, PATH_OPTIONS).freeze
 
-    FLAG_OPTION_KEYS = [
-      :classified_sort,
-      :exclude_controllers,
-      :exclude_factories,
-      :exclude_fixtures,
-      :exclude_helpers,
-      :exclude_scaffolds,
-      :exclude_serializers,
-      :exclude_sti_subclasses,
-      :exclude_tests,
-      :force,
-      :format_markdown,
-      :format_rdoc,
-      :format_yard,
-      :frozen,
-      :ignore_model_sub_dir,
-      :ignore_unknown_models,
-      :include_version,
-      :show_check_constraints,
-      :show_complete_foreign_keys,
-      :show_foreign_keys,
-      :show_indexes,
-      :simple_indexes,
-      :sort,
-      :timestamp,
-      :trace,
-      :with_comment,
-      :with_column_comments,
-      :with_table_comments
-    ].freeze
-
-    OTHER_OPTION_KEYS = [
-      :active_admin,
-      :command,
-      :debug,
-      :hide_default_column_types,
-      :hide_limit_column_types,
-      :ignore_columns,
-      :ignore_routes,
-      :ignore_unknown_models,
-      :models,
-      :routes,
-      :skip_on_db_migrate,
-      :target_action,
-      :wrapper,
-      :wrapper_close,
-      :wrapper_open,
-      :classes_default_to_s
-    ].freeze
-
-    PATH_OPTION_KEYS = [
-      :additional_file_patterns,
-      :model_dir,
-      :require,
-      :root_dir
-    ].freeze
-
-    ALL_OPTION_KEYS = [
-      POSITION_OPTIONS.keys, FLAG_OPTION_KEYS, OTHER_OPTION_KEYS, PATH_OPTION_KEYS
-    ].flatten.freeze
-
     POSITION_DEFAULT = "before"
 
     # Want this to be read only after initializing
-    def_delegator :@options, :[]
+    def_delegators :@options, :[], :to_h
 
     def initialize(options = {}, state = {})
       @options = options
@@ -164,44 +102,8 @@ module AnnotateRb
       # For now, state is a hash to store state that we need but is not a configuration option
       @state = state
 
-      symbolize_exclude_tests
-    end
-
-    def to_h
-      @options.to_h
-    end
-
-    def load_defaults
-      ALL_OPTION_KEYS.each do |key|
-        @options[key] = DEFAULT_OPTIONS[key] unless @options.key?(key)
-      end
-
-      # Set all of the position options in the following order:
-      # 1) Use the value if it's defined
-      # 2) Use value from :position if it's defined
-      # 3) Use default
-      POSITION_OPTIONS.keys.each do |key|
-        @options[key] = Helper.fallback(
-          @options[key], @options[:position], POSITION_DEFAULT
-        )
-      end
-
-      # Unpack path options if we're passed in a String
-      PATH_OPTION_KEYS.each do |key|
-        if @options[key].is_a?(String)
-          @options[key] = @options[key].split(",").map(&:strip).reject(&:empty?)
-        end
-      end
-
-      # Set wrapper to default to :wrapper
-      @options[:wrapper_open] ||= @options[:wrapper]
-      @options[:wrapper_close] ||= @options[:wrapper]
-
-      # Set column and table comments to default to :with_comment, if not set
-      @options[:with_column_comments] = @options[:with_comment] if @options[:with_column_comments].nil?
-      @options[:with_table_comments] = @options[:with_comment] if @options[:with_table_comments].nil?
-
-      self
+      load_defaults
+      @options.freeze
     end
 
     def set_state(key, value, overwrite = false)
@@ -223,18 +125,39 @@ module AnnotateRb
 
     private
 
-    # Guard against user inputting strings instead of symbols
-    def symbolize_exclude_tests
+    def load_defaults
+      @options = DEFAULT_OPTIONS.merge(@options)
+
       # `:exclude_tests` option is being expanded to function as a boolean OR an array of symbols
       # https://github.com/drwl/annotaterb/issues/103
-
       if @options[:exclude_tests].is_a?(Array)
-        @options[:exclude_tests].map! do |item|
-          item = item.strip if item.respond_to?(:strip)
+        @options[:exclude_tests].map! { |item| item.to_s.strip.to_sym }
+      end
 
-          item.to_sym
+      # Set all of the position options in the following order:
+      # 1) Use the value if it's defined
+      # 2) Use value from :position if it's defined
+      # 3) Use default
+      POSITION_OPTIONS.each_key do |key|
+        @options[key] = Helper.fallback(
+          @options[key], @options[:position], POSITION_DEFAULT
+        )
+      end
+
+      # Unpack path options if we're passed in a String
+      PATH_OPTIONS.each_key do |key|
+        if @options[key].is_a?(String)
+          @options[key] = @options[key].split(",").map(&:strip).reject(&:empty?)
         end
       end
+
+      # Set wrapper to default to :wrapper
+      @options[:wrapper_open] ||= @options[:wrapper]
+      @options[:wrapper_close] ||= @options[:wrapper]
+
+      # Set column and table comments to default to :with_comment, if not set
+      @options[:with_column_comments] = @options[:with_comment] if @options[:with_column_comments].nil?
+      @options[:with_table_comments] = @options[:with_comment] if @options[:with_table_comments].nil?
     end
   end
 end
