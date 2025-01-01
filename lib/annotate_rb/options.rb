@@ -67,6 +67,9 @@ module AnnotateRb
       # ModelAnnotator
       hide_limit_column_types: "",
 
+      # ModelAnnotator
+      timestamp_columns: ModelAnnotator::ModelWrapper::DEFAULT_TIMESTAMP_COLUMNS,
+
       ignore_columns: nil, # ModelAnnotator
       ignore_routes: nil, # RouteAnnotator
       ignore_unknown_models: false, # ModelAnnotator
