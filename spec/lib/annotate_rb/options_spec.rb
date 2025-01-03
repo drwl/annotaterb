@@ -1,18 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe AnnotateRb::Options do
+  let(:options) { {} }
+  let(:state) { {} }
+
   describe ".from" do
     subject { described_class.from(options, state) }
-
-    let(:options) { {} }
-    let(:state) { {} }
 
     it { is_expected.to be_a(described_class) }
   end
 
   describe ".new" do
     subject { described_class.new(options, state) }
-    let(:state) { {} }
 
     context ":exclude_tests option is an Array of strings" do
       let(:options) { {exclude_tests: ["serializers", "controllers"]} }
@@ -51,16 +50,9 @@ RSpec.describe AnnotateRb::Options do
 
       it { expect(subject[:exclude_tests]).to eq(false) }
     end
-  end
-
-  describe ".load_defaults" do
-    subject { described_class.new(options, state).load_defaults }
-
-    let(:state) { {} }
 
     context 'when default value of "show_complete_foreign_keys" is not set' do
       let(:key) { :show_complete_foreign_keys }
-      let(:options) { {} }
 
       it "returns false" do
         expect(subject[key]).to eq(false)
@@ -76,10 +68,14 @@ RSpec.describe AnnotateRb::Options do
       end
     end
 
+    describe "default timestamp_columns" do
+      it "sets defaults matching Rails' convention" do
+        expect(subject[:timestamp_columns]).to match_array(%w[created_at updated_at])
+      end
+    end
+
     describe "comment options" do
       context "when using defaults" do
-        let(:options) { {} }
-
         it "uses the defaults" do
           expect(subject[:with_comment]).to eq(true)
           expect(subject[:with_column_comments]).to eq(true)
