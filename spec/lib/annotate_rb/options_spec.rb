@@ -1,18 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe AnnotateRb::Options do
+  let(:options) { {} }
+  let(:state) { {} }
+
   describe ".from" do
     subject { described_class.from(options, state) }
-
-    let(:options) { {} }
-    let(:state) { {} }
 
     it { is_expected.to be_a(described_class) }
   end
 
   describe ".new" do
     subject { described_class.new(options, state) }
-    let(:state) { {} }
 
     context ":exclude_tests option is an Array of strings" do
       let(:options) { {exclude_tests: ["serializers", "controllers"]} }
