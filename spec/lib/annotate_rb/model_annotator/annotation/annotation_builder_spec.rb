@@ -182,7 +182,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
         is_expected.to eq expected_result
       end
 
-      context 'when default timestamps are included' do
+      context "when default timestamps are included" do
         let(:columns) do
           [
             mock_column("parent_id", :integer),
@@ -194,7 +194,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
           ]
         end
 
-        it 'sorts default timestamps second last before associations' do
+        it "sorts default timestamps second last before associations" do
           is_expected.to eq <<~EOS
             # == Schema Information
             #
@@ -210,7 +210,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
           EOS
         end
 
-        context 'when timestamps_column option is set' do
+        context "when timestamps_column option is set" do
           let(:options) do
             AnnotateRb::Options.new(
               classified_sort: true,
@@ -218,7 +218,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
             )
           end
 
-          it 'sorts configured timestamps into config order' do
+          it "sorts configured timestamps into config order" do
             is_expected.to eq <<~EOS
               # == Schema Information
               #
