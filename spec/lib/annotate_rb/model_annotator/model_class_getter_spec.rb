@@ -121,7 +121,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
       end
     end
 
-    context "when the file includes invlaid multibyte chars (USASCII)" do
+    context "when the file includes invalid multibyte chars (USASCII)" do
       context 'when class FooWithUtf8 is defined in "foo_with_utf8.rb"' do
         let :filename do
           "foo_with_utf8.rb"
