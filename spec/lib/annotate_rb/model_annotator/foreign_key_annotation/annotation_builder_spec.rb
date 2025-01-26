@@ -132,7 +132,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
           #
           # Foreign Keys
           #
-          #  custom_fk_name       ([tenant_id, customer_id] => customers[tenant_id, id])
+          #  custom_fk_name       ([tenant_id, customer_id] => customers.[tenant_id, id])
           #  fk_rails_cf2568e89e  (foreign_thing_id => foreign_things.id)
         OUTPUT
       end
@@ -146,7 +146,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
             # ### Foreign Keys
             #
             # * `custom_fk_name`:
-            #     * **`[tenant_id, customer_id] => customers[tenant_id, id]`**
+            #     * **`[tenant_id, customer_id] => customers.[tenant_id, id]`**
             # * `fk_rails_cf2568e89e`:
             #     * **`foreign_thing_id => foreign_things.id`**
           OUTPUT

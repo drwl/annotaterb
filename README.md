@@ -156,6 +156,7 @@ Additional options that work for annotating models and routes
         --ignore-model-subdirects    Ignore subdirectories of the models directory
         --sort                       Sort columns alphabetically, rather than in creation order
         --classified-sort            Sort columns alphabetically, but first goes id, then the rest columns, then the timestamp columns and then the association columns
+        --separate-associations      Puts associations in their own section
     -R, --require path               Additional file to require before loading models, may be used multiple times
     -e [tests,fixtures,factories,serializers],
         --exclude                    Do not annotate fixtures, test files, factories, and/or serializers
