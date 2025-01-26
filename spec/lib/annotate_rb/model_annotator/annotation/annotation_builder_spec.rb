@@ -120,7 +120,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       let :klass do
         mock_class(:posts, primary_key, columns, indexes, foreign_keys).tap do |mock_klass|
           allow(mock_klass).to receive(:translation_class).and_return(translation_klass)
-          allow(mock_klass).to receive(:name).and_return(double("name", foreign_key: double('foreign_key', to_sym: :post_id)))
+          allow(mock_klass).to receive(:name).and_return(double("name", foreign_key: double("foreign_key", to_sym: :post_id)))
         end
       end
 

@@ -167,7 +167,7 @@ module AnnotateRb
           :created_at,
           :updated_at,
           :locale,
-          @klass.name.foreign_key.to_sym,
+          @klass.name.foreign_key.to_sym
         ]
       end
     end
