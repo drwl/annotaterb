@@ -57,7 +57,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelWrapper do
       context "with options[:format_rdoc]" do
         let!(:format_rdoc_option) { true }
 
-        it "should return the max width ncluding the length of the comments and the length of the rdoc" do
+        it "should return the max width including the length of the comments and the length of the rdoc" do
           is_expected.to eq(expect_length)
         end
       end
@@ -65,7 +65,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelWrapper do
       context "with options[:format_rdoc] is false" do
         let!(:format_rdoc_option) { false }
 
-        it "should return the max width ncluding the length of the comments" do
+        it "should return the max width including the length of the comments" do
           is_expected.to eq(expect_length)
         end
       end
@@ -85,7 +85,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelWrapper do
       context "with options[:format_rdoc]" do
         let!(:format_rdoc_option) { true }
 
-        it "should return the max width ncluding the length of the rdoc" do
+        it "should return the max width including the length of the rdoc" do
           is_expected.to eq(expect_length)
         end
       end
