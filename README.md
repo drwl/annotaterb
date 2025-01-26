@@ -45,7 +45,7 @@ Or install it into your Rails project through the Gemfile:
 group :development do
   ...
 
-  gem "annotaterb"
+  gem "annotaterb", require: "annotate_rb"
   
   ...
 ```
