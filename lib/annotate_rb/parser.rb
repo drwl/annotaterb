@@ -78,10 +78,11 @@ module AnnotateRb
         version: Commands::PrintVersion.new
       }
 
+      if @commands.size > 1
+        warn "Only one command can be run at a time"
+      end
+
       @options[:command] = if @commands.any?
-        map[@commands.first]
-      elsif @commands.size > 1
-        # TODO: Should raise or alert user that multiple commands were selected but only 1 command will be ran
         map[@commands.first]
       else # None
         map[:help]

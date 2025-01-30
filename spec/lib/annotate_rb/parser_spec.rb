@@ -35,6 +35,16 @@ module AnnotateRb # rubocop:disable Metrics/ModuleLength
           expect(result).to include(command: instance_of(Commands::PrintVersion))
         end
       end
+
+      context "when given multiple commands" do
+        let(:model_command_option) { "models" }
+        let(:version_command_option) { "--version" }
+        let(:args) { [model_command_option, version_command_option] }
+
+        it "displays a warning to stderr" do
+          expect { result }.to output("Only one command can be run at a time\n").to_stderr
+        end
+      end
     end
 
     context "when given empty args" do
