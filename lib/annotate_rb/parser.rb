@@ -245,6 +245,11 @@ module AnnotateRb
         @options[:with_column_comments] = false
       end
 
+      option_parser.on("--position-of-column-comments VALUE",
+        "set the position, in the annotation block, of the column comment") do |value|
+        @options[:position_of_column_comments] = value.to_sym
+      end
+
       option_parser.on("--with-table-comments",
         "include table comments in model annotations") do
         @options[:with_table_comments] = true
