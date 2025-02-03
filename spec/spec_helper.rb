@@ -16,6 +16,7 @@ require "annotate_rb"
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
 
 RSpec.configure do |config|
+  config.filter_run focus: true
   config.include(SpecHelper::Aruba, type: :aruba)
 
   config.before(:example, type: :aruba) do
