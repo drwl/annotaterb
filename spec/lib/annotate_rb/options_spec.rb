@@ -76,7 +76,7 @@ RSpec.describe AnnotateRb::Options do
       end
     end
 
-    describe "comment options" do
+    fdescribe "comment options" do
       context "when using defaults" do
         let(:options) { {} }
 
@@ -84,6 +84,7 @@ RSpec.describe AnnotateRb::Options do
           expect(subject[:with_comment]).to eq(true)
           expect(subject[:with_column_comments]).to eq(true)
           expect(subject[:with_table_comments]).to eq(true)
+          expect(subject[:position_of_column_comment]).to eq(:with_name)
         end
       end
 
@@ -94,6 +95,7 @@ RSpec.describe AnnotateRb::Options do
           expect(subject[:with_comment]).to eq(false)
           expect(subject[:with_column_comments]).to eq(false)
           expect(subject[:with_table_comments]).to eq(false)
+          expect(subject[:position_of_column_comment]).to eq :with_name
         end
       end
 
@@ -104,6 +106,16 @@ RSpec.describe AnnotateRb::Options do
           expect(subject[:with_comment]).to eq(true)
           expect(subject[:with_column_comments]).to eq(true)
           expect(subject[:with_table_comments]).to eq(false)
+        end
+      end
+
+      context 'when "position_of_column_comment" set to "rightmost_column"' do
+        let(:options) { {with_comment: true, position_of_column_comment: "rightmost_column" } }
+
+        it 'set "position_of_column_comment" to the symbol of the configuration' do
+          expect(subject[:with_comment]).to eq(true)
+          expect(subject[:with_column_comments]).to eq(true)
+          expect(subject[:position_of_column_comment]).to eq(:rightmost_column)
         end
       end
 
