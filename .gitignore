@@ -21,3 +21,7 @@
 /spec/dummyapp/db/schema.rb
 /spec/dummyapp/db/development.sqlite3
 /tmp/*
+
+# Until we offer a devcontainer setup on this project, ignoring its folder to
+# allow individual developpers to create a local one.
+.devcontainer/
