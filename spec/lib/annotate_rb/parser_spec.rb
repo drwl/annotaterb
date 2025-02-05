@@ -581,7 +581,7 @@ module AnnotateRb # rubocop:disable Metrics/ModuleLength
       end
     end
 
-    fdescribe "--position-of-column-comments" do
+    describe "--position-of-column-comments" do
       let(:option) { "--position-of-column-comments" }
       let(:values) { "rightmost_column"}
       let(:args) { [option, values] }
