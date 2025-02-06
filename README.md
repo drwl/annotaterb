@@ -4,8 +4,8 @@
 A Ruby Gem that adds annotations to your Rails models and route files.
 
 ----------
-[![CI](https://github.com/drwl/annotaterb/actions/workflows/ci.yml/badge.svg)](https://github.com/drwl/annotaterb/actions/workflows/ci.yml)
-[![Gem Version](https://badge.fury.io/rb/annotaterb.svg)](https://badge.fury.io/rb/annotaterb)
+[![CI](https://github.com/drwl/annotate_rb/actions/workflows/ci.yml/badge.svg)](https://github.com/drwl/annotate_rb/actions/workflows/ci.yml)
+[![Gem Version](https://badge.fury.io/rb/annotate_rb.svg)](https://badge.fury.io/rb/annotate_rb)
 
 Adds comments summarizing the model schema or routes in your:
 
@@ -36,7 +36,7 @@ class Task < ApplicationRecord
 ## Installation
 
 ```sh
-$ gem install annotaterb
+$ gem install annotate_rb
 ```
 
 Or install it into your Rails project through the Gemfile:
@@ -45,7 +45,7 @@ Or install it into your Rails project through the Gemfile:
 group :development do
   ...
 
-  gem "annotaterb"
+  gem "annotate_rb"
   
   ...
 ```
@@ -83,7 +83,7 @@ AnnotateRb:
 ```
 
 `bin/rails g annotate_rb:config`
-- Generates a new configuration file, `.annotaterb.yml`, using defaults from the gem.
+- Generates a new configuration file, `.annotate_rb.yml`, using defaults from the gem.
 
 `bin/rails g annotate_rb:hook`
 - Installs the Rake file to automatically annotate Rails models on a database task (e.g. AnnotateRb will automatically run after running `bin/rails db:migrate`).
@@ -92,7 +92,7 @@ AnnotateRb:
 - Runs the `config` and `hook` generator commands
 
 `bin/rails g annotate_rb:update_config`
-- Appends to `.annotaterb.yml` any configuration key-value pairs that are used by the Gem. This is useful when there's a drift between the config file values and the gem defaults (i.e. when new features get added).
+- Appends to `.annotate_rb.yml` any configuration key-value pairs that are used by the Gem. This is useful when there's a drift between the config file values and the gem defaults (i.e. when new features get added).
 
 ## Migrating from the annotate gem
 Refer to the [migration guide](MIGRATION_GUIDE.md).
@@ -103,9 +103,9 @@ AnnotateRb has a CLI that you can use to add or remove annotations.
 
 ```sh
 # To show the CLI options
-$ bundle exec annotaterb 
+$ bundle exec annotate_rb 
 
-Usage: annotaterb [command] [options]
+Usage: annotate_rb [command] [options]
 
 Commands:
     models [options]
@@ -118,7 +118,7 @@ Options:
     -h, --help                       You're looking at it.
 
 Annotate model options:
-    Usage: annotaterb models [options]
+    Usage: annotate_rb models [options]
 
     -a, --active-admin               Annotate active_admin models
         --show-migration             Include the migration version number in the annotation
@@ -136,7 +136,7 @@ Annotate model options:
         --with-comment               include database comments in model annotations
 
 Annotate routes options:
-    Usage: annotaterb routes [options]
+    Usage: annotate_rb routes [options]
 
         --ignore-routes REGEX        don't annotate routes that match a given REGEX (i.e., `annotate -I '(mobile|resque|pghero)'`
         --timestamp                  Include timestamp in (routes) annotation
@@ -184,10 +184,10 @@ Additional options that work for annotating models and routes
 ## Configuration
 
 ### Storing default options
-Previously in the [Annotate](https://github.com/ctran/annotate_models) you could pass options through the CLI or store them as environment variables. Annotaterb removes dependency on the environment variables and instead can read values from a `.annotaterb.yml` file stored in the Rails project root.
+Previously in the [Annotate](https://github.com/ctran/annotate_models) you could pass options through the CLI or store them as environment variables. Annotaterb removes dependency on the environment variables and instead can read values from a `.annotate_rb.yml` file stored in the Rails project root.
 
 ```yml
-# .annotaterb.yml
+# .annotate_rb.yml
 
 position: after
 ```

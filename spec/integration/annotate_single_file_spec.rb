@@ -22,7 +22,7 @@ RSpec.describe "Annotate a single file", type: "aruba" do
     expect(expected_test_default).not_to eq(original_test_default)
     expect(expected_test_null_false).not_to eq(original_test_null_false)
 
-    _cmd = run_command_and_stop("bundle exec annotaterb models #{model_file}", fail_on_error: true, exit_timeout: command_timeout_seconds)
+    _cmd = run_command_and_stop("bundle exec annotate_rb models #{model_file}", fail_on_error: true, exit_timeout: command_timeout_seconds)
 
     annotated_test_default = read_file(dummyapp_model("test_default.rb"))
     annotated_test_null_false = read_file(dummyapp_model("test_null_false.rb"))

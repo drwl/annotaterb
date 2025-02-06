@@ -24,7 +24,7 @@ RSpec.describe "Annotating a file with comments" do
   end
 
   before do
-    @model_dir = Dir.mktmpdir("annotaterb")
+    @model_dir = Dir.mktmpdir("annotate_rb")
     (@model_file_name, _file_content) = write_model("user.rb", starting_file_content)
   end
 

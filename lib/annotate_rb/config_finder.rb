@@ -2,12 +2,12 @@
 
 module AnnotateRb
   class ConfigFinder
-    DOTFILE = ".annotaterb.yml"
+    DOTFILE = ".annotate_rb.yml"
 
     class << self
       def find_project_root
         # We should expect this method to be called from a Rails project root and returning it
-        # e.g. "/Users/drwl/personal/annotaterb/dummyapp"
+        # e.g. "/Users/drwl/personal/annotate_rb/dummyapp"
         Dir.pwd
       end
 

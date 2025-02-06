@@ -24,7 +24,7 @@ RSpec.describe "Annotate a file with existing annotations", type: "aruba" do
       expect(expected_test_default).not_to eq(original_test_default)
 
       _cmd = run_command_and_stop(
-        "bundle exec annotaterb models #{model_file} --force --position bottom",
+        "bundle exec annotate_rb models #{model_file} --force --position bottom",
         fail_on_error: true,
         exit_timeout: command_timeout_seconds
       )

@@ -30,7 +30,7 @@ module AnnotateRb
         rescue SystemCallError
           warn "No models found in directory '#{options[:model_dir].join("', '")}'."
           warn "Either specify models on the command line, or use the --model-dir option."
-          warn "Call 'annotaterb --help' for more info."
+          warn "Call 'annotate_rb --help' for more info."
           # exit 1 # TODO: Return exit code back to caller. Right now it messes up RSpec being able to run
         end
 
@@ -50,7 +50,7 @@ module AnnotateRb
 
           if model_files.size != specified_files.size
             warn "The specified file could not be found in directory '#{options[:model_dir].join("', '")}'."
-            warn "Call 'annotaterb --help' for more info."
+            warn "Call 'annotate_rb --help' for more info."
             # exit 1 # TODO: Return exit code back to caller. Right now it messes up RSpec being able to run
           end
 

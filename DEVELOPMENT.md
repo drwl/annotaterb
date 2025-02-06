@@ -30,7 +30,7 @@ I have found integration tests hard to write because we are testing a command li
 
 Refer to git history for examples of previous commits. 
 
-When I run into errors with newly written integration tests, I run the gem in the context of the dummyapp (spec/dummyapp) using `DATABASE_ADAPTER=sqlite3 bundle exec annotaterb models` with debug statements.
+When I run into errors with newly written integration tests, I run the gem in the context of the dummyapp (spec/dummyapp) using `DATABASE_ADAPTER=sqlite3 bundle exec annotate_rb models` with debug statements.
 
 ## Linter
 

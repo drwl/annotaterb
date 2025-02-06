@@ -5,7 +5,7 @@ RSpec.describe "Generator installs rake file", type: "aruba" do
 
   let(:rake_task_file) { "lib/tasks/annotate_rb.rake" }
   let(:rake_task) { File.join(aruba.config.root_directory, "lib/generators/annotate_rb/hook/templates/annotate_rb.rake") }
-  let(:config_file) { ".annotaterb.yml" }
+  let(:config_file) { ".annotate_rb.yml" }
 
   let(:generator_install_command) { "bin/rails generate annotate_rb:install" }
 

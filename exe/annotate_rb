@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 if !File.exist?("./Rakefile") && !File.exist?("./Gemfile")
-  abort "Please run annotaterb from the root of the project."
+  abort "Please run annotate_rb from the root of the project."
 end
 
 begin

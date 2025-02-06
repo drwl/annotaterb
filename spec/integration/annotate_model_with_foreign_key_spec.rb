@@ -16,7 +16,7 @@ RSpec.describe "Annotate collapsed models", type: "aruba" do
 
     expect(expected_test_model).not_to eq(original_test_model)
 
-    _cmd = run_command_and_stop("bundle exec annotaterb models", fail_on_error: true, exit_timeout: command_timeout_seconds)
+    _cmd = run_command_and_stop("bundle exec annotate_rb models", fail_on_error: true, exit_timeout: command_timeout_seconds)
 
     annotated_test_model = read_file(dummyapp_model("test_child_default.rb"))
 
