@@ -1,5 +1,8 @@
 # Changelog
 
+## [v5.0.0](...) (XXXX)
+- changed all references for `annotaterb` to `annotate_rb`, for consistency
+
 ## [v4.13.0](https://github.com/drwl/annotate_rb/tree/v4.13.0) (2024-10-21)
 
 [Full Changelog](https://github.com/drwl/annotate_rb/compare/v4.12.0...v4.13.0)
