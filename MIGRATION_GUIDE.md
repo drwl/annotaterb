@@ -16,18 +16,18 @@ Annotate provided 3 ways for passing options to the gem.
 
 ----------
 ### Command line differences
-Previously, Annotate allowed you to annotate both model and route files in the same command. In an attempt to make the CLI easier to use, they are now separate. The following output is what you see when running annotaterb without any options. 
+Previously, Annotate allowed you to annotate both model and route files in the same command. In an attempt to make the CLI easier to use, they are now separate. The following output is what you see when running annotate_rb without any options. 
 
 **Note: most of the options are similar with the following differences:**
-* `--models` has been removed, to annotate models use `annotaterb models [options]` instead
-* `-r`, `--routes` has been removed, to annotate routes use `annotaterb routes [options]` instead
+* `--models` has been removed, to annotate models use `annotate_rb models [options]` instead
+* `-r`, `--routes` has been removed, to annotate routes use `annotate_rb routes [options]` instead
 
-If you notice any differences please [report an issue](https://github.com/drwl/annotaterb/issues/new) or [submit a pull request](https://github.com/drwl/annotaterb/pulls) to update this document.
+If you notice any differences please [report an issue](https://github.com/drwl/annotate_rb/issues/new) or [submit a pull request](https://github.com/drwl/annotate_rb/pulls) to update this document.
 
 ```sh
-$ bundle exec annotaterb 
+$ bundle exec annotate_rb 
 
-Usage: annotaterb [command] [options]
+Usage: annotate_rb [command] [options]
 
 Commands:
     models [options]
@@ -40,7 +40,7 @@ Options:
     -h, --help                       You're looking at it.
 
 Annotate model options:
-    Usage: annotaterb models [options]
+    Usage: annotate_rb models [options]
 
     -a, --active-admin               Annotate active_admin models
         --show-migration             Include the migration version number in the annotation
@@ -48,7 +48,7 @@ Annotate model options:
     ...
 
 Annotate routes options:
-    Usage: annotaterb routes [options]
+    Usage: annotate_rb routes [options]
 
         --ignore-routes REGEX        don't annotate routes that match a given REGEX (i.e., `annotate -I '(mobile|resque|pghero)'`
         ...
@@ -74,17 +74,17 @@ Additional options that work for annotating models and routes
 ### Passing options via Environment Variables
 Annotate also reads options from ENV. For example, this command line argument `ANNOTATE_SKIP_ON_DB_MIGRATE=1 rake db:migrate` would affect Annotate's behavior. 
 
-The reading from ENV / environment variables has **been removed** in favor of reading configuration from `.annotaterb.yml` file in your Rails project root.
+The reading from ENV / environment variables has **been removed** in favor of reading configuration from `.annotate_rb.yml` file in your Rails project root.
 
 ```yml
-# .annotaterb.yml
+# .annotate_rb.yml
 
 position: after
 ```
 
 This change was done to reduce complexity in configuration and make the gem easier to maintain.
 
-**Note: `.annotaterb.yml` is optional.** In its, AnnotateRb will use command line arguments and then the defaults. The defaults are implemented in `AnnotateRb::Options`.
+**Note: `.annotate_rb.yml` is optional.** In its, AnnotateRb will use command line arguments and then the defaults. The defaults are implemented in `AnnotateRb::Options`.
 
 ----------
 
@@ -116,8 +116,8 @@ $ bin/rails g annotate_rb:install
 
 to install AnnotateRb's equivalent file into your Rails project.
 
-#### Default .annotaterb.yml
-When running the install generator command, `bin/rails g annotate_rb:install`, an `.annotaterb.yml` file gets automatically generated for your project using the defaults from the gem. 
+#### Default .annotate_rb.yml
+When running the install generator command, `bin/rails g annotate_rb:install`, an `.annotate_rb.yml` file gets automatically generated for your project using the defaults from the gem. 
 
 It _should_ match the old Annotate defaults however there may be differences.
 
