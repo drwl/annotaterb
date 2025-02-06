@@ -17,7 +17,7 @@ module AnnotateRb
         legacy_file_path = File.expand_path(LEGACY_DOTFILE, find_project_root)
 
         if File.exist?(file_path)
-          file_path 
+          file_path
         elsif File.exist?(legacy_file_path)
           legacy_file_path
         end
