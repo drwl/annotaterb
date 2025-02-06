@@ -3,6 +3,7 @@
 module AnnotateRb
   class ConfigFinder
     DOTFILE = ".annotate_rb.yml"
+    LEGACY_DOTFILE = ".annotaterb.yml"
 
     class << self
       def find_project_root
@@ -13,8 +14,13 @@ module AnnotateRb
 
       def find_project_dotfile
         file_path = File.expand_path(DOTFILE, find_project_root)
+        legacy_file_path = File.expand_path(LEGACY_DOTFILE, find_project_root)
 
-        return file_path if File.exist?(file_path)
+        if File.exist?(file_path)
+          file_path 
+        elsif File.exist?(legacy_file_path)
+          legacy_file_path
+        end
       end
     end
   end
