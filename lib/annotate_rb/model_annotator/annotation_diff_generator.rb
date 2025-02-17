@@ -5,7 +5,13 @@ module AnnotateRb
     # Compares the current file content and new annotation block and generates the column annotation differences
     class AnnotationDiffGenerator
       HEADER_PATTERN = /(^# Table name:.*?\n(#.*\r?\n)*\r?)/
-      COLUMN_PATTERN = /^#[\t ]+[\w*.`\[\]():]+[\t ]+.+$/
+      # Example matches:
+      #   - "#  id              :uuid             not null, primary key"
+      #   - "#  title(length 255) :string          not null"
+      #   - "#  status(a/b/c)    :string           not null"
+      #   - "#  created_at       :datetime         not null"
+      #   - "#  updated_at       :datetime         not null"
+      COLUMN_PATTERN = /^#[\t ]+[\w*.`\[\]():]+(?:\(.*?\))?[\t ]+.+$/
 
       class << self
         def call(file_content, annotation_block)
