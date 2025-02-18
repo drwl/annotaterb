@@ -99,4 +99,45 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelWrapper do
       end
     end
   end
+
+  describe "#enum_columns" do
+    let(:options) { {} }
+    let(:connection) { double("connection") }
+    let(:klass) { double("klass", connection: connection) }
+    let(:wrapper) { described_class.new(klass, options) }
+    let(:enum_column) do
+      double("column",
+             name: "status",
+             type: :enum,
+             sql_type_metadata: double("metadata", sql_type: "enum('active', 'inactive')"))
+    end
+
+    before do
+      allow(wrapper).to receive(:raw_columns).and_return([enum_column])
+      allow(connection).to receive(:respond_to?).with(:enum_types).and_return(true)
+      allow(connection).to receive(:enum_types).and_return([
+        ["enum('active', 'inactive')", "'active', 'inactive'"]
+      ])
+    end
+
+    it "returns enum column information" do
+      expect(wrapper.enum_columns).to eq([{
+        name: "status",
+        enum_type: "active', 'inactive",
+        values: ["active", "inactive"],
+        max_size: wrapper.max_schema_info_width,
+        type: :enum
+      }])
+    end
+
+    context "when connection doesn't support enum_types" do
+      before do
+        allow(connection).to receive(:respond_to?).with(:enum_types).and_return(false)
+      end
+
+      it "returns empty array" do
+        expect(wrapper.enum_columns).to eq([])
+      end
+    end
+  end
 end

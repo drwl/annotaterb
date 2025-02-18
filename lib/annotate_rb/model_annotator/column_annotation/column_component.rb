@@ -57,7 +57,7 @@ module AnnotateRb
           format("#  %s:%s %s",
             mb_chars_ljust(name, max_size),
             mb_chars_ljust(type, BARE_TYPE_ALLOWANCE),
-            attributes.join(", ")).rstrip
+            attributes.is_a?(Array) ? attributes.join(", ") : attributes).rstrip
         end
 
         private

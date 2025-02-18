@@ -23,6 +23,7 @@ module AnnotateRb
               SchemaHeader.new(table_name, table_comment, @options),
               MarkdownHeader.new(max_size),
               *columns,
+              *enum_annotations,
               IndexAnnotation::AnnotationBuilder.new(@model, @options).build,
               ForeignKeyAnnotation::AnnotationBuilder.new(@model, @options).build,
               CheckConstraintAnnotation::AnnotationBuilder.new(@model, @options).build,
@@ -46,9 +47,34 @@ module AnnotateRb
 
           private
 
+          def enum_annotations
+            return [] unless @model.has_enums?
+
+            [
+              Components::Base.new.tap do |c|
+                def c.to_default
+                  "#\n# Enums"
+                end
+              end,
+              *@model.enum_columns.map do |enum|
+                Components::Base.new.tap do |c|
+                  c.instance_variable_set(:@max_size, max_size)
+                  c.define_singleton_method(:to_default) do
+                    "#  #{enum[:name].ljust(@max_size)}  values: #{enum[:values].join(', ')}"
+                  end
+                end
+              end
+            ]
+          end
+
           def columns
             @model.columns.map do |col|
-              _component = ColumnAnnotation::AnnotationBuilder.new(col, @model, max_size, @options).build
+              if col.type == :enum
+                enum_info = @model.enum_columns.find { |e| e[:name] == col.name }
+                _component = ColumnAnnotation::AnnotationBuilder.new(col, @model, max_size, @options, enum_info).build
+              else
+                _component = ColumnAnnotation::AnnotationBuilder.new(col, @model, max_size, @options).build
+              end
             end
           end
         end
