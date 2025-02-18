@@ -4,11 +4,12 @@ module AnnotateRb
   module ModelAnnotator
     module ColumnAnnotation
       class AnnotationBuilder
-        def initialize(column, model, max_size, options)
+        def initialize(column, model, max_size, options, enum_info = nil)
           @column = column
           @model = model
           @max_size = max_size
           @options = options
+          @enum_info = enum_info
         end
 
         def build
@@ -28,6 +29,11 @@ module AnnotateRb
             @column.name
           end
 
+          if @enum_info
+            formatted_column_type = "enum"
+            column_attributes = ["enum_type: #{@enum_info[:enum_type]}", column_attributes].join(", ")
+          end
+          
           _component = ColumnComponent.new(col_name, @max_size, formatted_column_type, column_attributes)
         end
 
