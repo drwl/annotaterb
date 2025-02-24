@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::DefaultValueBuilder do
+RSpec.describe Annotaterb::ModelAnnotator::ColumnAnnotation::DefaultValueBuilder do
   describe "#build" do
     subject { described_class.new(value, config).build }
     let(:config) { {} }

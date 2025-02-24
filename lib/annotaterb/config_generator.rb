@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AnnotateRb
+module Annotaterb
   class ConfigGenerator
     class << self
       # Returns unset configuration key-value pairs as yaml.

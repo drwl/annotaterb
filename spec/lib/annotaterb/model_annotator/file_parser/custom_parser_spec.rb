@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
+RSpec.describe Annotaterb::ModelAnnotator::FileParser::CustomParser do
   describe ".parse" do
     subject { described_class.parse(input) }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiff do
+RSpec.describe Annotaterb::ModelAnnotator::AnnotationDiff do
   describe "attributes" do
     subject { described_class.new(current_columns, new_columns) }
     let(:current_columns) { "some current columns string" }

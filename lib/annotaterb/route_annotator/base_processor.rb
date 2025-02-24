@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # This module provides methods for annotating config/routes.rb.
-module AnnotateRb
+module Annotaterb
   module RouteAnnotator
     # This class is abstract class of classes adding and removing annotation to config/routes.rb.
     class BaseProcessor

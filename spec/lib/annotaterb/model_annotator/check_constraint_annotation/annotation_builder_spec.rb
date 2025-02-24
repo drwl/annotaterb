@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::CheckConstraintAnnotation::AnnotationBuilder do
+RSpec.describe Annotaterb::ModelAnnotator::CheckConstraintAnnotation::AnnotationBuilder do
   include AnnotateTestHelpers
 
   describe "#build" do
@@ -10,7 +10,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::CheckConstraintAnnotation::Annotation
 
     let(:model) do
       instance_double(
-        AnnotateRb::ModelAnnotator::ModelWrapper,
+        Annotaterb::ModelAnnotator::ModelWrapper,
         connection: connection,
         table_name: "Foo"
       )
@@ -18,7 +18,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::CheckConstraintAnnotation::Annotation
     let(:connection) do
       mock_connection([], [], check_constraints)
     end
-    let(:options) { AnnotateRb::Options.new({show_check_constraints: true}) }
+    let(:options) { Annotaterb::Options.new({show_check_constraints: true}) }
     let(:check_constraints) do
       [
         mock_check_constraint("alive", "age < 150"),
@@ -34,9 +34,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::CheckConstraintAnnotation::Annotation
     end
 
     context "when show_check_constraints option is false" do
-      let(:options) { AnnotateRb::Options.new({show_check_constraints: false}) }
+      let(:options) { Annotaterb::Options.new({show_check_constraints: false}) }
 
-      it { is_expected.to be_a(AnnotateRb::ModelAnnotator::Components::NilComponent) }
+      it { is_expected.to be_a(Annotaterb::ModelAnnotator::Components::NilComponent) }
     end
 
     context "using default format" do

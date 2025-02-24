@@ -6,12 +6,12 @@ RSpec.describe "Annotating a file with comments" do
 
   shared_examples "annotates the file" do
     it "writes the expected annotations to the file" do
-      AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
+      Annotaterb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
       expect(File.read(@model_file_name)).to eq(expected_file_content)
     end
   end
 
-  let(:options) { AnnotateRb::Options.from({}) }
+  let(:options) { Annotaterb::Options.from({}) }
   let(:schema_info) do
     <<~SCHEMA
       # == Schema Information
@@ -304,7 +304,7 @@ RSpec.describe "Annotating a file with comments" do
     end
 
     context "with `position_in_class: after`" do
-      let(:options) { AnnotateRb::Options.new({position_in_class: :after}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: :after}) }
 
       context "with magic comments before class declaration with a line break between" do
         let(:starting_file_content) do
@@ -1201,7 +1201,7 @@ RSpec.describe "Annotating a file with comments" do
   end
 
   context "when overwriting existing annotations using force: true" do
-    let(:options) { AnnotateRb::Options.from({force: true}) }
+    let(:options) { Annotaterb::Options.from({force: true}) }
     let(:schema_info) do
       <<~SCHEMA
         # == Schema Information

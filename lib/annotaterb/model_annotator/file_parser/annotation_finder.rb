@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AnnotateRb
+module Annotaterb
   module ModelAnnotator
     module FileParser
       class AnnotationFinder

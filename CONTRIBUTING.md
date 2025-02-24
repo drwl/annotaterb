@@ -2,7 +2,7 @@
 
 Contributions are welcome. 
 
-If you would like to help make AnnotateRb better, here are some ways to contribute:
+If you would like to help make Annotaterb better, here are some ways to contribute:
   - by reporting any issues you come across while using the gem
   - helping other people who report issues
   - by refactoring any parts of the codebase

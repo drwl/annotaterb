@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AnnotateRb
+module Annotaterb
   module ModelAnnotator
     class ModelWrapper
       # Should be the wrapper for an ActiveRecord model that serves as the source of truth of the model

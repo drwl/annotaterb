@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AnnotateRb
+module Annotaterb
   module Commands
     class AnnotateModels
       def call(options)
@@ -12,9 +12,9 @@ module AnnotateRb
         end
 
         # Eager load Models when we're annotating models
-        AnnotateRb::EagerLoader.call(options)
+        Annotaterb::EagerLoader.call(options)
 
-        AnnotateRb::ModelAnnotator::Annotator.send(options[:target_action], options)
+        Annotaterb::ModelAnnotator::Annotator.send(options[:target_action], options)
       end
     end
   end

@@ -3,11 +3,11 @@ require "integration_spec_helper"
 RSpec.describe "Generator installs rake file", type: "aruba" do
   let(:command_timeout_seconds) { 10 }
 
-  let(:rake_task_file) { "lib/tasks/annotate_rb.rake" }
-  let(:rake_task) { File.join(aruba.config.root_directory, "lib/generators/annotate_rb/hook/templates/annotate_rb.rake") }
+  let(:rake_task_file) { "lib/tasks/annotaterb.rake" }
+  let(:rake_task) { File.join(aruba.config.root_directory, "lib/generators/annotaterb/hook/templates/annotaterb.rake") }
   let(:config_file) { ".annotaterb.yml" }
 
-  let(:generator_install_command) { "bin/rails generate annotate_rb:install" }
+  let(:generator_install_command) { "bin/rails generate annotaterb:install" }
 
   it "installs the rake file to Rails project" do
     # First check that the file doesn't exist in dummyapp
@@ -49,10 +49,10 @@ RSpec.describe "Generator installs rake file", type: "aruba" do
       # The prompt should look something like this:
       #
       # ...
-      #     generate  annotate_rb:hook
-      #        rails  generate annotate_rb:hook
-      #     conflict  lib/tasks/annotate_rb.rake
-      # Overwrite .../dummyapp/lib/tasks/annotate_rb.rake? (enter "h" for help) [Ynaqdhm]
+      #     generate  annotaterb:hook
+      #        rails  generate annotaterb:hook
+      #     conflict  lib/tasks/annotaterb.rake
+      # Overwrite .../dummyapp/lib/tasks/annotaterb.rake? (enter "h" for help) [Ynaqdhm]
       type("q") # Quit the command
 
       # When the file already exists, the default behavior is the Thor CLI prompts user on how to proceed

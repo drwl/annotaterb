@@ -1,6 +1,6 @@
-## Guide for migrating from Annotate to AnnotateRb
+## Guide for migrating from Annotate to Annotaterb
 ### Notable differences
-* AnnotateRb drops support for older version of Ruby. At the time of writing, the minimum supported Ruby version is 2.7 as older versions have been end-of-life'd for sometime now.
+* Annotaterb drops support for older version of Ruby. At the time of writing, the minimum supported Ruby version is 2.7 as older versions have been end-of-life'd for sometime now.
 * The command line interface has been changed to make commands easier to run annotations for models and routes separately. Refer to Command line differences section for more details.
 * Configuration can now be done in a yml file instead of reading from ENV.
 * No longer reads configuration options from ENV / environment variables.
@@ -84,7 +84,7 @@ position: after
 
 This change was done to reduce complexity in configuration and make the gem easier to maintain.
 
-**Note: `.annotaterb.yml` is optional.** In its, AnnotateRb will use command line arguments and then the defaults. The defaults are implemented in `AnnotateRb::Options`.
+**Note: `.annotaterb.yml` is optional.** In its, Annotaterb will use command line arguments and then the defaults. The defaults are implemented in `Annotaterb::Options`.
 
 ----------
 
@@ -111,13 +111,13 @@ This rake task loaded other Annotate code that hooked into the Rails database mi
 These key-value pairs would go in the yml file mentioned above. After removing the rake task, run:
 
 ```sh
-$ bin/rails g annotate_rb:install
+$ bin/rails g annotaterb:install
 ```
 
-to install AnnotateRb's equivalent file into your Rails project.
+to install Annotaterb's equivalent file into your Rails project.
 
 #### Default .annotaterb.yml
-When running the install generator command, `bin/rails g annotate_rb:install`, an `.annotaterb.yml` file gets automatically generated for your project using the defaults from the gem. 
+When running the install generator command, `bin/rails g annotaterb:install`, an `.annotaterb.yml` file gets automatically generated for your project using the defaults from the gem. 
 
 It _should_ match the old Annotate defaults however there may be differences.
 

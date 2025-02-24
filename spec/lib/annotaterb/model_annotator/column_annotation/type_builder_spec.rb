@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::TypeBuilder do
+RSpec.describe Annotaterb::ModelAnnotator::ColumnAnnotation::TypeBuilder do
   include AnnotateTestHelpers
 
   describe "#build" do
@@ -8,7 +8,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::TypeBuilder do
 
     let(:column) {}
     let(:column_defaults) { {} }
-    let(:options) { AnnotateRb::Options.new({}) }
+    let(:options) { Annotaterb::Options.new({}) }
 
     before do
       stub_const("#{described_class}::NO_LIMIT_COL_TYPES", %w[integer bigint boolean].freeze)
@@ -81,7 +81,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::TypeBuilder do
       context "when show_virtual_columns if false" do
         let(:column) { mock_column("name", :string, virtual?: true) }
         let(:options) do
-          AnnotateRb::Options.new({show_virtual_columns: false})
+          Annotaterb::Options.new({show_virtual_columns: false})
         end
         let(:expected_result) { "string" }
 
@@ -91,7 +91,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::TypeBuilder do
       context "when show_virtual_columns if true" do
         let(:column) { mock_column("name", :string, virtual?: true) }
         let(:options) do
-          AnnotateRb::Options.new({show_virtual_columns: true})
+          Annotaterb::Options.new({show_virtual_columns: true})
         end
         let(:expected_result) { "virtual(string)" }
 
@@ -103,7 +103,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::TypeBuilder do
       context "with a string column with a limit" do
         let(:column) { mock_column("name", :string, limit: 50) }
         let(:options) do
-          AnnotateRb::Options.new({format_yard: true})
+          Annotaterb::Options.new({format_yard: true})
         end
         let(:expected_result) { "string" }
 
@@ -115,7 +115,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::TypeBuilder do
       context 'when "hide_limit_column_types" is blank string' do
         let(:column) { mock_column("name", :string, limit: 50) }
         let(:options) do
-          AnnotateRb::Options.new({hide_limit_column_types: ""})
+          Annotaterb::Options.new({hide_limit_column_types: ""})
         end
         let(:expected_result) { "string(50)" }
 
@@ -125,7 +125,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::TypeBuilder do
       context 'when "hide_limit_column_types" is "integer,boolean" with a string column' do
         let(:column) { mock_column("name", :string, limit: 50) }
         let(:options) do
-          AnnotateRb::Options.new({hide_limit_column_types: "integer,boolean"})
+          Annotaterb::Options.new({hide_limit_column_types: "integer,boolean"})
         end
         let(:expected_result) { "string(50)" }
 
@@ -135,7 +135,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::TypeBuilder do
       context 'when "hide_limit_column_types" is "integer,boolean" with an integer column' do
         let(:column) { mock_column("id", :integer, limit: 8) }
         let(:options) do
-          AnnotateRb::Options.new({hide_limit_column_types: "integer,boolean"})
+          Annotaterb::Options.new({hide_limit_column_types: "integer,boolean"})
         end
         let(:expected_result) { "integer" }
 
@@ -145,7 +145,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::TypeBuilder do
       context 'when "hide_limit_column_types" is "integer,boolean" with a boolean column' do
         let(:column) { mock_column("active", :boolean, limit: 1) }
         let(:options) do
-          AnnotateRb::Options.new({hide_limit_column_types: "integer,boolean"})
+          Annotaterb::Options.new({hide_limit_column_types: "integer,boolean"})
         end
         let(:expected_result) { "boolean" }
 
@@ -155,7 +155,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::TypeBuilder do
       context 'when "hide_limit_column_types" is "integer,boolean,string,text"' do
         let(:column) { mock_column("name", :string, limit: 50) }
         let(:options) do
-          AnnotateRb::Options.new({hide_limit_column_types: "integer,boolean,string,text"})
+          Annotaterb::Options.new({hide_limit_column_types: "integer,boolean,string,text"})
         end
         let(:expected_result) { "string" }
 

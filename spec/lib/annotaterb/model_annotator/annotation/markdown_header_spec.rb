@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::Annotation::MarkdownHeader do
+RSpec.describe Annotaterb::ModelAnnotator::Annotation::MarkdownHeader do
   subject { described_class.new(max_size) }
   let(:markdown_format) { subject.to_markdown }
   let(:default_format) { subject.to_default }

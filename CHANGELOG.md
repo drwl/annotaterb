@@ -331,7 +331,7 @@
 - Add configuration instructions to README [\#13](https://github.com/drwl/annotaterb/pull/13) ([drwl](https://github.com/drwl))
 - Prepare gem for beta release [\#12](https://github.com/drwl/annotaterb/pull/12) ([drwl](https://github.com/drwl))
 - Make annotaterb usable [\#11](https://github.com/drwl/annotaterb/pull/11) ([drwl](https://github.com/drwl))
-- Move old annotate code into AnnotateRb namespace [\#10](https://github.com/drwl/annotaterb/pull/10) ([drwl](https://github.com/drwl))
+- Move old annotate code into Annotaterb namespace [\#10](https://github.com/drwl/annotaterb/pull/10) ([drwl](https://github.com/drwl))
 - Fix CodeQL action [\#9](https://github.com/drwl/annotaterb/pull/9) ([drwl](https://github.com/drwl))
 - Regularly run CI [\#8](https://github.com/drwl/annotaterb/pull/8) ([drwl](https://github.com/drwl))
 - Get CI consistently green [\#7](https://github.com/drwl/annotaterb/pull/7) ([drwl](https://github.com/drwl))

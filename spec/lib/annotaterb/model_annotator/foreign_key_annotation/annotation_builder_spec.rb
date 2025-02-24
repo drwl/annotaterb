@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuilder do
+RSpec.describe Annotaterb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuilder do
   include AnnotateTestHelpers
 
   describe "#build" do
@@ -23,15 +23,15 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
         )
       end
 
-      ::AnnotateRb::ModelAnnotator::ModelWrapper.new(klass, options)
+      ::Annotaterb::ModelAnnotator::ModelWrapper.new(klass, options)
     end
-    let(:options) { ::AnnotateRb::Options.new({show_foreign_keys: true, show_complete_foreign_keys: true}) }
+    let(:options) { ::Annotaterb::Options.new({show_foreign_keys: true, show_complete_foreign_keys: true}) }
 
     context "when show_foreign_keys option is false" do
       let(:foreign_keys) { [] }
-      let(:options) { ::AnnotateRb::Options.new({show_foreign_keys: false}) }
+      let(:options) { ::Annotaterb::Options.new({show_foreign_keys: false}) }
 
-      it { is_expected.to be_a(AnnotateRb::ModelAnnotator::Components::NilComponent) }
+      it { is_expected.to be_a(Annotaterb::ModelAnnotator::Components::NilComponent) }
     end
 
     context "without foreign keys" do
@@ -80,7 +80,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
       end
 
       context "when show_complete_foreign_keys option is false" do
-        let(:options) { ::AnnotateRb::Options.new({show_foreign_keys: true, show_complete_foreign_keys: false}) }
+        let(:options) { ::Annotaterb::Options.new({show_foreign_keys: true, show_complete_foreign_keys: false}) }
 
         let(:expected_output) do
           <<~OUTPUT.strip

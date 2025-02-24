@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AnnotateRb
+module Annotaterb
   # Raised when a configuration file is not found.
   class ConfigNotFoundError < StandardError
   end

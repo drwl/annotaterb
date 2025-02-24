@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
+RSpec.describe Annotaterb::ModelAnnotator::AnnotationDiffGenerator do
   def test_columns_match_expected
     remove_whitespace = proc { |str| str.delete(" \t\r\n") }
 

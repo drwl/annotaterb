@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AnnotateRb
+module Annotaterb
   module ModelAnnotator
     # Compares the current file content and new annotation block and generates the column annotation differences
     class AnnotationDiffGenerator

@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require "annotate_rb"
+require "annotaterb"
 
-module AnnotateRb
+module Annotaterb
   module Generators
     class ConfigGenerator < ::Rails::Generators::Base
       def generate_config
-        create_file ::AnnotateRb::ConfigFinder::DOTFILE do
-          ::AnnotateRb::ConfigGenerator.default_config_yml
+        create_file ::Annotaterb::ConfigFinder::DOTFILE do
+          ::Annotaterb::ConfigGenerator.default_config_yml
         end
       end
     end

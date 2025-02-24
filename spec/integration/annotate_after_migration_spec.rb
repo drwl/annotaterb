@@ -34,7 +34,7 @@ RSpec.describe "Annotate after running migrations", type: "aruba" do
 
   context "when the rake task that hooks into database migration exists" do
     before do
-      _cmd = run_command_and_stop("bin/rails g annotate_rb:install", fail_on_error: true, exit_timeout: command_timeout_seconds)
+      _cmd = run_command_and_stop("bin/rails g annotaterb:install", fail_on_error: true, exit_timeout: command_timeout_seconds)
     end
 
     it "annotations are automatically added during migration" do

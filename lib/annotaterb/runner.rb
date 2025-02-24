@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AnnotateRb
+module Annotaterb
   class Runner
     class << self
       def run(args)
@@ -18,7 +18,7 @@ module AnnotateRb
       options = config_file_options.merge(parsed_options)
 
       @options = Options.from(options, {working_args: remaining_args})
-      AnnotateRb::RakeBootstrapper.call(@options)
+      Annotaterb::RakeBootstrapper.call(@options)
 
       if @options[:command]
         @options[:command].call(@options)

@@ -1,8 +1,8 @@
-RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
+RSpec.describe Annotaterb::ModelAnnotator::PatternGetter do
   describe ".call" do
     subject { described_class.call(options, pattern_type) }
 
-    let(:options) { AnnotateRb::Options.new(base_options) }
+    let(:options) { Annotaterb::Options.new(base_options) }
 
     context 'when pattern_type is "additional_file_patterns"' do
       let(:pattern_type) { "additional_file_patterns" }

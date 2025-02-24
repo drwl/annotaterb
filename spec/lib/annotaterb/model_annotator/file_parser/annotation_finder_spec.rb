@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::FileParser::AnnotationFinder do
+RSpec.describe Annotaterb::ModelAnnotator::FileParser::AnnotationFinder do
   describe "#run" do
     subject { described_class.new(content, wrapper_open, wrapper_close, parser) }
-    let(:parser) { AnnotateRb::ModelAnnotator::FileParser::CustomParser.parse(content) }
-    let(:yml_parser) { AnnotateRb::ModelAnnotator::FileParser::YmlParser.parse(content) }
+    let(:parser) { Annotaterb::ModelAnnotator::FileParser::CustomParser.parse(content) }
+    let(:yml_parser) { Annotaterb::ModelAnnotator::FileParser::YmlParser.parse(content) }
     let(:wrapper_open) { nil }
     let(:wrapper_close) { nil }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder do
+RSpec.describe Annotaterb::ModelAnnotator::ColumnAnnotation::AttributesBuilder do
   include AnnotateTestHelpers
 
   describe "#build" do
@@ -8,7 +8,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
 
     let(:column) {}
     let(:column_defaults) { {} }
-    let(:options) { AnnotateRb::Options.new({}) }
+    let(:options) { Annotaterb::Options.new({}) }
     let(:is_primary_key) {}
     let(:column_indices) {}
 
@@ -66,7 +66,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
 
     context "when a column has an index and simple_indexes option is true" do
       let(:is_primary_key) { true }
-      let(:options) { AnnotateRb::Options.new({simple_indexes: true}) }
+      let(:options) { Annotaterb::Options.new({simple_indexes: true}) }
 
       context "with an id integer primary key column" do
         let(:column) { mock_column("id", :integer) }
@@ -156,7 +156,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
     end
 
     context "when the hide_default_column_types option is 'skip' with a json column" do
-      let(:options) { AnnotateRb::Options.new({hide_default_column_types: "skip"}) }
+      let(:options) { Annotaterb::Options.new({hide_default_column_types: "skip"}) }
       let(:column_defaults) { {"profile" => {}} }
 
       let(:is_primary_key) { false }
@@ -167,7 +167,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
     end
 
     context "when the hide_default_column_types option is 'skip' with a jsonb column" do
-      let(:options) { AnnotateRb::Options.new({hide_default_column_types: "skip"}) }
+      let(:options) { Annotaterb::Options.new({hide_default_column_types: "skip"}) }
       let(:column_defaults) { {"settings" => {}} }
 
       let(:is_primary_key) { false }
@@ -178,7 +178,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
     end
 
     context "when the hide_default_column_types option is 'skip' with a hstore column" do
-      let(:options) { AnnotateRb::Options.new({hide_default_column_types: "skip"}) }
+      let(:options) { Annotaterb::Options.new({hide_default_column_types: "skip"}) }
       let(:column_defaults) { {"parameters" => {}} }
 
       let(:is_primary_key) { false }
@@ -189,7 +189,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
     end
 
     context "when the hide_default_column_types option is 'json' with a json column" do
-      let(:options) { AnnotateRb::Options.new({hide_default_column_types: "json"}) }
+      let(:options) { Annotaterb::Options.new({hide_default_column_types: "json"}) }
       let(:column_defaults) { {"profile" => {}} }
 
       let(:is_primary_key) { false }
@@ -200,7 +200,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
     end
 
     context "when the hide_default_column_types option is 'json' with a non-json column" do
-      let(:options) { AnnotateRb::Options.new({hide_default_column_types: "json"}) }
+      let(:options) { Annotaterb::Options.new({hide_default_column_types: "json"}) }
       let(:column_defaults) { {"settings" => {}} }
 
       let(:is_primary_key) { false }
@@ -213,7 +213,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
     context "when the show_virtual_columns option is false with a virtual column" do
       let(:column) { mock_column("name", :string, virtual?: true, default_function: "first_name || ' ' || last_name") }
       let(:options) do
-        AnnotateRb::Options.new({show_virtual_columns: false})
+        Annotaterb::Options.new({show_virtual_columns: false})
       end
       let(:expected_result) { ["not null"] }
 
@@ -223,7 +223,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
     context "when the show_virtual_columns option is true with a virtual column" do
       let(:column) { mock_column("name", :string, virtual?: true, default_function: "first_name || ' ' || last_name") }
       let(:options) do
-        AnnotateRb::Options.new({show_virtual_columns: true})
+        Annotaterb::Options.new({show_virtual_columns: true})
       end
       let(:expected_result) { ["first_name || ' ' || last_name", "not null"] }
 

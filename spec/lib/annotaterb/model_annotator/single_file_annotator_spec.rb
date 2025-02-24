@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
+RSpec.describe Annotaterb::ModelAnnotator::SingleFileAnnotator do
   include AnnotateTestHelpers
   include AnnotateTestConstants
 
   describe ".call" do
     describe "annotating a file without annotations" do
-      let(:options) { AnnotateRb::Options.new({}) }
+      let(:options) { Annotaterb::Options.new({}) }
       let(:schema_info) do
         <<~SCHEMA
           # == Schema Information
@@ -42,13 +42,13 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
 
       it "writes the annotations to the file" do
-        AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
+        Annotaterb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
         expect(File.read(@model_file_name)).to eq(expected_file_content)
       end
     end
 
     describe "annotating a file with old annotations" do
-      let(:options) { AnnotateRb::Options.new({}) }
+      let(:options) { Annotaterb::Options.new({}) }
       let(:schema_info) do
         <<~SCHEMA
           # == Schema Information
@@ -92,13 +92,13 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
 
       it "updates the annotations" do
-        AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
+        Annotaterb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
         expect(File.read(@model_file_name)).to eq(expected_file_content)
       end
     end
 
     describe 'annotating a file with existing annotations (position: after) using position: "before" and force: false' do
-      let(:options) { AnnotateRb::Options.new({position_in_class: "before", force: false}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "before", force: false}) }
       let(:schema_info) do
         <<~SCHEMA
           # == Schema Information
@@ -144,13 +144,13 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
 
       it "updates the annotations without changing the position" do
-        AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
+        Annotaterb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
         expect(File.read(@model_file_name)).to eq(expected_file_content)
       end
     end
 
     describe 'annotating a file with existing annotations (position: after) using position: "before" and force: true' do
-      let(:options) { AnnotateRb::Options.new({position_in_class: "before", force: true}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "before", force: true}) }
       let(:schema_info) do
         <<~SCHEMA
           # == Schema Information
@@ -195,13 +195,13 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
 
       it "replaces the annotations using the new position" do
-        AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
+        Annotaterb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
         expect(File.read(@model_file_name)).to eq(expected_file_content)
       end
     end
 
     describe "annotating a file with old annotations and magic comments" do
-      let(:options) { AnnotateRb::Options.new({}) }
+      let(:options) { Annotaterb::Options.new({}) }
       let(:schema_info) do
         <<~SCHEMA
           # == Schema Information
@@ -249,13 +249,13 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
 
       it "updates the annotations" do
-        AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
+        Annotaterb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
         expect(File.read(@model_file_name)).to eq(expected_file_content)
       end
     end
 
     describe "annotating a file with existing column comments" do
-      let(:options) { AnnotateRb::Options.new({with_comment: true}) }
+      let(:options) { Annotaterb::Options.new({with_comment: true}) }
       let(:schema_info) do
         <<~SCHEMA
           # == Schema Information
@@ -310,13 +310,13 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
 
       it "updates the annotations" do
-        AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
+        Annotaterb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
         expect(File.read(@model_file_name)).to eq(expected_file_content)
       end
     end
 
     describe "annotating a yml file with erb with position before" do
-      let(:options) { AnnotateRb::Options.new({with_comment: true, position_in_fixture: "before"}) }
+      let(:options) { Annotaterb::Options.new({with_comment: true, position_in_fixture: "before"}) }
       let(:schema_info) do
         <<~SCHEMA
           # == Schema Information
@@ -374,7 +374,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
     end
 
     describe "annotating a yml file with erb with position after" do
-      let(:options) { AnnotateRb::Options.new({with_comment: true, position_in_fixture: "after"}) }
+      let(:options) { Annotaterb::Options.new({with_comment: true, position_in_fixture: "after"}) }
       let(:schema_info) do
         <<~SCHEMA
           # == Schema Information

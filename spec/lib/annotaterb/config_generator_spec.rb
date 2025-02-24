@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ConfigGenerator do
+RSpec.describe Annotaterb::ConfigGenerator do
   describe "#default_config_yml" do
     subject { described_class.default_config_yml }
 

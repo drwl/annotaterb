@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AnnotateRb
+module Annotaterb
   module ModelAnnotator
     class BadModelFileError < LoadError
       def to_s

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
+RSpec.describe Annotaterb::ModelAnnotator::AnnotatedFile::Updater do
   describe "#update" do
     subject { described_class.new(*params).update }
 
@@ -16,8 +16,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
 
     let(:annotation_position) { :position_in_class }
     let(:parsed_file) do
-      parser_klass = AnnotateRb::ModelAnnotator::FileParser::CustomParser
-      AnnotateRb::ModelAnnotator::FileParser::ParsedFile.new(file_content, new_annotations, parser_klass, options).parse
+      parser_klass = Annotaterb::ModelAnnotator::FileParser::CustomParser
+      Annotaterb::ModelAnnotator::FileParser::ParsedFile.new(file_content, new_annotations, parser_klass, options).parse
     end
 
     context "with a foreign key constraint change" do
@@ -54,7 +54,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
         ANNOTATIONS
       end
 
-      let(:options) { AnnotateRb::Options.new({position_in_class: "before", show_foreign_keys: true}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "before", show_foreign_keys: true}) }
 
       let(:expected_content) do
         <<~CONTENT
@@ -109,7 +109,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
         ANNOTATIONS
       end
 
-      let(:options) { AnnotateRb::Options.new({position_in_class: "before", show_foreign_keys: true}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "before", show_foreign_keys: true}) }
 
       let(:expected_content) do
         <<~CONTENT
@@ -160,7 +160,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
         ANNOTATIONS
       end
 
-      let(:options) { AnnotateRb::Options.new({position_in_class: "before"}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "before"}) }
 
       let(:expected_content) do
         <<~CONTENT
@@ -206,7 +206,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
         ANNOTATIONS
       end
 
-      let(:options) { AnnotateRb::Options.new({position_in_class: "after"}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "after"}) }
 
       let(:expected_content) do
         <<~CONTENT
@@ -258,7 +258,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
         ANNOTATIONS
       end
 
-      let(:options) { AnnotateRb::Options.new({position_in_class: "before", show_foreign_keys: true}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "before", show_foreign_keys: true}) }
 
       let(:expected_content) do
         <<~CONTENT
@@ -317,7 +317,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
         ANNOTATIONS
       end
 
-      let(:options) { AnnotateRb::Options.new({position_in_class: "before", show_foreign_keys: true}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "before", show_foreign_keys: true}) }
 
       let(:expected_content) do
         <<~CONTENT

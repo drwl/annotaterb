@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AnnotateRb
+module Annotaterb
   module ModelAnnotator
     class SingleFileAnnotator
       class << self
@@ -38,7 +38,7 @@ module AnnotateRb
           return false if parsed_file.has_skip_string?
           return false if !parsed_file.annotations_changed? && !options[:force]
 
-          abort "AnnotateRb error. #{file_name} needs to be updated, but annotaterb was run with `--frozen`." if options[:frozen]
+          abort "Annotaterb error. #{file_name} needs to be updated, but annotaterb was run with `--frozen`." if options[:frozen]
 
           updated_file_content = if !parsed_file.has_annotations?
             AnnotatedFile::Generator.new(old_content, annotation, annotation_position, parser_klass, parsed_file, options).generate

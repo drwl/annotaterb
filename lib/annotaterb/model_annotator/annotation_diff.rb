@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AnnotateRb
+module Annotaterb
   module ModelAnnotator
     # Plain old Ruby object for holding the differences
     class AnnotationDiff

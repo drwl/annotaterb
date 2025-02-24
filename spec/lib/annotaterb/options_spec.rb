@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::Options do
+RSpec.describe Annotaterb::Options do
   describe ".from" do
     subject { described_class.from(options, state) }
 

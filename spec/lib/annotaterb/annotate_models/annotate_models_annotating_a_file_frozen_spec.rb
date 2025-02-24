@@ -1,8 +1,8 @@
-RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
+RSpec.describe Annotaterb::ModelAnnotator::Annotator do
   include AnnotateTestHelpers
 
   describe "annotating a file" do
-    let(:options) { AnnotateRb::Options.new({}) }
+    let(:options) { Annotaterb::Options.new({}) }
 
     before do
       @model_dir = Dir.mktmpdir("annotate_models")
@@ -17,7 +17,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
           mock_column("id", :integer),
           mock_column("name", :string, limit: 50)
         ])
-      @schema_info = AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder.new(@klass, options).build
+      @schema_info = Annotaterb::ModelAnnotator::Annotation::AnnotationBuilder.new(@klass, options).build
     end
 
     # TODO: Check out why this test fails due to test pollution
@@ -29,7 +29,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
       it "should abort with different annotation when frozen: true " do
         annotate_one_file
 
-        another_schema_info = AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder.new(
+        another_schema_info = Annotaterb::ModelAnnotator::Annotation::AnnotationBuilder.new(
           mock_class(:users, :id, [mock_column("id", :integer)]),
           options
         ).build

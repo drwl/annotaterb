@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AnnotateRb
+module Annotaterb
   module Commands
     class AnnotateRoutes
       def call(options)
@@ -11,7 +11,7 @@ module AnnotateRb
           pp options.to_h
         end
 
-        AnnotateRb::RouteAnnotator::Annotator.send(options[:target_action], options)
+        Annotaterb::RouteAnnotator::Annotator.send(options[:target_action], options)
       end
     end
   end

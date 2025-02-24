@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
+RSpec.describe Annotaterb::ModelAnnotator::RelatedFilesListBuilder do
   describe "#build" do
     subject { described_class.new(*args).build }
 
@@ -8,7 +8,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
     let(:file) { "app/models/test_default.rb" }
     let(:model_name) { "test_default" }
     let(:table_name) { "test_defaults" }
-    let(:options) { AnnotateRb::Options.new({}) }
+    let(:options) { Annotaterb::Options.new({}) }
     let(:include_nothing_options) do
       {
         exclude_tests: true,
@@ -26,7 +26,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
 
     context "when not adding any related files with an empty project", :isolated_environment do
       let(:options) do
-        AnnotateRb::Options.new(**include_nothing_options)
+        Annotaterb::Options.new(**include_nothing_options)
       end
 
       it { is_expected.to be_empty }
@@ -34,7 +34,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
 
     context "when not adding any related files with existing files", :isolated_environment do
       let(:options) do
-        AnnotateRb::Options.new(**include_nothing_options)
+        Annotaterb::Options.new(**include_nothing_options)
       end
 
       let(:model_name) { "test_default" }
@@ -77,7 +77,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
     end
 
     context "when including model tests", :isolated_environment do
-      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_tests: exclude_tests_option})) }
+      let(:options) { Annotaterb::Options.new(**include_nothing_options.merge({exclude_tests: exclude_tests_option})) }
       let(:exclude_tests_option) { false }
 
       let(:model_name) { "test_default" }
@@ -119,7 +119,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
     end
 
     context "when including fixtures", :isolated_environment do
-      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_fixtures: false})) }
+      let(:options) { Annotaterb::Options.new(**include_nothing_options.merge({exclude_fixtures: false})) }
 
       let(:model_name) { "test_default" }
       let(:fixture_directory) { "spec/fixtures" }
@@ -138,7 +138,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
     end
 
     context "when including factories", :isolated_environment do
-      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_factories: false})) }
+      let(:options) { Annotaterb::Options.new(**include_nothing_options.merge({exclude_factories: false})) }
 
       let(:model_name) { "test_default" }
       let(:factory_directory) { "spec/factories" }
@@ -157,7 +157,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
     end
 
     context "when including serializers", :isolated_environment do
-      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_serializers: false})) }
+      let(:options) { Annotaterb::Options.new(**include_nothing_options.merge({exclude_serializers: false})) }
 
       let(:model_name) { "test_default" }
 
@@ -190,7 +190,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
 
       context "when exclude_tests includes :serializer" do
         let(:options) do
-          AnnotateRb::Options.new(**include_nothing_options.merge(
+          Annotaterb::Options.new(**include_nothing_options.merge(
             {
               exclude_serializers: false,
               exclude_tests: [:serializer]
@@ -207,7 +207,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
 
       context "when exclude_tests does not include :serializer" do
         let(:options) do
-          AnnotateRb::Options.new(**include_nothing_options.merge(
+          Annotaterb::Options.new(**include_nothing_options.merge(
             {
               exclude_serializers: false,
               exclude_tests: []
@@ -225,7 +225,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
     end
 
     context "when including scaffolds (request specs)", :isolated_environment do
-      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_scaffolds: false})) }
+      let(:options) { Annotaterb::Options.new(**include_nothing_options.merge({exclude_scaffolds: false})) }
 
       let(:model_name) { "test_default" }
       let(:scaffolded_requests_directory) { "spec/requests" }
@@ -244,7 +244,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
 
       context "when exclude_tests includes :request" do
         let(:options) do
-          AnnotateRb::Options.new(**include_nothing_options.merge(
+          Annotaterb::Options.new(**include_nothing_options.merge(
             {
               exclude_scaffolds: false,
               exclude_tests: [:request]
@@ -257,7 +257,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
 
       context "when exclude_tests does not include :request" do
         let(:options) do
-          AnnotateRb::Options.new(**include_nothing_options.merge(
+          Annotaterb::Options.new(**include_nothing_options.merge(
             {
               exclude_scaffolds: false,
               exclude_tests: []
@@ -272,7 +272,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
     end
 
     context "when including scaffolds (routing specs)", :isolated_environment do
-      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_scaffolds: false})) }
+      let(:options) { Annotaterb::Options.new(**include_nothing_options.merge({exclude_scaffolds: false})) }
 
       let(:model_name) { "test_default" }
       let(:scaffolded_requests_directory) { "spec/routing" }
@@ -291,7 +291,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
 
       context "when exclude_tests includes :routing" do
         let(:options) do
-          AnnotateRb::Options.new(**include_nothing_options.merge(
+          Annotaterb::Options.new(**include_nothing_options.merge(
             {
               exclude_scaffolds: false,
               exclude_tests: [:routing]
@@ -304,7 +304,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
 
       context "when exclude_tests does not include :routing" do
         let(:options) do
-          AnnotateRb::Options.new(**include_nothing_options.merge(
+          Annotaterb::Options.new(**include_nothing_options.merge(
             {
               exclude_scaffolds: false,
               exclude_tests: []
@@ -319,7 +319,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
     end
 
     context "when including scaffolds (controller test)", :isolated_environment do
-      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_scaffolds: false})) }
+      let(:options) { Annotaterb::Options.new(**include_nothing_options.merge({exclude_scaffolds: false})) }
 
       let(:model_name) { "test_default" }
       let(:scaffolded_requests_directory) { "test/controllers" }
@@ -338,7 +338,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
 
       context "when exclude_tests includes :controller" do
         let(:options) do
-          AnnotateRb::Options.new(**include_nothing_options.merge(
+          Annotaterb::Options.new(**include_nothing_options.merge(
             {
               exclude_scaffolds: false,
               exclude_tests: [:controller]
@@ -351,7 +351,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
 
       context "when exclude_tests does not include :controller" do
         let(:options) do
-          AnnotateRb::Options.new(**include_nothing_options.merge(
+          Annotaterb::Options.new(**include_nothing_options.merge(
             {
               exclude_scaffolds: false,
               exclude_tests: []
@@ -366,7 +366,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
     end
 
     context "when including controllers", :isolated_environment do
-      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_controllers: false})) }
+      let(:options) { Annotaterb::Options.new(**include_nothing_options.merge({exclude_controllers: false})) }
 
       let(:model_name) { "test_default" }
       let(:controllers_directory) { "app/controllers" }
@@ -385,7 +385,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
     end
 
     context "when including helpers", :isolated_environment do
-      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_helpers: false})) }
+      let(:options) { Annotaterb::Options.new(**include_nothing_options.merge({exclude_helpers: false})) }
 
       let(:model_name) { "test_default" }
       let(:helpers_directory) { "app/helpers" }
@@ -404,7 +404,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
     end
 
     context "when including active admin models", :isolated_environment do
-      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({active_admin: true})) }
+      let(:options) { Annotaterb::Options.new(**include_nothing_options.merge({active_admin: true})) }
 
       let(:model_name) { "test_default" }
       let(:admin_directory) { "app/admin" }
@@ -424,7 +424,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
 
     context "when including additional file patterns", :isolated_environment do
       let(:patterns) { ["spec/custom/%MODEL_NAME%_custom.rb"] }
-      let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({additional_file_patterns: patterns})) }
+      let(:options) { Annotaterb::Options.new(**include_nothing_options.merge({additional_file_patterns: patterns})) }
 
       let(:model_name) { "test_default" }
       let(:custom_directory) { "spec/custom" }

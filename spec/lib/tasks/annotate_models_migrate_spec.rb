@@ -12,42 +12,42 @@ RSpec.describe "ActiveRecord migration rake task hooks" do
       Rake::Task["db:migrate"].invoke
     end
 
-    Rake.load_rakefile("annotate_rb/tasks/annotate_models_migrate.rake")
+    Rake.load_rakefile("annotaterb/tasks/annotate_models_migrate.rake")
 
     Rake.application.instance_variable_set(:@top_level_tasks, [subject])
   end
 
   describe "db:migrate" do
     it "should annotate model files" do
-      expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
+      expect(Annotaterb::Runner).to receive(:run).with(a_collection_including("models"))
       Rake.application.top_level
     end
   end
 
   describe "db:migrate:up" do
     it "should annotate model files" do
-      expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
+      expect(Annotaterb::Runner).to receive(:run).with(a_collection_including("models"))
       Rake.application.top_level
     end
   end
 
   describe "db:migrate:down" do
     it "should annotate model files" do
-      expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
+      expect(Annotaterb::Runner).to receive(:run).with(a_collection_including("models"))
       Rake.application.top_level
     end
   end
 
   describe "db:migrate:reset" do
     it "should annotate model files" do
-      expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
+      expect(Annotaterb::Runner).to receive(:run).with(a_collection_including("models"))
       Rake.application.top_level
     end
   end
 
   describe "db:rollback" do
     it "should annotate model files" do
-      expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
+      expect(Annotaterb::Runner).to receive(:run).with(a_collection_including("models"))
       Rake.application.top_level
     end
   end
@@ -55,7 +55,7 @@ RSpec.describe "ActiveRecord migration rake task hooks" do
   describe "db:migrate:redo" do
     it "should annotate model files after all migration tasks" do
       # Hooked 3 times by db:rollback, db:migrate, and db:migrate:redo tasks
-      expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models")).exactly(3).times
+      expect(Annotaterb::Runner).to receive(:run).with(a_collection_including("models")).exactly(3).times
 
       Rake.application.top_level
     end

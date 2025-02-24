@@ -4,4 +4,4 @@ Description:
     development mode.
 
 Example:
-    `rails generate annotate_rb:hook`
+    `rails generate annotaterb:hook`

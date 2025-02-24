@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AnnotateRb
+module Annotaterb
   module ModelAnnotator
     # Given a model file and options, this class will return a list of related files (e.g. fixture, controllers, etc)
     # to also annotate

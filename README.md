@@ -1,4 +1,4 @@
-## AnnotateRb
+## Annotaterb
 ### forked from the [Annotate aka AnnotateModels gem](https://github.com/ctran/annotate_models)
 
 A Ruby Gem that adds annotations to your Rails models and route files.
@@ -54,10 +54,10 @@ group :development do
 For Rails projects, model files can get automatically annotated after migration tasks. To do this, run the following command:
 
 ```sh
-$ bin/rails g annotate_rb:install
+$ bin/rails g annotaterb:install
 ```
 
-This will copy a rake task into your Rails project's `lib/tasks` directory that will hook into the Rails project rake tasks, automatically running AnnotateRb after database migration rake tasks.
+This will copy a rake task into your Rails project's `lib/tasks` directory that will hook into the Rails project rake tasks, automatically running Annotaterb after database migration rake tasks.
 
 To skip the automatic annotation that happens after a db task, pass the environment variable `ANNOTATERB_SKIP_ON_DB_TASKS=1` before your command.
 
@@ -73,25 +73,25 @@ $ bin/rails generator --help
 
 ...
 
-AnnotateRb:
-  annotate_rb:config
-  annotate_rb:hook
-  annotate_rb:install
-  annotate_rb:update_config
+Annotaterb:
+  annotaterb:config
+  annotaterb:hook
+  annotaterb:install
+  annotaterb:update_config
 ...
 
 ```
 
-`bin/rails g annotate_rb:config`
+`bin/rails g annotaterb:config`
 - Generates a new configuration file, `.annotaterb.yml`, using defaults from the gem.
 
-`bin/rails g annotate_rb:hook`
-- Installs the Rake file to automatically annotate Rails models on a database task (e.g. AnnotateRb will automatically run after running `bin/rails db:migrate`).
+`bin/rails g annotaterb:hook`
+- Installs the Rake file to automatically annotate Rails models on a database task (e.g. Annotaterb will automatically run after running `bin/rails db:migrate`).
 
-`bin/rails g annotate_rb:install`
+`bin/rails g annotaterb:install`
 - Runs the `config` and `hook` generator commands
 
-`bin/rails g annotate_rb:update_config`
+`bin/rails g annotaterb:update_config`
 - Appends to `.annotaterb.yml` any configuration key-value pairs that are used by the Gem. This is useful when there's a drift between the config file values and the gem defaults (i.e. when new features get added).
 
 ## Migrating from the annotate gem
@@ -99,7 +99,7 @@ Refer to the [migration guide](MIGRATION_GUIDE.md).
 
 ## Usage
 
-AnnotateRb has a CLI that you can use to add or remove annotations.
+Annotaterb has a CLI that you can use to add or remove annotations.
 
 ```sh
 # To show the CLI options

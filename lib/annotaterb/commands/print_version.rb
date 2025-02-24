@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module AnnotateRb
+module Annotaterb
   module Commands
     class PrintVersion
       def call(_options)
-        puts "AnnotateRb v#{Core.version}"
+        puts "Annotaterb v#{Core.version}"
       end
     end
   end

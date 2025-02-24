@@ -1,4 +1,4 @@
-RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
+RSpec.describe Annotaterb::ModelAnnotator::ModelClassGetter do
   describe ".call" do
     def create(filename, file_content, options)
       model_dir_path = options[:model_dir][0]
@@ -15,7 +15,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
       create(filename, file_content, options)
     end
 
-    let(:options) { AnnotateRb::Options.new(base_options) }
+    let(:options) { Annotaterb::Options.new(base_options) }
     let(:base_options) { {model_dir: [Dir.mktmpdir("annotate_models")]} }
     let :klass do
       model_dir_path = options[:model_dir][0]

@@ -1,4 +1,4 @@
-RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotationRemover do
+RSpec.describe Annotaterb::ModelAnnotator::SingleFileAnnotationRemover do
   describe ".call" do
     subject { described_class.call(path) }
 
@@ -97,7 +97,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotationRemover do
         EOS
       end
 
-      subject { described_class.call(path, AnnotateRb::Options.new({wrapper_open: "wrapper"})) }
+      subject { described_class.call(path, Annotaterb::Options.new({wrapper_open: "wrapper"})) }
 
       it "removes annotation" do
         expect(file_content_after_removal).to eq expected_result
@@ -121,7 +121,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotationRemover do
         EOS
       end
 
-      subject { described_class.call(path, AnnotateRb::Options.new({wrapper_open: "wrapper"})) }
+      subject { described_class.call(path, Annotaterb::Options.new({wrapper_open: "wrapper"})) }
 
       it "removes annotation" do
         expect(file_content_after_removal).to eq expected_result
@@ -170,7 +170,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotationRemover do
         EOS
       end
 
-      subject { described_class.call(path, AnnotateRb::Options.new({wrapper_close: "wrapper"})) }
+      subject { described_class.call(path, Annotaterb::Options.new({wrapper_close: "wrapper"})) }
 
       it "removes annotation" do
         expect(file_content_after_removal).to eq expected_result

@@ -1,4 +1,4 @@
-RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
+RSpec.describe Annotaterb::ModelAnnotator::Annotation::AnnotationBuilder do
   include AnnotateTestHelpers
 
   describe "#build" do
@@ -51,7 +51,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       end
 
       let(:options) do
-        AnnotateRb::Options.new({
+        Annotaterb::Options.new({
           show_indexes: true,
           with_comment: true,
           with_table_comments: true,
@@ -99,7 +99,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
 
     context "with primary key and using globalize gem" do
       let :options do
-        AnnotateRb::Options.new({})
+        Annotaterb::Options.new({})
       end
 
       let :primary_key do
@@ -155,7 +155,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       end
 
       let :options do
-        AnnotateRb::Options.new({classified_sort: true})
+        Annotaterb::Options.new({classified_sort: true})
       end
 
       let :columns do
@@ -190,7 +190,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       end
 
       let :options do
-        AnnotateRb::Options.new({classified_sort: false, with_comment: true})
+        Annotaterb::Options.new({classified_sort: false, with_comment: true})
       end
 
       let :columns do
@@ -231,7 +231,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       end
 
       let :options do
-        AnnotateRb::Options.new({format_rdoc: true})
+        Annotaterb::Options.new({format_rdoc: true})
       end
 
       let :columns do
@@ -266,7 +266,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       end
 
       let :options do
-        AnnotateRb::Options.new({format_yard: true})
+        Annotaterb::Options.new({format_yard: true})
       end
 
       let :columns do
@@ -302,7 +302,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
         end
 
         let :options do
-          AnnotateRb::Options.new({format_markdown: true})
+          Annotaterb::Options.new({format_markdown: true})
         end
 
         let :columns do
@@ -339,7 +339,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
         end
 
         let :options do
-          AnnotateRb::Options.new({format_markdown: true, show_indexes: true})
+          Annotaterb::Options.new({format_markdown: true, show_indexes: true})
         end
 
         let :columns do
@@ -584,7 +584,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
         end
 
         let :options do
-          AnnotateRb::Options.new({format_markdown: true, show_foreign_keys: true})
+          Annotaterb::Options.new({format_markdown: true, show_foreign_keys: true})
         end
 
         let :columns do
@@ -640,7 +640,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       end
 
       let :options do
-        AnnotateRb::Options.new({format_rdoc: true, with_comment: true, with_column_comments: true})
+        Annotaterb::Options.new({format_rdoc: true, with_comment: true, with_column_comments: true})
       end
 
       let :columns do
@@ -684,7 +684,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       end
 
       let :options do
-        AnnotateRb::Options.new({format_markdown: true, with_comment: true, with_column_comments: true})
+        Annotaterb::Options.new({format_markdown: true, with_comment: true, with_column_comments: true})
       end
 
       let :columns do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AnnotateRb
+module Annotaterb
   module ModelAnnotator
     # A plain old Ruby object (PORO) that contains all necessary information for SingleFileAnnotator
     class SingleFileAnnotatorInstruction

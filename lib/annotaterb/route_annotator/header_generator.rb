@@ -1,4 +1,4 @@
-module AnnotateRb
+module Annotaterb
   module RouteAnnotator
     class HeaderGenerator
       PREFIX = "== Route Map".freeze

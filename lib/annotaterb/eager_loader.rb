@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AnnotateRb
+module Annotaterb
   # Not sure what this does just yet
   class EagerLoader
     class << self

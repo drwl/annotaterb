@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module AnnotateRb
+module Annotaterb
   module ModelAnnotator
     module AnnotatedFile
-      autoload :Generator, "annotate_rb/model_annotator/annotated_file/generator"
-      autoload :Updater, "annotate_rb/model_annotator/annotated_file/updater"
+      autoload :Generator, "annotaterb/model_annotator/annotated_file/generator"
+      autoload :Updater, "annotaterb/model_annotator/annotated_file/updater"
     end
   end
 end

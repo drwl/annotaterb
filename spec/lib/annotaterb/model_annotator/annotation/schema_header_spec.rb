@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
+RSpec.describe Annotaterb::ModelAnnotator::Annotation::SchemaHeader do
   describe "#to_default" do
     subject { described_class.new(table_name, table_comment, options).to_default }
 
     let(:table_name) { "users" }
     let(:table_comment) {}
     let :options do
-      AnnotateRb::Options.new({})
+      Annotaterb::Options.new({})
     end
 
     let(:expected_header) do
@@ -23,7 +23,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
     context "with `with_comment: true`" do
       context "with `with_table_comments: true` and table has comments" do
         let :options do
-          AnnotateRb::Options.new({with_comment: true, with_table_comments: true})
+          Annotaterb::Options.new({with_comment: true, with_table_comments: true})
         end
 
         let(:table_comment) { "table_comments" }
@@ -43,7 +43,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
 
       context "with `with_table_comments: true` and table does not have comments" do
         let :options do
-          AnnotateRb::Options.new({with_comment: true, with_table_comments: true})
+          Annotaterb::Options.new({with_comment: true, with_table_comments: true})
         end
 
         let(:table_comment) {}
@@ -63,7 +63,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
 
       context "with `with_table_comments: false` and table has comments" do
         let :options do
-          AnnotateRb::Options.new({with_comment: true, with_table_comments: false})
+          Annotaterb::Options.new({with_comment: true, with_table_comments: false})
         end
 
         let(:table_comment) { "table_comments" }
@@ -85,7 +85,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
     context "with `with_comment: false`" do
       context "with `with_table_comments: true` and table has comments" do
         let :options do
-          AnnotateRb::Options.new({with_comment: false, with_table_comments: true})
+          Annotaterb::Options.new({with_comment: false, with_table_comments: true})
         end
 
         let(:table_comment) { "table_comments" }
@@ -105,7 +105,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
 
       context "with `with_table_comments: false` and table has comments" do
         let :options do
-          AnnotateRb::Options.new({with_comment: false, with_table_comments: false})
+          Annotaterb::Options.new({with_comment: false, with_table_comments: false})
         end
 
         let(:table_comment) { "table_comments" }
@@ -131,7 +131,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
     let(:table_name) { "users" }
     let(:table_comment) {}
     let :options do
-      AnnotateRb::Options.new({})
+      Annotaterb::Options.new({})
     end
 
     let(:expected_header) do

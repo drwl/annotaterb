@@ -2,7 +2,7 @@
 
 require "ripper"
 
-module AnnotateRb
+module Annotaterb
   module ModelAnnotator
     module FileParser
       class CustomParser < Ripper

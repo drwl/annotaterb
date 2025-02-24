@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::IndexAnnotation::AnnotationBuilder do
+RSpec.describe Annotaterb::ModelAnnotator::IndexAnnotation::AnnotationBuilder do
   include AnnotateTestHelpers
 
   describe "#build" do
@@ -23,21 +23,21 @@ RSpec.describe AnnotateRb::ModelAnnotator::IndexAnnotation::AnnotationBuilder do
         )
       end
 
-      ::AnnotateRb::ModelAnnotator::ModelWrapper.new(klass, options)
+      ::Annotaterb::ModelAnnotator::ModelWrapper.new(klass, options)
     end
-    let(:options) { ::AnnotateRb::Options.new({show_indexes: true}) }
+    let(:options) { ::Annotaterb::Options.new({show_indexes: true}) }
     let(:indexes) { [mock_index("index_rails_02e851e3b7", columns: ["id"])] }
 
     context "when show_indexes option is false" do
-      let(:options) { ::AnnotateRb::Options.new({show_indexes: false}) }
+      let(:options) { ::Annotaterb::Options.new({show_indexes: false}) }
 
-      it { is_expected.to be_a(AnnotateRb::ModelAnnotator::Components::NilComponent) }
+      it { is_expected.to be_a(Annotaterb::ModelAnnotator::Components::NilComponent) }
     end
 
     context "when there are no indexes" do
       let(:indexes) { [] }
 
-      it { is_expected.to be_a(AnnotateRb::ModelAnnotator::Components::NilComponent) }
+      it { is_expected.to be_a(Annotaterb::ModelAnnotator::Components::NilComponent) }
     end
 
     context "index includes an ordered index key" do

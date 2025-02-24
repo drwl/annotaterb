@@ -9,7 +9,7 @@ require "byebug"
 require "bigdecimal"
 require "tmpdir"
 
-require "annotate_rb"
+require "annotaterb"
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.

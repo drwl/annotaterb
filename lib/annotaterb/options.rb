@@ -2,7 +2,7 @@
 
 require "forwardable"
 
-module AnnotateRb
+module Annotaterb
   # Used to hold all of the options when annotating models and routes.
   # Should be the source of truth for what are valid options.
   class Options

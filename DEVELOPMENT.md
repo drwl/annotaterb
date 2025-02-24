@@ -1,10 +1,10 @@
 # Development
 
-After reading this file, you should have the necessary information to make changes to AnnotateRb.
+After reading this file, you should have the necessary information to make changes to Annotaterb.
 
 ## Context around testing
 
-AnnotateRb is a tool that annotates ActiveRecord model files with their model schema. At the time of writing, ActiveRecord has implementations for Postgres, SQLite3, MySQL, and Trilogy, although it should support other adapters. 
+Annotaterb is a tool that annotates ActiveRecord model files with their model schema. At the time of writing, ActiveRecord has implementations for Postgres, SQLite3, MySQL, and Trilogy, although it should support other adapters. 
 Databases and adapters can differ in their behaviors, so it's important to test run unit tests as well as integration tests with different adapters. 
 
 An example of database adapter differences: when creating a model migration, SQLite represents the id field as a `:integer` and MySQL represents it as `:bigint`.
@@ -18,9 +18,9 @@ This environment variable is required when running the dummyapp.
 
 ## On testing
 
-AnnotateRb uses RSpec as a testing framework for unit tests.
+Annotaterb uses RSpec as a testing framework for unit tests.
 
-AnnotateRb uses RSpec + Aruba to run integration tests.
+Annotaterb uses RSpec + Aruba to run integration tests.
 
 I have found integration tests hard to write because we are testing a command line interface. As far as I'm aware, there aren't ways to easily debug it (i.e. add `binding.pry` or `binding.irb` statements) due to RSpec + Aruba.
 
@@ -34,7 +34,7 @@ When I run into errors with newly written integration tests, I run the gem in th
 
 ## Linter
 
-AnnotateRb uses [StandardRb](https://github.com/standardrb/standard). This is open to changing in the future, but was chosen early on to spend as little time on configuring Rubocop.
+Annotaterb uses [StandardRb](https://github.com/standardrb/standard). This is open to changing in the future, but was chosen early on to spend as little time on configuring Rubocop.
 
 ## Development flow
 **If you intend to run integration tests locally, you will need to install the dependencies for dummyapp and setup the respective databases before being able to run them.**

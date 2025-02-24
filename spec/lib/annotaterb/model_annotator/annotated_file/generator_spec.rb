@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
+RSpec.describe Annotaterb::ModelAnnotator::AnnotatedFile::Generator do
   describe "#generate" do
     subject { described_class.new(*params).generate }
 
@@ -32,13 +32,13 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
       ANNOTATIONS
     end
     let(:annotation_position) { :position_in_class }
-    let(:parser_klass) { AnnotateRb::ModelAnnotator::FileParser::CustomParser }
+    let(:parser_klass) { Annotaterb::ModelAnnotator::FileParser::CustomParser }
     let(:parsed_file) do
-      AnnotateRb::ModelAnnotator::FileParser::ParsedFile.new(file_content, new_annotations, parser_klass, options).parse
+      Annotaterb::ModelAnnotator::FileParser::ParsedFile.new(file_content, new_annotations, parser_klass, options).parse
     end
 
     context 'when position is "before"' do
-      let(:options) { AnnotateRb::Options.new({position_in_class: "before"}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "before"}) }
 
       let(:expected_content) do
         <<~CONTENT
@@ -59,7 +59,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
     end
 
     context "when position is :before" do
-      let(:options) { AnnotateRb::Options.new({position_in_class: :before}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: :before}) }
 
       let(:expected_content) do
         <<~CONTENT
@@ -80,7 +80,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
     end
 
     context 'when position is "top"' do
-      let(:options) { AnnotateRb::Options.new({position_in_class: "top"}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "top"}) }
 
       let(:expected_content) do
         <<~CONTENT
@@ -101,7 +101,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
     end
 
     context "when position is :top" do
-      let(:options) { AnnotateRb::Options.new({position_in_class: :top}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: :top}) }
 
       let(:expected_content) do
         <<~CONTENT
@@ -122,7 +122,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
     end
 
     context 'when position is "after"' do
-      let(:options) { AnnotateRb::Options.new({position_in_class: "after"}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "after"}) }
 
       let(:expected_content) do
         <<~CONTENT
@@ -144,7 +144,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
     end
 
     context "when position is :after" do
-      let(:options) { AnnotateRb::Options.new({position_in_class: :after}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: :after}) }
 
       let(:expected_content) do
         <<~CONTENT
@@ -166,7 +166,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
     end
 
     context 'when position is "bottom"' do
-      let(:options) { AnnotateRb::Options.new({position_in_class: "bottom"}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "bottom"}) }
 
       let(:expected_content) do
         <<~CONTENT
@@ -188,7 +188,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
     end
 
     context "when position is :bottom" do
-      let(:options) { AnnotateRb::Options.new({position_in_class: :bottom}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: :bottom}) }
 
       let(:expected_content) do
         <<~CONTENT
@@ -210,7 +210,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
     end
 
     context "when the :wrapper_open option is specified" do
-      let(:options) { AnnotateRb::Options.new({position_in_class: "before", wrapper_open: "START"}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "before", wrapper_open: "START"}) }
 
       let(:expected_content) do
         <<~CONTENT
@@ -232,7 +232,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
     end
 
     context "when the :wrapper_close option is specified" do
-      let(:options) { AnnotateRb::Options.new({position_in_class: "before", wrapper_close: "END"}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "before", wrapper_close: "END"}) }
 
       let(:expected_content) do
         <<~CONTENT
@@ -254,7 +254,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
     end
 
     context "when both :wrapper_open and :wrapper_close are specified" do
-      let(:options) { AnnotateRb::Options.new({position_in_class: "before", wrapper_open: "START", wrapper_close: "END"}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "before", wrapper_open: "START", wrapper_close: "END"}) }
 
       let(:expected_content) do
         <<~CONTENT
@@ -297,7 +297,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
         ANNOTATIONS
       end
 
-      let(:options) { AnnotateRb::Options.new({position_in_class: "before"}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "before"}) }
 
       let(:expected_content) do
         <<~CONTENT
@@ -382,7 +382,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
           ANNOTATIONS
         end
 
-        let(:options) { AnnotateRb::Options.new({position_in_class: "after"}) }
+        let(:options) { Annotaterb::Options.new({position_in_class: "after"}) }
 
         let(:expected_content) do
           <<~CONTENT
@@ -408,7 +408,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
     end
 
     context 'when position is "before" for a FactoryBot factory' do
-      let(:options) { AnnotateRb::Options.new({position_in_class: "before"}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "before"}) }
 
       let(:file_content) do
         <<~FILE
@@ -442,7 +442,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
     end
 
     context 'when position is "after" for a FactoryBot factory' do
-      let(:options) { AnnotateRb::Options.new({position_in_class: "after"}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "after"}) }
 
       let(:file_content) do
         <<~FILE
@@ -477,7 +477,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
     end
 
     context 'when position is "before" for a Fabrication fabricator' do
-      let(:options) { AnnotateRb::Options.new({position_in_class: "before"}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "before"}) }
 
       let(:file_content) do
         <<~FILE
@@ -509,7 +509,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
     end
 
     context 'when position is "after" for a Fabrication fabricator' do
-      let(:options) { AnnotateRb::Options.new({position_in_class: "after"}) }
+      let(:options) { Annotaterb::Options.new({position_in_class: "after"}) }
 
       let(:file_content) do
         <<~FILE

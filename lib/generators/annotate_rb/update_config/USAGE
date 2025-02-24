@@ -3,4 +3,4 @@ Description:
     key-value pairs.
 
 Example:
-    `rails generate annotate_rb:update_config`
+    `rails generate annotaterb:update_config`

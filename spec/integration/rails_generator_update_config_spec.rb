@@ -25,7 +25,7 @@ RSpec.describe "Generator appends to config file", type: "aruba" do
     YML
   end
 
-  let(:generator_update_config_command) { "bin/rails generate annotate_rb:update_config" }
+  let(:generator_update_config_command) { "bin/rails generate annotaterb:update_config" }
 
   it "appends missing configuration key-value pairs" do
     write_file(config_file, config_file_content)

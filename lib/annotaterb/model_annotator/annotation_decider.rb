@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AnnotateRb
+module Annotaterb
   module ModelAnnotator
     # Class that encapsulates the logic to decide whether to annotate a model file and its related files or not.
     class AnnotationDecider

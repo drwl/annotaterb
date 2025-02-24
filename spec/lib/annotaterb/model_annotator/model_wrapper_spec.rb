@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::ModelWrapper do
+RSpec.describe Annotaterb::ModelAnnotator::ModelWrapper do
   include AnnotateTestHelpers
 
   describe "#columns" do
@@ -19,7 +19,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelWrapper do
     let(:name_column) { mock_column("name", :string, limit: 50) }
 
     context "with options[:ignore_columns]" do
-      let(:options) { AnnotateRb::Options.new({ignore_columns: "(id|updated_at|created_at)"}) }
+      let(:options) { Annotaterb::Options.new({ignore_columns: "(id|updated_at|created_at)"}) }
 
       it "should filter the columns set in option[:ignore_columns]" do
         is_expected.to contain_exactly(name_column)
@@ -44,7 +44,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelWrapper do
 
     context "with options[:with_comment] and options[:with_column_comments] are true" do
       let(:options) do
-        AnnotateRb::Options.new({
+        Annotaterb::Options.new({
           with_comment: true,
           with_column_comments: true,
           format_rdoc: format_rdoc_option
@@ -73,7 +73,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelWrapper do
 
     context "with options[:with_column_comments] is false" do
       let(:options) do
-        AnnotateRb::Options.new({
+        Annotaterb::Options.new({
           with_comment: true,
           with_column_comments: false,
           format_rdoc: format_rdoc_option

@@ -1,8 +1,8 @@
-RSpec.describe AnnotateRb::ModelAnnotator::FileToParserMapper do
+RSpec.describe Annotaterb::ModelAnnotator::FileToParserMapper do
   describe ".map" do
     subject { described_class.map(file_name) }
-    let(:custom_parser) { AnnotateRb::ModelAnnotator::FileParser::CustomParser }
-    let(:yml_parser) { AnnotateRb::ModelAnnotator::FileParser::YmlParser }
+    let(:custom_parser) { Annotaterb::ModelAnnotator::FileParser::CustomParser }
+    let(:yml_parser) { Annotaterb::ModelAnnotator::FileParser::YmlParser }
 
     context "when it is a ruby file" do
       let(:file_name) { "some_path/script.rb" }

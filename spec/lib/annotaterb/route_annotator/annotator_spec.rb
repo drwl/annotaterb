@@ -1,4 +1,4 @@
-RSpec.describe AnnotateRb::RouteAnnotator::Annotator do
+RSpec.describe Annotaterb::RouteAnnotator::Annotator do
   ROUTE_FILE = "config/routes.rb".freeze
 
   MESSAGE_ANNOTATED = "#{ROUTE_FILE} was annotated.".freeze
@@ -57,7 +57,7 @@ RSpec.describe AnnotateRb::RouteAnnotator::Annotator do
         allow(File).to receive(:exist?).with(ROUTE_FILE).and_return(true).once
         allow(File).to receive(:read).with(ROUTE_FILE).and_return(route_file_content).once
 
-        allow(AnnotateRb::RouteAnnotator::HeaderGenerator).to receive(:`).with("rails routes").and_return(rake_routes_result).once
+        allow(Annotaterb::RouteAnnotator::HeaderGenerator).to receive(:`).with("rails routes").and_return(rake_routes_result).once
       end
 
       context "When the result of `rake routes` is present" do

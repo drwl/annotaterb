@@ -1,4 +1,4 @@
-RSpec.describe AnnotateRb::ModelAnnotator::FileNameResolver do
+RSpec.describe Annotaterb::ModelAnnotator::FileNameResolver do
   describe ".call" do
     subject do
       described_class.call(filename_template, model_name, table_name)

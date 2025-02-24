@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require "annotate_rb"
+require "annotaterb"
 
-module AnnotateRb
+module Annotaterb
   module Generators
     class InstallGenerator < ::Rails::Generators::Base
       def install_hook_and_generate_defaults
-        generate "annotate_rb:hook"
-        generate "annotate_rb:config"
+        generate "annotaterb:hook"
+        generate "annotaterb:config"
       end
     end
   end

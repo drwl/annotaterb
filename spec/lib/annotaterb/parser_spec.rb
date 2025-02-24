@@ -1,4 +1,4 @@
-module AnnotateRb # rubocop:disable Metrics/ModuleLength
+module Annotaterb # rubocop:disable Metrics/ModuleLength
   RSpec.describe Parser do
     subject(:result) { described_class.parse(args, existing_options) }
     let(:existing_options) { {} }

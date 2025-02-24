@@ -2,7 +2,7 @@
 
 require "psych"
 
-module AnnotateRb
+module Annotaterb
   module ModelAnnotator
     module FileParser
       class YmlParser

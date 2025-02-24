@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::FileParser::YmlParser do
+RSpec.describe Annotaterb::ModelAnnotator::FileParser::YmlParser do
   subject { described_class.parse(input) }
 
   def check_it_parses_correctly

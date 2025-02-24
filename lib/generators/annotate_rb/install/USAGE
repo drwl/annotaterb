@@ -4,4 +4,4 @@ Description:
     annotates models when you do a db:migrate in development mode.
 
 Example:
-    `rails generate annotate_rb:install`
+    `rails generate annotaterb:install`

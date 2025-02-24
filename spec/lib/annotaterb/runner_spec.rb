@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::Runner do
+RSpec.describe Annotaterb::Runner do
   subject(:runner) { described_class.new }
 
   before do
@@ -18,7 +18,7 @@ RSpec.describe AnnotateRb::Runner do
       it "shows help text" do
         runner.run(["-h"])
 
-        expect($stdout.string).to include(AnnotateRb::Parser::BANNER_STRING)
+        expect($stdout.string).to include(Annotaterb::Parser::BANNER_STRING)
       end
     end
 
@@ -26,7 +26,7 @@ RSpec.describe AnnotateRb::Runner do
       it "shows help text" do
         runner.run(["help"])
 
-        expect($stdout.string).to include(AnnotateRb::Parser::BANNER_STRING)
+        expect($stdout.string).to include(Annotaterb::Parser::BANNER_STRING)
       end
     end
   end
@@ -36,7 +36,7 @@ RSpec.describe AnnotateRb::Runner do
       it "shows version text" do
         runner.run(["-v"])
 
-        version_string = AnnotateRb::Core.version
+        version_string = Annotaterb::Core.version
 
         expect($stdout.string).to include(version_string)
       end
@@ -46,7 +46,7 @@ RSpec.describe AnnotateRb::Runner do
       it "shows version text" do
         runner.run(["version"])
 
-        version_string = AnnotateRb::Core.version
+        version_string = Annotaterb::Core.version
 
         expect($stdout.string).to include(version_string)
       end
@@ -55,10 +55,10 @@ RSpec.describe AnnotateRb::Runner do
 
   describe "Annotating models" do
     let(:args) { ["models"] }
-    let(:command_double) { instance_double(AnnotateRb::Commands::AnnotateModels) }
+    let(:command_double) { instance_double(Annotaterb::Commands::AnnotateModels) }
 
     before do
-      allow(AnnotateRb::Commands::AnnotateModels).to receive(:new).and_return(command_double)
+      allow(Annotaterb::Commands::AnnotateModels).to receive(:new).and_return(command_double)
       allow(command_double).to receive(:call)
     end
 
@@ -71,10 +71,10 @@ RSpec.describe AnnotateRb::Runner do
 
   describe "Annotating routes" do
     let(:args) { ["routes"] }
-    let(:command_double) { instance_double(AnnotateRb::Commands::AnnotateRoutes) }
+    let(:command_double) { instance_double(Annotaterb::Commands::AnnotateRoutes) }
 
     before do
-      allow(AnnotateRb::Commands::AnnotateRoutes).to receive(:new).and_return(command_double)
+      allow(Annotaterb::Commands::AnnotateRoutes).to receive(:new).and_return(command_double)
       allow(command_double).to receive(:call)
     end
 

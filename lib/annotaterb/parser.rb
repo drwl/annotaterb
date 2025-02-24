@@ -1,6 +1,6 @@
 require "optparse"
 
-module AnnotateRb
+module Annotaterb
   # Class for handling command line arguments
   class Parser # rubocop:disable Metrics/ClassLength
     def self.parse(args, existing_options)

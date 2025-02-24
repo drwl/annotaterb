@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::ColumnWrapper do
+RSpec.describe Annotaterb::ModelAnnotator::ColumnAnnotation::ColumnWrapper do
   include AnnotateTestHelpers
 
   describe "#default_string" do
