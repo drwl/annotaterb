@@ -94,5 +94,33 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelFilesGetter do
         expect($stderr.string).to include("No models found in directory")
       end
     end
+
+    context "when `model_dir` is the glob pattern" do
+      let(:base_options) { {model_dir: ["app/models", "packs/*/app/models"]} }
+      let(:options) { AnnotateRb::Options.new(base_options, {working_args: []}) }
+
+      around do |example|
+        Dir.mktmpdir do |dir|
+          Dir.chdir(dir) do
+            FileUtils.mkdir_p(File.join("app", "models"))
+            FileUtils.touch(File.join("app", "models", "x.rb"))
+            FileUtils.mkdir_p(File.join("packs", "foo", "app", "models"))
+            FileUtils.touch(File.join("packs", "foo", "app", "models", "y.rb"))
+            FileUtils.mkdir_p(File.join("packs", "bar", "app", "models"))
+            FileUtils.touch(File.join("packs", "bar", "app", "models", "z.rb"))
+
+            example.run
+          end
+        end
+      end
+
+      it "returns all model files under directories that matches the glob pattern" do
+        is_expected.to contain_exactly(
+          ["app/models", "x.rb"],
+          ["packs/bar/app/models", "z.rb"],
+          ["packs/foo/app/models", "y.rb"]
+        )
+      end
+    end
   end
 end
