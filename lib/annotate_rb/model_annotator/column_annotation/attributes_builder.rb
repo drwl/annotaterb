@@ -78,6 +78,12 @@ module AnnotateRb
             end
           end
 
+          # Check if the column is a virtual column and print the function
+          if @options[:show_virtual_columns] && @column.virtual?
+            # Any whitespace in the function gets reduced to a single space
+            attrs << @column.default_function.gsub(/\s+/, " ").strip
+          end
+
           attrs
         end
 
