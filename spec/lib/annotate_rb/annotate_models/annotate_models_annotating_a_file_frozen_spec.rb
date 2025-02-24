@@ -23,7 +23,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
     # TODO: Check out why this test fails due to test pollution
     describe "frozen option" do
       it "should abort without existing annotation when frozen: true " do
-        expect { annotate_one_file frozen: true }.to raise_error SystemExit, /user.rb needs to be updated, but annotaterb was run with `--frozen`./
+        expect { annotate_one_file frozen: true }.to raise_error SystemExit, /user.rb needs to be updated, but annotate_rb was run with `--frozen`./
       end
 
       it "should abort with different annotation when frozen: true " do
@@ -36,7 +36,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
 
         @schema_info = another_schema_info
 
-        expect { annotate_one_file frozen: true }.to raise_error SystemExit, /user.rb needs to be updated, but annotaterb was run with `--frozen`./
+        expect { annotate_one_file frozen: true }.to raise_error SystemExit, /user.rb needs to be updated, but annotate_rb was run with `--frozen`./
       end
 
       it "should NOT abort with same annotation when frozen: true " do

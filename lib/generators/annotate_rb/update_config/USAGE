@@ -1,5 +1,5 @@
 Description:
-    Appends to .annotaterb.yml any missing default configuration
+    Appends to .annotate_rb.yml any missing default configuration
     key-value pairs.
 
 Example:
