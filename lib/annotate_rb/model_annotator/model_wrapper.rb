@@ -89,7 +89,7 @@ module AnnotateRb
           begin
             cols = columns
 
-            if with_comments?
+            if with_comments? && @options[:position_of_column_comment] == :with_name
               column_widths = cols.map do |column|
                 column.name.size + (column.comment ? Helper.width(column.comment) : 0)
               end
@@ -104,6 +104,10 @@ module AnnotateRb
 
             max_size
           end
+      end
+
+      def max_attributes_size
+        max_attributes_size ||= columns.max { |c| c.try(:attributes)&.join(", ")&.length || 0 }
       end
 
       def retrieve_indexes_from_table
@@ -135,6 +139,10 @@ module AnnotateRb
           @options[:with_column_comments] &&
           raw_columns.first.respond_to?(:comment) &&
           raw_columns.map(&:comment).any? { |comment| !comment.nil? }
+      end
+
+      def position_of_column_comment
+        @position_of_column_comment ||= @options[:position_of_column_comment]
       end
 
       def classified_sort(cols)

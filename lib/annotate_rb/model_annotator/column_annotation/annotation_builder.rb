@@ -22,13 +22,18 @@ module AnnotateRb
           formatted_column_type = TypeBuilder.new(@column, @options, column_defaults).build
 
           display_column_comments = @options[:with_comment] && @options[:with_column_comments]
-          col_name = if display_column_comments && @model.with_comments? && @column.comment
-            "#{@column.name}(#{@column.comment.gsub(/\n/, '\\n')})"
-          else
-            @column.name
-          end
+          display_column_comments &&= @model.with_comments? && @column.comment
+          position_of_column_comment = @options[:position_of_column_comment] || Options::FLAG_OPTIONS[:position_of_column_comment] if display_column_comments
 
-          _component = ColumnComponent.new(col_name, @max_size, formatted_column_type, column_attributes)
+          _component = ColumnComponent.new(
+            column: @column,
+            max_name_size: @max_size,
+            type: formatted_column_type,
+            attributes: column_attributes,
+            position_of_column_comment:,
+            max_attributes_size: @model.max_attributes_size
+          )
+
         end
 
         private

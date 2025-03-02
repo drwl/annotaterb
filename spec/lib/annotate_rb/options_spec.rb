@@ -76,7 +76,7 @@ RSpec.describe AnnotateRb::Options do
       end
     end
 
-    fdescribe "comment options" do
+    describe "comment options" do
       context "when using defaults" do
         let(:options) { {} }
 

@@ -19,7 +19,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             primary_key: "id",
             retrieve_indexes_from_table: [],
             with_comments?: false,
-            column_defaults: {}
+            column_defaults: {},
+            max_attributes_size: 'not null, primary key'.length
           )
         end
         let(:expected_result) do
@@ -41,7 +42,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
             with_comments?: false,
-            column_defaults: {}
+            column_defaults: {},
+            max_attributes_size: 'not null'.length
           )
         end
         let(:expected_result) do
@@ -65,7 +67,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             with_comments?: false,
             column_defaults: {
               "notifications" => []
-            }
+            },
+            max_attributes_size: 'default([]), is an Array'.length
           )
         end
         let(:expected_result) do
@@ -89,7 +92,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             with_comments?: false,
             column_defaults: {
               "notifications" => ["something"]
-            }
+            },
+            max_attributes_size: 'default(["something"]), is an Array'.length
           )
         end
         let(:expected_result) do
@@ -113,7 +117,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             with_comments?: false,
             column_defaults: {
               "notifications" => "alert"
-            }
+            },
+            max_attributes_size: 'default("alert")'.length
           )
         end
         let(:expected_result) do
@@ -137,9 +142,11 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
             with_comments?: true,
-            column_defaults: {}
+            column_defaults: {},
+            max_attributes_size: 'not null'.length
           )
         end
+
         let(:expected_result) do
           <<~COLUMN.strip
             #  id([is commented])  :integer          not null
@@ -148,6 +155,26 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
 
         it "returns the column annotation" do
           is_expected.to eq(expected_result)
+        end
+
+        context "when position of column comment is set to `rightmost_column`" do
+          let(:options) do
+            AnnotateRb::Options.new({
+              with_comment: true,
+              with_column_comments: true,
+              position_of_column_comment: :rightmost_column
+            })
+          end
+
+          let(:expected_result) do
+            <<~COLUMN.strip
+              #  id                  :integer          not null     [is commented]
+            COLUMN
+          end
+
+          it "returns the column annotation" do
+            is_expected.to eq(expected_result)
+          end
         end
       end
 
@@ -159,7 +186,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
             with_comments?: true,
-            column_defaults: {}
+            column_defaults: {},
+            max_attributes_size: 'not null'.length
           )
         end
 
@@ -208,7 +236,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
             with_comments?: true,
-            column_defaults: {}
+            column_defaults: {},
+            max_attributes_size: 'not null'.length
           )
         end
 
@@ -231,7 +260,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
             with_comments?: true,
-            column_defaults: {}
+            column_defaults: {},
+            max_attributes_size: 'not null'.length
           )
         end
         let(:expected_result) do
@@ -256,7 +286,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
             with_comments?: true,
-            column_defaults: {}
+            column_defaults: {},
+            max_attributes_size: 'not null'.length
           )
         end
         let(:expected_result) do
@@ -281,7 +312,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
             with_comments?: true,
-            column_defaults: {}
+            column_defaults: {},
+            max_attributes_size: 'not null'.length
           )
         end
         let(:expected_result) do
@@ -310,7 +342,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             primary_key: "id",
             retrieve_indexes_from_table: [],
             with_comments?: false,
-            column_defaults: {}
+            column_defaults: {},
+            max_attributes_size: 'not null, primary key'.length
           )
         end
 
@@ -336,7 +369,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
             with_comments?: false,
-            column_defaults: {}
+            column_defaults: {},
+            max_attributes_size: 'not null'.length
           )
         end
         let(:expected_result) do
@@ -363,7 +397,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
             with_comments?: true,
-            column_defaults: {}
+            column_defaults: {},
+            max_attributes_size: 'not null'.length
           )
         end
         let(:expected_result) do
@@ -394,7 +429,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             primary_key: "id",
             retrieve_indexes_from_table: [],
             with_comments?: false,
-            column_defaults: {}
+            column_defaults: {},
+            max_attributes_size: 0
           )
         end
 
@@ -421,7 +457,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
             with_comments?: false,
-            column_defaults: {}
+            column_defaults: {},
+            max_attributes_size: 0
           )
         end
         let(:expected_result) do
@@ -446,7 +483,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
             with_comments?: true,
-            column_defaults: {}
+            column_defaults: {},
+            max_attributes_size: 0
           )
         end
         let(:expected_result) do
@@ -477,7 +515,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             primary_key: "id",
             retrieve_indexes_from_table: [],
             with_comments?: false,
-            column_defaults: {}
+            column_defaults: {},
+            max_attributes_size: 'not null, primary key'.length
           )
         end
 
@@ -502,7 +541,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
             with_comments?: false,
-            column_defaults: {}
+            column_defaults: {},
+            max_attributes_size: 'not null'.length
           )
         end
         let(:expected_result) do
@@ -526,7 +566,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
             primary_key: "something_else",
             retrieve_indexes_from_table: [],
             with_comments?: true,
-            column_defaults: {}
+            column_defaults: {},
+            max_attributes_size: 'not null'.length
           )
         end
         let(:expected_result) do
