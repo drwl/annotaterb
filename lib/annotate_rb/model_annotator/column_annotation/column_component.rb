@@ -66,14 +66,14 @@ module AnnotateRb
         end
 
         def to_default
-          comment_rightmost = position_of_column_comment == :rightmost_column ? @column.comment : ""
+          comment_rightmost = (position_of_column_comment == :rightmost_column) ? @column.comment : ""
           joined_attributes = attributes.join(", ")
           format("#  %s:%s %s %s",
             mb_chars_ljust(name, max_name_size),
             mb_chars_ljust(type, BARE_TYPE_ALLOWANCE),
             mb_chars_ljust(joined_attributes, max_attributes_size.to_i + MIN_SPACES_BEFORE_COMMENT),
             comment_rightmost
-          ).rstrip
+                ).rstrip
         end
 
         private

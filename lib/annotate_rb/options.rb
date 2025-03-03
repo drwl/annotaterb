@@ -207,6 +207,10 @@ module AnnotateRb
       self
     end
 
+    def with_default_fallback(key)
+      @options[key] || DEFAULT_OPTIONS[key]
+    end
+
     def set_state(key, value, overwrite = false)
       if @state.key?(key) && !overwrite
         val = @state[key]
