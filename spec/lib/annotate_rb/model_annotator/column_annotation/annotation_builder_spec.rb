@@ -5,11 +5,18 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
 
   describe "#build" do
     let(:max_size) { 16 }
+    let(:position_of_column_comment) { :with_name }
 
     describe "bare format" do
       subject { described_class.new(column, model, max_size, options).build.to_default }
 
-      let(:options) { AnnotateRb::Options.new({with_comment: true, with_column_comments: true}) }
+      let(:options) do
+          AnnotateRb::Options.new({
+            with_comment: true,
+            with_column_comments: true,
+            position_of_column_comment: position_of_column_comment
+          })
+      end
 
       context "when the column is the primary key" do
         let(:column) { mock_column("id", :integer) }
@@ -203,6 +210,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
           it "returns the column annotation" do
             is_expected.to eq(expected_result)
           end
+
+          context "when position of column comment is set to `rightmost_column`" do
+            let(:position_of_column_comment) { :rightmost_column }
+            let(:expected_result) { "#  id                  :integer          not null     ＩＤ" }
+            it { is_expected.to eq(expected_result) }
+          end
         end
 
         context "with column comment in Cyrillic" do
@@ -211,6 +224,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
 
           it "returns the column annotation" do
             is_expected.to eq(expected_result)
+          end
+
+          context "when position of column comment is set to `rightmost_column`" do
+            let(:position_of_column_comment) { :rightmost_column }
+            let(:expected_result) { "#  cyrillic            :text(30)         not null     Кириллица" }
+            it { is_expected.to eq(expected_result) }
           end
         end
 
@@ -221,6 +240,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
           it "returns the column annotation" do
             is_expected.to eq(expected_result)
           end
+
+          context "when position of column comment is set to `rightmost_column`" do
+            let(:position_of_column_comment) { :rightmost_column }
+            let(:expected_result) { "#  japanese            :text(60)         not null     熊本大学　イタリア　宝島" }
+            it { is_expected.to eq(expected_result) }
+          end
         end
 
         context "with column comment in Arabic" do
@@ -229,6 +254,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
 
           it "returns the column annotation" do
             is_expected.to eq(expected_result)
+          end
+
+          context "when position of column comment is set to `rightmost_column`" do
+            let(:position_of_column_comment) { :rightmost_column }
+            let(:expected_result) { "#  arabic              :text(20)         not null     لغة" }
+            it { is_expected.to eq(expected_result) }
           end
         end
       end
@@ -251,6 +282,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
 
         it "returns the column annotation" do
           is_expected.to eq(expected_result)
+        end
+
+        context "when position of column comment is set to `rightmost_column`" do
+          let(:position_of_column_comment) { :rightmost_column }
+          let(:expected_result) { "#  notes                                        :text(55)         not null     Notes.\nMay include things like notes." }
+          it { is_expected.to eq(expected_result) }
         end
       end
 
@@ -417,6 +454,11 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
         it "returns the column annotation" do
           is_expected.to eq(expected_result)
         end
+
+        context "when position of column comment is set to `rightmost_column`" do
+          let(:position_of_column_comment) { :rightmost_column }
+          it { pending "not yet implemented in RDoc"; fail }
+        end
       end
     end
 
@@ -504,13 +546,25 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
         it "returns the column annotation" do
           is_expected.to eq(expected_result)
         end
+
+        context "when position of column comment is set to `rightmost_column`" do
+          let(:position_of_column_comment) { :rightmost_column }
+          it { pending "not yet implemented in Yard"; fail }
+        end
       end
     end
 
     describe "markdown format" do
       subject { described_class.new(column, model, max_size, options).build.to_markdown }
 
-      let(:options) { AnnotateRb::Options.new({format_markdown: true, with_comment: true, with_column_comments: true}) }
+      let(:options) do
+        AnnotateRb::Options.new({
+          format_markdown: true,
+          with_comment: true,
+          with_column_comments: true,
+          position_of_column_comment: position_of_column_comment
+        })
+      end
 
       context "when the column is the primary key" do
         let(:column) { mock_column("id", :integer) }
@@ -585,6 +639,21 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
 
         it "returns the column annotation" do
           is_expected.to eq(expected_result)
+        end
+
+        context "when position of column comment is set to `rightmost_column`" do
+          let(:position_of_column_comment) { :rightmost_column }
+          let(:expected_result) do
+            # Unsure if this is even proper markdown.
+            # TODO: Check and fix if this is incorrect.
+            <<~COLUMN.strip
+              # **`id`**               | `integer`          | `not null` | `[is commented]`
+            COLUMN
+          end
+
+          it "returns the column annotation" do
+            is_expected.to eq(expected_result)
+          end
         end
       end
     end

@@ -52,28 +52,35 @@ module AnnotateRb
         end
 
         def to_markdown
+          joined_attributes = attributes.join(", ").rstrip
           name_remainder = max_name_size - name.length - non_ascii_length(name)
           type_remainder = (MD_TYPE_ALLOWANCE - 2) - type.length
+          attributes_remainder = max_attributes_size + 1 - joined_attributes.length
+          comment_rightmost = position_of_column_comment != :rightmost_column ? "" : " | `#{@column.comment}`"
 
           # standard:disable Lint/FormatParameterMismatch
-          format("# **`%s`**%#{name_remainder}s | `%s`%#{type_remainder}s | `%s`",
+          format(
+            "# **`%s`**%#{name_remainder}s | `%s`%#{type_remainder}s | `%s`%#{attributes_remainder}s", #%s",
             name,
             " ",
             type,
             " ",
-            attributes.join(", ").rstrip).gsub("``", "  ").rstrip
+            joined_attributes,
+            comment_rightmost.to_s
+          ).gsub("``", "  ").rstrip
           # standard:enable Lint/FormatParameterMismatch
         end
 
         def to_default
           comment_rightmost = (position_of_column_comment == :rightmost_column) ? @column.comment : ""
           joined_attributes = attributes.join(", ")
-          format("#  %s:%s %s %s",
+          format(
+            "#  %s:%s %s %s",
             mb_chars_ljust(name, max_name_size),
             mb_chars_ljust(type, BARE_TYPE_ALLOWANCE),
             mb_chars_ljust(joined_attributes, max_attributes_size.to_i + MIN_SPACES_BEFORE_COMMENT),
             comment_rightmost
-                ).rstrip
+          ).rstrip
         end
 
         private
