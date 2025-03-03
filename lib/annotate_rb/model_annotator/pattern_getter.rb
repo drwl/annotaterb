@@ -64,7 +64,10 @@ module AnnotateRb
       def get
         current_patterns = []
 
-        @options[:root_dir].each do |root_directory|
+        root_dirs = @options[:root_dir].flat_map do |root_dir|
+          root_dir.empty? ? root_dir : Dir[root_dir]
+        end
+        root_dirs.each do |root_directory|
           Array(@pattern_types).each do |pattern_type|
             patterns = generate(root_directory, pattern_type)
 
