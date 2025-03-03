@@ -1,5 +1,31 @@
 # Changelog
 
+## [v4.14.0](https://github.com/drwl/annotaterb/tree/v4.14.0) (2025-02-17)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.13.0...v4.14.0)
+
+**Closed issues:**
+
+- How do I annotate models but NOT routes? [\#178](https://github.com/drwl/annotaterb/issues/178)
+- Model Annotation Not Updated When Modifying Table Columns Using change\_table. [\#169](https://github.com/drwl/annotaterb/issues/169)
+- annotate\_rb:install failing on Rails 8 [\#168](https://github.com/drwl/annotaterb/issues/168)
+- Annotations with enums changing between db:create db:migrate and then db:migrate [\#167](https://github.com/drwl/annotaterb/issues/167)
+- JSON parse error [\#155](https://github.com/drwl/annotaterb/issues/155)
+- Feature: Add Support for dynamic fixtures with ERB [\#149](https://github.com/drwl/annotaterb/issues/149)
+
+**Merged pull requests:**
+
+- Bump version to v4.14.0 [\#190](https://github.com/drwl/annotaterb/pull/190) ([drwl](https://github.com/drwl))
+- Add expected file to automatically require [\#185](https://github.com/drwl/annotaterb/pull/185) ([drwl](https://github.com/drwl))
+- Fix translation foreign key exclusion bug [\#181](https://github.com/drwl/annotaterb/pull/181) ([galori](https://github.com/galori))
+- Lock `concurrent-ruby` gem to fix CI [\#180](https://github.com/drwl/annotaterb/pull/180) ([tagliala](https://github.com/tagliala))
+- Chore: alert when multiple conmmands were selected [\#179](https://github.com/drwl/annotaterb/pull/179) ([OdenTakashi](https://github.com/OdenTakashi))
+- Updated COLUMN\_PATTERN to handle optional metadata \(e.g., constraints or descriptions\) enclosed in parentheses. [\#170](https://github.com/drwl/annotaterb/pull/170) ([hatsu38](https://github.com/hatsu38))
+- Opt-in for MFA requirement [\#166](https://github.com/drwl/annotaterb/pull/166) ([tagliala](https://github.com/tagliala))
+- Fix typos [\#165](https://github.com/drwl/annotaterb/pull/165) ([tagliala](https://github.com/tagliala))
+- Add support for virtual columns [\#163](https://github.com/drwl/annotaterb/pull/163) ([robbevp](https://github.com/robbevp))
+- Generate changelog for v4.13.0 [\#160](https://github.com/drwl/annotaterb/pull/160) ([drwl](https://github.com/drwl))
+
 ## [v4.13.0](https://github.com/drwl/annotaterb/tree/v4.13.0) (2024-10-21)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.12.0...v4.13.0)
@@ -293,7 +319,7 @@
 - Fix the default behavior for model annotator [\#20](https://github.com/drwl/annotaterb/pull/20) ([drwl](https://github.com/drwl))
 - Refactor model annotator [\#19](https://github.com/drwl/annotaterb/pull/19) ([drwl](https://github.com/drwl))
 - Removed unused helper methods and `Env` class [\#18](https://github.com/drwl/annotaterb/pull/18) ([drwl](https://github.com/drwl))
-- Update dummy app depdencies [\#17](https://github.com/drwl/annotaterb/pull/17) ([drwl](https://github.com/drwl))
+- Update dummy app dependencies [\#17](https://github.com/drwl/annotaterb/pull/17) ([drwl](https://github.com/drwl))
 
 ## [v4.0.0](https://github.com/drwl/annotaterb/tree/v4.0.0) (2023-05-03)
 

@@ -196,21 +196,12 @@ module AnnotateRb
       # These are the columns that the globalize gem needs to work but
       # are not necessary for the models to be displayed as annotations.
       def ignored_translation_table_columns
-        # Construct the foreign column name in the translations table
-        # eg. Model: Car, foreign column name: car_id
-        foreign_column_name = [
-          @klass.translation_class.to_s
-            .gsub("::Translation", "").gsub("::", "_")
-            .downcase,
-          "_id"
-        ].join.to_sym
-
         [
           :id,
           :created_at,
           :updated_at,
           :locale,
-          foreign_column_name
+          @klass.name.foreign_key.to_sym
         ]
       end
     end

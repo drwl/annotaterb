@@ -16,8 +16,9 @@ Gem::Specification.new do |spec|
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/drwl/annotaterb"
-  spec.metadata["changelog_uri"] = "https://github.com/drwl/annotaterb/blob/master/CHANGELOG.md"
+  spec.metadata["changelog_uri"] = "https://github.com/drwl/annotaterb/blob/main/CHANGELOG.md"
   spec.metadata["bug_tracker_uri"] = "https://github.com/drwl/annotaterb/issues"
+  spec.metadata["rubygems_mfa_required"] = "true"
 
   spec.files = Dir["VERSION", "CHANGELOG.md", "LICENSE.txt", "README.md", "lib/**/*"]
   spec.bindir = "exe"
