@@ -82,6 +82,31 @@ module AnnotateRb
         @klass.name.underscore
       end
 
+      def enum_columns
+        return [] unless connection.respond_to?(:enum_types)
+
+        raw_columns.select { |col| col.type == :enum }.map do |col|
+          enum_type = col.sql_type_metadata.sql_type
+          enum_values = if (enum_entry = connection.enum_types.find { |k,v| k == enum_type })
+            enum_entry.last.split(',').map { |v| v.strip.gsub(/^'|'$/, '') }
+          else
+            []
+          end
+
+          {
+            name: col.name,
+            enum_type: enum_type.gsub(/^enum\('|'\)$/, ''),
+            values: enum_values,
+            max_size: max_schema_info_width,
+            type: col.type
+          }
+        end
+      end
+
+      def has_enums?
+        enum_columns.any?
+      end
+
       # Calculates the max width of the schema for the model by looking at the columns, schema comments, with respect
       # to the options.
       def max_schema_info_width
