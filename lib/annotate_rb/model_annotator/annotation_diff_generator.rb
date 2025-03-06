@@ -11,7 +11,7 @@ module AnnotateRb
       #   - "#  status(a/b/c)    :string           not null"
       #   - "#  created_at       :datetime         not null"
       #   - "#  updated_at       :datetime         not null"
-      COLUMN_PATTERN = /^#[\t ]+[\w*.`\[\]():]+(?:\(.*?\))?[\t ]+.+$/
+      COLUMN_PATTERN = /^#[\t ]+[\w*.`\[\]():]+[\t ]+.+$/
 
       class << self
         def call(file_content, annotation_block)
