@@ -13,10 +13,16 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelFilesGetter do
     end
 
     context "when `model_dir` is valid" do
+      let(:other_root_dir) { Dir.mktmpdir }
       let(:model_dir) do
         dir = Dir.mktmpdir
         FileUtils.touch(File.join(dir, "foo.rb"))
         FileUtils.mkdir_p(File.join(dir, "bar"))
+
+        FileUtils.mkdir_p(File.join(other_root_dir, "fib", "models", "bee.rb"))
+        FileUtils.mkdir_p(File.join(other_root_dir, "foh", "models", "boo.rb"))
+        FileUtils.mkdir_p(File.join(other_root_dir, "fum", "models", "biz.rb"))
+
         FileUtils.touch(File.join(dir, "bar", "baz.rb"))
         FileUtils.mkdir_p(File.join(dir, "bar", "qux"))
         FileUtils.touch(File.join(dir, "bar", "qux", "quux.rb"))
@@ -35,6 +41,24 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelFilesGetter do
               [model_dir, "foo.rb"],
               [model_dir, File.join("bar", "baz.rb")],
               [model_dir, File.join("bar", "qux", "quux.rb")]
+
+            )
+          end
+        end
+
+       context 'when some model files are specified via a glob in another dir other_root_dir/*/models' do
+          let(:base_options) { {model_dir: [model_dir, "#{other_root_dir}/*/models"]} }
+          let(:options) { AnnotateRb::Options.new(base_options, {working_args: []}) }
+
+          it "returns specified files" do
+            is_expected.to contain_exactly(
+              [File.join(other_root_dir, "fib", "models"), "bee.rb"],
+              [File.join(other_root_dir, "foh", "models"), "boo.rb"],
+              [File.join(other_root_dir, "fum", "models"), "biz.rb"],
+              [model_dir, "foo.rb"],
+              [model_dir, File.join("bar", "baz.rb")],
+              [model_dir, File.join("bar", "qux", "quux.rb")]
+
             )
           end
         end
@@ -57,6 +81,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelFilesGetter do
             "./#{File.join(additional_model_dir, "corge/grault.rb")}" # Specification by relative path
           ]
         end
+
 
         context "when no option is specified" do
           let(:base_options) { {model_dir: [model_dir, additional_model_dir]} }

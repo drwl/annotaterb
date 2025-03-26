@@ -14,6 +14,22 @@ module AnnotateRb
           return model_files if model_files.any?
 
           options[:model_dir].each do |dir|
+            dir_is_glob = dir.include?("*")
+
+            if dir_is_glob
+              Dir.glob(dir).each do |sub_dir|
+                Dir.chdir(sub_dir) do
+                  list = if options[:ignore_model_sub_dir]
+                    Dir["*.rb"].map { |f| [sub_dir, f] }
+                  else
+                    Dir["**/*.rb"]
+                      .reject { |f| f["concerns/"] }
+                      .map { |f| [sub_dir, f] }
+                  end
+                  model_files.concat(list)
+                end
+              end
+            else
             Dir.chdir(dir) do
               list = if options[:ignore_model_sub_dir]
                 Dir["*.rb"].map { |f| [dir, f] }
@@ -24,6 +40,7 @@ module AnnotateRb
               end
               model_files.concat(list)
             end
+          end
           end
 
           model_files
@@ -37,9 +54,10 @@ module AnnotateRb
         private
 
         def list_model_files_from_argument(options)
-          return [] if options.get_state(:working_args).empty?
+          working_args = options.get_state(:working_args)
+          return [] if working_args.empty?
 
-          specified_files = options.get_state(:working_args).map { |file| File.expand_path(file) }
+          specified_files = working_args.map { |file| File.expand_path(file) }
 
           model_files = options[:model_dir].flat_map do |dir|
             absolute_dir_path = File.expand_path(dir)
