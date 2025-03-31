@@ -56,11 +56,11 @@ RSpec.describe AnnotateRb::Options do
   describe ".load_defaults" do
     subject { described_class.new(options, state).load_defaults }
 
+    let(:options) { {} }
     let(:state) { {} }
 
     context 'when default value of "show_complete_foreign_keys" is not set' do
       let(:key) { :show_complete_foreign_keys }
-      let(:options) { {} }
 
       it "returns false" do
         expect(subject[key]).to eq(false)
@@ -76,10 +76,14 @@ RSpec.describe AnnotateRb::Options do
       end
     end
 
+    describe "default timestamp_columns" do
+      it "sets defaults matching Rails' convention" do
+        expect(subject[:timestamp_columns]).to match_array(%w[created_at updated_at])
+      end
+    end
+
     describe "comment options" do
       context "when using defaults" do
-        let(:options) { {} }
-
         it "uses the defaults" do
           expect(subject[:with_comment]).to eq(true)
           expect(subject[:with_column_comments]).to eq(true)
