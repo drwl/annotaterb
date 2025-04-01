@@ -116,7 +116,7 @@ module AnnotateRb
         return indexes if indexes.any? || !@klass.table_name_prefix
 
         # Try to search the table without prefix
-        table_name_without_prefix = table_name.to_s.sub(@klass.table_name_prefix, "")
+        table_name_without_prefix = table_name.to_s.sub(@klass.table_name_prefix.to_s, "")
         begin
           @klass.connection.indexes(table_name_without_prefix)
         rescue ActiveRecord::StatementInvalid => _e
