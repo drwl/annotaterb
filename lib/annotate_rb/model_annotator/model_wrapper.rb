@@ -6,6 +6,8 @@ module AnnotateRb
       # Should be the wrapper for an ActiveRecord model that serves as the source of truth of the model
       # of the model that we're annotating
 
+      DEFAULT_TIMESTAMP_COLUMNS = %w[created_at updated_at]
+
       def initialize(klass, options)
         @klass = klass
         @options = options
@@ -177,10 +179,13 @@ module AnnotateRb
         associations = []
         id = nil
 
+        # specs don't load defaults, so ensure we have defaults here
+        timestamp_columns = @options[:timestamp_columns] || DEFAULT_TIMESTAMP_COLUMNS
+
         cols.each do |c|
           if c.name.eql?("id")
             id = c
-          elsif c.name.eql?("created_at") || c.name.eql?("updated_at")
+          elsif timestamp_columns.include?(c.name)
             timestamps << c
           elsif c.name[-3, 3].eql?("_id")
             associations << c
@@ -188,7 +193,10 @@ module AnnotateRb
             rest_cols << c
           end
         end
-        [rest_cols, timestamps, associations].each { |a| a.sort_by!(&:name) }
+
+        timestamp_order = timestamp_columns.each_with_index.to_h
+        timestamps.sort_by! { |col| timestamp_order[col.name] }
+        [rest_cols, associations].each { |a| a.sort_by!(&:name) }
 
         ([id] << rest_cols << timestamps << associations).flatten.compact
       end

@@ -182,6 +182,60 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       it 'works with option "classified_sort"' do
         is_expected.to eq expected_result
       end
+
+      context "when default timestamps are included" do
+        let(:columns) do
+          [
+            mock_column("parent_id", :integer),
+            mock_column("updated_at", :datetime),
+            mock_column("name", :string),
+            mock_column("id", :integer),
+            mock_column("deleted_at", :datetime),
+            mock_column("created_at", :datetime)
+          ]
+        end
+
+        it "sorts default timestamps second last before associations" do
+          is_expected.to eq <<~EOS
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id         :integer          not null, primary key
+            #  deleted_at :datetime         not null
+            #  name       :string           not null
+            #  created_at :datetime         not null
+            #  updated_at :datetime         not null
+            #  parent_id  :integer          not null
+            #
+          EOS
+        end
+
+        context "when timestamps_column option is set" do
+          let(:options) do
+            AnnotateRb::Options.new(
+              classified_sort: true,
+              timestamp_columns: %w[created_at updated_at deleted_at]
+            )
+          end
+
+          it "sorts configured timestamps into config order" do
+            is_expected.to eq <<~EOS
+              # == Schema Information
+              #
+              # Table name: users
+              #
+              #  id         :integer          not null, primary key
+              #  name       :string           not null
+              #  created_at :datetime         not null
+              #  updated_at :datetime         not null
+              #  deleted_at :datetime         not null
+              #  parent_id  :integer          not null
+              #
+            EOS
+          end
+        end
+      end
     end
 
     context "when geometry columns are included" do
