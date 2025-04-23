@@ -57,7 +57,7 @@ module AnnotateRb
 
           if model_files.size != specified_files.size
             missing_files = specified_files - model_files.map { |dir, rel_path| File.expand_path(rel_path, dir) }
-            warn "The specified file(s) could not be found in any directory matching patterns '#{model_directory_patterns.join("', '")}'': #{missing_files.join(', ')}."
+            warn "The specified file(s) could not be found in any directory matching patterns '#{model_directory_patterns.join("', '")}'': #{missing_files.join(", ")}."
             warn "Call 'annotaterb --help' for more info."
             # exit 1 # TODO: Return exit code back to caller. Right now it messes up RSpec being able to run
           end
