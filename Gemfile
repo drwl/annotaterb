@@ -2,6 +2,8 @@
 
 source "https://rubygems.org"
 
+gemspec
+
 gem "activerecord", require: false
 gem "rake"
 gem "rspec"
@@ -19,5 +21,3 @@ group :development, :test do
     gem "pry-byebug", require: false
   end
 end
-
-gemspec
