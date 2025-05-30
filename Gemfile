@@ -4,6 +4,8 @@ source "https://rubygems.org"
 
 gemspec
 
+gem "rake"
+
 group :development, :test do
   gem "aruba", "~> 2.1.0", require: false
   gem "byebug"
