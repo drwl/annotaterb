@@ -15,10 +15,9 @@ module AnnotateRb
             klass.eager_load!
           end
         else
-          options[:model_dir].each do |dir|
-            ::Rake::FileList["#{dir}/**/*.rb"].each do |fname|
-              require File.expand_path(fname)
-            end
+          model_files = ModelAnnotator::ModelFilesGetter.call(options)
+          model_files&.each do |model_file|
+            require model_file
           end
         end
       end
