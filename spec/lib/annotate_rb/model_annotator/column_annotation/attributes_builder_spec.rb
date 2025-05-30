@@ -153,6 +153,19 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AttributesBuilder d
 
         it { is_expected.to match_array(expected_result) }
       end
+
+      context "with a column including an index with a unique constraint" do
+        let(:column) { mock_column("name", :string) }
+        let(:expected_result) { ["not null", "primary key", "uniquely indexed"] }
+
+        let(:column_indices) do
+          [
+            mock_index("index_rails_02e851e3b8", columns: ["name"], unique: true)
+          ]
+        end
+
+        it { is_expected.to match_array(expected_result) }
+      end
     end
 
     context "when the hide_default_column_types option is 'skip' with a json column" do

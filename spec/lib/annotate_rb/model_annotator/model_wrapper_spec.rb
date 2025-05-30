@@ -99,4 +99,74 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelWrapper do
       end
     end
   end
+
+  describe "#retrieve_indexes_from_table" do
+    subject { described_class.new(*args).retrieve_indexes_from_table }
+    let(:args) { [klass, options] }
+
+    let(:klass) do
+      mock_class(
+        table_name,
+        :id,
+        [
+          id_column,
+          name_column
+        ],
+        [
+          index
+        ]
+      )
+    end
+
+    let(:table_name) { :users }
+    let(:table_name_prefix) { nil }
+
+    let(:id_column) { mock_column("id", :integer) }
+    let(:name_column) { mock_column("name", :string, limit: 50) }
+
+    let(:index) { mock_index("index_users_on_name") }
+    let(:options) { AnnotateRb::Options.new }
+
+    before do
+      allow(klass).to receive(:table_name_prefix).and_return(table_name_prefix)
+    end
+
+    it "should return the indexes from the table" do
+      is_expected.to contain_exactly(index)
+    end
+
+    context "when indexes not found and table_name_prefix is specified" do
+      let(:table_name) { "prefix_users" }
+      let(:table_name_prefix) { "prefix_" }
+
+      before do
+        allow(klass.connection).to receive(:indexes).with(table_name).and_return([])
+      end
+
+      it "should try to search indexes in table_name without prefix" do
+        expect(subject).to contain_exactly(index)
+        expect(klass.connection).to have_received(:indexes).with("users")
+      end
+
+      context "when table_name_prefix specified as symbol" do
+        let(:table_name_prefix) { :prefix_ }
+
+        it "should correct works as for string" do
+          expect(subject).to contain_exactly(index)
+          expect(klass.connection).to have_received(:indexes).with("users")
+        end
+      end
+
+      context "when indexes were not found and connection raises an ActiveRecord::StatementInvalid error" do
+        before do
+          allow(klass.connection).to receive(:indexes).with("users")
+            .and_raise(ActiveRecord::StatementInvalid)
+        end
+
+        it "should rescue it with empty array" do
+          expect(subject).to eq([])
+        end
+      end
+    end
+  end
 end
