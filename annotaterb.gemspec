@@ -24,4 +24,6 @@ Gem::Specification.new do |spec|
   spec.bindir = "exe"
   spec.executables = Dir["exe/*"].map { |exe| File.basename(exe) }
   spec.require_paths = ["lib"]
+
+  spec.add_dependency "activerecord", ">= 6.0.0"
 end
