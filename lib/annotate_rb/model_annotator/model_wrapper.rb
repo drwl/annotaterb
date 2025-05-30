@@ -109,6 +109,10 @@ module AnnotateRb
       end
 
       def retrieve_indexes_from_table
+        @indexes_from_table ||= _retrieve_indexes_from_table
+      end
+
+      def _retrieve_indexes_from_table
         table_name = @klass.table_name
         return [] unless table_name
 
