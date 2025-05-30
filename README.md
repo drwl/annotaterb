@@ -1,9 +1,11 @@
 ## AnnotateRb
+
 ### forked from the [Annotate aka AnnotateModels gem](https://github.com/ctran/annotate_models)
 
 A Ruby Gem that adds annotations to your Rails models and route files.
 
-----------
+---
+
 [![CI](https://github.com/drwl/annotaterb/actions/workflows/ci.yml/badge.svg)](https://github.com/drwl/annotaterb/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/annotaterb.svg)](https://badge.fury.io/rb/annotaterb)
 
@@ -32,7 +34,9 @@ The schema comment looks like this:
 class Task < ApplicationRecord
   ...
 ```
-----------
+
+---
+
 ## Installation
 
 ```sh
@@ -46,11 +50,12 @@ group :development do
   ...
 
   gem "annotaterb"
-  
+
   ...
 ```
 
 ### Automatically annotate models
+
 For Rails projects, model files can get automatically annotated after migration tasks. To do this, run the following command:
 
 ```sh
@@ -66,6 +71,7 @@ $ ANNOTATERB_SKIP_ON_DB_TASKS=1 bin/rails db:migrate
 ```
 
 ### Added Rails generators
+
 The following Rails generator commands get added.
 
 ```sh
@@ -83,18 +89,23 @@ AnnotateRb:
 ```
 
 `bin/rails g annotate_rb:config`
+
 - Generates a new configuration file, `.annotaterb.yml`, using defaults from the gem.
 
 `bin/rails g annotate_rb:hook`
+
 - Installs the Rake file to automatically annotate Rails models on a database task (e.g. AnnotateRb will automatically run after running `bin/rails db:migrate`).
 
 `bin/rails g annotate_rb:install`
+
 - Runs the `config` and `hook` generator commands
 
 `bin/rails g annotate_rb:update_config`
+
 - Appends to `.annotaterb.yml` any configuration key-value pairs that are used by the Gem. This is useful when there's a drift between the config file values and the gem defaults (i.e. when new features get added).
 
 ## Migrating from the annotate gem
+
 Refer to the [migration guide](MIGRATION_GUIDE.md).
 
 ## Usage
@@ -103,7 +114,7 @@ AnnotateRb has a CLI that you can use to add or remove annotations.
 
 ```sh
 # To show the CLI options
-$ bundle exec annotaterb 
+$ bundle exec annotaterb
 
 Usage: annotaterb [command] [options]
 
@@ -151,7 +162,8 @@ Additional options that work for annotating models and routes
         --additional-file-patterns path1,path2,path3
                                      Additional file paths or globs to annotate, separated by commas (e.g. `/foo/bar/%model_name%/*.rb,/baz/%model_name%.rb`)
     -d, --delete                     Remove annotations from all model files or the routes.rb file
-        --model-dir dir              Annotate model files stored in dir rather than app/models, separate multiple dirs with commas
+        --model-dir dir              Annotate model files stored in dir rather than app/models.
+                                     Separate multiple directories with commas. Glob patterns (e.g., `apps/*/models`) are also supported.
         --root-dir dir               Annotate files stored within root dir projects, separate multiple dirs with commas
         --ignore-model-subdirects    Ignore subdirectories of the models directory
         --sort                       Sort columns alphabetically, rather than in creation order
@@ -184,6 +196,7 @@ Additional options that work for annotating models and routes
 ## Configuration
 
 ### Storing default options
+
 Previously in the [Annotate](https://github.com/ctran/annotate_models) you could pass options through the CLI or store them as environment variables. Annotaterb removes dependency on the environment variables and instead can read values from a `.annotaterb.yml` file stored in the Rails project root.
 
 ```yml
@@ -192,11 +205,12 @@ Previously in the [Annotate](https://github.com/ctran/annotate_models) you could
 position: after
 ```
 
-Annotaterb reads first from the configuration file, if it exists, then merges it with any options passed into the CLI. 
+Annotaterb reads first from the configuration file, if it exists, then merges it with any options passed into the CLI.
 
 For further details visit the [section in the migration guide](MIGRATION_GUIDE.md#automatic-annotations-after-running-database-migration-commands).
 
 ### How to skip annotating a particular model
+
 If you want to always skip annotations on a particular model, add this string
 anywhere in the file:
 
