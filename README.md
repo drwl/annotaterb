@@ -149,7 +149,7 @@ Command options:
 Additional options that work for annotating models and routes
 
         --additional-file-patterns path1,path2,path3
-                                     Additional file paths or globs to annotate, separated by commas (e.g. `/foo/bar/%model_name%/*.rb,/baz/%model_name%.rb`)
+                                     Additional file paths or globs to annotate, separated by commas (e.g. `/foo/bar/%MODEL_NAME%/*.rb,/baz/%MODEL_NAME%.rb`)
     -d, --delete                     Remove annotations from all model files or the routes.rb file
         --model-dir dir              Annotate model files stored in dir rather than app/models, separate multiple dirs with commas
         --root-dir dir               Annotate files stored within root dir projects, separate multiple dirs with commas
