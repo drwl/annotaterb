@@ -15,7 +15,7 @@ RSpec.describe "Annotate routes", type: "aruba" do
     # Check that files have been copied over correctly
     expect(expected_routes_file).not_to eq(original_routes_file)
 
-    _cmd = run_command_and_stop("bundle exec annotate_rb routes", fail_on_error: true, exit_timeout: command_timeout_seconds)
+    _cmd = run_command_and_stop("bundle exec annotaterb routes", fail_on_error: true, exit_timeout: command_timeout_seconds)
 
     annotated_routes_file = read_file(routes_file)
 

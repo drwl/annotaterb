@@ -22,7 +22,7 @@ RSpec.configure do |config|
     copy_dummy_app_into_aruba_working_directory
 
     # Unset the bundler context from running annotate_rb integration specs.
-    #   This way, when `run_command("bundle exec annotate_rb")` runs, it runs as if it's within the context of dummyapp.
+    #   This way, when `run_command("bundle exec annotaterb")` runs, it runs as if it's within the context of dummyapp.
     unset_bundler_env_vars
   end
 

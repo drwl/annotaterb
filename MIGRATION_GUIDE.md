@@ -25,7 +25,7 @@ Previously, Annotate allowed you to annotate both model and route files in the s
 If you notice any differences please [report an issue](https://github.com/drwl/annotate_rb/issues/new) or [submit a pull request](https://github.com/drwl/annotate_rb/pulls) to update this document.
 
 ```sh
-$ bundle exec annotate_rb 
+$ bundle exec annotaterb 
 
 Usage: annotate_rb [command] [options]
 
