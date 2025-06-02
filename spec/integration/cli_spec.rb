@@ -12,7 +12,7 @@ RSpec.describe "CLI", type: "aruba" do
       remove("Gemfile") if exist?("Gemfile")
     end
 
-    let(:error_message) { "Please run annotate_rb from the root of the project." }
+    let(:error_message) { "Please run annotaterb from the root of the project." }
 
     it "exits and outputs an error message" do
       _cmd = run_command("bundle exec annotaterb")
@@ -23,7 +23,7 @@ RSpec.describe "CLI", type: "aruba" do
   end
 
   context "when running in a directory with a Rakefile and a Gemfile" do
-    let(:help_banner_fragment) { "Usage: annotate_rb [command] [options]" }
+    let(:help_banner_fragment) { "Usage: annotaterb [command] [options]" }
 
     it "outputs the help message" do
       _cmd = run_command("bundle exec annotaterb", fail_on_error: true, exit_timeout: command_timeout_seconds)
