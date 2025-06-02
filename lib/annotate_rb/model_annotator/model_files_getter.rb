@@ -13,7 +13,8 @@ module AnnotateRb
 
           return model_files if model_files.any?
 
-          options[:model_dir].each do |dir|
+          model_dirs = options[:model_dir].flat_map { |model_dir| Dir[model_dir] }
+          model_dirs.each do |dir|
             Dir.chdir(dir) do
               list = if options[:ignore_model_sub_dir]
                 Dir["*.rb"].map { |f| [dir, f] }
@@ -26,12 +27,14 @@ module AnnotateRb
             end
           end
 
-          model_files
-        rescue SystemCallError
-          warn "No models found in directory '#{options[:model_dir].join("', '")}'."
-          warn "Either specify models on the command line, or use the --model-dir option."
-          warn "Call 'annotate_rb --help' for more info."
-          # exit 1 # TODO: Return exit code back to caller. Right now it messes up RSpec being able to run
+          if model_files.empty?
+            warn "No models found in directory '#{options[:model_dir].join("', '")}'."
+            warn "Either specify models on the command line, or use the --model-dir option."
+            warn "Call 'annotate_rb --help' for more info."
+            # exit 1 # TODO: Return exit code back to caller. Right now it messes up RSpec being able to run
+          else
+            model_files
+          end
         end
 
         private

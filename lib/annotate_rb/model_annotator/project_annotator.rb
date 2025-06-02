@@ -34,6 +34,7 @@ module AnnotateRb
       private
 
       def build_instructions_for_file(file)
+        start = Time.now
         klass = ModelClassGetter.call(file, @options)
 
         instructions = []
@@ -51,6 +52,10 @@ module AnnotateRb
           _instruction = SingleFileAnnotatorInstruction.new(f, annotation, position_key, @options)
         end
         instructions.concat(related_file_instructions)
+
+        if @options[:debug]
+          puts "Built instructions for #{file} in #{Time.now - start}s"
+        end
 
         instructions
       end

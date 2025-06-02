@@ -10,18 +10,21 @@ Gem::Specification.new do |spec|
   spec.description = <<~DESCRIPTION.strip
     Annotates Rails/ActiveRecord Models, routes, fixtures, and others based on the database schema.
   DESCRIPTION
-  spec.homepage = "https://github.com/drwl/annotate_rb"
+  spec.homepage = "https://github.com/drwl/annotaterb"
   spec.license = "BSD-2-Clause"
   spec.required_ruby_version = ">= 2.7.0"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "https://github.com/drwl/annotate_rb"
-  spec.metadata["changelog_uri"] = "https://github.com/drwl/annotate_rb/blob/master/CHANGELOG.md"
-  spec.metadata["bug_tracker_uri"] = "https://github.com/drwl/annotate_rb/issues"
+  spec.metadata["source_code_uri"] = "https://github.com/drwl/annotaterb"
+  spec.metadata["changelog_uri"] = "https://github.com/drwl/annotaterb/blob/main/CHANGELOG.md"
+  spec.metadata["bug_tracker_uri"] = "https://github.com/drwl/annotaterb/issues"
   spec.metadata["rubygems_mfa_required"] = "true"
 
   spec.files = Dir["VERSION", "CHANGELOG.md", "LICENSE.txt", "README.md", "lib/**/*"]
   spec.bindir = "exe"
   spec.executables = Dir["exe/*"].map { |exe| File.basename(exe) }
   spec.require_paths = ["lib"]
+
+  spec.add_dependency "activerecord", ">= 6.0.0"
+  spec.add_dependency "activesupport", ">= 6.0.0"
 end
