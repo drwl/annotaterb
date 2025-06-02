@@ -231,7 +231,7 @@ module AnnotateRb
     # Guard against user inputting strings instead of symbols
     def symbolize_exclude_tests
       # `:exclude_tests` option is being expanded to function as a boolean OR an array of symbols
-      # https://github.com/drwl/annotate_rb/issues/103
+      # https://github.com/drwl/annotaterb/issues/103
 
       if @options[:exclude_tests].is_a?(Array)
         @options[:exclude_tests].map! do |item|

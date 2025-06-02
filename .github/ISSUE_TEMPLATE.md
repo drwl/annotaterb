@@ -8,7 +8,7 @@ $ show your commands here.
 
 ## Version
 
-- annotate_rb version
+- annotaterb version
 - rails version
 - ruby version
 - database version

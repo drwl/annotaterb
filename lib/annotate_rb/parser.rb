@@ -8,7 +8,7 @@ module AnnotateRb
     end
 
     BANNER_STRING = <<~BANNER.freeze
-      Usage: annotate_rb [command] [options]
+      Usage: annotaterb [command] [options]
 
       Commands:
           models [options]
@@ -160,7 +160,7 @@ module AnnotateRb
     def add_model_options_to_parser(option_parser)
       option_parser.separator("")
       option_parser.separator("Annotate model options:")
-      option_parser.separator(" " * 4 + "Usage: annotate_rb models [options]")
+      option_parser.separator(" " * 4 + "Usage: annotaterb models [options]")
       option_parser.separator("")
 
       option_parser.on("-a",
@@ -269,7 +269,7 @@ module AnnotateRb
     def add_route_options_to_parser(option_parser)
       option_parser.separator("")
       option_parser.separator("Annotate routes options:")
-      option_parser.separator(" " * 4 + "Usage: annotate_rb routes [options]")
+      option_parser.separator(" " * 4 + "Usage: annotaterb routes [options]")
       option_parser.separator("")
 
       option_parser.on("--ignore-routes REGEX",
