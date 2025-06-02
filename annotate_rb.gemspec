@@ -1,5 +1,5 @@
 Gem::Specification.new do |spec|
-  spec.name = "annotate_rb"
+  spec.name = "annotaterb"
   spec.version = File.read("VERSION").strip
   spec.authors = ["Andrew W. Lee"]
   spec.email = ["git@drewlee.com"]
