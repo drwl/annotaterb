@@ -4,8 +4,8 @@
 A Ruby Gem that adds annotations to your Rails models and route files.
 
 ----------
-[![CI](https://github.com/drwl/annotate_rb/actions/workflows/ci.yml/badge.svg)](https://github.com/drwl/annotate_rb/actions/workflows/ci.yml)
-[![Gem Version](https://badge.fury.io/rb/annotate_rb.svg)](https://badge.fury.io/rb/annotate_rb)
+[![CI](https://github.com/drwl/annotaterb/actions/workflows/ci.yml/badge.svg)](https://github.com/drwl/annotaterb/actions/workflows/ci.yml)
+[![Gem Version](https://badge.fury.io/rb/annotaterb.svg)](https://badge.fury.io/rb/annotaterb)
 
 Adds comments summarizing the model schema or routes in your:
 
@@ -36,7 +36,7 @@ class Task < ApplicationRecord
 ## Installation
 
 ```sh
-$ gem install annotate_rb
+$ gem install annotaterb
 ```
 
 Or install it into your Rails project through the Gemfile:
@@ -45,7 +45,7 @@ Or install it into your Rails project through the Gemfile:
 group :development do
   ...
 
-  gem "annotate_rb"
+  gem "annotaterb"
   
   ...
 ```
@@ -103,9 +103,9 @@ AnnotateRb has a CLI that you can use to add or remove annotations.
 
 ```sh
 # To show the CLI options
-$ bundle exec annotate_rb 
+$ bundle exec annotaterb
 
-Usage: annotate_rb [command] [options]
+Usage: annotaterb [command] [options]
 
 Commands:
     models [options]
@@ -118,7 +118,7 @@ Options:
     -h, --help                       You're looking at it.
 
 Annotate model options:
-    Usage: annotate_rb models [options]
+    Usage: annotaterb models [options]
 
     -a, --active-admin               Annotate active_admin models
         --show-migration             Include the migration version number in the annotation
@@ -136,7 +136,7 @@ Annotate model options:
         --with-comment               include database comments in model annotations
 
 Annotate routes options:
-    Usage: annotate_rb routes [options]
+    Usage: annotaterb routes [options]
 
         --ignore-routes REGEX        don't annotate routes that match a given REGEX (i.e., `annotate -I '(mobile|resque|pghero)'`
         --timestamp                  Include timestamp in (routes) annotation
@@ -149,7 +149,7 @@ Command options:
 Additional options that work for annotating models and routes
 
         --additional-file-patterns path1,path2,path3
-                                     Additional file paths or globs to annotate, separated by commas (e.g. `/foo/bar/%MODEL_NAME%/*.rb,/baz/%MODEL_NAME%.rb`)
+                                     Additional file paths or globs to annotate, separated by commas (e.g. `/foo/bar/%model_name%/*.rb,/baz/%model_name%.rb`)
     -d, --delete                     Remove annotations from all model files or the routes.rb file
         --model-dir dir              Annotate model files stored in dir rather than app/models, separate multiple dirs with commas
         --root-dir dir               Annotate files stored within root dir projects, separate multiple dirs with commas
