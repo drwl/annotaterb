@@ -52,7 +52,7 @@ module AnnotateRb
 
         def name
           if display_table_comments? && table_comment
-            formatted_comment = "(#{table_comment.gsub(/\n/, "\\n")})"
+            formatted_comment = "(#{table_comment.gsub("\n", "\\n")})"
 
             "#{table_name}#{formatted_comment}"
           else

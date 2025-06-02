@@ -440,7 +440,7 @@ module AnnotateRb # rubocop:disable Metrics/ModuleLength
       describe option do
         Parser::FORMAT_TYPES.each do |format_type|
           context "when passing in format type '#{format_type}'" do
-            let(:format_key) { "format_#{format_type}".to_sym }
+            let(:format_key) { :"format_#{format_type}" }
             let(:args) { [option, format_type] }
 
             it "sets key for the format type to true" do
