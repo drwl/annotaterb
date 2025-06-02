@@ -3,7 +3,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotationRemover do
     subject { described_class.call(path) }
 
     let(:tmpdir) do
-      Dir.mktmpdir("annotate_rb")
+      Dir.mktmpdir("annotaterb")
     end
 
     let(:filename) { "some_file.rb" }

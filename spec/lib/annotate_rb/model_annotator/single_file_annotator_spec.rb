@@ -37,7 +37,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
 
       before do
-        @model_dir = Dir.mktmpdir("annotate_rb")
+        @model_dir = Dir.mktmpdir("annotaterb")
         (@model_file_name, _file_content) = write_model("user.rb", starting_file_content)
       end
 
@@ -87,7 +87,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
 
       before do
-        @model_dir = Dir.mktmpdir("annotate_rb")
+        @model_dir = Dir.mktmpdir("annotaterb")
         (@model_file_name, _file_content) = write_model("user.rb", starting_file_content)
       end
 
@@ -139,7 +139,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
 
       before do
-        @model_dir = Dir.mktmpdir("annotate_rb")
+        @model_dir = Dir.mktmpdir("annotaterb")
         (@model_file_name, _file_content) = write_model("user.rb", starting_file_content)
       end
 
@@ -190,7 +190,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
 
       before do
-        @model_dir = Dir.mktmpdir("annotate_rb")
+        @model_dir = Dir.mktmpdir("annotaterb")
         (@model_file_name, _file_content) = write_model("user.rb", starting_file_content)
       end
 
@@ -244,7 +244,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
 
       before do
-        @model_dir = Dir.mktmpdir("annotate_rb")
+        @model_dir = Dir.mktmpdir("annotaterb")
         (@model_file_name, _file_content) = write_model("user.rb", starting_file_content)
       end
 
@@ -295,7 +295,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
 
       before do
-        @model_dir = Dir.mktmpdir("annotate_rb")
+        @model_dir = Dir.mktmpdir("annotaterb")
         (@model_file_name, _file_content) = write_model("user.rb", starting_file_content)
 
         @klass = mock_class(:users,
@@ -363,7 +363,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
 
       before do
-        @model_dir = Dir.mktmpdir("annotate_rb")
+        @model_dir = Dir.mktmpdir("annotaterb")
         (@model_file_name, _file_content) = write_model("user.yml", starting_file_content)
       end
 
@@ -422,7 +422,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
 
       before do
-        @model_dir = Dir.mktmpdir("annotate_rb")
+        @model_dir = Dir.mktmpdir("annotaterb")
         (@model_file_name, _file_content) = write_model("user.yml", starting_file_content)
       end
 
