@@ -52,3 +52,6 @@ group :development do
   # gem "spring"
 end
 
+gem "bigdecimal"
+gem "logger"
+gem "mutex_m"

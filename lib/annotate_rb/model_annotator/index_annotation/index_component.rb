@@ -34,11 +34,19 @@ module AnnotateRb
             ""
           end
 
+          value = index.try(:include)
+          include_info = if value.present? && value.any?
+            " INCLUDE (#{value.join(",")})"
+          else
+            ""
+          end
+
           # standard:disable Lint/FormatParameterMismatch
           sprintf(
-            "#  %-#{max_size}.#{max_size}s %s%s%s%s%s",
+            "#  %-#{max_size}.#{max_size}s %s%s%s%s%s%s",
             index.name,
             "(#{columns_info.join(",")})",
+            include_info,
             unique_info,
             nulls_not_distinct_info,
             where_info,
@@ -70,8 +78,16 @@ module AnnotateRb
             ""
           end
 
+          value = index.try(:include)
+          include_info = if value.present? && value.any?
+            " _include_ (#{value.join(",")})"
+          else
+            ""
+          end
+
           details = sprintf(
-            "%s%s%s%s",
+            "%s%s%s%s%s",
+            include_info,
             unique_info,
             nulls_not_distinct_info,
             where_info,
