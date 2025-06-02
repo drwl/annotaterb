@@ -1,0 +1,17 @@
+one:
+  boolean: false
+  date: 2023-07-04
+  datetime: 2023-07-04 12:34:56
+  decimal: 43.21
+  float: 12.34
+  integer: 99
+  string: hello world!
+
+two:
+  boolean: true
+  date: 2023-09-04
+  datetime: 2023-09-04 12:34:56
+  decimal: 87.65
+  float: 56.78
+  integer: 100
+  string: hello universe!
