@@ -26,7 +26,7 @@ module AnnotateRb
     }.freeze
 
     FLAG_OPTIONS = {
-      classified_sort: true, # ModelAnnotator
+      classified_sort: false, # ModelAnnotator
       exclude_controllers: true, # ModelAnnotator
       exclude_factories: false, # ModelAnnotator
       exclude_fixtures: false, # ModelAnnotator
