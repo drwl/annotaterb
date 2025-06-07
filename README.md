@@ -59,10 +59,10 @@ $ bin/rails g annotate_rb:install
 
 This will copy a rake task into your Rails project's `lib/tasks` directory that will hook into the Rails project rake tasks, automatically running AnnotateRb after database migration rake tasks.
 
-To skip the automatic annotation that happens after a db task, pass the environment variable `ANNOTATERB_SKIP_ON_DB_TASKS=1` before your command.
+To skip the automatic annotation that happens after a db task, pass the environment variable `ANNOTATE_RB_SKIP_ON_DB_TASKS=1` before your command.
 
 ```sh
-$ ANNOTATERB_SKIP_ON_DB_TASKS=1 bin/rails db:migrate
+$ ANNOTATE_RB_SKIP_ON_DB_TASKS=1 bin/rails db:migrate
 ```
 
 ### Added Rails generators
@@ -83,7 +83,7 @@ AnnotateRb:
 ```
 
 `bin/rails g annotate_rb:config`
-- Generates a new configuration file, `.annotaterb.yml`, using defaults from the gem.
+- Generates a new configuration file, `.annotate_rb.yml`, using defaults from the gem.
 
 `bin/rails g annotate_rb:hook`
 - Installs the Rake file to automatically annotate Rails models on a database task (e.g. AnnotateRb will automatically run after running `bin/rails db:migrate`).
@@ -92,7 +92,7 @@ AnnotateRb:
 - Runs the `config` and `hook` generator commands
 
 `bin/rails g annotate_rb:update_config`
-- Appends to `.annotaterb.yml` any configuration key-value pairs that are used by the Gem. This is useful when there's a drift between the config file values and the gem defaults (i.e. when new features get added).
+- Appends to `.annotate_rb.yml` any configuration key-value pairs that are used by the Gem. This is useful when there's a drift between the config file values and the gem defaults (i.e. when new features get added).
 
 ## Migrating from the annotate gem
 Refer to the [migration guide](MIGRATION_GUIDE.md).
@@ -103,7 +103,7 @@ AnnotateRb has a CLI that you can use to add or remove annotations.
 
 ```sh
 # To show the CLI options
-$ bundle exec annotaterb 
+$ bundle exec annotaterb
 
 Usage: annotaterb [command] [options]
 
@@ -184,10 +184,10 @@ Additional options that work for annotating models and routes
 ## Configuration
 
 ### Storing default options
-Previously in the [Annotate](https://github.com/ctran/annotate_models) you could pass options through the CLI or store them as environment variables. Annotaterb removes dependency on the environment variables and instead can read values from a `.annotaterb.yml` file stored in the Rails project root.
+Previously in the [Annotate](https://github.com/ctran/annotate_models) you could pass options through the CLI or store them as environment variables. Annotaterb removes dependency on the environment variables and instead can read values from a `.annotate_rb.yml` file stored in the Rails project root.
 
 ```yml
-# .annotaterb.yml
+# .annotate_rb.yml
 
 position: after
 ```

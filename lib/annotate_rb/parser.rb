@@ -412,14 +412,14 @@ module AnnotateRb
         Array,
         "Do not annotate fixtures, test files, factories, and/or serializers") do |exclusions|
         exclusions ||= EXCLUSION_LIST
-        exclusions.each { |exclusion| @options["exclude_#{exclusion}".to_sym] = true }
+        exclusions.each { |exclusion| @options[:"exclude_#{exclusion}"] = true }
       end
 
       option_parser.on("-f",
         "--format [bare|rdoc|yard|markdown]",
         FORMAT_TYPES,
         "Render Schema Information as plain/RDoc/Yard/Markdown") do |format_type|
-        @options["format_#{format_type}".to_sym] = true
+        @options[:"format_#{format_type}"] = true
       end
     end
   end
