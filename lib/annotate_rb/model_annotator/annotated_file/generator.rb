@@ -47,17 +47,44 @@ module AnnotateRb
         def content_annotated_before(parsed, content_without_annotations, write_position)
           same_write_position = @parsed_file.has_annotations? && @parsed_file.annotation_position.to_s == write_position
 
-          # Could error if there's no class or module declaration
-          _constant_name, line_number_before = parsed.starts.first
+          _constant_name, line_number_before = determine_annotation_position(parsed)
 
           content_with_annotations_written_before = []
           content_with_annotations_written_before << content_without_annotations.lines[0...line_number_before]
           content_with_annotations_written_before << $/ if @parsed_file.has_leading_whitespace? && same_write_position
-          content_with_annotations_written_before << @new_wrapped_annotations.lines
+          content_with_annotations_written_before << formatted_annotations(content_without_annotations, line_number_before)
           content_with_annotations_written_before << $/ if @parsed_file.has_trailing_whitespace? && same_write_position
           content_with_annotations_written_before << content_without_annotations.lines[line_number_before..]
 
           content_with_annotations_written_before.join
+        end
+
+        # Determines where to place the annotation based on the nested_position option.
+        # When nested_position is enabled, finds the most deeply nested class declaration
+        # to place annotations directly above nested classes instead of at the file top.
+        def determine_annotation_position(parsed)
+          return parsed.starts.first unless @options[:nested_position]
+
+          class_entries = parsed.starts.select { |name, _line| parsed.type_map[name] == :class }
+          class_entries.last || parsed.starts.first
+        end
+
+        # Formats annotations with appropriate indentation for consistent code structure.
+        # Applies the same indentation level as the target line to maintain proper
+        # code alignment when using nested positioning.
+        def formatted_annotations(content_without_annotations, line_number_before)
+          indentation = determine_indentation(content_without_annotations, line_number_before)
+          @new_wrapped_annotations.lines.map { |line| "#{indentation}#{line}" }
+        end
+
+        # Calculates the indentation string to apply to annotations for nested positioning.
+        # Extracts leading whitespace from the target line to preserve visual hierarchy
+        # and readability of nested code structures.
+        def determine_indentation(content_without_annotations, line_number_before)
+          return "" unless @options[:nested_position] && line_number_before > 0
+
+          target_line = content_without_annotations.lines[line_number_before]
+          target_line&.match(/^(\s*)/)&.[](1) || ""
         end
 
         def content_annotated_after(parsed, content_without_annotations)
