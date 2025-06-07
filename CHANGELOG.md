@@ -1,5 +1,35 @@
 # Changelog
 
+## [v4.15.0](https://github.com/drwl/annotaterb/tree/v4.15.0) (2025-05-30)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.14.1...v4.15.0)
+
+**Closed issues:**
+
+- Feature request: packs-rails support [\#99](https://github.com/drwl/annotaterb/issues/99)
+- Annotate models using Zeitwerk namespaces [\#82](https://github.com/drwl/annotaterb/issues/82)
+
+**Merged pull requests:**
+
+- Bump version to v4.15.0 [\#218](https://github.com/drwl/annotaterb/pull/218) ([drwl](https://github.com/drwl))
+- Add debug logs for model annotation [\#217](https://github.com/drwl/annotaterb/pull/217) ([jarredhawkins](https://github.com/jarredhawkins))
+- Cache retrieved indexes in ModelWrapper [\#215](https://github.com/drwl/annotaterb/pull/215) ([tr4b4nt](https://github.com/tr4b4nt))
+- feat: identify unique indexes in simple\_indexes option [\#214](https://github.com/drwl/annotaterb/pull/214) ([amerritt14](https://github.com/amerritt14))
+- fix: Handle case when table\_name\_prefix specified as symbol [\#208](https://github.com/drwl/annotaterb/pull/208) ([gururuby](https://github.com/gururuby))
+- Support the glob pattern in `root_dir` and `model_dir` [\#198](https://github.com/drwl/annotaterb/pull/198) ([sinsoku](https://github.com/sinsoku))
+- Fix `changelog_uri` in gemspec [\#192](https://github.com/drwl/annotaterb/pull/192) ([y-yagi](https://github.com/y-yagi))
+- Generate changelog for v4.14.0 [\#191](https://github.com/drwl/annotaterb/pull/191) ([drwl](https://github.com/drwl))
+- feat: add `timestamp_columns` config option [\#173](https://github.com/drwl/annotaterb/pull/173) ([pbernays](https://github.com/pbernays))
+
+## [v4.14.1](https://github.com/drwl/annotaterb/tree/v4.14.1) (2025-03-31)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.14.0...v4.14.1)
+
+**Closed issues:**
+
+- Sort by database order [\#194](https://github.com/drwl/annotaterb/issues/194)
+- “wrong number of arguments \(given 0, expected 1..2\)” when using enum in a Rails 8 model [\#184](https://github.com/drwl/annotaterb/issues/184)
+
 ## [v4.14.0](https://github.com/drwl/annotaterb/tree/v4.14.0) (2025-02-17)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.13.0...v4.14.0)

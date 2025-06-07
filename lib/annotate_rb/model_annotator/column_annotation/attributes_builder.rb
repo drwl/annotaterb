@@ -70,10 +70,16 @@ module AnnotateRb
             sorted_column_indices&.each do |index|
               indexed_columns = index.columns.reject { |i| i == @column.name }
 
-              attrs << if indexed_columns.empty?
-                "indexed"
+              index_text = if index.unique
+                "uniquely indexed"
               else
-                "indexed => [#{indexed_columns.join(", ")}]"
+                "indexed"
+              end
+
+              attrs << if indexed_columns.empty?
+                index_text
+              else
+                "#{index_text} => [#{indexed_columns.join(", ")}]"
               end
             end
           end
