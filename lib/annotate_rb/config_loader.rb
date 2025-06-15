@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'erb'
+require "erb"
 
 module AnnotateRb
   # Raised when a configuration file is not found.

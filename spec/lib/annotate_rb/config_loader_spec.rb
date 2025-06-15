@@ -1,4 +1,4 @@
-require 'tempfile'
+require "tempfile"
 
 RSpec.describe AnnotateRb::ConfigLoader do
   before do
@@ -11,11 +11,11 @@ RSpec.describe AnnotateRb::ConfigLoader do
     context "there is no config file" do
       let(:dotfile) { nil }
 
-      it { is_expected.to eq({})}
+      it { is_expected.to eq({}) }
     end
 
     context "there is a plain config file" do
-      let(:tempfile) { Tempfile.new('annotaterb') }
+      let(:tempfile) { Tempfile.new("annotaterb") }
       let(:dotfile) { tempfile.path }
 
       around do |example|
@@ -33,12 +33,12 @@ RSpec.describe AnnotateRb::ConfigLoader do
     end
 
     context "the config file has ERB in it" do
-      let(:tempfile) { Tempfile.new('annotaterb') }
+      let(:tempfile) { Tempfile.new("annotaterb") }
       let(:dotfile) { tempfile.path }
 
       around do |example|
         File.write(tempfile.path, <<~YAML)
-          <% model_dir = %w(foo/models bar/models baz/models) %>
+          <% model_dir = %w[foo/models bar/models baz/models] %>
           :model_dir: <%= model_dir.inspect %>
         YAML
         example.run
@@ -46,7 +46,7 @@ RSpec.describe AnnotateRb::ConfigLoader do
       end
 
       it "reads the dotfile successfully" do
-        expect(subject[:model_dir]).to eq(%w(foo/models bar/models baz/models))
+        expect(subject[:model_dir]).to eq(%w[foo/models bar/models baz/models])
       end
     end
   end
