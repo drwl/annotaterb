@@ -192,7 +192,7 @@ Previously in the [Annotate](https://github.com/ctran/annotate_models) you could
 position: after
 ```
 
-Annotaterb reads first from the configuration file, if it exists, then merges it with any options passed into the CLI. 
+Annotaterb reads first the configuration file, if it exists, passes its content through ERB, and merges the result with any options passed into the CLI.
 
 For further details visit the [section in the migration guide](MIGRATION_GUIDE.md#automatic-annotations-after-running-database-migration-commands).
 
