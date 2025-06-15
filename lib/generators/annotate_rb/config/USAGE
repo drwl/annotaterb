@@ -1,5 +1,5 @@
 Description:
-    Generates a default configuration file, `.annotaterb.yml` in your
+    Generates a default configuration file, `.annotate_rb.yml` in your
     Rails app project root.
 
 Example:

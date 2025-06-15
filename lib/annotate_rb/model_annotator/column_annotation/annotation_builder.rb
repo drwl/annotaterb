@@ -23,7 +23,7 @@ module AnnotateRb
 
           display_column_comments = @options[:with_comment] && @options[:with_column_comments]
           col_name = if display_column_comments && @model.with_comments? && @column.comment
-            "#{@column.name}(#{@column.comment.gsub(/\n/, '\\n')})"
+            "#{@column.name}(#{@column.comment.gsub("\n", '\\n')})"
           else
             @column.name
           end
