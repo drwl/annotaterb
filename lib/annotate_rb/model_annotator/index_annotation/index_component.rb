@@ -4,11 +4,12 @@ module AnnotateRb
   module ModelAnnotator
     module IndexAnnotation
       class IndexComponent < Components::Base
-        attr_reader :index, :max_size
+        attr_reader :index, :max_size, :options
 
-        def initialize(index, max_size)
+        def initialize(index, max_size, options)
           @index = index
           @max_size = max_size
+          @options = options
         end
 
         def to_default
@@ -34,11 +35,22 @@ module AnnotateRb
             ""
           end
 
+          include_info = ""
+          if options[:show_indexes_include]
+            value = index.try(:include)
+            include_info = if value.present? && value.any?
+              " INCLUDE (#{value.join(",")})"
+            else
+              ""
+            end
+          end
+
           # standard:disable Lint/FormatParameterMismatch
           sprintf(
-            "#  %-#{max_size}.#{max_size}s %s%s%s%s%s",
+            "#  %-#{max_size}.#{max_size}s %s%s%s%s%s%s",
             index.name,
             "(#{columns_info.join(",")})",
+            include_info,
             unique_info,
             nulls_not_distinct_info,
             where_info,
@@ -70,8 +82,19 @@ module AnnotateRb
             ""
           end
 
+          include_info = ""
+          if options[:show_indexes_include]
+            value = index.try(:include)
+            include_info = if value.present? && value.any?
+              " _include_ (#{value.join(",")})"
+            else
+              ""
+            end
+          end
+
           details = sprintf(
-            "%s%s%s%s",
+            "%s%s%s%s%s",
+            include_info,
             unique_info,
             nulls_not_distinct_info,
             where_info,
