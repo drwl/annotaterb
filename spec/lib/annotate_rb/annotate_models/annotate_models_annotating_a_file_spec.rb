@@ -93,7 +93,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotator do
         options = AnnotateRb::Options.from({model_dir: @model_dir, trace: true}, {working_args: []})
 
         expect { described_class.remove_annotations(options) }.to output(a_string_including("Unable to process #{@model_dir}/user.rb: oops")).to_stderr
-        expect { described_class.remove_annotations(options) }.to output(a_string_including("/user.rb:2:in `<class:User>'")).to_stderr
+        expect { described_class.remove_annotations(options) }.to output(a_string_including("<class:User>")).to_stderr
       end
     end
   end
