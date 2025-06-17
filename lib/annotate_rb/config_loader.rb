@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "erb"
+
 module AnnotateRb
   # Raised when a configuration file is not found.
   class ConfigNotFoundError < StandardError
@@ -20,8 +22,9 @@ module AnnotateRb
       # Method from Rubocop::ConfigLoader
       def load_yaml_configuration(absolute_path)
         file_contents = read_file(absolute_path)
+        yaml_code = ERB.new(file_contents).result
 
-        hash = yaml_safe_load(file_contents, absolute_path) || {}
+        hash = yaml_safe_load(yaml_code, absolute_path) || {}
 
         # TODO: Print config if debug flag/option is set
 
