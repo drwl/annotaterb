@@ -88,6 +88,16 @@ This change was done to reduce complexity in configuration and make the gem easi
 
 ----------
 
+### Dynamic configuration settings
+
+`.annotaterb.yml` is passed through ERB. Therefore, if your previous settings had dynamic values, you can still replicate that logic in the new configuration file:
+
+```yaml
+model_dir: <%= Dir["packs/*/app/models"].inspect %>
+```
+
+----------
+
 ### Automatic annotations after running database migration commands
 The old Annotate gem came with a generator that installed the following Rake file(s) into your Rails project.
 
