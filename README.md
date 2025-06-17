@@ -134,6 +134,7 @@ Annotate model options:
         --ignore-unknown-models      don't display warnings for bad model files
     -I, --ignore-columns REGEX       don't annotate columns that match a given REGEX (i.e., `annotate -I '^(id|updated_at|created_at)'`
         --with-comment               include database comments in model annotations
+        --with-column-comments       include column comments in model annotations 
 
 Annotate routes options:
     Usage: annotaterb routes [options]
@@ -192,7 +193,7 @@ Previously in the [Annotate](https://github.com/ctran/annotate_models) you could
 position: after
 ```
 
-Annotaterb reads first from the configuration file, if it exists, then merges it with any options passed into the CLI. 
+Annotaterb reads first the configuration file, if it exists, passes its content through ERB, and merges the result with any options passed into the CLI.
 
 For further details visit the [section in the migration guide](MIGRATION_GUIDE.md#automatic-annotations-after-running-database-migration-commands).
 
