@@ -162,7 +162,7 @@ Additional options that work for annotating models and routes
         --exclude                    Do not annotate fixtures, test files, factories, and/or serializers
     -f [bare|rdoc|yard|markdown],    Render Schema Information as plain/RDoc/Yard/Markdown
         --format
-    -c, --config_path [path]         Path to configuration file (by default, .annotaterb.yml in the root of the project)
+        --config_path [path]         Path to configuration file (by default, .annotaterb.yml in the root of the project)
     -p [before|top|after|bottom],    Place the annotations at the top (before) or the bottom (after) of the model/test/fixture/factory/route/serializer file(s)
         --position
         --pc, --position-in-class [before|top|after|bottom]
