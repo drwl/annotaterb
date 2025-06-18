@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   DESCRIPTION
   spec.homepage = "https://github.com/drwl/annotaterb"
   spec.license = "BSD-2-Clause"
-  spec.required_ruby_version = ">= 2.7.0"
+  spec.required_ruby_version = ">= 3.0.0"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/drwl/annotaterb"
@@ -24,4 +24,7 @@ Gem::Specification.new do |spec|
   spec.bindir = "exe"
   spec.executables = Dir["exe/*"].map { |exe| File.basename(exe) }
   spec.require_paths = ["lib"]
+
+  spec.add_dependency "activerecord", ">= 6.0.0"
+  spec.add_dependency "activesupport", ">= 6.0.0"
 end

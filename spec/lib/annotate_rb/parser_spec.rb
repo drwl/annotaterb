@@ -599,5 +599,14 @@ module AnnotateRb # rubocop:disable Metrics/ModuleLength
         expect(result).to include(config_path: "../annotaterb.yml")
       end
     end
+
+    describe "--nested-position" do
+      let(:option) { "--nested-position" }
+      let(:args) { [option] }
+
+      it "sets nested_position to true" do
+        expect(result).to include(nested_position: true)
+      end
+    end
   end
 end
