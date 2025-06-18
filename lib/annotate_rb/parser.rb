@@ -422,8 +422,7 @@ module AnnotateRb
         @options["format_#{format_type}".to_sym] = true
       end
 
-      option_parser.on("-c",
-        "--config_path [path]",
+      option_parser.on("--config-path [path]",
         "Path to configuration file (by default, .annotaterb.yml in the root of the project)") do |path|
         @options[:config_path] = path
       end

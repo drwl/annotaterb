@@ -590,5 +590,14 @@ module AnnotateRb # rubocop:disable Metrics/ModuleLength
         expect(result).to include(with_column_comments: false)
       end
     end
+
+    describe "--config-path" do
+      let(:option) { "--config-path=../annotaterb.yml" }
+      let(:args) { [option] }
+
+      it "sets config_path to the path" do
+        expect(result).to include(config_path: "../annotaterb.yml")
+      end
+    end
   end
 end
