@@ -26,7 +26,7 @@ module AnnotateRb
           klass_is_not_abstract = klass.respond_to?(:abstract_class?) && !klass.abstract_class?
           klass_table_exists = klass.respond_to?(:table_exists?) && klass.table_exists?
 
-          not_sure_this_conditional = (!@options[:exclude_sti_subclasses] || !(klass.superclass < ActiveRecord::Base && klass.table_name == klass.superclass.table_name))
+          not_sure_this_conditional = !@options[:exclude_sti_subclasses] || !(klass.superclass < ActiveRecord::Base && klass.table_name == klass.superclass.table_name)
 
           annotate_conditions = [
             klass_is_a_class,

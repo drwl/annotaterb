@@ -5,7 +5,7 @@ require "integration_spec_helper"
 RSpec.describe "Generator appends to config file", type: "aruba" do
   let(:command_timeout_seconds) { 10 }
 
-  let(:config_file) { ".annotaterb.yml" }
+  let(:config_file) { ".annotate_rb.yml" }
   let(:config_file_content) do
     <<~YML.strip
       ---
