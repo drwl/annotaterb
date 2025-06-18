@@ -2,14 +2,18 @@
 
 source "https://rubygems.org"
 
-gem "activerecord", require: false
+gemspec
+
 gem "rake"
-gem "rspec"
+gem "bigdecimal"
+gem "mutex_m"
 
 group :development, :test do
   gem "aruba", "~> 2.1.0", require: false
   gem "byebug"
   gem "guard-rspec", require: false
+
+  gem "rspec"
 
   gem "standard", "~> 1.29.0"
   gem "terminal-notifier-guard", require: false
@@ -19,5 +23,3 @@ group :development, :test do
     gem "pry-byebug", require: false
   end
 end
-
-gemspec

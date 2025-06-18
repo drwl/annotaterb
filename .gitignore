@@ -20,4 +20,5 @@
 /spec/dummyapp/log/
 /spec/dummyapp/db/schema.rb
 /spec/dummyapp/db/development.sqlite3
+/spec/dummyapp/tmp/
 /tmp/*

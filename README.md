@@ -134,6 +134,7 @@ Annotate model options:
         --ignore-unknown-models      don't display warnings for bad model files
     -I, --ignore-columns REGEX       don't annotate columns that match a given REGEX (i.e., `annotate -I '^(id|updated_at|created_at)'`
         --with-comment               include database comments in model annotations
+        --with-column-comments       include column comments in model annotations 
 
 Annotate routes options:
     Usage: annotaterb routes [options]
@@ -149,7 +150,7 @@ Command options:
 Additional options that work for annotating models and routes
 
         --additional-file-patterns path1,path2,path3
-                                     Additional file paths or globs to annotate, separated by commas (e.g. `/foo/bar/%model_name%/*.rb,/baz/%model_name%.rb`)
+                                     Additional file paths or globs to annotate, separated by commas (e.g. `/foo/bar/%MODEL_NAME%/*.rb,/baz/%MODEL_NAME%.rb`)
     -d, --delete                     Remove annotations from all model files or the routes.rb file
         --model-dir dir              Annotate model files stored in dir rather than app/models, separate multiple dirs with commas
         --root-dir dir               Annotate files stored within root dir projects, separate multiple dirs with commas
@@ -193,7 +194,7 @@ Previously in the [Annotate](https://github.com/ctran/annotate_models) you could
 position: after
 ```
 
-Annotaterb reads first from the configuration file, if it exists, then merges it with any options passed into the CLI. 
+Annotaterb reads first the configuration file, if it exists, passes its content through ERB, and merges the result with any options passed into the CLI.
 
 For further details visit the [section in the migration guide](MIGRATION_GUIDE.md#automatic-annotations-after-running-database-migration-commands).
 
