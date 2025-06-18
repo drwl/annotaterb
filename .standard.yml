@@ -1,6 +1,6 @@
 parallel: true
 format: progress
-ruby_version: 2.7
+ruby_version: 3.0
 ignore:
   - 'dummyapp/**/*'
   - 'spec/dummyapp/**/*'
