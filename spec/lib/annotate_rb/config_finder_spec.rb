@@ -22,7 +22,7 @@ RSpec.describe AnnotateRb::ConfigFinder do
       it "returns the default dotfile path" do
         expect(subject).to eq(File.expand_path(".annotaterb.yml", Dir.pwd))
       end
-    end 
+    end
 
     context "when the config path directory is not set and the dotfile does not exist" do
       it "returns nil" do

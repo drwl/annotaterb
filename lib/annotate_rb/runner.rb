@@ -18,7 +18,7 @@ module AnnotateRb
       config_file_options = ConfigLoader.load_config
       options = config_file_options.merge(parsed_options)
 
-      @options = Options.from(options, { working_args: remaining_args })
+      @options = Options.from(options, {working_args: remaining_args})
       AnnotateRb::RakeBootstrapper.call(@options)
 
       raise "Didn't specify a command" unless @options[:command]
