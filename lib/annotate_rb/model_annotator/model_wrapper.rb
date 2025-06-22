@@ -23,7 +23,7 @@ module AnnotateRb
             ignore_columns = @options[:ignore_columns]
             if ignore_columns
               cols = cols.reject do |col|
-                col.name.match(/#{ignore_columns}/)
+                col.name.match?(/#{ignore_columns}/)
               end
             end
 
