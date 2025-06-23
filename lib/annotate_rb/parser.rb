@@ -269,6 +269,11 @@ module AnnotateRb
           [klass]
         end
       end
+
+      option_parser.on("--nested-position",
+        "Place annotations directly above nested classes or modules instead of at the top of the file.") do
+        @options[:nested_position] = true
+      end
     end
 
     def add_route_options_to_parser(option_parser)
