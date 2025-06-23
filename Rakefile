@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "bundler"
+require "bundler/gem_helper"
 require "rspec/core/rake_task"
 
 namespace :spec do
@@ -16,3 +17,8 @@ end
 task spec: ["spec:unit", "spec:integration"]
 
 task default: ["spec:unit"]
+
+base_dir = File.join(File.dirname(__FILE__))
+helper = Bundler::GemHelper.new(base_dir)
+
+helper.install

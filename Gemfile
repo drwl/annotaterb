@@ -5,6 +5,8 @@ source "https://rubygems.org"
 gemspec
 
 gem "rake"
+gem "bigdecimal"
+gem "mutex_m"
 
 group :development, :test do
   gem "aruba", "~> 2.1.0", require: false
