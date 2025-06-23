@@ -114,7 +114,7 @@ RSpec.describe AnnotateRb::Options do
       end
 
       context 'when "position_of_column_comment" set to "rightmost_column"' do
-        let(:options) { {with_comment: true, position_of_column_comment: "rightmost_column" } }
+        let(:options) { {with_comment: true, position_of_column_comment: "rightmost_column"} }
 
         it 'set "position_of_column_comment" to the symbol of the configuration' do
           expect(subject[:with_comment]).to eq(true)

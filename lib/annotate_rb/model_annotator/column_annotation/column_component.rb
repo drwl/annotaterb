@@ -56,11 +56,11 @@ module AnnotateRb
           name_remainder = max_name_size - name.length - non_ascii_length(name)
           type_remainder = (MD_TYPE_ALLOWANCE - 2) - type.length
           attributes_remainder = max_attributes_size + 1 - joined_attributes.length
-          comment_rightmost = position_of_column_comment != :rightmost_column ? "" : " | `#{@column.comment}`"
+          comment_rightmost = (position_of_column_comment != :rightmost_column) ? "" : " | `#{@column.comment}`"
 
           # standard:disable Lint/FormatParameterMismatch
           format(
-            "# **`%s`**%#{name_remainder}s | `%s`%#{type_remainder}s | `%s`%#{attributes_remainder}s", #%s",
+            "# **`%s`**%#{name_remainder}s | `%s`%#{type_remainder}s | `%s`%#{attributes_remainder}s", # %s",
             name,
             " ",
             type,
