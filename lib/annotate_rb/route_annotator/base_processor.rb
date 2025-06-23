@@ -70,7 +70,7 @@ module AnnotateRb
         mode = :content
         header_position = 0
 
-        content.split(/\n/, -1).each_with_index do |line, line_number|
+        content.split("\n", -1).each_with_index do |line, line_number|
           if mode == :header && line !~ /\s*#/
             mode = :content
             real_content << line unless line.blank?
