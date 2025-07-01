@@ -22,3 +22,7 @@
 /spec/dummyapp/db/development.sqlite3
 /spec/dummyapp/tmp/
 /tmp/*
+
+# Until we offer a devcontainer setup on this project, ignoring its folder to
+# allow individual developpers to create a local one.
+.devcontainer/
