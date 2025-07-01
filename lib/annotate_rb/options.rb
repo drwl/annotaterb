@@ -48,6 +48,7 @@ module AnnotateRb
       show_check_constraints: false, # ModelAnnotator
       show_foreign_keys: true, # ModelAnnotator
       show_indexes: true, # ModelAnnotator
+      show_indexes_include: false, # ModelAnnotator
       show_virtual_columns: false, # ModelAnnotator
       simple_indexes: false, # ModelAnnotator
       sort: false, # ModelAnnotator
@@ -55,7 +56,8 @@ module AnnotateRb
       trace: false, # ModelAnnotator, but is part of Core
       with_comment: true, # ModelAnnotator
       with_column_comments: nil, # ModelAnnotator
-      with_table_comments: nil # ModelAnnotator
+      with_table_comments: nil, # ModelAnnotator
+      position_of_column_comment: :with_name # ModelAnnotator
     }.freeze
 
     OTHER_OPTIONS = {
@@ -118,13 +120,15 @@ module AnnotateRb
       :show_complete_foreign_keys,
       :show_foreign_keys,
       :show_indexes,
+      :show_indexes_include,
       :simple_indexes,
       :sort,
       :timestamp,
       :trace,
       :with_comment,
       :with_column_comments,
-      :with_table_comments
+      :with_table_comments,
+      :position_of_column_comment
     ].freeze
 
     OTHER_OPTION_KEYS = [
@@ -205,8 +209,13 @@ module AnnotateRb
       # Set column and table comments to default to :with_comment, if not set
       @options[:with_column_comments] = @options[:with_comment] if @options[:with_column_comments].nil?
       @options[:with_table_comments] = @options[:with_comment] if @options[:with_table_comments].nil?
+      @options[:position_of_column_comment] = @options[:position_of_column_comment].to_sym
 
       self
+    end
+
+    def with_default_fallback(key)
+      @options[key] || DEFAULT_OPTIONS[key]
     end
 
     def set_state(key, value, overwrite = false)

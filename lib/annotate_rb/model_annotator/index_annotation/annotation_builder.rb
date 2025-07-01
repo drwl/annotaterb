@@ -18,7 +18,7 @@ module AnnotateRb
           max_size = indexes.map { |index| index.name.size }.max + 1
 
           indexes = indexes.sort_by(&:name).map do |index|
-            IndexComponent.new(index, max_size)
+            IndexComponent.new(index, max_size, @options)
           end
 
           _annotation = Annotation.new(indexes)

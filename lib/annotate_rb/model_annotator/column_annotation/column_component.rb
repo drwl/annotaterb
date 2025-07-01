@@ -6,19 +6,31 @@ module AnnotateRb
       class ColumnComponent < Components::Base
         MD_TYPE_ALLOWANCE = 18
         BARE_TYPE_ALLOWANCE = 16
+        MIN_SPACES_BEFORE_COMMENT = 4
 
-        attr_reader :name, :max_size, :type, :attributes
+        attr_reader :column, :max_name_size, :type, :attributes, :position_of_column_comment, :max_attributes_size
 
-        def initialize(name, max_size, type, attributes)
-          @name = name
-          @max_size = max_size
+        def initialize(column:, max_name_size:, type:, attributes:, position_of_column_comment:, max_attributes_size:)
+          @column = column
+          @max_name_size = max_name_size
           @type = type
           @attributes = attributes
+          @position_of_column_comment = position_of_column_comment
+          @max_attributes_size = max_attributes_size
+        end
+
+        def name
+          case position_of_column_comment
+          when :with_name
+            "#{column.name}(#{column.comment.gsub(/\n/, '\\n')})"
+          else
+            column.name
+          end
         end
 
         def to_rdoc
           # standard:disable Lint/FormatParameterMismatch
-          format("# %-#{max_size}.#{max_size}s<tt>%s</tt>",
+          format("# %-#{max_name_size}.#{max_name_size}s<tt>%s</tt>",
             "*#{name}*::",
             attributes.unshift(type).join(", ")).rstrip
           # standard:enable Lint/FormatParameterMismatch
@@ -40,24 +52,35 @@ module AnnotateRb
         end
 
         def to_markdown
-          name_remainder = max_size - name.length - non_ascii_length(name)
+          joined_attributes = attributes.join(", ").rstrip
+          name_remainder = max_name_size - name.length - non_ascii_length(name)
           type_remainder = (MD_TYPE_ALLOWANCE - 2) - type.length
+          attributes_remainder = max_attributes_size + 1 - joined_attributes.length
+          comment_rightmost = (position_of_column_comment != :rightmost_column) ? "" : " | `#{@column.comment}`"
 
           # standard:disable Lint/FormatParameterMismatch
-          format("# **`%s`**%#{name_remainder}s | `%s`%#{type_remainder}s | `%s`",
+          format(
+            "# **`%s`**%#{name_remainder}s | `%s`%#{type_remainder}s | `%s`%#{attributes_remainder}s", # %s",
             name,
             " ",
             type,
             " ",
-            attributes.join(", ").rstrip).gsub("``", "  ").rstrip
+            joined_attributes,
+            comment_rightmost.to_s
+          ).gsub("``", "  ").rstrip
           # standard:enable Lint/FormatParameterMismatch
         end
 
         def to_default
-          format("#  %s:%s %s",
-            mb_chars_ljust(name, max_size),
+          comment_rightmost = (position_of_column_comment == :rightmost_column) ? @column.comment : ""
+          joined_attributes = attributes.join(", ")
+          format(
+            "#  %s:%s %s %s",
+            mb_chars_ljust(name, max_name_size),
             mb_chars_ljust(type, BARE_TYPE_ALLOWANCE),
-            attributes.join(", ")).rstrip
+            mb_chars_ljust(joined_attributes, max_attributes_size.to_i + MIN_SPACES_BEFORE_COMMENT),
+            comment_rightmost
+          ).rstrip
         end
 
         private

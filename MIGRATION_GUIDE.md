@@ -56,7 +56,7 @@ Command options:
 Additional options that work for annotating models and routes
 
         --additional-file-patterns path1,path2,path3
-                                     Additional file paths or globs to annotate, separated by commas (e.g. `/foo/bar/%model_name%/*.rb,/baz/%model_name%.rb`)
+                                     Additional file paths or globs to annotate, separated by commas (e.g. `/foo/bar/%MODEL_NAME%/*.rb,/baz/%MODEL_NAME%.rb`)
     -d, --delete                     Remove annotations from all model files or the routes.rb file
         --model-dir dir              Annotate model files stored in dir rather than app/models, separate multiple dirs with commas
         --root-dir dir               Annotate files stored within root dir projects, separate multiple dirs with commas
@@ -85,6 +85,16 @@ position: after
 This change was done to reduce complexity in configuration and make the gem easier to maintain.
 
 **Note: `.annotaterb.yml` is optional.** In its, AnnotateRb will use command line arguments and then the defaults. The defaults are implemented in `AnnotateRb::Options`.
+
+----------
+
+### Dynamic configuration settings
+
+`.annotaterb.yml` is passed through ERB. Therefore, if your previous settings had dynamic values, you can still replicate that logic in the new configuration file:
+
+```yaml
+model_dir: <%= Dir["packs/*/app/models"].inspect %>
+```
 
 ----------
 
@@ -122,4 +132,3 @@ When running the install generator command, `bin/rails g annotate_rb:install`, a
 It _should_ match the old Annotate defaults however there may be differences.
 
 **Note: there were bugs in Annotate that may have led to options not actually being used for some of the `exclude_*` options. If you experience different behavior despite using the same defaults then this may be why.**
-
