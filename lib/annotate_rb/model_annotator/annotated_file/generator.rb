@@ -63,6 +63,9 @@ module AnnotateRb
         # When nested_position is enabled, finds the most deeply nested class declaration
         # to place annotations directly above nested classes instead of at the file top.
         def determine_annotation_position(parsed)
+          # Handle empty files where no classes/modules are found
+          return [nil, 0] if parsed.starts.empty?
+
           return parsed.starts.first unless @options[:nested_position]
 
           class_entries = parsed.starts.select { |name, _line| parsed.type_map[name] == :class }
@@ -89,6 +92,17 @@ module AnnotateRb
 
         def content_annotated_after(parsed, content_without_annotations)
           _constant_name, line_number_after = parsed.ends.last
+
+          # Handle empty files where no classes/modules are found
+          if line_number_after.nil?
+            content_lines = content_without_annotations.lines
+            # For empty files, append annotations at the end
+            content_with_annotations_written_after = []
+            content_with_annotations_written_after << content_lines
+            content_with_annotations_written_after << $/ unless content_lines.empty?
+            content_with_annotations_written_after << @new_wrapped_annotations.lines
+            return content_with_annotations_written_after.join
+          end
 
           content_with_annotations_written_after = []
           content_with_annotations_written_after << content_without_annotations.lines[0..line_number_after]

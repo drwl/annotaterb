@@ -738,5 +738,160 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
         end
       end
     end
+
+    context "when file is empty" do
+      let(:file_content) { "" }
+      let(:new_annotations) do
+        <<~ANNOTATIONS
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+        ANNOTATIONS
+      end
+
+      context 'with position "before"' do
+        let(:options) { AnnotateRb::Options.new({position_in_class: "before"}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+          CONTENT
+        end
+
+        it "adds annotations to empty file" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context 'with position "after"' do
+        let(:options) { AnnotateRb::Options.new({position_in_class: "after"}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+          CONTENT
+        end
+
+        it "adds annotations to empty file" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context 'with position "top"' do
+        let(:options) { AnnotateRb::Options.new({position_in_class: "top"}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+          CONTENT
+        end
+
+        it "adds annotations to empty file" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context 'with position "bottom"' do
+        let(:options) { AnnotateRb::Options.new({position_in_class: "bottom"}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+          CONTENT
+        end
+
+        it "adds annotations to empty file" do
+          is_expected.to eq(expected_content)
+        end
+      end
+    end
+
+    context "when file contains only whitespace and comments" do
+      let(:file_content) do
+        <<~FILE
+          # Some random comment
+          
+          # Another comment
+        FILE
+      end
+      let(:new_annotations) do
+        <<~ANNOTATIONS
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+        ANNOTATIONS
+      end
+
+      context 'with position "before"' do
+        let(:options) { AnnotateRb::Options.new({position_in_class: "before"}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+            # Some random comment
+            
+            # Another comment
+          CONTENT
+        end
+
+        it "adds annotations at the beginning of file with only comments" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context 'with position "after"' do
+        let(:options) { AnnotateRb::Options.new({position_in_class: "after"}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            # Some random comment
+            
+            # Another comment
+
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+          CONTENT
+        end
+
+        it "adds annotations at the end of file with only comments" do
+          is_expected.to eq(expected_content)
+        end
+      end
+    end
   end
 end
