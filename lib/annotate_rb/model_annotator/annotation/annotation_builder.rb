@@ -59,17 +59,7 @@ module AnnotateRb
         end
 
         def build
-          if @options.get_state(:current_version).nil?
-            migration_version = begin
-              ActiveRecord::Migrator.current_version
-            rescue
-              0
-            end
-
-            @options.set_state(:current_version, migration_version)
-          end
-
-          version = @options.get_state(:current_version)
+          version = migration_version_for_model(@model)
           table_name = @model.table_name
           table_comment = @model.connection.try(:table_comment, @model.table_name)
           max_size = @model.max_schema_info_width
@@ -77,6 +67,30 @@ module AnnotateRb
           _annotation = Annotation.new(@options,
             version: version, table_name: table_name, table_comment: table_comment,
             max_size: max_size, model: @model).build
+        end
+
+        private
+
+        def migration_version_for_model(model)
+          return 0 unless @options[:include_version]
+
+          # Multi-database support: Cache migration versions per database connection to handle
+          # different schema versions across primary/secondary databases correctly.
+          # Example: primary → "current_version_primary", secondary → "current_version_secondary"
+          connection_pool_name = model.connection.pool.db_config.name
+          cache_key = "current_version_#{connection_pool_name}".to_sym
+
+          if @options.get_state(cache_key).nil?
+            migration_version = begin
+              model.connection.migration_context.current_version
+            rescue
+              0
+            end
+
+            @options.set_state(cache_key, migration_version)
+          end
+
+          @options.get_state(cache_key)
         end
       end
     end
