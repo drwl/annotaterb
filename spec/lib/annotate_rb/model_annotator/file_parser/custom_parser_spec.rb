@@ -321,5 +321,82 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
         check_it_parses_correctly
       end
     end
+
+    context "when file is completely empty" do
+      let(:input) { "" }
+      let(:expected_comments) { [] }
+      let(:expected_starts) { [] }
+      let(:expected_ends) { [] }
+
+      it "parses correctly and returns empty arrays" do
+        check_it_parses_correctly
+      end
+    end
+
+    context "when file contains only whitespace" do
+      let(:input) do
+        <<~FILE
+          
+          
+          
+        FILE
+      end
+      let(:expected_comments) { [] }
+      let(:expected_starts) { [] }
+      let(:expected_ends) { [] }
+
+      it "parses correctly and returns empty arrays" do
+        check_it_parses_correctly
+      end
+    end
+
+    context "when file contains only comments" do
+      let(:input) do
+        <<~FILE
+          # This is just a comment
+          # Another comment
+          
+          # Final comment
+        FILE
+      end
+      let(:expected_comments) do
+        [
+          ["# This is just a comment", 0],
+          ["# Another comment", 1],
+          ["# Final comment", 3]
+        ]
+      end
+      let(:expected_starts) { [] }
+      let(:expected_ends) { [] }
+
+      it "parses comments but returns empty arrays for starts and ends" do
+        check_it_parses_correctly
+      end
+    end
+
+    context "when file contains only block comments" do
+      let(:input) do
+        <<~FILE
+          =begin
+          This is a multi-line comment
+          with no actual Ruby code
+          =end
+        FILE
+      end
+      let(:expected_comments) do
+        [
+          ["=begin", 0],
+          ["This is a multi-line comment", 1],
+          ["with no actual Ruby code", 2],
+          ["=end", 3]
+        ]
+      end
+      let(:expected_starts) { [] }
+      let(:expected_ends) { [] }
+
+      it "parses block comments but returns empty arrays for starts and ends" do
+        check_it_parses_correctly
+      end
+    end
   end
 end
