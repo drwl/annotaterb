@@ -1,5 +1,34 @@
 # Changelog
 
+## [v4.17.0](https://github.com/drwl/annotaterb/tree/v4.17.0) (2025-07-14)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.16.0...v4.17.0)
+
+**Implemented enhancements:**
+
+- Place column comments at the end of the line \(feature suggestion\) [\#164](https://github.com/drwl/annotaterb/issues/164)
+
+**Fixed bugs:**
+
+- Model annotation chokes on an empty file [\#182](https://github.com/drwl/annotaterb/issues/182)
+
+**Closed issues:**
+
+- uninitialized constant Zeitwerk::VERSION [\#216](https://github.com/drwl/annotaterb/issues/216)
+- Incorrect annotation of fixture files when different models share the same table name in different databases [\#206](https://github.com/drwl/annotaterb/issues/206)
+- Should active record and active support be in the gemspec? [\#197](https://github.com/drwl/annotaterb/issues/197)
+
+**Merged pull requests:**
+
+- Bump version to v4.17.0 [\#234](https://github.com/drwl/annotaterb/pull/234) ([drwl](https://github.com/drwl))
+- Fix NoMethodError when processing empty files [\#232](https://github.com/drwl/annotaterb/pull/232) ([tanukiti1987](https://github.com/tanukiti1987))
+- Refactor column ignore to use `match?` [\#231](https://github.com/drwl/annotaterb/pull/231) ([tagliala](https://github.com/tagliala))
+- Fix standard configuration [\#230](https://github.com/drwl/annotaterb/pull/230) ([tagliala](https://github.com/tagliala))
+- Generate changelog for v4.16.0 [\#229](https://github.com/drwl/annotaterb/pull/229) ([drwl](https://github.com/drwl))
+- show included columns in indexes [\#211](https://github.com/drwl/annotaterb/pull/211) ([pineman](https://github.com/pineman))
+- fix: use model name for file retrieval when not connected to the primary DB. [\#207](https://github.com/drwl/annotaterb/pull/207) ([OdenTakashi](https://github.com/OdenTakashi))
+- Place column comments at the end of the line [\#199](https://github.com/drwl/annotaterb/pull/199) ([Adeynack](https://github.com/Adeynack))
+
 ## [v4.16.0](https://github.com/drwl/annotaterb/tree/v4.16.0) (2025-06-18)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.15.0...v4.16.0)
