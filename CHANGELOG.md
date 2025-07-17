@@ -1,5 +1,92 @@
 # Changelog
 
+## [v4.17.0](https://github.com/drwl/annotaterb/tree/v4.17.0) (2025-07-14)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.16.0...v4.17.0)
+
+**Implemented enhancements:**
+
+- Place column comments at the end of the line \(feature suggestion\) [\#164](https://github.com/drwl/annotaterb/issues/164)
+
+**Fixed bugs:**
+
+- Model annotation chokes on an empty file [\#182](https://github.com/drwl/annotaterb/issues/182)
+
+**Closed issues:**
+
+- uninitialized constant Zeitwerk::VERSION [\#216](https://github.com/drwl/annotaterb/issues/216)
+- Incorrect annotation of fixture files when different models share the same table name in different databases [\#206](https://github.com/drwl/annotaterb/issues/206)
+- Should active record and active support be in the gemspec? [\#197](https://github.com/drwl/annotaterb/issues/197)
+
+**Merged pull requests:**
+
+- Bump version to v4.17.0 [\#234](https://github.com/drwl/annotaterb/pull/234) ([drwl](https://github.com/drwl))
+- Fix NoMethodError when processing empty files [\#232](https://github.com/drwl/annotaterb/pull/232) ([tanukiti1987](https://github.com/tanukiti1987))
+- Refactor column ignore to use `match?` [\#231](https://github.com/drwl/annotaterb/pull/231) ([tagliala](https://github.com/tagliala))
+- Fix standard configuration [\#230](https://github.com/drwl/annotaterb/pull/230) ([tagliala](https://github.com/tagliala))
+- Generate changelog for v4.16.0 [\#229](https://github.com/drwl/annotaterb/pull/229) ([drwl](https://github.com/drwl))
+- show included columns in indexes [\#211](https://github.com/drwl/annotaterb/pull/211) ([pineman](https://github.com/pineman))
+- fix: use model name for file retrieval when not connected to the primary DB. [\#207](https://github.com/drwl/annotaterb/pull/207) ([OdenTakashi](https://github.com/OdenTakashi))
+- Place column comments at the end of the line [\#199](https://github.com/drwl/annotaterb/pull/199) ([Adeynack](https://github.com/Adeynack))
+
+## [v4.16.0](https://github.com/drwl/annotaterb/tree/v4.16.0) (2025-06-18)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.15.0...v4.16.0)
+
+**Implemented enhancements:**
+
+- Feature Request: Add Option to Place Annotations Above Nested Classes or Modules. [\#186](https://github.com/drwl/annotaterb/issues/186)
+
+**Closed issues:**
+
+- Misleading pattern examples in documentation for `additional_file_patterns` [\#221](https://github.com/drwl/annotaterb/issues/221)
+- Permission denied for table pg\_index [\#209](https://github.com/drwl/annotaterb/issues/209)
+- Performance regression relative to pre-fork? [\#205](https://github.com/drwl/annotaterb/issues/205)
+- Add back ruby configuration option? [\#203](https://github.com/drwl/annotaterb/issues/203)
+- Enable frozen mode when CI environment variable is set [\#171](https://github.com/drwl/annotaterb/issues/171)
+
+**Merged pull requests:**
+
+-  Bump version to v4.16.0 [\#228](https://github.com/drwl/annotaterb/pull/228) ([drwl](https://github.com/drwl))
+- chore: add --with-column-comments readme documentation [\#227](https://github.com/drwl/annotaterb/pull/227) ([jonmcelroy-appfolio](https://github.com/jonmcelroy-appfolio))
+- Drop Ruby 2.7 support and improve CI [\#226](https://github.com/drwl/annotaterb/pull/226) ([drwl](https://github.com/drwl))
+- Pass .annotaterb.yml through ERB [\#225](https://github.com/drwl/annotaterb/pull/225) ([fxn](https://github.com/fxn))
+- feat: Add `--nested-position` option for placing annotations above nested classes. [\#223](https://github.com/drwl/annotaterb/pull/223) ([yamat47](https://github.com/yamat47))
+- Fix for: Misleading pattern examples in documentation for additional\_file\_patterns [\#222](https://github.com/drwl/annotaterb/pull/222) ([skliarov](https://github.com/skliarov))
+- Move activerecord dependency into gemspec [\#220](https://github.com/drwl/annotaterb/pull/220) ([drwl](https://github.com/drwl))
+- Generate changelog for v4.15.0 [\#219](https://github.com/drwl/annotaterb/pull/219) ([drwl](https://github.com/drwl))
+- chore: add rake task to automatically deploy to rubygems [\#183](https://github.com/drwl/annotaterb/pull/183) ([OdenTakashi](https://github.com/OdenTakashi))
+
+## [v4.15.0](https://github.com/drwl/annotaterb/tree/v4.15.0) (2025-05-30)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.14.1...v4.15.0)
+
+**Closed issues:**
+
+- Feature request: packs-rails support [\#99](https://github.com/drwl/annotaterb/issues/99)
+- Annotate models using Zeitwerk namespaces [\#82](https://github.com/drwl/annotaterb/issues/82)
+
+**Merged pull requests:**
+
+- Bump version to v4.15.0 [\#218](https://github.com/drwl/annotaterb/pull/218) ([drwl](https://github.com/drwl))
+- Add debug logs for model annotation [\#217](https://github.com/drwl/annotaterb/pull/217) ([jarredhawkins](https://github.com/jarredhawkins))
+- Cache retrieved indexes in ModelWrapper [\#215](https://github.com/drwl/annotaterb/pull/215) ([tr4b4nt](https://github.com/tr4b4nt))
+- feat: identify unique indexes in simple\_indexes option [\#214](https://github.com/drwl/annotaterb/pull/214) ([amerritt14](https://github.com/amerritt14))
+- fix: Handle case when table\_name\_prefix specified as symbol [\#208](https://github.com/drwl/annotaterb/pull/208) ([gururuby](https://github.com/gururuby))
+- Support the glob pattern in `root_dir` and `model_dir` [\#198](https://github.com/drwl/annotaterb/pull/198) ([sinsoku](https://github.com/sinsoku))
+- Fix `changelog_uri` in gemspec [\#192](https://github.com/drwl/annotaterb/pull/192) ([y-yagi](https://github.com/y-yagi))
+- Generate changelog for v4.14.0 [\#191](https://github.com/drwl/annotaterb/pull/191) ([drwl](https://github.com/drwl))
+- feat: add `timestamp_columns` config option [\#173](https://github.com/drwl/annotaterb/pull/173) ([pbernays](https://github.com/pbernays))
+
+## [v4.14.1](https://github.com/drwl/annotaterb/tree/v4.14.1) (2025-03-31)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.14.0...v4.14.1)
+
+**Closed issues:**
+
+- Sort by database order [\#194](https://github.com/drwl/annotaterb/issues/194)
+- “wrong number of arguments \(given 0, expected 1..2\)” when using enum in a Rails 8 model [\#184](https://github.com/drwl/annotaterb/issues/184)
+
 ## [v4.14.0](https://github.com/drwl/annotaterb/tree/v4.14.0) (2025-02-17)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.13.0...v4.14.0)

@@ -590,5 +590,24 @@ module AnnotateRb # rubocop:disable Metrics/ModuleLength
         expect(result).to include(with_column_comments: false)
       end
     end
+
+    describe "--position-of-column-comments" do
+      let(:option) { "--position-of-column-comments" }
+      let(:values) { "rightmost_column" }
+      let(:args) { [option, values] }
+
+      it "sets with_column_comments to true" do
+        expect(result).to include(position_of_column_comments: :rightmost_column)
+      end
+    end
+
+    describe "--nested-position" do
+      let(:option) { "--nested-position" }
+      let(:args) { [option] }
+
+      it "sets nested_position to true" do
+        expect(result).to include(nested_position: true)
+      end
+    end
   end
 end

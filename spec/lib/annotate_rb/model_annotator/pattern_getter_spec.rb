@@ -181,5 +181,35 @@ RSpec.describe AnnotateRb::ModelAnnotator::PatternGetter do
         ])
       end
     end
+
+    context "when root_dir is the glob pattern" do
+      let(:base_options) { {root_dir: ["", "packs/*"]} }
+      let(:pattern_type) { "test" }
+
+      around do |example|
+        Dir.mktmpdir do |dir|
+          Dir.chdir(dir) do
+            FileUtils.mkdir_p("packs/foo")
+            FileUtils.mkdir_p("packs/bar")
+            FileUtils.touch(File.join(dir, "foo.rb"))
+            example.run
+          end
+        end
+      end
+
+      it "returns patterns with the glob pattern expanded" do
+        is_expected.to eq([
+          "test/unit/%MODEL_NAME%_test.rb",
+          "test/models/%MODEL_NAME%_test.rb",
+          "spec/models/%MODEL_NAME%_spec.rb",
+          "packs/bar/test/unit/%MODEL_NAME%_test.rb",
+          "packs/bar/test/models/%MODEL_NAME%_test.rb",
+          "packs/bar/spec/models/%MODEL_NAME%_spec.rb",
+          "packs/foo/test/unit/%MODEL_NAME%_test.rb",
+          "packs/foo/test/models/%MODEL_NAME%_test.rb",
+          "packs/foo/spec/models/%MODEL_NAME%_spec.rb"
+        ])
+      end
+    end
   end
 end

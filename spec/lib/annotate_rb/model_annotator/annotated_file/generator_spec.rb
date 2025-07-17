@@ -540,5 +540,358 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
         is_expected.to eq(expected_content)
       end
     end
+
+    context "when nested_position option is enabled" do
+      context 'with position "before" and nested classes' do
+        let(:file_content) do
+          <<~FILE
+            # frozen_string_literal: true
+
+            module Collapsed
+              class TestModel < ApplicationRecord
+                def self.table_name_prefix
+                  "collapsed_"
+                end
+              end
+            end
+          FILE
+        end
+
+        let(:options) { AnnotateRb::Options.new({position_in_class: "before", nested_position: true}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            # frozen_string_literal: true
+
+            module Collapsed
+              # == Schema Information
+              #
+              # Table name: users
+              #
+              #  id                     :bigint           not null, primary key
+              #
+              class TestModel < ApplicationRecord
+                def self.table_name_prefix
+                  "collapsed_"
+                end
+              end
+            end
+          CONTENT
+        end
+
+        it "places annotation before the nested class, not at the file top" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context 'with position "before" and no nested_position option (default behavior)' do
+        let(:file_content) do
+          <<~FILE
+            # frozen_string_literal: true
+
+            module Collapsed
+              class TestModel < ApplicationRecord
+                def self.table_name_prefix
+                  "collapsed_"
+                end
+              end
+            end
+          FILE
+        end
+
+        let(:options) { AnnotateRb::Options.new({position_in_class: "before", nested_position: false}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            # frozen_string_literal: true
+
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+            module Collapsed
+              class TestModel < ApplicationRecord
+                def self.table_name_prefix
+                  "collapsed_"
+                end
+              end
+            end
+          CONTENT
+        end
+
+        it "places annotation at file top (before the module)" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context "with deeply nested classes" do
+        let(:file_content) do
+          <<~FILE
+            module Level1
+              module Level2
+                module Level3
+                  class DeeplyNestedModel < ApplicationRecord
+                  end
+                end
+              end
+            end
+          FILE
+        end
+
+        let(:options) { AnnotateRb::Options.new({position_in_class: "before", nested_position: true}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            module Level1
+              module Level2
+                module Level3
+                  # == Schema Information
+                  #
+                  # Table name: users
+                  #
+                  #  id                     :bigint           not null, primary key
+                  #
+                  class DeeplyNestedModel < ApplicationRecord
+                  end
+                end
+              end
+            end
+          CONTENT
+        end
+
+        it "places annotation before the most deeply nested class" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context "with multiple classes in the same file" do
+        let(:file_content) do
+          <<~FILE
+            module Namespace
+              class FirstModel < ApplicationRecord
+              end
+
+              class SecondModel < ApplicationRecord
+              end
+            end
+          FILE
+        end
+
+        let(:options) { AnnotateRb::Options.new({position_in_class: "before", nested_position: true}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            module Namespace
+              class FirstModel < ApplicationRecord
+              end
+
+              # == Schema Information
+              #
+              # Table name: users
+              #
+              #  id                     :bigint           not null, primary key
+              #
+              class SecondModel < ApplicationRecord
+              end
+            end
+          CONTENT
+        end
+
+        it "places annotation before the last class in the file" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context "with nested_position but no classes (only modules)" do
+        let(:file_content) do
+          <<~FILE
+            module OnlyModule
+              module AnotherModule
+                # Just modules, no classes
+              end
+            end
+          FILE
+        end
+
+        let(:options) { AnnotateRb::Options.new({position_in_class: "before", nested_position: true}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+            module OnlyModule
+              module AnotherModule
+                # Just modules, no classes
+              end
+            end
+          CONTENT
+        end
+
+        it "falls back to placing annotation at file top when no classes are found" do
+          is_expected.to eq(expected_content)
+        end
+      end
+    end
+
+    context "when file is empty" do
+      let(:file_content) { "" }
+      let(:new_annotations) do
+        <<~ANNOTATIONS
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+        ANNOTATIONS
+      end
+
+      context 'with position "before"' do
+        let(:options) { AnnotateRb::Options.new({position_in_class: "before"}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+          CONTENT
+        end
+
+        it "adds annotations to empty file" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context 'with position "after"' do
+        let(:options) { AnnotateRb::Options.new({position_in_class: "after"}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+          CONTENT
+        end
+
+        it "adds annotations to empty file" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context 'with position "top"' do
+        let(:options) { AnnotateRb::Options.new({position_in_class: "top"}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+          CONTENT
+        end
+
+        it "adds annotations to empty file" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context 'with position "bottom"' do
+        let(:options) { AnnotateRb::Options.new({position_in_class: "bottom"}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+          CONTENT
+        end
+
+        it "adds annotations to empty file" do
+          is_expected.to eq(expected_content)
+        end
+      end
+    end
+
+    context "when file contains only whitespace and comments" do
+      let(:file_content) do
+        <<~FILE
+          # Some random comment
+          
+          # Another comment
+        FILE
+      end
+      let(:new_annotations) do
+        <<~ANNOTATIONS
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+        ANNOTATIONS
+      end
+
+      context 'with position "before"' do
+        let(:options) { AnnotateRb::Options.new({position_in_class: "before"}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+            # Some random comment
+            
+            # Another comment
+          CONTENT
+        end
+
+        it "adds annotations at the beginning of file with only comments" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context 'with position "after"' do
+        let(:options) { AnnotateRb::Options.new({position_in_class: "after"}) }
+
+        let(:expected_content) do
+          <<~CONTENT
+            # Some random comment
+            
+            # Another comment
+
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+          CONTENT
+        end
+
+        it "adds annotations at the end of file with only comments" do
+          is_expected.to eq(expected_content)
+        end
+      end
+    end
   end
 end

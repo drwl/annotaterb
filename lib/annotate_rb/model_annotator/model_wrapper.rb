@@ -6,6 +6,8 @@ module AnnotateRb
       # Should be the wrapper for an ActiveRecord model that serves as the source of truth of the model
       # of the model that we're annotating
 
+      DEFAULT_TIMESTAMP_COLUMNS = %w[created_at updated_at]
+
       def initialize(klass, options)
         @klass = klass
         @options = options
@@ -21,7 +23,7 @@ module AnnotateRb
             ignore_columns = @options[:ignore_columns]
             if ignore_columns
               cols = cols.reject do |col|
-                col.name.match(/#{ignore_columns}/)
+                col.name.match?(/#{ignore_columns}/)
               end
             end
 
@@ -89,7 +91,8 @@ module AnnotateRb
           begin
             cols = columns
 
-            if with_comments?
+            position_of_column_comment = @options.with_default_fallback(:position_of_column_comment)
+            if with_comments? && position_of_column_comment == :with_name
               column_widths = cols.map do |column|
                 column.name.size + (column.comment ? Helper.width(column.comment) : 0)
               end
@@ -106,7 +109,40 @@ module AnnotateRb
           end
       end
 
+      # TODO: Simplify this conditional
+      def is_column_primary_key?(column_name)
+        if primary_key
+          if primary_key.is_a?(Array)
+            # If the model has multiple primary keys, check if this column is one of them
+            if primary_key.collect(&:to_sym).include?(column_name.to_sym)
+              return true
+            end
+          elsif column_name.to_sym == primary_key.to_sym
+            # If model has 1 primary key, check if this column is it
+            return true
+          end
+        end
+
+        false
+      end
+
+      def built_attributes
+        @built_attributes ||= begin
+          table_indices = retrieve_indexes_from_table
+          columns.map do |column|
+            is_primary_key = is_column_primary_key?(column.name)
+            column_indices = table_indices.select { |ind| ind.columns.include?(column.name) }
+            built = ColumnAnnotation::AttributesBuilder.new(column, @options, is_primary_key, column_indices, column_defaults).build
+            [column.name, built]
+          end.to_h
+        end
+      end
+
       def retrieve_indexes_from_table
+        @indexes_from_table ||= _retrieve_indexes_from_table
+      end
+
+      def _retrieve_indexes_from_table
         table_name = @klass.table_name
         return [] unless table_name
 
@@ -114,7 +150,7 @@ module AnnotateRb
         return indexes if indexes.any? || !@klass.table_name_prefix
 
         # Try to search the table without prefix
-        table_name_without_prefix = table_name.to_s.sub(@klass.table_name_prefix, "")
+        table_name_without_prefix = table_name.to_s.sub(@klass.table_name_prefix.to_s, "")
         begin
           @klass.connection.indexes(table_name_without_prefix)
         rescue ActiveRecord::StatementInvalid => _e
@@ -137,16 +173,23 @@ module AnnotateRb
           raw_columns.map(&:comment).any? { |comment| !comment.nil? }
       end
 
+      def position_of_column_comment
+        @position_of_column_comment ||= @options[:position_of_column_comment]
+      end
+
       def classified_sort(cols)
         rest_cols = []
         timestamps = []
         associations = []
         id = nil
 
+        # specs don't load defaults, so ensure we have defaults here
+        timestamp_columns = @options[:timestamp_columns] || DEFAULT_TIMESTAMP_COLUMNS
+
         cols.each do |c|
           if c.name.eql?("id")
             id = c
-          elsif c.name.eql?("created_at") || c.name.eql?("updated_at")
+          elsif timestamp_columns.include?(c.name)
             timestamps << c
           elsif c.name[-3, 3].eql?("_id")
             associations << c
@@ -154,7 +197,10 @@ module AnnotateRb
             rest_cols << c
           end
         end
-        [rest_cols, timestamps, associations].each { |a| a.sort_by!(&:name) }
+
+        timestamp_order = timestamp_columns.each_with_index.to_h
+        timestamps.sort_by! { |col| timestamp_order[col.name] }
+        [rest_cols, associations].each { |a| a.sort_by!(&:name) }
 
         ([id] << rest_cols << timestamps << associations).flatten.compact
       end
