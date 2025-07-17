@@ -193,7 +193,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
       end
     end
 
-    context "when column names contain Japanese characters" do
+    context "when column comments contain Japanese characters" do
       let(:annotation_block) do
         <<~SCHEMA
           # == Schema Information
@@ -201,9 +201,9 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
           # Table name: users
           #
           #  id                     :bigint           not null, primary key
-          #  名前                    :string(50)       not null
-          #  メールアドレス           :string(255)      not null
-          #  作成日時                :datetime         not null
+          #  name(名前)              :string(50)       not null
+          #  email(メールアドレス)    :string(255)      not null
+          #  created_at(作成日時)     :datetime         not null
           #
         SCHEMA
       end
@@ -214,7 +214,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
           # Table name: users
           #
           #  id                     :bigint           not null, primary key
-          #  名前                    :string(50)       not null
+          #  name(名前)              :string(50)       not null
           #
           class User < ApplicationRecord
           end
@@ -224,16 +224,16 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
       let(:current_columns) do
         [
           "#  id                     :bigint           not null, primary key",
-          "#  名前                    :string(50)       not null",
+          "#  name(名前)              :string(50)       not null",
           "# Table name: users"
         ]
       end
       let(:new_columns) do
         [
+          "#  created_at(作成日時)     :datetime         not null",
+          "#  email(メールアドレス)    :string(255)      not null",
           "#  id                     :bigint           not null, primary key",
-          "#  メールアドレス           :string(255)      not null",
-          "#  作成日時                :datetime         not null",
-          "#  名前                    :string(50)       not null",
+          "#  name(名前)              :string(50)       not null",
           "# Table name: users"
         ]
       end
