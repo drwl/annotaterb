@@ -192,5 +192,57 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
         expect(subject.changed?).to eq(true)
       end
     end
+
+    context "when column comments contain Japanese characters" do
+      let(:annotation_block) do
+        <<~SCHEMA
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #  name(名前)              :string(50)       not null
+          #  email(メールアドレス)    :string(255)      not null
+          #  created_at(作成日時)     :datetime         not null
+          #
+        SCHEMA
+      end
+      let(:file_content) do
+        <<~FILE
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #  name(名前)              :string(50)       not null
+          #
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      let(:current_columns) do
+        [
+          "#  id                     :bigint           not null, primary key",
+          "#  name(名前)              :string(50)       not null",
+          "# Table name: users"
+        ]
+      end
+      let(:new_columns) do
+        [
+          "#  created_at(作成日時)     :datetime         not null",
+          "#  email(メールアドレス)    :string(255)      not null",
+          "#  id                     :bigint           not null, primary key",
+          "#  name(名前)              :string(50)       not null",
+          "# Table name: users"
+        ]
+      end
+
+      it "returns an AnnotationDiff object with the expected old and new columns" do
+        test_columns_match_expected
+
+        expect(subject.changed?).to eq(true)
+      end
+    end
   end
 end
