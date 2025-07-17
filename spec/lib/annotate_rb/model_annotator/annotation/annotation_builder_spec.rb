@@ -236,6 +236,47 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
           end
         end
       end
+
+      context "when polymorphic associations are present" do
+        let(:columns) do
+          [
+            mock_column("id", :uuid),
+            mock_column("account_id", :uuid),
+            mock_column("user_id", :uuid),
+            mock_column("artifact_type", :string),
+            mock_column("artifact_id", :uuid),
+            mock_column("provider", :string),
+            mock_column("model", :string),
+            mock_column("created_at", :datetime),
+            mock_column("updated_at", :datetime)
+          ]
+        end
+
+        let(:options) do
+          AnnotateRb::Options.new(classified_sort: true)
+        end
+
+        it "places polymorphic _type columns together with their _id columns in associations section" do
+          expected = <<~EOS
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id            :uuid             not null, primary key
+            #  model         :string           not null
+            #  provider      :string           not null
+            #  created_at    :datetime         not null
+            #  updated_at    :datetime         not null
+            #  account_id    :uuid             not null
+            #  artifact_id   :uuid             not null
+            #  artifact_type :string           not null
+            #  user_id       :uuid             not null
+            #
+          EOS
+
+          is_expected.to eq expected
+        end
+      end
     end
 
     context "when geometry columns are included" do
