@@ -186,12 +186,17 @@ module AnnotateRb
         # specs don't load defaults, so ensure we have defaults here
         timestamp_columns = @options[:timestamp_columns] || DEFAULT_TIMESTAMP_COLUMNS
 
+        col_names = cols.map(&:name)
+
         cols.each do |c|
           if c.name.eql?("id")
             id = c
           elsif timestamp_columns.include?(c.name)
             timestamps << c
           elsif c.name[-3, 3].eql?("_id")
+            associations << c
+          elsif c.name[-5, 5].eql?("_type") && col_names.include?(c.name.sub(/_type$/, "_id"))
+            # This is a polymorphic association's type column
             associations << c
           else
             rest_cols << c
