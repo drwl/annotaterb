@@ -1,9 +1,11 @@
 ## AnnotateRb
+
 ### forked from the [Annotate aka AnnotateModels gem](https://github.com/ctran/annotate_models)
 
 A Ruby Gem that adds annotations to your Rails models and route files.
 
-----------
+---
+
 [![CI](https://github.com/drwl/annotaterb/actions/workflows/ci.yml/badge.svg)](https://github.com/drwl/annotaterb/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/annotaterb.svg)](https://badge.fury.io/rb/annotaterb)
 
@@ -32,7 +34,9 @@ The schema comment looks like this:
 class Task < ApplicationRecord
   ...
 ```
-----------
+
+---
+
 ## Installation
 
 ```sh
@@ -46,11 +50,12 @@ group :development do
   ...
 
   gem "annotaterb"
-  
+
   ...
 ```
 
 ### Automatically annotate models
+
 For Rails projects, model files can get automatically annotated after migration tasks. To do this, run the following command:
 
 ```sh
@@ -66,6 +71,7 @@ $ ANNOTATERB_SKIP_ON_DB_TASKS=1 bin/rails db:migrate
 ```
 
 ### Added Rails generators
+
 The following Rails generator commands get added.
 
 ```sh
@@ -83,18 +89,23 @@ AnnotateRb:
 ```
 
 `bin/rails g annotate_rb:config`
+
 - Generates a new configuration file, `.annotaterb.yml`, using defaults from the gem.
 
 `bin/rails g annotate_rb:hook`
+
 - Installs the Rake file to automatically annotate Rails models on a database task (e.g. AnnotateRb will automatically run after running `bin/rails db:migrate`).
 
 `bin/rails g annotate_rb:install`
+
 - Runs the `config` and `hook` generator commands
 
 `bin/rails g annotate_rb:update_config`
+
 - Appends to `.annotaterb.yml` any configuration key-value pairs that are used by the Gem. This is useful when there's a drift between the config file values and the gem defaults (i.e. when new features get added).
 
 ## Migrating from the annotate gem
+
 Refer to the [migration guide](MIGRATION_GUIDE.md).
 
 ## Usage
@@ -103,7 +114,7 @@ AnnotateRb has a CLI that you can use to add or remove annotations.
 
 ```sh
 # To show the CLI options
-$ bundle exec annotaterb 
+$ bundle exec annotaterb
 
 Usage: annotaterb [command] [options]
 
@@ -127,6 +138,7 @@ Annotate model options:
                                      Complete foreign key names in the annotation
     -i, --show-indexes               List the table's database indexes in the annotation
     -s, --simple-indexes             Concat the column's related indexes in the annotation
+    -c, --show-check-constraints     List the table's check constraints in the annotation
         --hide-limit-column-types VALUES
                                      don't show limit for given column types, separated by commas (i.e., `integer,boolean,text`)
         --hide-default-column-types VALUES
@@ -134,7 +146,15 @@ Annotate model options:
         --ignore-unknown-models      don't display warnings for bad model files
     -I, --ignore-columns REGEX       don't annotate columns that match a given REGEX (i.e., `annotate -I '^(id|updated_at|created_at)'`
         --with-comment               include database comments in model annotations
-        --with-column-comments       include column comments in model annotations 
+        --without-comment            include database comments in model annotations
+        --with-column-comments       include column comments in model annotations
+        --without-column-comments    exclude column comments in model annotations
+        --position-of-column-comments VALUE
+                                     set the position, in the annotation block, of the column comment
+        --with-table-comments        include table comments in model annotations
+        --without-table-comments     exclude table comments in model annotations
+        --classes-default-to-s class Custom classes to be represented with `to_s`, may be used multiple times
+        --nested-position            Place annotations directly above nested classes or modules instead of at the top of the file.
 
 Annotate routes options:
     Usage: annotaterb routes [options]
@@ -157,6 +177,7 @@ Additional options that work for annotating models and routes
         --ignore-model-subdirects    Ignore subdirectories of the models directory
         --sort                       Sort columns alphabetically, rather than in creation order
         --classified-sort            Sort columns alphabetically, but first goes id, then the rest columns, then the timestamp columns and then the association columns
+        --grouped-polymorphic        Group polymorphic associations together in the annotation when using --classified-sort
     -R, --require path               Additional file to require before loading models, may be used multiple times
     -e [tests,fixtures,factories,serializers],
         --exclude                    Do not annotate fixtures, test files, factories, and/or serializers
@@ -176,6 +197,8 @@ Additional options that work for annotating models and routes
                                      Place the annotations at the top (before) or the bottom (after) of the routes.rb file
         --ps, --position-in-serializer [before|top|after|bottom]
                                      Place the annotations at the top (before) or the bottom (after) of the serializer files
+        --pa, --position-in-additional-file-patterns [before|top|after|bottom]
+                                     Place the annotations at the top (before) or the bottom (after) of files captured in additional file patterns
         --force                      Force new annotations even if there are no changes.
         --debug                      Prints the options and outputs messages to make it easier to debug.
         --frozen                     Do not allow to change annotations. Exits non-zero if there are going to be changes to files.
@@ -185,6 +208,7 @@ Additional options that work for annotating models and routes
 ## Configuration
 
 ### Storing default options
+
 Previously in the [Annotate](https://github.com/ctran/annotate_models) you could pass options through the CLI or store them as environment variables. Annotaterb removes dependency on the environment variables and instead can read values from a `.annotaterb.yml` file stored in the Rails project root.
 
 ```yml
@@ -198,6 +222,7 @@ Annotaterb reads first the configuration file, if it exists, passes its content 
 For further details visit the [section in the migration guide](MIGRATION_GUIDE.md#automatic-annotations-after-running-database-migration-commands).
 
 ### How to skip annotating a particular model
+
 If you want to always skip annotations on a particular model, add this string
 anywhere in the file:
 
@@ -210,6 +235,10 @@ migrations were run).
 
 If you prefer to sort alphabetically so that the results of annotation are
 consistent regardless of what order migrations are executed in, use `--sort`.
+
+You can also sort columns by type, then alphabetically using `--classified-sort`
+and `--grouped-polymorphic`: first goes id, then the rest columns, then the
+timestamp columns and then the association columns.
 
 ## License
 

@@ -41,6 +41,7 @@ module AnnotateRb
       format_rdoc: false, # ModelAnnotator
       format_yard: false, # ModelAnnotator
       frozen: false, # ModelAnnotator, but should be used by both
+      grouped_polymorphic: false, # ModelAnnotator
       ignore_model_sub_dir: false, # ModelAnnotator
       ignore_unknown_models: false, # ModelAnnotator
       include_version: false, # ModelAnnotator
@@ -113,6 +114,7 @@ module AnnotateRb
       :format_rdoc,
       :format_yard,
       :frozen,
+      :grouped_polymorphic,
       :ignore_model_sub_dir,
       :ignore_unknown_models,
       :include_version,

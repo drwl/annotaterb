@@ -252,29 +252,58 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
           ]
         end
 
-        let(:options) do
-          AnnotateRb::Options.new(classified_sort: true)
+        context "when grouped_polymorphic is false" do
+          let(:options) do
+            AnnotateRb::Options.new(classified_sort: true, grouped_polymorphic: false)
+          end
+
+          it "places polymorphic _type columns together with their _id columns in associations section" do
+            expected = <<~EOS
+              # == Schema Information
+              #
+              # Table name: users
+              #
+              #  id            :uuid             not null, primary key
+              #  artifact_type :string           not null
+              #  model         :string           not null
+              #  provider      :string           not null
+              #  created_at    :datetime         not null
+              #  updated_at    :datetime         not null
+              #  account_id    :uuid             not null
+              #  artifact_id   :uuid             not null
+              #  user_id       :uuid             not null
+              #
+            EOS
+
+            is_expected.to eq expected
+          end
         end
 
-        it "places polymorphic _type columns together with their _id columns in associations section" do
-          expected = <<~EOS
-            # == Schema Information
-            #
-            # Table name: users
-            #
-            #  id            :uuid             not null, primary key
-            #  model         :string           not null
-            #  provider      :string           not null
-            #  created_at    :datetime         not null
-            #  updated_at    :datetime         not null
-            #  account_id    :uuid             not null
-            #  artifact_id   :uuid             not null
-            #  artifact_type :string           not null
-            #  user_id       :uuid             not null
-            #
-          EOS
+        context "when grouped_polymorphic is true" do
+          let(:options) do
+            AnnotateRb::Options.new(classified_sort: true, grouped_polymorphic: true)
+          end
 
-          is_expected.to eq expected
+          it "sorts polymorphic _type columns with the other columns" do
+            expected = <<~EOS
+              # == Schema Information
+              #
+              # Table name: users
+              #
+              #  id            :uuid             not null, primary key
+              #  model         :string           not null
+              #  provider      :string           not null
+              #  created_at    :datetime         not null
+              #  updated_at    :datetime         not null
+              #  account_id    :uuid             not null
+              #  artifact_id   :uuid             not null
+              #  artifact_type :string           not null
+              #  user_id       :uuid             not null
+              #
+            EOS
+
+            is_expected.to eq expected
+          end
         end
       end
     end
