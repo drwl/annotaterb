@@ -407,6 +407,11 @@ module AnnotateRb
         @options[:classified_sort] = true
       end
 
+      option_parser.on("--grouped-polymorphic",
+        "Group polymorphic associations together in the annotation when using --classified-sort") do
+        @options[:grouped_polymorphic] = true
+      end
+
       option_parser.on("-R",
         "--require path",
         "Additional file to require before loading models, may be used multiple times") do |path|
