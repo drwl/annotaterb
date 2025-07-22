@@ -84,4 +84,30 @@ RSpec.describe AnnotateRb::Runner do
       expect(command_double).to have_received(:call)
     end
   end
+
+  describe ".running?" do
+    context "when an instance is not running" do
+      it "is false" do
+        expect(AnnotateRb::Runner).not_to be_running
+      end
+    end
+
+    context "when an instance is running" do
+      it "is true" do
+        expect(AnnotateRb::Runner).not_to be_running
+
+        double = instance_double(described_class)
+
+        allow(described_class).to receive(:new).and_return(double)
+
+        expect(double).to receive(:run) do |original_method, *args|
+          expect(AnnotateRb::Runner).to be_running
+
+          true
+        end
+
+        AnnotateRb::Runner.run({})
+      end
+    end
+  end
 end
