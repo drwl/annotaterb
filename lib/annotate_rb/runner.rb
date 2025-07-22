@@ -3,9 +3,23 @@
 module AnnotateRb
   class Runner
     class << self
+      attr_reader :runner
+
       def run(args)
-        new.run(args)
+        self.runner = new
+
+        runner.run(args)
+
+        self.runner = nil
       end
+
+      def running?
+        !!runner
+      end
+
+      private
+
+      attr_writer :runner
     end
 
     def run(args)
