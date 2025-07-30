@@ -17,28 +17,13 @@ module AnnotateRb
         begin
           klass = ModelClassGetter.call(@file, @options)
 
-          klass_is_a_class = klass.is_a?(Class)
-          # Methods such as #superclass only exist on a class. Because of how the code is structured, `klass` could be a
-          #  module that does not support the #superclass method, so we want to return early.
-          return false if !klass_is_a_class
+          return false unless klass.is_a?(Class)
+          return false unless klass < ActiveRecord::Base
+          return false unless klass.respond_to?(:abstract_class?) && !klass.abstract_class?
+          return false unless klass.respond_to?(:table_exists?) && klass.table_exists?
+          return false unless !@options[:exclude_sti_subclasses] || !(klass.superclass < ActiveRecord::Base && klass.table_name == klass.superclass.table_name)
 
-          klass_inherits_active_record_base = klass < ActiveRecord::Base
-          klass_is_not_abstract = klass.respond_to?(:abstract_class?) && !klass.abstract_class?
-          klass_table_exists = klass.respond_to?(:table_exists?) && klass.table_exists?
-
-          not_sure_this_conditional = (!@options[:exclude_sti_subclasses] || !(klass.superclass < ActiveRecord::Base && klass.table_name == klass.superclass.table_name))
-
-          annotate_conditions = [
-            klass_is_a_class,
-            klass_inherits_active_record_base,
-            not_sure_this_conditional,
-            klass_is_not_abstract,
-            klass_table_exists
-          ]
-
-          to_annotate = annotate_conditions.all?
-
-          return to_annotate
+          true
         rescue BadModelFileError => e
           unless @options[:ignore_unknown_models]
             warn "Unable to process #{@file}: #{e.message}"
@@ -55,9 +40,9 @@ module AnnotateRb
       private
 
       def file_contains_skip_annotation
-        file_string = File.exist?(@file) ? File.read(@file) : ""
+        return false unless File.exist?(@file)
 
-        /#{SKIP_ANNOTATION_PREFIX}.*/o.match?(file_string)
+        /#{SKIP_ANNOTATION_PREFIX}.*/o.match?(File.read(@file))
       end
     end
   end
