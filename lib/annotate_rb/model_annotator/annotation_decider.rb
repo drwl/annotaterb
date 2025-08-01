@@ -18,7 +18,7 @@ module AnnotateRb
           klass = ModelClassGetter.call(@file, @options)
           return false unless klass.respond_to?(:descends_from_active_record?) && klass.descends_from_active_record? && klass.table_exists?
 
-          @options[:exclude_sti_subclasses] ? true : !klass.base_class?
+          @options[:exclude_sti_subclasses] ? klass.base_class? : true
         rescue BadModelFileError => e
           unless @options[:ignore_unknown_models]
             warn "Unable to process #{@file}: #{e.message}"
