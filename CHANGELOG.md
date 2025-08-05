@@ -1,5 +1,34 @@
 # Changelog
 
+## [v4.18.0](https://github.com/drwl/annotaterb/tree/v4.18.0) (2025-08-04)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.17.0...v4.18.0)
+
+**Implemented enhancements:**
+
+- Feature request: support for multi database [\#188](https://github.com/drwl/annotaterb/issues/188)
+
+**Closed issues:**
+
+- Does not run on rollback with multiple databases [\#244](https://github.com/drwl/annotaterb/issues/244)
+- classified\_sort and polymorphic associations [\#236](https://github.com/drwl/annotaterb/issues/236)
+- --show-migration also annotates the primary DB's schema version for models referencing the secondary DB [\#233](https://github.com/drwl/annotaterb/issues/233)
+- Annotations are not added on top of model files when columns'`comment:` contains Japanese characters in migrations [\#200](https://github.com/drwl/annotaterb/issues/200)
+- Feature: further customization to achieve more compact annotations [\#150](https://github.com/drwl/annotaterb/issues/150)
+- Version 5 change list [\#127](https://github.com/drwl/annotaterb/issues/127)
+- Reformat Column Comments [\#117](https://github.com/drwl/annotaterb/issues/117)
+
+**Merged pull requests:**
+
+- Bump version to v4.18.0 [\#246](https://github.com/drwl/annotaterb/pull/246) ([drwl](https://github.com/drwl))
+- Run on rollback in app with multiple databases [\#245](https://github.com/drwl/annotaterb/pull/245) ([z1lk](https://github.com/z1lk))
+- Speed up AnnotationDecider [\#243](https://github.com/drwl/annotaterb/pull/243) ([DRBragg](https://github.com/DRBragg))
+- Add AnnotateRb::Runner.running? method [\#242](https://github.com/drwl/annotaterb/pull/242) ([thewatts](https://github.com/thewatts))
+- fix: --show-migration to use per-model database connections [\#241](https://github.com/drwl/annotaterb/pull/241) ([OdenTakashi](https://github.com/OdenTakashi))
+- Fix: Support Japanese characters in column names [\#239](https://github.com/drwl/annotaterb/pull/239) ([tonystrawberry](https://github.com/tonystrawberry))
+- Fix classified\_sort to group polymorphic association columns together [\#238](https://github.com/drwl/annotaterb/pull/238) ([garriguv](https://github.com/garriguv))
+- Generate changelog for v4.17.0 [\#235](https://github.com/drwl/annotaterb/pull/235) ([drwl](https://github.com/drwl))
+
 ## [v4.17.0](https://github.com/drwl/annotaterb/tree/v4.17.0) (2025-07-14)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.16.0...v4.17.0)
