@@ -32,9 +32,8 @@ module AnnotateRb
             warn "Either specify models on the command line, or use the --model-dir option."
             warn "Call 'annotaterb --help' for more info."
             # exit 1 # TODO: Return exit code back to caller. Right now it messes up RSpec being able to run
-          else
-            model_files
           end
+          model_files
         end
 
         private
