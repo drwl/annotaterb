@@ -16,7 +16,7 @@ module AnnotateRb
 
         begin
           klass = ModelClassGetter.call(@file, @options)
-          return false unless klass.respond_to?(:descends_from_active_record?) && klass.descends_from_active_record? && klass.table_exists?
+          return false unless klass.respond_to?(:descends_from_active_record?) && klass.descends_from_active_record? && !klass.abstract_class? && klass.table_exists?
 
           return @options[:exclude_sti_subclasses] ? klass.base_class? : true
         rescue BadModelFileError => e
