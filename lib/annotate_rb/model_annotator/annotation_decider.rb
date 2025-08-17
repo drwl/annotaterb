@@ -29,7 +29,6 @@ module AnnotateRb
           not_sure_this_conditional = (!@options[:exclude_sti_subclasses] || !(klass.superclass < ActiveRecord::Base && klass.table_name == klass.superclass.table_name))
 
           annotate_conditions = [
-            klass_is_a_class,
             klass_inherits_active_record_base,
             not_sure_this_conditional,
             klass_is_not_abstract,
