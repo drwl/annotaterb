@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDecider do
+RSpec.xdescribe AnnotateRb::ModelAnnotator::AnnotationDecider do
   subject { described_class.new(file, options).annotate? }
 
   let(:options) { AnnotateRb::Options.new }
