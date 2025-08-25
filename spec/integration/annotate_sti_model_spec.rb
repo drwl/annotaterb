@@ -23,4 +23,22 @@ RSpec.describe "Annotate STI model", type: "aruba" do
     expect(last_command_started).to be_successfully_executed
     expect(expected_test_model).to eq(annotated_test_model)
   end
+
+  it "does not annotate when excluding sti subclasses" do
+    reset_database
+    run_migrations
+
+    expected_test_model = read_file(model_template("test_sibling_default.rb"))
+
+    original_test_model = read_file(dummyapp_model("test_sibling_default.rb"))
+
+    expect(expected_test_model).to_not eq(original_test_model)
+
+    _cmd = run_command_and_stop("bundle exec annotaterb models --exclude sti_subclasses", fail_on_error: true, exit_timeout: command_timeout_seconds)
+
+    annotated_test_model = read_file(dummyapp_model("test_sibling_default.rb"))
+
+    expect(last_command_started).to be_successfully_executed
+    expect(expected_test_model).to_not eq(annotated_test_model)
+  end
 end
