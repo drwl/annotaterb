@@ -47,9 +47,11 @@ RSpec.describe "Annotate STI models", type: "aruba" do
 
     expect(last_command_started).to be_successfully_executed
 
+    # Models that are subclassed without `type` field get annotated
     annotated_pseudo_sti_model = read_file(dummyapp_model("test_sibling_default.rb"))
-    expect(expected_pseudo_sti_model).to_not eq(annotated_pseudo_sti_model)
+    expect(expected_pseudo_sti_model).to eq(annotated_pseudo_sti_model)
 
+    # STI classes do not get annotated
     annotated_true_sti_model = read_file(dummyapp_model("test_true_sti.rb"))
     expect(expected_true_sti_model).to_not eq(annotated_true_sti_model)
   end
