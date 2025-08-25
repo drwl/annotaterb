@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.xdescribe AnnotateRb::ModelAnnotator::AnnotationDecider do
+RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDecider do
   subject { described_class.new(file, options).annotate? }
 
   let(:options) { AnnotateRb::Options.new }
@@ -41,8 +41,7 @@ RSpec.xdescribe AnnotateRb::ModelAnnotator::AnnotationDecider do
   context "when the model is a class but does not descend from ActiveRecord::Base" do
     let(:model) do
       double(
-        "NotAnArModel",
-        descends_from_active_record?: false
+        "NotAnArModel"
       )
     end
     it { is_expected.to be false }
@@ -80,21 +79,20 @@ RSpec.xdescribe AnnotateRb::ModelAnnotator::AnnotationDecider do
       let(:model) do
         double(
           "Admin",
-          descends_from_active_record?: true,
+          descends_from_active_record?: false,
           abstract_class?: false,
           table_exists?: true,
           base_class: base_class
         )
       end
 
-      # FIXME: https://github.com/drwl/annotaterb/issues/252
-      xcontext "and exclude_sti_subclasses is true" do
-        let(:options) { AnnotateRb::Options.new("exclude_sti_subclasses" => true) }
+      context "and exclude_sti_subclasses is true" do
+        let(:options) { AnnotateRb::Options.new(exclude_sti_subclasses: true) }
         it { is_expected.to be false }
       end
 
       context "and exclude_sti_subclasses is false" do
-        let(:options) { AnnotateRb::Options.new("exclude_sti_subclasses" => false) }
+        let(:options) { AnnotateRb::Options.new(exclude_sti_subclasses: false) }
         it { is_expected.to be true }
       end
     end
