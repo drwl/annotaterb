@@ -4,9 +4,9 @@
 #
 # Table name: test_parents
 #
-#  id         :integer          not null, primary key
-#  something  :string
-#  type       :string
+#  id         :bigint           not null, primary key
+#  something  :string(255)
+#  type       :string(255)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
