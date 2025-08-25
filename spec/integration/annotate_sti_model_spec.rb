@@ -17,7 +17,7 @@ RSpec.describe "Annotate STI models", type: "aruba" do
     expect(expected_pseudo_sti_model).not_to eq(original_pseudo_sti_model)
 
     expected_true_sti_model = read_file(model_template("test_true_sti.rb"))
-    original_true_sti_model =  read_file(dummyapp_model("test_true_sti.rb"))
+    original_true_sti_model = read_file(dummyapp_model("test_true_sti.rb"))
     expect(expected_true_sti_model).not_to eq(original_true_sti_model)
 
     _cmd = run_command_and_stop("bundle exec annotaterb models", fail_on_error: true, exit_timeout: command_timeout_seconds)
@@ -40,7 +40,7 @@ RSpec.describe "Annotate STI models", type: "aruba" do
     expect(expected_pseudo_sti_model).to_not eq(original_pseudo_sti_model)
 
     expected_true_sti_model = read_file(model_template("test_true_sti.rb"))
-    original_true_sti_model =  read_file(dummyapp_model("test_true_sti.rb"))
+    original_true_sti_model = read_file(dummyapp_model("test_true_sti.rb"))
     expect(expected_true_sti_model).not_to eq(original_true_sti_model)
 
     _cmd = run_command_and_stop("bundle exec annotaterb models --exclude sti_subclasses", fail_on_error: true, exit_timeout: command_timeout_seconds)
