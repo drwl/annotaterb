@@ -423,9 +423,9 @@ module AnnotateRb
       end
 
       option_parser.on("-e",
-        "--exclude [tests,fixtures,factories,serializers]",
+        "--exclude [tests,fixtures,factories,serializers,sti_subclasses]",
         Array,
-        "Do not annotate fixtures, test files, factories, and/or serializers") do |exclusions|
+        "Do not annotate fixtures, test files, factories, serializers, and/or sti subclasses") do |exclusions|
         exclusions ||= EXCLUSION_LIST
         exclusions.each { |exclusion| @options["exclude_#{exclusion}".to_sym] = true }
       end
