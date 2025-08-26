@@ -7,17 +7,16 @@ module AnnotateRb
       def call(options)
         options[:require].count > 0 && options[:require].each { |path| require path }
 
-        if defined?(::Rails::Application)
-          if defined?(::Zeitwerk)
-            # Delegate to Zeitwerk to load stuff as needed
-          else
-            klass = ::Rails::Application.send(:subclasses).first
-            klass.eager_load!
-          end
+        if defined?(::Zeitwerk)
+          # Delegate to Zeitwerk to load stuff as needed
+          #   (Supports both Rails and non-Rails applications)
+        elsif defined?(::Rails::Application)
+          klass = ::Rails::Application.send(:subclasses).first
+          klass.eager_load!
         else
           model_files = ModelAnnotator::ModelFilesGetter.call(options)
           model_files&.each do |model_file|
-            require model_file
+            require File.join(*model_file)
           end
         end
       end
