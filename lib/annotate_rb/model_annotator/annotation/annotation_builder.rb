@@ -59,17 +59,7 @@ module AnnotateRb
         end
 
         def build
-          if @options.get_state(:current_version).nil?
-            migration_version = begin
-              ActiveRecord::Migrator.current_version
-            rescue
-              0
-            end
-
-            @options.set_state(:current_version, migration_version)
-          end
-
-          version = @options.get_state(:current_version)
+          version = @model.migration_version
           table_name = @model.table_name
           table_comment = @model.connection.try(:table_comment, @model.table_name)
           max_size = @model.max_schema_info_width

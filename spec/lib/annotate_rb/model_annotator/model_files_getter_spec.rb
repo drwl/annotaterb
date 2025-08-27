@@ -93,6 +93,10 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelFilesGetter do
         subject
         expect($stderr.string).to include("No models found in directory")
       end
+
+      it "returns an empty array" do
+        expect(subject).to be_empty
+      end
     end
 
     context "when `model_dir` is the glob pattern" do

@@ -28,7 +28,7 @@ module AnnotateRb
             end
 
             cols = cols.sort_by(&:name) if @options[:sort]
-            cols = classified_sort(cols) if @options[:classified_sort]
+            cols = classified_sort(cols, @options[:grouped_polymorphic]) if @options[:classified_sort]
 
             cols
           end
@@ -91,7 +91,8 @@ module AnnotateRb
           begin
             cols = columns
 
-            if with_comments?
+            position_of_column_comment = @options.with_default_fallback(:position_of_column_comment)
+            if with_comments? && position_of_column_comment == :with_name
               column_widths = cols.map do |column|
                 column.name.size + (column.comment ? Helper.width(column.comment) : 0)
               end
@@ -106,6 +107,35 @@ module AnnotateRb
 
             max_size
           end
+      end
+
+      # TODO: Simplify this conditional
+      def is_column_primary_key?(column_name)
+        if primary_key
+          if primary_key.is_a?(Array)
+            # If the model has multiple primary keys, check if this column is one of them
+            if primary_key.collect(&:to_sym).include?(column_name.to_sym)
+              return true
+            end
+          elsif column_name.to_sym == primary_key.to_sym
+            # If model has 1 primary key, check if this column is it
+            return true
+          end
+        end
+
+        false
+      end
+
+      def built_attributes
+        @built_attributes ||= begin
+          table_indices = retrieve_indexes_from_table
+          columns.map do |column|
+            is_primary_key = is_column_primary_key?(column.name)
+            column_indices = table_indices.select { |ind| ind.columns.include?(column.name) }
+            built = ColumnAnnotation::AttributesBuilder.new(column, @options, is_primary_key, column_indices, column_defaults).build
+            [column.name, built]
+          end.to_h
+        end
       end
 
       def retrieve_indexes_from_table
@@ -143,7 +173,11 @@ module AnnotateRb
           raw_columns.map(&:comment).any? { |comment| !comment.nil? }
       end
 
-      def classified_sort(cols)
+      def position_of_column_comment
+        @position_of_column_comment ||= @options[:position_of_column_comment]
+      end
+
+      def classified_sort(cols, grouped_polymorphic)
         rest_cols = []
         timestamps = []
         associations = []
@@ -152,12 +186,17 @@ module AnnotateRb
         # specs don't load defaults, so ensure we have defaults here
         timestamp_columns = @options[:timestamp_columns] || DEFAULT_TIMESTAMP_COLUMNS
 
+        col_names = cols.map(&:name)
+
         cols.each do |c|
           if c.name.eql?("id")
             id = c
           elsif timestamp_columns.include?(c.name)
             timestamps << c
           elsif c.name[-3, 3].eql?("_id")
+            associations << c
+          elsif c.name[-5, 5].eql?("_type") && col_names.include?(c.name.sub(/_type$/, "_id")) && grouped_polymorphic
+            # This is a polymorphic association's type column
             associations << c
           else
             rest_cols << c
@@ -181,6 +220,28 @@ module AnnotateRb
           :locale,
           @klass.name.foreign_key.to_sym
         ]
+      end
+
+      def migration_version
+        return 0 unless @options[:include_version]
+
+        # Multi-database support: Cache migration versions per database connection to handle
+        # different schema versions across primary/secondary databases correctly.
+        # Example: primary → "current_version_primary", secondary → "current_version_secondary"
+        connection_pool_name = connection.pool.db_config.name
+        cache_key = "current_version_#{connection_pool_name}".to_sym
+
+        if @options.get_state(cache_key).nil?
+          migration_version = begin
+            connection.migration_context.current_version
+          rescue
+            0
+          end
+
+          @options.set_state(cache_key, migration_version)
+        end
+
+        @options.get_state(cache_key)
       end
     end
   end
