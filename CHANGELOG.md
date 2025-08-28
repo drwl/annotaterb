@@ -1,5 +1,28 @@
 # Changelog
 
+## [v4.19.0](https://github.com/drwl/annotaterb/tree/v4.19.0) (2025-08-28)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.18.0...v4.19.0)
+
+**Implemented enhancements:**
+
+- ignore ActiveRecord::AssociatedObject [\#172](https://github.com/drwl/annotaterb/issues/172)
+
+**Closed issues:**
+
+- STI classes blank [\#252](https://github.com/drwl/annotaterb/issues/252)
+- Model annotation issue [\#249](https://github.com/drwl/annotaterb/issues/249)
+
+**Merged pull requests:**
+
+- Bump version to v4.19.0 [\#259](https://github.com/drwl/annotaterb/pull/259) ([drwl](https://github.com/drwl))
+- Fix STI models not being annotated [\#256](https://github.com/drwl/annotaterb/pull/256) ([drwl](https://github.com/drwl))
+- refactor: relocate migration\_version\_for\_model method to ModelWrapper [\#255](https://github.com/drwl/annotaterb/pull/255) ([OdenTakashi](https://github.com/OdenTakashi))
+- Fix: Skip abstract models during annotation [\#253](https://github.com/drwl/annotaterb/pull/253) ([taise](https://github.com/taise))
+- Fix Ruby 3.3.8 compatibility and improve Zeitwerk support for non-Rails projects [\#250](https://github.com/drwl/annotaterb/pull/250) ([bradley2W1DL](https://github.com/bradley2W1DL))
+- Return a model files array even if it’s empty [\#248](https://github.com/drwl/annotaterb/pull/248) ([Flink](https://github.com/Flink))
+- Generate changelog for v4.18.0 [\#247](https://github.com/drwl/annotaterb/pull/247) ([drwl](https://github.com/drwl))
+
 ## [v4.18.0](https://github.com/drwl/annotaterb/tree/v4.18.0) (2025-08-04)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.17.0...v4.18.0)

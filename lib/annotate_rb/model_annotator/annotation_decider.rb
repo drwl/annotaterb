@@ -16,17 +16,26 @@ module AnnotateRb
 
         begin
           klass = ModelClassGetter.call(@file, @options)
-          return false unless klass.respond_to?(:descends_from_active_record?) && klass.descends_from_active_record? && !klass.abstract_class? && klass.table_exists?
 
-          return @options[:exclude_sti_subclasses] ? klass.base_class? : true
+          return false unless klass.respond_to?(:descends_from_active_record?)
+
+          # Skip annotating STI classes
+          if @options[:exclude_sti_subclasses] && !klass.descends_from_active_record?
+            return false
+          end
+
+          return false if klass.abstract_class?
+          return false unless klass.table_exists?
+
+          return true
         rescue BadModelFileError => e
           unless @options[:ignore_unknown_models]
             warn "Unable to process #{@file}: #{e.message}"
-            warn "\t" + e.backtrace.join("\n\t") if @options[:trace]
+            warn "\t#{e.backtrace.join("\n\t")}" if @options[:trace]
           end
         rescue => e
           warn "Unable to process #{@file}: #{e.message}"
-          warn "\t" + e.backtrace.join("\n\t") if @options[:trace]
+          warn "\t#{e.backtrace.join("\n\t")}" if @options[:trace]
         end
 
         false
