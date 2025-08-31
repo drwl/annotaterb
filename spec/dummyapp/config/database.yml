@@ -11,10 +11,12 @@
     primary:
       <<: *default
       database: annotaterb_development
+    <% unless ENV['SINGLE_DB_TEST'] == 'true' %>
     secondary:
       <<: *default
       database: secondary_annotaterb_development
       migrations_paths: db/secondary_migrate
+    <% end %>
 <% end %>
 
 <% if ENV['DATABASE_ADAPTER'] == 'pg' %>
@@ -30,10 +32,12 @@
     primary:
       <<: *default
       database: annotaterb_development
+    <% unless ENV['SINGLE_DB_TEST'] == 'true' %>
     secondary:
       <<: *default
       database: secondary_annotaterb_development
       migrations_paths: db/secondary_migrate
+    <% end %>
 <% end %>
 
 <% if ENV['DATABASE_ADAPTER'] == 'sqlite3' %>
@@ -44,8 +48,10 @@
     primary:
       <<: *default
       database: db/development.sqlite3
+    <% unless ENV['SINGLE_DB_TEST'] == 'true' %>
     secondary:
       <<: *default
       database: secondary_annotaterb_development
       migrations_paths: db/secondary_migrate
+    <% end %>
 <% end %>
