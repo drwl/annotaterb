@@ -286,7 +286,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
 
         context "when position of column comment is set to `rightmost_column`" do
           let(:position_of_column_comment) { :rightmost_column }
-          let(:expected_result) { "#  notes                                        :text(55)         not null     Notes.\nMay include things like notes." }
+          let(:expected_result) { "#  notes                                        :text(55)         not null     Notes.\\nMay include things like notes." }
           it { is_expected.to eq(expected_result) }
         end
       end
@@ -659,6 +659,31 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
 
           it "returns the column annotation" do
             is_expected.to eq(expected_result)
+          end
+        end
+
+        context "when the column has a multi-line comment" do
+          let(:column) { mock_column("id", :text, comment: "Identifier.\nPrimary key for record.") }
+          let(:expected_result) do
+            <<~COLUMN.strip
+              # **`id(Identifier.\\nPrimary key for record.)`**                         | `text`             | `not null`
+            COLUMN
+          end
+
+          it "returns the column annotation" do
+            is_expected.to eq(expected_result)
+          end
+
+          context "when position of column comment is set to `rightmost_column`" do
+            let(:position_of_column_comment) { :rightmost_column }
+
+            let(:expected_result) do
+              <<~COLUMN.strip
+                # **`id`**               | `text`             | `not null` | `Identifier.\\nPrimary key for record.`
+              COLUMN
+            end
+
+            it { is_expected.to eq(expected_result) }
           end
         end
       end

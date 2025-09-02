@@ -246,7 +246,7 @@ module AnnotateRb
         @options[:with_column_comments] = false
       end
 
-      option_parser.on("--position-of-column-comments VALUE",
+      option_parser.on("--position-of-column-comments [with_name|rightmost_column]",
         "set the position, in the annotation block, of the column comment") do |value|
         @options[:position_of_column_comments] = value.to_sym
       end

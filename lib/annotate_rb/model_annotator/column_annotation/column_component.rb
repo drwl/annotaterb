@@ -22,10 +22,14 @@ module AnnotateRb
         def name
           case position_of_column_comment
           when :with_name
-            "#{column.name}(#{column.comment.gsub(/\n/, '\\n')})"
+            "#{column.name}(#{escaped_column_comment})"
           else
             column.name
           end
+        end
+
+        def escaped_column_comment
+          column.comment.to_s.gsub(/\n/, '\\n')
         end
 
         def to_rdoc
@@ -56,7 +60,7 @@ module AnnotateRb
           name_remainder = max_name_size - name.length - non_ascii_length(name)
           type_remainder = (MD_TYPE_ALLOWANCE - 2) - type.length
           attributes_remainder = max_attributes_size + 1 - joined_attributes.length
-          comment_rightmost = (position_of_column_comment != :rightmost_column) ? "" : " | `#{@column.comment}`"
+          comment_rightmost = (position_of_column_comment != :rightmost_column) ? "" : " | `#{escaped_column_comment}`"
 
           # standard:disable Lint/FormatParameterMismatch
           format(
@@ -72,7 +76,7 @@ module AnnotateRb
         end
 
         def to_default
-          comment_rightmost = (position_of_column_comment == :rightmost_column) ? @column.comment : ""
+          comment_rightmost = (position_of_column_comment == :rightmost_column) ? escaped_column_comment : ""
           joined_attributes = attributes.join(", ")
           format(
             "#  %s:%s %s %s",
