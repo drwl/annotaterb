@@ -699,4 +699,77 @@ RSpec.describe AnnotateRb::RouteAnnotator::Annotator do
       end
     end
   end
+
+  describe "frozen option" do
+    before do
+      allow(File).to receive(:exist?).with(ROUTE_FILE).and_return(true).once
+      allow(File).to receive(:read).with(ROUTE_FILE).and_return(route_file_content).once
+      allow(File).to receive(:open).with(ROUTE_FILE, "wb").and_yield(mock_file).once
+      allow(mock_file).to receive(:puts).once
+
+      allow(AnnotateRb::RouteAnnotator::HeaderGenerator).to receive(:`).with("rails routes").and_return(rake_routes_result).once
+    end
+
+    describe "when changes are needed" do
+      let(:rake_routes_result) do
+        <<~EOS
+              Prefix Verb       URI Pattern                                               Controller#Action
+          myaction1 GET        /url1(.:format)                                           mycontroller1#action
+        EOS
+      end
+
+      let(:route_file_content) do
+        <<~EOS
+          # == Route Map
+          #
+        EOS
+      end
+
+      it "aborts when frozen: true" do
+        expect {
+          described_class.add_annotations(frozen: true)
+        }.to raise_error(SystemExit, /config\/routes.rb needs to be updated, but annotaterb was run with `--frozen`./)
+      end
+
+      it "does not abort when frozen: false" do
+        expect {
+          described_class.add_annotations
+        }.not_to raise_error
+      end
+    end
+
+    describe "when no changes are needed" do
+      let(:rake_routes_result) do
+        <<~EOS
+             Prefix Verb       URI Pattern                                               Controller#Action
+          myaction1 GET        /url1(.:format)                                           mycontroller1#action
+          myaction2 POST       /url2(.:format)                                           mycontroller2#action
+          myaction3 DELETE|GET /url3(.:format)                                           mycontroller3#action
+        EOS
+      end
+
+      let(:route_file_content) do
+        <<~EOS
+          # == Route Map
+          #
+          #    Prefix Verb       URI Pattern                                               Controller#Action
+          # myaction1 GET        /url1(.:format)                                           mycontroller1#action
+          # myaction2 POST       /url2(.:format)                                           mycontroller2#action
+          # myaction3 DELETE|GET /url3(.:format)                                           mycontroller3#action
+        EOS
+      end
+
+      it "does not abort when frozen: true" do
+        expect {
+          described_class.add_annotations(frozen: true)
+        }.not_to raise_error
+      end
+
+      it "does not abort when frozen: false" do
+        expect {
+          described_class.add_annotations
+        }.not_to raise_error
+      end
+    end
+  end
 end

@@ -26,6 +26,10 @@ module AnnotateRb
         if existing_text == new_text
           false
         else
+          if options[:frozen]
+            abort "AnnotateRb error. #{routes_file} needs to be updated, but annotaterb was run with `--frozen`."
+          end
+
           write(new_text)
           true
         end
