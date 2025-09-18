@@ -90,6 +90,7 @@ module AnnotateRb
 
     PATH_OPTIONS = {
       additional_file_patterns: [], # ModelAnnotator
+      ignore_filename_regexp: nil, # ModelAnnotator
       model_dir: ["app/models"], # ModelAnnotator
       require: [], # Core
       root_dir: [""] # Core; Old model Annotate code depends on it being empty when not provided another value

@@ -47,6 +47,18 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelFilesGetter do
             is_expected.to contain_exactly([model_dir, "foo.rb"])
           end
         end
+
+        context "when `ignore_file_regexp` option is enabled" do
+          let(:base_options) { {model_dir: [model_dir], ignore_filename_regexp: '\Aquux\.rb\z'} }
+          let(:options) { AnnotateRb::Options.new(base_options, {working_args: []}) }
+
+          it "returns model files that do not match the regexp" do
+            is_expected.to contain_exactly(
+              [model_dir, "foo.rb"],
+              [model_dir, File.join("bar", "baz.rb")],
+            )
+          end
+        end
       end
 
       context "when the model files are specified" do
