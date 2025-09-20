@@ -23,7 +23,7 @@ RSpec.describe "Annotate after running migrations", type: "aruba" do
     copy(File.join(migrations_template_dir, migration_file), "db/migrate")
 
     # Apply this specific migration
-    _run_migrations_cmd = run_command_and_stop("bin/rails db:migrate:up:primary VERSION=20231013230731", fail_on_error: true, exit_timeout: command_timeout_seconds)
+    _run_migrations_cmd = run_command_and_stop("bin/rails db:migrate:up VERSION=20231013230731", fail_on_error: true, exit_timeout: command_timeout_seconds)
     _run_annotations_cmd = run_command_and_stop("bundle exec annotaterb models", fail_on_error: true, exit_timeout: command_timeout_seconds)
 
     annotated_test_default = read_file(dummyapp_model("test_default.rb"))

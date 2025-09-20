@@ -3,6 +3,8 @@
 require "integration_spec_helper"
 
 RSpec.describe "Annotate with --show-migration option", type: "aruba" do
+  include_context "when in a multi database environment"
+
   let(:command_timeout_seconds) { 10 }
   let(:model_file) { "app/models/test_default.rb" }
 

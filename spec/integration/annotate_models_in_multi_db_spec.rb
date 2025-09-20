@@ -3,6 +3,8 @@
 require "integration_spec_helper"
 
 RSpec.describe "Annotate models in a multi-db environment with duplicate table names", type: "aruba" do
+  include_context "when in a multi database environment"
+
   let(:command_timeout_seconds) { 10 }
 
   # Test that running `bundle exec annotate models` twice results in no changes on the second run
