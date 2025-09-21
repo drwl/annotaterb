@@ -146,7 +146,7 @@ Annotate model options:
         --ignore-unknown-models      don't display warnings for bad model files
     -I, --ignore-columns REGEX       don't annotate columns that match a given REGEX (i.e., `annotate -I '^(id|updated_at|created_at)'`
         --with-comment               include database comments in model annotations
-        --without-comment            include database comments in model annotations
+        --without-comment            exclude database comments in model annotations
         --with-column-comments       include column comments in model annotations
         --without-column-comments    exclude column comments in model annotations
         --position-of-column-comments [with_name|rightmost_column]
