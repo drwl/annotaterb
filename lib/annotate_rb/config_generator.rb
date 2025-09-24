@@ -13,6 +13,9 @@ module AnnotateRb
         differences = defaults.keys - user_defaults.keys
         result = defaults.slice(*differences)
 
+        # Return empty string if no differences to avoid appending empty hash
+        return "" if result.empty?
+
         # Generates proper YAML including the leading hyphens `---` header
         yml_content = YAML.dump(result, StringIO.new).string
         # Remove the header
