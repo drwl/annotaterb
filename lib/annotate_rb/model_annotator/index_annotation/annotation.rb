@@ -26,6 +26,10 @@ module AnnotateRb
         def to_default
           body.map(&:to_default).join("\n")
         end
+
+        def to_yard
+          body.map(:&to_yard).join("\n")
+        end
       end
     end
   end
