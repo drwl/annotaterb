@@ -38,6 +38,10 @@ module AnnotateRb
         @klass.connection
       end
 
+      def database_name
+        connection.pool.db_config.name
+      end
+
       # Returns the unmodified model columns
       def raw_columns
         @raw_columns ||= @klass.columns

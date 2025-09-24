@@ -20,11 +20,28 @@ module AnnotateRb
           end
         end
 
-        attr_reader :table_name, :table_comment
+        class DatabaseName < Components::Base
+          attr_reader :name
 
-        def initialize(table_name, table_comment, options)
+          def initialize(name)
+            @name = name
+          end
+
+          def to_default
+            "# Database name: #{name}"
+          end
+
+          def to_markdown
+            "# Database name: `#{name}`"
+          end
+        end
+
+        attr_reader :table_name, :table_comment, :database_name
+
+        def initialize(table_name, table_comment, database_name, options)
           @table_name = table_name
           @table_comment = table_comment
+          @database_name = database_name
           @options = options
         end
 
@@ -32,8 +49,9 @@ module AnnotateRb
           [
             Components::BlankCommentLine.new,
             TableName.new(name),
+            (DatabaseName.new(database_name) if database_name),
             Components::BlankCommentLine.new
-          ]
+          ].compact
         end
 
         def to_default
