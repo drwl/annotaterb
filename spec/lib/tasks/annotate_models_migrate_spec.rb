@@ -1,64 +1,118 @@
 RSpec.describe "ActiveRecord migration rake task hooks" do
   context "single database" do
-    before do
-      Rake.application = Rake::Application.new
+    shared_context "spec setup with a single database" do |skip_on_db_migrate: false|
+      before do
+        allow(AnnotateRb::ConfigLoader).to receive(:load_config).and_return({skip_on_db_migrate:})
 
-      # Stub migration tasks
-      %w[db:migrate db:migrate:up db:migrate:down db:migrate:reset db:rollback].each do |task|
-        Rake::Task.define_task(task)
-      end
+        Rake.application = Rake::Application.new
 
-      Rake::Task.define_task("db:migrate:redo") do
-        Rake::Task["db:rollback"].invoke
-        Rake::Task["db:migrate"].invoke
-      end
+        # Stub migration tasks
+        %w[db:migrate db:migrate:up db:migrate:down db:migrate:reset db:rollback].each do |task|
+          Rake::Task.define_task(task)
+        end
 
-      Rake.load_rakefile("annotate_rb/tasks/annotate_models_migrate.rake")
+        Rake::Task.define_task("db:migrate:redo") do
+          Rake::Task["db:rollback"].invoke
+          Rake::Task["db:migrate"].invoke
+        end
 
-      Rake.application.instance_variable_set(:@top_level_tasks, [subject])
-    end
+        Rake.load_rakefile("annotate_rb/tasks/annotate_models_migrate.rake")
 
-    describe "db:migrate" do
-      it "should annotate model files" do
-        expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
-        Rake.application.top_level
+        Rake.application.instance_variable_set(:@top_level_tasks, [subject])
       end
     end
 
-    describe "db:migrate:up" do
-      it "should annotate model files" do
-        expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
-        Rake.application.top_level
+    context "when skip_on_db_migrate is disabled" do
+      include_context "spec setup with a single database", skip_on_db_migrate: false
+
+      describe "db:migrate" do
+        it "should annotate model files" do
+          expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
+          Rake.application.top_level
+        end
+      end
+
+      describe "db:migrate:up" do
+        it "should annotate model files" do
+          expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
+          Rake.application.top_level
+        end
+      end
+
+      describe "db:migrate:down" do
+        it "should annotate model files" do
+          expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
+          Rake.application.top_level
+        end
+      end
+
+      describe "db:migrate:reset" do
+        it "should annotate model files" do
+          expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
+          Rake.application.top_level
+        end
+      end
+
+      describe "db:rollback" do
+        it "should annotate model files" do
+          expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
+          Rake.application.top_level
+        end
+      end
+
+      describe "db:migrate:redo" do
+        it "should annotate model files after all migration tasks" do
+          # Hooked 3 times by db:rollback, db:migrate, and db:migrate:redo tasks
+          expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models")).exactly(3).times
+
+          Rake.application.top_level
+        end
       end
     end
 
-    describe "db:migrate:down" do
-      it "should annotate model files" do
-        expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
-        Rake.application.top_level
+    context "when skip_on_db_migrate is enabled" do
+      include_context "spec setup with a single database", skip_on_db_migrate: true
+
+      describe "db:migrate" do
+        it "should not annotate model files" do
+          expect(AnnotateRb::Runner).not_to receive(:run)
+          Rake.application.top_level
+        end
       end
-    end
 
-    describe "db:migrate:reset" do
-      it "should annotate model files" do
-        expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
-        Rake.application.top_level
+      describe "db:migrate:up" do
+        it "should not annotate model files" do
+          expect(AnnotateRb::Runner).not_to receive(:run)
+          Rake.application.top_level
+        end
       end
-    end
 
-    describe "db:rollback" do
-      it "should annotate model files" do
-        expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
-        Rake.application.top_level
+      describe "db:migrate:down" do
+        it "should not annotate model files" do
+          expect(AnnotateRb::Runner).not_to receive(:run)
+          Rake.application.top_level
+        end
       end
-    end
 
-    describe "db:migrate:redo" do
-      it "should annotate model files after all migration tasks" do
-        # Hooked 3 times by db:rollback, db:migrate, and db:migrate:redo tasks
-        expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models")).exactly(3).times
+      describe "db:migrate:reset" do
+        it "should not annotate model files" do
+          expect(AnnotateRb::Runner).not_to receive(:run)
+          Rake.application.top_level
+        end
+      end
 
-        Rake.application.top_level
+      describe "db:rollback" do
+        it "should not annotate model files" do
+          expect(AnnotateRb::Runner).not_to receive(:run)
+          Rake.application.top_level
+        end
+      end
+
+      describe "db:migrate:redo" do
+        it "should not annotate model files" do
+          expect(AnnotateRb::Runner).not_to receive(:run)
+          Rake.application.top_level
+        end
       end
     end
   end
@@ -77,49 +131,89 @@ RSpec.describe "ActiveRecord migration rake task hooks" do
       end
 
       allow(ActiveRecord::Tasks::DatabaseTasks).to receive(:for_each) do |databases, &block|
-        databases.each { |name, config| block.call(name) }
+        databases.each { |name, _config| block.call(name) }
       end
     end
 
-    before do
-      stub_rails "6.0.0", ["primary"]
+    shared_context "spec setup with multiple databases" do |skip_on_db_migrate: false|
+      before do
+        allow(AnnotateRb::ConfigLoader).to receive(:load_config).and_return({skip_on_db_migrate:})
 
-      Rake.application = Rake::Application.new
+        stub_rails "6.0.0", ["primary"]
 
-      %w[db:migrate db:migrate:up db:migrate:down db:rollback].each do |task|
-        Rake::Task.define_task("#{task}:primary")
-      end
+        Rake.application = Rake::Application.new
 
-      Rake.load_rakefile("annotate_rb/tasks/annotate_models_migrate.rake")
+        %w[db:migrate db:migrate:up db:migrate:down db:rollback].each do |task|
+          Rake::Task.define_task("#{task}:primary")
+        end
 
-      Rake.application.instance_variable_set(:@top_level_tasks, [subject])
-    end
+        Rake.load_rakefile("annotate_rb/tasks/annotate_models_migrate.rake")
 
-    describe "db:migrate:primary" do
-      it "should annotate model files" do
-        expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
-        Rake.application.top_level
+        Rake.application.instance_variable_set(:@top_level_tasks, [subject])
       end
     end
 
-    describe "db:migrate:up:primary" do
-      it "should annotate model files" do
-        expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
-        Rake.application.top_level
+    context "when skip_on_db_migrate is disabled" do
+      include_context "spec setup with multiple databases", skip_on_db_migrate: false
+
+      describe "db:migrate:primary" do
+        it "should annotate model files" do
+          expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
+          Rake.application.top_level
+        end
+      end
+
+      describe "db:migrate:up:primary" do
+        it "should annotate model files" do
+          expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
+          Rake.application.top_level
+        end
+      end
+
+      describe "db:migrate:down:primary" do
+        it "should annotate model files" do
+          expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
+          Rake.application.top_level
+        end
+      end
+
+      describe "db:rollback:primary" do
+        it "should annotate model files" do
+          expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
+          Rake.application.top_level
+        end
       end
     end
 
-    describe "db:migrate:down:primary" do
-      it "should annotate model files" do
-        expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
-        Rake.application.top_level
-      end
-    end
+    context "when skip_on_db_migrate is enabled" do
+      include_context "spec setup with multiple databases", skip_on_db_migrate: true
 
-    describe "db:rollback:primary" do
-      it "should annotate model files" do
-        expect(AnnotateRb::Runner).to receive(:run).with(a_collection_including("models"))
-        Rake.application.top_level
+      describe "db:migrate:primary" do
+        it "should not annotate model files" do
+          expect(AnnotateRb::Runner).not_to receive(:run)
+          Rake.application.top_level
+        end
+      end
+
+      describe "db:migrate:up:primary" do
+        it "should not annotate model files" do
+          expect(AnnotateRb::Runner).not_to receive(:run)
+          Rake.application.top_level
+        end
+      end
+
+      describe "db:migrate:down:primary" do
+        it "should not annotate model files" do
+          expect(AnnotateRb::Runner).not_to receive(:run)
+          Rake.application.top_level
+        end
+      end
+
+      describe "db:rollback:primary" do
+        it "should not annotate model files" do
+          expect(AnnotateRb::Runner).not_to receive(:run)
+          Rake.application.top_level
+        end
       end
     end
   end

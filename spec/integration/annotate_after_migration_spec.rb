@@ -54,4 +54,36 @@ RSpec.describe "Annotate after running migrations", type: "aruba" do
       expect(annotated_test_default).to eq(expected_test_default)
     end
   end
+
+  context "when skip_on_db_migrate is enabled" do
+    before do
+      # Install the rake task hook
+      _cmd = run_command_and_stop("bin/rails g annotate_rb:install", fail_on_error: true, exit_timeout: command_timeout_seconds)
+
+      # Create config with skip_on_db_migrate enabled
+      write_file(".annotaterb.yml", "skip_on_db_migrate: true")
+    end
+
+    it "skips annotation during migration" do
+      reset_database
+
+      original_test_default = read_file(dummyapp_model("test_default.rb"))
+
+      # Run migration - should NOT trigger annotation due to skip_on_db_migrate
+      _run_migrations_cmd = run_command_and_stop("bin/rails db:migrate", fail_on_error: true, exit_timeout: command_timeout_seconds)
+
+      # File should remain unchanged
+      unchanged_test_default = read_file(dummyapp_model("test_default.rb"))
+
+      expect(last_command_started).to be_successfully_executed
+      expect(unchanged_test_default).to eq(original_test_default)
+
+      # Verify annotation still works when run manually
+      _manual_cmd = run_command_and_stop("bundle exec annotaterb models", fail_on_error: true, exit_timeout: command_timeout_seconds)
+      annotated_test_default = read_file(dummyapp_model("test_default.rb"))
+      expected_test_default = read_file(model_template("test_default.rb"))
+
+      expect(annotated_test_default).to eq(expected_test_default)
+    end
+  end
 end
