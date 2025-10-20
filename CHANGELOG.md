@@ -1,5 +1,24 @@
 # Changelog
 
+## [v4.20.0](https://github.com/drwl/annotaterb/tree/v4.20.0) (2025-10-20)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.19.0...v4.20.0)
+
+**Merged pull requests:**
+
+- Bump version to v4.20.0 [\#278](https://github.com/drwl/annotaterb/pull/278) ([drwl](https://github.com/drwl))
+- Bump github/codeql-action from 3 to 4 [\#277](https://github.com/drwl/annotaterb/pull/277) ([dependabot[bot]](https://github.com/apps/dependabot))
+- fix: position-of-column-comment option [\#275](https://github.com/drwl/annotaterb/pull/275) ([JohnnyKei](https://github.com/JohnnyKei))
+- feat: Add database name to annotations in multi-DB environments [\#272](https://github.com/drwl/annotaterb/pull/272) ([OdenTakashi](https://github.com/OdenTakashi))
+- fix: resolve YAML syntax error in update\_config generator [\#269](https://github.com/drwl/annotaterb/pull/269) ([ivy](https://github.com/ivy))
+- Update README.md [\#268](https://github.com/drwl/annotaterb/pull/268) ([torgoton](https://github.com/torgoton))
+- Honor --frozen option in routes [\#265](https://github.com/drwl/annotaterb/pull/265) ([garriguv](https://github.com/garriguv))
+- refactor\(test\): Default to single-DB environment for tests [\#264](https://github.com/drwl/annotaterb/pull/264) ([OdenTakashi](https://github.com/OdenTakashi))
+- Escape column comment newlines when using "rightmost" value for position\_of\_column\_comment option [\#263](https://github.com/drwl/annotaterb/pull/263) ([rowanhogan](https://github.com/rowanhogan))
+- chore: introduce switchable DB environment for specs [\#262](https://github.com/drwl/annotaterb/pull/262) ([OdenTakashi](https://github.com/OdenTakashi))
+- Generate changelog for v4.19.0 [\#260](https://github.com/drwl/annotaterb/pull/260) ([drwl](https://github.com/drwl))
+- Bump actions/checkout from 4 to 5 [\#257](https://github.com/drwl/annotaterb/pull/257) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v4.19.0](https://github.com/drwl/annotaterb/tree/v4.19.0) (2025-08-28)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.18.0...v4.19.0)
