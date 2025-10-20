@@ -24,4 +24,14 @@ RSpec.describe "Annotate models in a multi-db environment with duplicate table n
     # Ensure "Model files unchanged." is included in the output
     expect(second_run_output).to include("Model files unchanged.")
   end
+
+  it "includes the database name in the annotation for secondary models" do
+    reset_database
+    run_migrations
+
+    run_command_and_stop("bundle exec annotaterb models", fail_on_error: true, exit_timeout: command_timeout_seconds)
+
+    content = read_file(dummyapp_model("secondary/test_default.rb"))
+    expect(content).to include("# Database name: secondary")
+  end
 end

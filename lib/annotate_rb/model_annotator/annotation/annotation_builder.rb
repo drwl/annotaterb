@@ -5,7 +5,7 @@ module AnnotateRb
     module Annotation
       class AnnotationBuilder
         class Annotation < Components::Base
-          attr_reader :version, :table_name, :table_comment, :max_size
+          attr_reader :version, :table_name, :table_comment, :max_size, :database_name
 
           def initialize(options, **input)
             @options = options
@@ -15,12 +15,13 @@ module AnnotateRb
             @table_comment = input[:table_comment]
             @max_size = input[:max_size]
             @model = input[:model]
+            @database_name = input[:database_name]
           end
 
           def body
             [
               MainHeader.new(version, @options[:include_version]),
-              SchemaHeader.new(table_name, table_comment, @options),
+              SchemaHeader.new(table_name, table_comment, database_name, @options),
               MarkdownHeader.new(max_size),
               *columns,
               IndexAnnotation::AnnotationBuilder.new(@model, @options).build,
@@ -63,10 +64,21 @@ module AnnotateRb
           table_name = @model.table_name
           table_comment = @model.connection.try(:table_comment, @model.table_name)
           max_size = @model.max_schema_info_width
+          database_name = @model.database_name if multi_db_environment?
 
           _annotation = Annotation.new(@options,
             version: version, table_name: table_name, table_comment: table_comment,
-            max_size: max_size, model: @model).build
+            max_size: max_size, model: @model, database_name: database_name).build
+        end
+
+        private
+
+        def multi_db_environment?
+          if defined?(::Rails) && ::Rails.env
+            ActiveRecord::Base.configurations.configs_for(env_name: ::Rails.env).size > 1
+          else
+            false
+          end
         end
       end
     end
