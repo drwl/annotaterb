@@ -2,7 +2,7 @@ RSpec.describe "ActiveRecord migration rake task hooks" do
   context "single database" do
     shared_context "spec setup with a single database" do |skip_on_db_migrate: false|
       before do
-        allow(AnnotateRb::ConfigLoader).to receive(:load_config).and_return({skip_on_db_migrate:})
+        allow(AnnotateRb::ConfigLoader).to receive(:load_config).and_return({skip_on_db_migrate: skip_on_db_migrate})
 
         Rake.application = Rake::Application.new
 
@@ -137,7 +137,7 @@ RSpec.describe "ActiveRecord migration rake task hooks" do
 
     shared_context "spec setup with multiple databases" do |skip_on_db_migrate: false|
       before do
-        allow(AnnotateRb::ConfigLoader).to receive(:load_config).and_return({skip_on_db_migrate:})
+        allow(AnnotateRb::ConfigLoader).to receive(:load_config).and_return({skip_on_db_migrate: skip_on_db_migrate})
 
         stub_rails "6.0.0", ["primary"]
 
