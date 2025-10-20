@@ -149,7 +149,7 @@ Annotate model options:
         --without-comment            exclude database comments in model annotations
         --with-column-comments       include column comments in model annotations
         --without-column-comments    exclude column comments in model annotations
-        --position-of-column-comments [with_name|rightmost_column]
+        --position-of-column-comment [with_name|rightmost_column]
                                      set the position, in the annotation block, of the column comment
         --with-table-comments        include table comments in model annotations
         --without-table-comments     exclude table comments in model annotations
