@@ -213,8 +213,9 @@ Previously in the [Annotate](https://github.com/ctran/annotate_models) you could
 
 ### Configuration file location
 
-AnnotateRb also supports [the `.config` directory convention](https://dot-config.github.io/). Configuration files are searched for in the following locations (in order of precedence):
+AnnotateRb also supports other configuration file locations, and are searched for in the following locations (in order of precedence):
 - `.annotaterb.yml`
+- `config/annotaterb.yml`
 - `.config/.annotaterb.yml`
 - `.config/annotaterb/config.yml`
 
