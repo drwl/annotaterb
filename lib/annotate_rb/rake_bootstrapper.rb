@@ -3,8 +3,9 @@
 module AnnotateRb
   class RakeBootstrapper
     class << self
-      def call(options)
+      def call
         require "rake"
+
         load "./Rakefile" if File.exist?("./Rakefile") && !Rake::Task.task_defined?(:environment)
 
         begin

@@ -23,23 +23,18 @@ module AnnotateRb
     end
 
     def run(args)
-      config_file_options = ConfigLoader.load_config
-      parser = Parser.new(args, {})
+      AnnotateRb::RakeBootstrapper.call
 
+      parser = Parser.new(args, {})
       parsed_options = parser.parse
       remaining_args = parser.remaining_args
 
-      options = config_file_options.merge(parsed_options)
+      options = ConfigLoader.load_config.merge(parsed_options)
+      @options = Options.from(ConfigLoader.load_config.merge(parsed_options), { working_args: remaining_args })
 
-      @options = Options.from(options, {working_args: remaining_args})
-      AnnotateRb::RakeBootstrapper.call(@options)
+      raise "Didn't specify a command" unless @options[:command]
 
-      if @options[:command]
-        @options[:command].call(@options)
-      else
-        # TODO
-        raise "Didn't specify a command"
-      end
+      @options[:command].call(@options)
     end
   end
 end
