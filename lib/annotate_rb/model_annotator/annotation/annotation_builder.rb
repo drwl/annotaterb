@@ -74,6 +74,8 @@ module AnnotateRb
         private
 
         def multi_db_environment?
+          return false if @options[:ignore_multi_database_name]
+
           if defined?(::Rails) && ::Rails.env
             ActiveRecord::Base.configurations.configs_for(env_name: ::Rails.env).size > 1
           else
