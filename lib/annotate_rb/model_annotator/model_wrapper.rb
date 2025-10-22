@@ -232,8 +232,7 @@ module AnnotateRb
         # Multi-database support: Cache migration versions per database connection to handle
         # different schema versions across primary/secondary databases correctly.
         # Example: primary → "current_version_primary", secondary → "current_version_secondary"
-        connection_pool_name = connection.pool.db_config.name
-        cache_key = "current_version_#{connection_pool_name}".to_sym
+        cache_key = "current_version_#{database_name}".to_sym
 
         if @options.get_state(cache_key).nil?
           migration_version = begin
