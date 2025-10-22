@@ -211,6 +211,14 @@ Additional options that work for annotating models and routes
 
 Previously in the [Annotate](https://github.com/ctran/annotate_models) you could pass options through the CLI or store them as environment variables. Annotaterb removes dependency on the environment variables and instead can read values from a `.annotaterb.yml` file stored in the Rails project root.
 
+### Configuration file location
+
+AnnotateRb also supports other configuration file locations, and are searched for in the following locations (in order of precedence):
+- `.annotaterb.yml`
+- `config/annotaterb.yml`
+- `.config/.annotaterb.yml`
+- `.config/annotaterb/config.yml`
+
 ```yml
 # .annotaterb.yml
 
