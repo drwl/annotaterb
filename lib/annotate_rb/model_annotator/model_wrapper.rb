@@ -113,21 +113,10 @@ module AnnotateRb
           end
       end
 
-      # TODO: Simplify this conditional
       def is_column_primary_key?(column_name)
-        if primary_key
-          if primary_key.is_a?(Array)
-            # If the model has multiple primary keys, check if this column is one of them
-            if primary_key.collect(&:to_sym).include?(column_name.to_sym)
-              return true
-            end
-          elsif column_name.to_sym == primary_key.to_sym
-            # If model has 1 primary key, check if this column is it
-            return true
-          end
-        end
+        return false unless primary_key
 
-        false
+        Array(primary_key).map(&:to_sym).include?(column_name.to_sym)
       end
 
       def built_attributes
