@@ -10,6 +10,7 @@ class CreateTestTables < ActiveRecord::Migration["#{Rails::VERSION::MAJOR}.#{Rai
       t.float :float, default: 12.34
       t.integer :integer, default: 99
       t.string :string, default: 'hello world!'
+      t.string :ignored_column
 
       t.timestamps
     end
