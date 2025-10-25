@@ -155,6 +155,7 @@ Annotate model options:
         --without-table-comments     exclude table comments in model annotations
         --classes-default-to-s class Custom classes to be represented with `to_s`, may be used multiple times
         --nested-position            Place annotations directly above nested classes or modules instead of at the top of the file.
+        --load-columns-from-schema   Load columns from schema to avoid ActiveRecord ignored/only column configuration
 
 Annotate routes options:
     Usage: annotaterb routes [options]
