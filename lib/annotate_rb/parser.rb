@@ -274,6 +274,11 @@ module AnnotateRb
         "Place annotations directly above nested classes or modules instead of at the top of the file.") do
         @options[:nested_position] = true
       end
+
+      option_parser.on("--skip-database-name",
+        "Skip adding the database name to annotations (useful in multi-database setups)") do
+        @options[:skip_database_name] = true
+      end
     end
 
     def add_route_options_to_parser(option_parser)

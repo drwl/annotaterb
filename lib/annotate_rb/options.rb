@@ -52,6 +52,7 @@ module AnnotateRb
       show_indexes_include: false, # ModelAnnotator
       show_virtual_columns: false, # ModelAnnotator
       simple_indexes: false, # ModelAnnotator
+      skip_database_name: false, # ModelAnnotator
       sort: false, # ModelAnnotator
       timestamp: false, # RouteAnnotator
       trace: false, # ModelAnnotator, but is part of Core
@@ -125,6 +126,7 @@ module AnnotateRb
       :show_indexes,
       :show_indexes_include,
       :simple_indexes,
+      :skip_database_name,
       :sort,
       :timestamp,
       :trace,

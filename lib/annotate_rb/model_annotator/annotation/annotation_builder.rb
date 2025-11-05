@@ -64,7 +64,7 @@ module AnnotateRb
           table_name = @model.table_name
           table_comment = @model.connection.try(:table_comment, @model.table_name)
           max_size = @model.max_schema_info_width
-          database_name = @model.database_name if multi_db_environment?
+          database_name = @model.database_name if multi_db_environment? && !@options[:skip_database_name]
 
           _annotation = Annotation.new(@options,
             version: version, table_name: table_name, table_comment: table_comment,
