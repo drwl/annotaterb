@@ -609,5 +609,14 @@ module AnnotateRb # rubocop:disable Metrics/ModuleLength
         expect(result).to include(nested_position: true)
       end
     end
+
+    describe "--skip-database-name" do
+      let(:option) { "--skip-database-name" }
+      let(:args) { [option] }
+
+      it "sets skip_database_name to true" do
+        expect(result).to include(skip_database_name: true)
+      end
+    end
   end
 end
