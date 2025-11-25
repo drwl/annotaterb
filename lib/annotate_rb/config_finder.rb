@@ -17,7 +17,7 @@ module AnnotateRb
 
       def find_project_dotfile
         return @config_path if @config_path && File.exist?(@config_path)
-        
+
         [
           find_project_root.join(DOTFILE),
           find_project_root.join("config", DOTFILE.delete_prefix(".")),
