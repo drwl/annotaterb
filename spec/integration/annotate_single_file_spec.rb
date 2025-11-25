@@ -29,6 +29,7 @@ RSpec.describe "Annotate a single file", type: "aruba" do
 
     expect(last_command_started).to be_successfully_executed
     expect(annotated_test_default).to eq(expected_test_default)
+    expect(annotated_test_default).not_to include("# Database name:")
     expect(annotated_test_null_false).not_to eq(expected_test_null_false)
   end
 end

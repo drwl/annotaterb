@@ -18,7 +18,7 @@ if defined?(Rails::Application) && Rails.version.split(".").first.to_i >= 6
 
   # If there's multiple databases, this appends database specific rake tasks to `migration_tasks`
   ActiveRecord::Tasks::DatabaseTasks.for_each(databases) do |database_name|
-    migration_tasks.concat(%w[db:migrate db:migrate:up db:migrate:down].map { |task| "#{task}:#{database_name}" })
+    migration_tasks.concat(%w[db:migrate db:migrate:up db:migrate:down db:rollback].map { |task| "#{task}:#{database_name}" })
   end
 end
 

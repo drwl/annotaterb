@@ -2,10 +2,11 @@
 
 RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
   describe "#to_default" do
-    subject { described_class.new(table_name, table_comment, options).to_default }
+    subject { described_class.new(table_name, table_comment, database_name, options).to_default }
 
     let(:table_name) { "users" }
     let(:table_comment) {}
+    let(:database_name) {}
     let :options do
       AnnotateRb::Options.new({})
     end
@@ -19,6 +20,21 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
     end
 
     it { is_expected.to eq(expected_header) }
+
+    context "with database_name" do
+      let(:database_name) { "secondary" }
+
+      let(:expected_header) do
+        <<~HEADER.strip
+          #
+          # Table name: users
+          # Database name: secondary
+          #
+        HEADER
+      end
+
+      it { is_expected.to eq(expected_header) }
+    end
 
     context "with `with_comment: true`" do
       context "with `with_table_comments: true` and table has comments" do
@@ -126,10 +142,11 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
   end
 
   describe "#to_markdown" do
-    subject { described_class.new(table_name, table_comment, options).to_markdown }
+    subject { described_class.new(table_name, table_comment, database_name, options).to_markdown }
 
     let(:table_name) { "users" }
     let(:table_comment) {}
+    let(:database_name) {}
     let :options do
       AnnotateRb::Options.new({})
     end
@@ -143,5 +160,20 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
     end
 
     it { is_expected.to eq(expected_header) }
+
+    context "with database_name" do
+      let(:database_name) { "secondary" }
+
+      let(:expected_header) do
+        <<~HEADER.strip
+          #
+          # Table name: `users`
+          # Database name: `secondary`
+          #
+        HEADER
+      end
+
+      it { is_expected.to eq(expected_header) }
+    end
   end
 end

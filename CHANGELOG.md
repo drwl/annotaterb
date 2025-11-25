@@ -1,5 +1,105 @@
 # Changelog
 
+## [v4.20.0](https://github.com/drwl/annotaterb/tree/v4.20.0) (2025-10-20)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.19.0...v4.20.0)
+
+**Merged pull requests:**
+
+- Bump version to v4.20.0 [\#278](https://github.com/drwl/annotaterb/pull/278) ([drwl](https://github.com/drwl))
+- Bump github/codeql-action from 3 to 4 [\#277](https://github.com/drwl/annotaterb/pull/277) ([dependabot[bot]](https://github.com/apps/dependabot))
+- fix: position-of-column-comment option [\#275](https://github.com/drwl/annotaterb/pull/275) ([JohnnyKei](https://github.com/JohnnyKei))
+- feat: Add database name to annotations in multi-DB environments [\#272](https://github.com/drwl/annotaterb/pull/272) ([OdenTakashi](https://github.com/OdenTakashi))
+- fix: resolve YAML syntax error in update\_config generator [\#269](https://github.com/drwl/annotaterb/pull/269) ([ivy](https://github.com/ivy))
+- Update README.md [\#268](https://github.com/drwl/annotaterb/pull/268) ([torgoton](https://github.com/torgoton))
+- Honor --frozen option in routes [\#265](https://github.com/drwl/annotaterb/pull/265) ([garriguv](https://github.com/garriguv))
+- refactor\(test\): Default to single-DB environment for tests [\#264](https://github.com/drwl/annotaterb/pull/264) ([OdenTakashi](https://github.com/OdenTakashi))
+- Escape column comment newlines when using "rightmost" value for position\_of\_column\_comment option [\#263](https://github.com/drwl/annotaterb/pull/263) ([rowanhogan](https://github.com/rowanhogan))
+- chore: introduce switchable DB environment for specs [\#262](https://github.com/drwl/annotaterb/pull/262) ([OdenTakashi](https://github.com/OdenTakashi))
+- Generate changelog for v4.19.0 [\#260](https://github.com/drwl/annotaterb/pull/260) ([drwl](https://github.com/drwl))
+- Bump actions/checkout from 4 to 5 [\#257](https://github.com/drwl/annotaterb/pull/257) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v4.19.0](https://github.com/drwl/annotaterb/tree/v4.19.0) (2025-08-28)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.18.0...v4.19.0)
+
+**Implemented enhancements:**
+
+- ignore ActiveRecord::AssociatedObject [\#172](https://github.com/drwl/annotaterb/issues/172)
+
+**Closed issues:**
+
+- STI classes blank [\#252](https://github.com/drwl/annotaterb/issues/252)
+- Model annotation issue [\#249](https://github.com/drwl/annotaterb/issues/249)
+
+**Merged pull requests:**
+
+- Bump version to v4.19.0 [\#259](https://github.com/drwl/annotaterb/pull/259) ([drwl](https://github.com/drwl))
+- Fix STI models not being annotated [\#256](https://github.com/drwl/annotaterb/pull/256) ([drwl](https://github.com/drwl))
+- refactor: relocate migration\_version\_for\_model method to ModelWrapper [\#255](https://github.com/drwl/annotaterb/pull/255) ([OdenTakashi](https://github.com/OdenTakashi))
+- Fix: Skip abstract models during annotation [\#253](https://github.com/drwl/annotaterb/pull/253) ([taise](https://github.com/taise))
+- Fix Ruby 3.3.8 compatibility and improve Zeitwerk support for non-Rails projects [\#250](https://github.com/drwl/annotaterb/pull/250) ([bradley2W1DL](https://github.com/bradley2W1DL))
+- Return a model files array even if it’s empty [\#248](https://github.com/drwl/annotaterb/pull/248) ([Flink](https://github.com/Flink))
+- Generate changelog for v4.18.0 [\#247](https://github.com/drwl/annotaterb/pull/247) ([drwl](https://github.com/drwl))
+
+## [v4.18.0](https://github.com/drwl/annotaterb/tree/v4.18.0) (2025-08-04)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.17.0...v4.18.0)
+
+**Implemented enhancements:**
+
+- Feature request: support for multi database [\#188](https://github.com/drwl/annotaterb/issues/188)
+
+**Closed issues:**
+
+- Does not run on rollback with multiple databases [\#244](https://github.com/drwl/annotaterb/issues/244)
+- classified\_sort and polymorphic associations [\#236](https://github.com/drwl/annotaterb/issues/236)
+- --show-migration also annotates the primary DB's schema version for models referencing the secondary DB [\#233](https://github.com/drwl/annotaterb/issues/233)
+- Annotations are not added on top of model files when columns'`comment:` contains Japanese characters in migrations [\#200](https://github.com/drwl/annotaterb/issues/200)
+- Feature: further customization to achieve more compact annotations [\#150](https://github.com/drwl/annotaterb/issues/150)
+- Version 5 change list [\#127](https://github.com/drwl/annotaterb/issues/127)
+- Reformat Column Comments [\#117](https://github.com/drwl/annotaterb/issues/117)
+
+**Merged pull requests:**
+
+- Bump version to v4.18.0 [\#246](https://github.com/drwl/annotaterb/pull/246) ([drwl](https://github.com/drwl))
+- Run on rollback in app with multiple databases [\#245](https://github.com/drwl/annotaterb/pull/245) ([z1lk](https://github.com/z1lk))
+- Speed up AnnotationDecider [\#243](https://github.com/drwl/annotaterb/pull/243) ([DRBragg](https://github.com/DRBragg))
+- Add AnnotateRb::Runner.running? method [\#242](https://github.com/drwl/annotaterb/pull/242) ([thewatts](https://github.com/thewatts))
+- fix: --show-migration to use per-model database connections [\#241](https://github.com/drwl/annotaterb/pull/241) ([OdenTakashi](https://github.com/OdenTakashi))
+- Fix: Support Japanese characters in column names [\#239](https://github.com/drwl/annotaterb/pull/239) ([tonystrawberry](https://github.com/tonystrawberry))
+- Fix classified\_sort to group polymorphic association columns together [\#238](https://github.com/drwl/annotaterb/pull/238) ([garriguv](https://github.com/garriguv))
+- Generate changelog for v4.17.0 [\#235](https://github.com/drwl/annotaterb/pull/235) ([drwl](https://github.com/drwl))
+
+## [v4.17.0](https://github.com/drwl/annotaterb/tree/v4.17.0) (2025-07-14)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.16.0...v4.17.0)
+
+**Implemented enhancements:**
+
+- Place column comments at the end of the line \(feature suggestion\) [\#164](https://github.com/drwl/annotaterb/issues/164)
+
+**Fixed bugs:**
+
+- Model annotation chokes on an empty file [\#182](https://github.com/drwl/annotaterb/issues/182)
+
+**Closed issues:**
+
+- uninitialized constant Zeitwerk::VERSION [\#216](https://github.com/drwl/annotaterb/issues/216)
+- Incorrect annotation of fixture files when different models share the same table name in different databases [\#206](https://github.com/drwl/annotaterb/issues/206)
+- Should active record and active support be in the gemspec? [\#197](https://github.com/drwl/annotaterb/issues/197)
+
+**Merged pull requests:**
+
+- Bump version to v4.17.0 [\#234](https://github.com/drwl/annotaterb/pull/234) ([drwl](https://github.com/drwl))
+- Fix NoMethodError when processing empty files [\#232](https://github.com/drwl/annotaterb/pull/232) ([tanukiti1987](https://github.com/tanukiti1987))
+- Refactor column ignore to use `match?` [\#231](https://github.com/drwl/annotaterb/pull/231) ([tagliala](https://github.com/tagliala))
+- Fix standard configuration [\#230](https://github.com/drwl/annotaterb/pull/230) ([tagliala](https://github.com/tagliala))
+- Generate changelog for v4.16.0 [\#229](https://github.com/drwl/annotaterb/pull/229) ([drwl](https://github.com/drwl))
+- show included columns in indexes [\#211](https://github.com/drwl/annotaterb/pull/211) ([pineman](https://github.com/pineman))
+- fix: use model name for file retrieval when not connected to the primary DB. [\#207](https://github.com/drwl/annotaterb/pull/207) ([OdenTakashi](https://github.com/OdenTakashi))
+- Place column comments at the end of the line [\#199](https://github.com/drwl/annotaterb/pull/199) ([Adeynack](https://github.com/Adeynack))
+
 ## [v4.16.0](https://github.com/drwl/annotaterb/tree/v4.16.0) (2025-06-18)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.15.0...v4.16.0)

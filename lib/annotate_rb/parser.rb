@@ -246,6 +246,11 @@ module AnnotateRb
         @options[:with_column_comments] = false
       end
 
+      option_parser.on("--position-of-column-comment [with_name|rightmost_column]",
+        "set the position, in the annotation block, of the column comment") do |value|
+        @options[:position_of_column_comment] = value.to_sym
+      end
+
       option_parser.on("--with-table-comments",
         "include table comments in model annotations") do
         @options[:with_table_comments] = true
@@ -402,6 +407,11 @@ module AnnotateRb
         @options[:classified_sort] = true
       end
 
+      option_parser.on("--grouped-polymorphic",
+        "Group polymorphic associations together in the annotation when using --classified-sort") do
+        @options[:grouped_polymorphic] = true
+      end
+
       option_parser.on("-R",
         "--require path",
         "Additional file to require before loading models, may be used multiple times") do |path|
@@ -413,9 +423,9 @@ module AnnotateRb
       end
 
       option_parser.on("-e",
-        "--exclude [tests,fixtures,factories,serializers]",
+        "--exclude [tests,fixtures,factories,serializers,sti_subclasses]",
         Array,
-        "Do not annotate fixtures, test files, factories, and/or serializers") do |exclusions|
+        "Do not annotate fixtures, test files, factories, serializers, and/or sti subclasses") do |exclusions|
         exclusions ||= EXCLUSION_LIST
         exclusions.each { |exclusion| @options["exclude_#{exclusion}".to_sym] = true }
       end

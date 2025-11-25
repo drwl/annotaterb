@@ -1,4 +1,4 @@
-  <% if ENV['DATABASE_ADAPTER'] == 'mysql2' %>
+<% if ENV['DATABASE_ADAPTER'] == 'mysql2' %>
   default: &default
     host: 127.0.0.1
     port: 3306
@@ -11,9 +11,15 @@
     primary:
       <<: *default
       database: annotaterb_development
+    <% if ENV['MULTI_DB_TEST'] == 'true' %>
+    secondary:
+      <<: *default
+      database: secondary_annotaterb_development
+      migrations_paths: db/secondary_migrate
     <% end %>
-    
-    <% if ENV['DATABASE_ADAPTER'] == 'pg' %>
+<% end %>
+
+<% if ENV['DATABASE_ADAPTER'] == 'pg' %>
   default: &default
     host: 127.0.0.1
     port: 5432
@@ -26,9 +32,15 @@
     primary:
       <<: *default
       database: annotaterb_development
+    <% if ENV['MULTI_DB_TEST'] == 'true' %>
+    secondary:
+      <<: *default
+      database: secondary_annotaterb_development
+      migrations_paths: db/secondary_migrate
     <% end %>
-    
-    <% if ENV['DATABASE_ADAPTER'] == 'sqlite3' %>
+<% end %>
+
+<% if ENV['DATABASE_ADAPTER'] == 'sqlite3' %>
   default: &default
     adapter: sqlite3
 
@@ -36,4 +48,10 @@
     primary:
       <<: *default
       database: db/development.sqlite3
+    <% if ENV['MULTI_DB_TEST'] == 'true' %>
+    secondary:
+      <<: *default
+      database: secondary_annotaterb_development
+      migrations_paths: db/secondary_migrate
     <% end %>
+<% end %>
