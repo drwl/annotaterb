@@ -7,6 +7,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::IndexAnnotation::AnnotationBuilder do
     subject { described_class.new(model, options).build }
     let(:default_format) { subject.to_default }
     let(:markdown_format) { subject.to_markdown }
+    let(:yard_format) { subject.to_yard }
+    let(:rdoc_format) { subject.to_rdoc }
 
     let(:model) do
       klass = begin
@@ -161,6 +163,44 @@ RSpec.describe AnnotateRb::ModelAnnotator::IndexAnnotation::AnnotationBuilder do
 
       it "matches the expected result" do
         expect(default_format).to eq(expected_result)
+      end
+    end
+
+    describe "#to_yard" do
+      let(:indexes) do
+        [mock_index("index_rails_02e851e3b7", columns: ["id"])]
+      end
+
+      let(:expected_result) do
+        <<~EOS.strip
+          #
+          # Indexes
+          #
+          #  index_rails_02e851e3b7  (id)
+        EOS
+      end
+
+      it "returns annotation in yard format" do
+        expect(yard_format).to eq(expected_result)
+      end
+    end
+
+    describe "#to_rdoc" do
+      let(:indexes) do
+        [mock_index("index_rails_02e851e3b7", columns: ["id"])]
+      end
+
+      let(:expected_result) do
+        <<~EOS.strip
+          #
+          # Indexes
+          #
+          #  index_rails_02e851e3b7  (id)
+        EOS
+      end
+
+      it "returns annotation in rdoc format" do
+        expect(rdoc_format).to eq(expected_result)
       end
     end
   end
