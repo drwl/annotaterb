@@ -34,4 +34,24 @@ RSpec.describe "Annotate models in a multi-db environment with duplicate table n
     content = read_file(dummyapp_model("secondary/test_default.rb"))
     expect(content).to include("# Database name: secondary")
   end
+
+  it "does not include the database name when ignore_multi_database_name is true" do
+    reset_database
+    run_migrations
+
+    # Create config file with ignore_multi_database_name option
+    config_content = <<~YAML.strip
+      ignore_multi_database_name: true
+    YAML
+    write_file(".annotaterb.yml", config_content)
+
+    run_command_and_stop("bundle exec annotaterb models", fail_on_error: true, exit_timeout: command_timeout_seconds)
+
+    primary_content = read_file(dummyapp_model("test_default.rb"))
+    secondary_content = read_file(dummyapp_model("secondary/test_default.rb"))
+
+    # Neither model should include the database name
+    expect(primary_content).not_to include("# Database name: primary")
+    expect(secondary_content).not_to include("# Database name: secondary")
+  end
 end

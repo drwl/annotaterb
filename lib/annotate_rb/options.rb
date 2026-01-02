@@ -144,6 +144,7 @@ module AnnotateRb
       :ignore_columns,
       :ignore_routes,
       :ignore_unknown_models,
+      :ignore_multi_database_name,
       :models,
       :routes,
       :skip_on_db_migrate,
