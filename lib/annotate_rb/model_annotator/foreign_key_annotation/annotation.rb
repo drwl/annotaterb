@@ -23,6 +23,14 @@ module AnnotateRb
           body.map(&:to_markdown).join("\n")
         end
 
+        def to_rdoc
+          body.map(&:to_rdoc).join("\n")
+        end
+
+        def to_yard
+          body.map(&:to_yard).join("\n")
+        end
+
         def to_default
           body.map(&:to_default).join("\n")
         end
