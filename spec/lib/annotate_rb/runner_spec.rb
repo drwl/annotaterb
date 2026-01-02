@@ -110,4 +110,42 @@ RSpec.describe AnnotateRb::Runner do
       end
     end
   end
+
+  describe ".run_after_migration" do
+    let(:config_file_options) { {} }
+    let(:options) { instance_double(AnnotateRb::Options) }
+
+    before do
+      allow(AnnotateRb::ConfigLoader).to receive(:load_config).and_return(config_file_options)
+      allow(AnnotateRb::Options).to receive(:from).with(config_file_options).and_return(options)
+    end
+
+    context "when auto_annotate_routes_after_migrate is false" do
+      before do
+        allow(options).to receive(:[]).with(:auto_annotate_routes_after_migrate).and_return(false)
+        allow(AnnotateRb::Runner).to receive(:run)
+      end
+
+      it "runs models annotation only" do
+        described_class.run_after_migration
+
+        expect(AnnotateRb::Runner).to have_received(:run).with(["models"], config_file_options: config_file_options).once
+        expect(AnnotateRb::Runner).not_to have_received(:run).with(["routes"], anything)
+      end
+    end
+
+    context "when auto_annotate_routes_after_migrate is true" do
+      before do
+        allow(options).to receive(:[]).with(:auto_annotate_routes_after_migrate).and_return(true)
+        allow(AnnotateRb::Runner).to receive(:run)
+      end
+
+      it "runs both models and routes annotation" do
+        described_class.run_after_migration
+
+        expect(AnnotateRb::Runner).to have_received(:run).with(["models"], config_file_options: config_file_options).once
+        expect(AnnotateRb::Runner).to have_received(:run).with(["routes"], config_file_options: config_file_options).once
+      end
+    end
+  end
 end

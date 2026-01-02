@@ -29,7 +29,7 @@ migration_tasks.each do |task|
     task_name = Rake.application.top_level_tasks.last # The name of the task that was run, e.g. "db:migrate"
 
     Rake::Task[task_name].enhance do
-      ::AnnotateRb::Runner.run(["models"])
+      ::AnnotateRb::Runner.run_after_migration
     end
   end
 end
