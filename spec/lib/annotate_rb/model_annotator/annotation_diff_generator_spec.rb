@@ -9,8 +9,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
     resulting_new_columns_data = subject.new_columns.map(&remove_whitespace)
     expected_new_columns_data = new_columns.map(&remove_whitespace)
 
-    expect(resulting_current_columns_data).to eq(expected_current_columns_data)
-    expect(resulting_new_columns_data).to eq(expected_new_columns_data)
+    expect(resulting_current_columns_data).to match_array(expected_current_columns_data)
+    expect(resulting_new_columns_data).to match_array(expected_new_columns_data)
   end
 
   describe ".call" do
@@ -92,6 +92,54 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
         test_columns_match_expected
 
         expect(subject.changed?).to eq(false)
+      end
+    end
+
+    context "when model file has existing annotation with unordered columns" do
+      let(:file_content) do
+        <<~FILE
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #  user_id                :bigint
+          #
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:annotation_block) do
+        <<~ANNOTATION
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  user_id                :bigint
+          #  id                     :bigint           not null, primary key
+          #
+        ANNOTATION
+      end
+
+      let(:current_columns) do
+        [
+          "#  id                     :bigint           not null, primary key",
+          "#  user_id                :bigint",
+          "# Table name: users"
+        ]
+      end
+      let(:new_columns) do
+        [
+          "#  id                     :bigint           not null, primary key",
+          "#  user_id                :bigint",
+          "# Table name: users"
+        ]
+      end
+
+      it "returns an AnnotationDiff object with the expected old and new columns" do
+        test_columns_match_expected
+
+        expect(subject.changed?).to eq(true)
       end
     end
 
