@@ -7,6 +7,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
     subject { described_class.new(model, options).build }
     let(:default_format) { subject.to_default }
     let(:markdown_format) { subject.to_markdown }
+    let(:yard_format) { subject.to_yard }
+    let(:rdoc_format) { subject.to_rdoc }
 
     let(:model) do
       klass = begin
@@ -153,6 +155,44 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
         end
 
         it { expect(markdown_format).to eq(expected_output) }
+      end
+    end
+
+    describe "#to_yard" do
+      let(:foreign_keys) do
+        [mock_foreign_key("fk_rails_cf2568e89e", "foreign_thing_id", "foreign_things")]
+      end
+
+      let(:expected_output) do
+        <<~OUTPUT.strip
+          #
+          # Foreign Keys
+          #
+          #  fk_rails_cf2568e89e  (foreign_thing_id => foreign_things.id)
+        OUTPUT
+      end
+
+      it "returns annotation in yard format" do
+        expect(yard_format).to eq(expected_output)
+      end
+    end
+
+    describe "#to_rdoc" do
+      let(:foreign_keys) do
+        [mock_foreign_key("fk_rails_cf2568e89e", "foreign_thing_id", "foreign_things")]
+      end
+
+      let(:expected_output) do
+        <<~OUTPUT.strip
+          #
+          # Foreign Keys
+          #
+          #  fk_rails_cf2568e89e  (foreign_thing_id => foreign_things.id)
+        OUTPUT
+      end
+
+      it "returns annotation in rdoc format" do
+        expect(rdoc_format).to eq(expected_output)
       end
     end
   end
