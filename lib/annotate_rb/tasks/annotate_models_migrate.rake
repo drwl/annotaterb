@@ -22,8 +22,11 @@ if defined?(Rails::Application) && Rails.version.split(".").first.to_i >= 6
   end
 end
 
+config = ::AnnotateRb::ConfigLoader.load_config
+
 migration_tasks.each do |task|
   next unless Rake::Task.task_defined?(task)
+  next if config[:skip_on_db_migrate]
 
   Rake::Task[task].enhance do # This block is ran after `task` completes
     task_name = Rake.application.top_level_tasks.last # The name of the task that was run, e.g. "db:migrate"
