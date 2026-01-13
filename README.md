@@ -75,7 +75,7 @@ $ ANNOTATERB_SKIP_ON_DB_TASKS=1 bin/rails db:migrate
 The following Rails generator commands get added.
 
 ```sh
-$ bin/rails generator --help
+$ bin/rails generate --help
 
 ...
 
