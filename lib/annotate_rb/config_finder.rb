@@ -7,6 +7,8 @@ module AnnotateRb
     DOTFILE = ".annotaterb.yml"
 
     class << self
+      attr_accessor :config_path
+
       def find_project_root
         # We should expect this method to be called from a Rails project root and returning it
         # e.g. "/Users/drwl/personal/annotaterb/dummyapp"
@@ -14,6 +16,8 @@ module AnnotateRb
       end
 
       def find_project_dotfile
+        return @config_path if @config_path && File.exist?(@config_path)
+
         [
           find_project_root.join(DOTFILE),
           find_project_root.join("config", DOTFILE.delete_prefix(".")),
