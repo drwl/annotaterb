@@ -31,13 +31,13 @@ module AnnotateRb
         new_annotations = @annotation_block.match(HEADER_PATTERN).to_s
 
         current_annotation_columns = if current_annotations.present?
-          current_annotations.scan(COLUMN_PATTERN).sort
+          current_annotations.scan(COLUMN_PATTERN)
         else
           []
         end
 
         new_annotation_columns = if new_annotations.present?
-          new_annotations.scan(COLUMN_PATTERN).sort
+          new_annotations.scan(COLUMN_PATTERN)
         else
           []
         end
