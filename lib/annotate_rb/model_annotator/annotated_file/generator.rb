@@ -66,7 +66,7 @@ module AnnotateRb
           # Handle empty files where no classes/modules are found
           return [nil, 0] if parsed.starts.empty?
 
-          return parsed.starts.first unless @options[:nested_position]
+          return parsed.starts.first unless @options[:nested_position] && parsed.respond_to?(:type_map)
 
           class_entries = parsed.starts.select { |name, _line| parsed.type_map[name] == :class }
           class_entries.last || parsed.starts.first
