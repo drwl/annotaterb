@@ -35,7 +35,11 @@ module AnnotateRb
       end
 
       def connection
-        @klass.connection
+        if @klass.respond_to?(:lease_connection)
+          @klass.lease_connection
+        else
+          @klass.connection
+        end
       end
 
       def database_name
@@ -56,12 +60,12 @@ module AnnotateRb
       end
 
       def table_comments
-        @klass.connection.table_comment(@klass.table_name)
+        connection.table_comment(@klass.table_name)
       end
 
       def has_table_comments?
-        @klass.connection.respond_to?(:table_comment) &&
-          @klass.connection.table_comment(@klass.table_name).present?
+        connection.respond_to?(:table_comment) &&
+          connection.table_comment(@klass.table_name).present?
       end
 
       def column_defaults
@@ -150,13 +154,13 @@ module AnnotateRb
         table_name = @klass.table_name
         return [] unless table_name
 
-        indexes = @klass.connection.indexes(table_name)
+        indexes = connection.indexes(table_name)
         return indexes if indexes.any? || !@klass.table_name_prefix
 
         # Try to search the table without prefix
         table_name_without_prefix = table_name.to_s.sub(@klass.table_name_prefix.to_s, "")
         begin
-          @klass.connection.indexes(table_name_without_prefix)
+          connection.indexes(table_name_without_prefix)
         rescue ActiveRecord::StatementInvalid => _e
           # Mysql2 adapter behaves differently than Sqlite3 and Postgres adapter.
           # If `table_name_without_prefix` does not exist, Mysql2 will raise,
