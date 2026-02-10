@@ -13,8 +13,10 @@ RSpec.describe "Annotate collapsed models with --nested-position", type: "aruba"
 
       expected = read_file(model_template("nested_position_collapsed_test_model.rb"))
 
-      run_command_and_stop("bundle exec annotaterb models --nested-position", fail_on_error: false, exit_timeout: command_timeout_seconds)
+      run_command_and_stop("bundle exec annotaterb models --nested-position", fail_on_error: true, exit_timeout: command_timeout_seconds)
       annotated = read_file(dummyapp_model("collapsed/example/test_model.rb"))
+
+      expect(last_command_started).to be_successfully_executed
       expect(annotated).to eq(expected)
     end
   end

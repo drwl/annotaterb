@@ -7,6 +7,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::CheckConstraintAnnotation::Annotation
     subject { described_class.new(model, options).build }
     let(:default_format) { subject.to_default }
     let(:markdown_format) { subject.to_markdown }
+    let(:yard_format) { subject.to_yard }
+    let(:rdoc_format) { subject.to_rdoc }
 
     let(:model) do
       instance_double(
@@ -93,6 +95,42 @@ RSpec.describe AnnotateRb::ModelAnnotator::CheckConstraintAnnotation::Annotation
       end
 
       it { expect(default_format).to be_nil }
+    end
+
+    context "using yard format" do
+      let(:expected_result) do
+        <<~RESULT.strip
+          #
+          # Check Constraints
+          #
+          #  alive               (age < 150)
+          #  missing_expression
+          #  multiline_test      (CASE WHEN (age >= 18) THEN (age <= 21) ELSE true END)
+          #  must_be_adult       (age >= 18)
+        RESULT
+      end
+
+      it "annotates the check constraints" do
+        expect(yard_format).to eq(expected_result)
+      end
+    end
+
+    context "using rdoc format" do
+      let(:expected_result) do
+        <<~RESULT.strip
+          #
+          # Check Constraints
+          #
+          #  alive               (age < 150)
+          #  missing_expression
+          #  multiline_test      (CASE WHEN (age >= 18) THEN (age <= 21) ELSE true END)
+          #  must_be_adult       (age >= 18)
+        RESULT
+      end
+
+      it "annotates the check constraints" do
+        expect(rdoc_format).to eq(expected_result)
+      end
     end
   end
 end

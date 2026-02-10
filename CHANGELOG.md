@@ -1,5 +1,37 @@
 # Changelog
 
+## [v4.21.0](https://github.com/drwl/annotaterb/tree/v4.21.0) (2026-01-30)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.20.0...v4.21.0)
+
+**Implemented enhancements:**
+
+- Displaying database name for multi-database rails projects [\#254](https://github.com/drwl/annotaterb/issues/254)
+
+**Fixed bugs:**
+
+- Yard format broken? [\#212](https://github.com/drwl/annotaterb/issues/212)
+
+**Closed issues:**
+
+- \[dotenv\] Loaded comment gets added to routes annotations [\#288](https://github.com/drwl/annotaterb/issues/288)
+
+**Merged pull requests:**
+
+- Bump version to v4.21.0 [\#306](https://github.com/drwl/annotaterb/pull/306) ([drwl](https://github.com/drwl))
+- Add integration test for ignore\_multi\_database\_name config option [\#305](https://github.com/drwl/annotaterb/pull/305) ([OdenTakashi](https://github.com/OdenTakashi))
+- Include ignore\_multi\_database\_name in generated config [\#304](https://github.com/drwl/annotaterb/pull/304) ([OdenTakashi](https://github.com/OdenTakashi))
+- Add to\_yard and to\_rdoc methods to Annotation classes [\#302](https://github.com/drwl/annotaterb/pull/302) ([k-duho](https://github.com/k-duho))
+- Support customising config path [\#301](https://github.com/drwl/annotaterb/pull/301) ([rience](https://github.com/rience))
+- Bump actions/checkout from 5 to 6 [\#299](https://github.com/drwl/annotaterb/pull/299) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Update Rails generator command in README [\#296](https://github.com/drwl/annotaterb/pull/296) ([EstebanDalelR](https://github.com/EstebanDalelR))
+- chore: remove concurrent-ruby version lock from dummy app [\#284](https://github.com/drwl/annotaterb/pull/284) ([OdenTakashi](https://github.com/OdenTakashi))
+- feat: Add "ignore\_multi\_database\_name" option [\#283](https://github.com/drwl/annotaterb/pull/283) ([t27duck](https://github.com/t27duck))
+- refactor: use existing `database_name` method for cache key [\#282](https://github.com/drwl/annotaterb/pull/282) ([OdenTakashi](https://github.com/OdenTakashi))
+- Support .config directory convention [\#281](https://github.com/drwl/annotaterb/pull/281) ([ngan](https://github.com/ngan))
+- chore: add missing newlines [\#280](https://github.com/drwl/annotaterb/pull/280) ([OdenTakashi](https://github.com/OdenTakashi))
+- Generate changelog for v4.20.0 [\#279](https://github.com/drwl/annotaterb/pull/279) ([drwl](https://github.com/drwl))
+
 ## [v4.20.0](https://github.com/drwl/annotaterb/tree/v4.20.0) (2025-10-20)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.19.0...v4.20.0)
