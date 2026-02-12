@@ -1,5 +1,35 @@
 # Changelog
 
+## [v4.22.0](https://github.com/drwl/annotaterb/tree/v4.22.0) (2026-02-12)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.21.0...v4.22.0)
+
+**Implemented enhancements:**
+
+- Feature: ruby-lsp addon [\#175](https://github.com/drwl/annotaterb/issues/175)
+- Mounting ActionCable leads to weird annotation [\#161](https://github.com/drwl/annotaterb/issues/161)
+
+**Fixed bugs:**
+
+- Yardoc formatting for comments on database attributes [\#162](https://github.com/drwl/annotaterb/issues/162)
+
+**Closed issues:**
+
+- New `ignore_multi_database_name` option seems to be non-functional [\#303](https://github.com/drwl/annotaterb/issues/303)
+- Changing sort options does not change annotations [\#294](https://github.com/drwl/annotaterb/issues/294)
+- CLI script for annotaterb not installed or runnable [\#290](https://github.com/drwl/annotaterb/issues/290)
+
+**Merged pull requests:**
+
+- Bump version to v4.22.0 [\#310](https://github.com/drwl/annotaterb/pull/310) ([drwl](https://github.com/drwl))
+- Run CI on CRuby 4.0 [\#308](https://github.com/drwl/annotaterb/pull/308) ([viralpraxis](https://github.com/viralpraxis))
+- Generate changelog for v4.21.0 [\#307](https://github.com/drwl/annotaterb/pull/307) ([drwl](https://github.com/drwl))
+- fix NoMethodError when using nested\_position with fixture files [\#298](https://github.com/drwl/annotaterb/pull/298) ([OdenTakashi](https://github.com/OdenTakashi))
+- fix: Respect configured sort [\#295](https://github.com/drwl/annotaterb/pull/295) ([patrickarnett](https://github.com/patrickarnett))
+- Use `#lease_connection` if available [\#292](https://github.com/drwl/annotaterb/pull/292) ([viralpraxis](https://github.com/viralpraxis))
+- refactor: simplify primary key check logic \(no functional changes\) [\#285](https://github.com/drwl/annotaterb/pull/285) ([OdenTakashi](https://github.com/OdenTakashi))
+- Honor skip\_on\_db\_migrate config option when runnig migrate tasks [\#274](https://github.com/drwl/annotaterb/pull/274) ([martinechtner](https://github.com/martinechtner))
+
 ## [v4.21.0](https://github.com/drwl/annotaterb/tree/v4.21.0) (2026-01-30)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.20.0...v4.21.0)
