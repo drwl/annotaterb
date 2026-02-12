@@ -4,11 +4,6 @@
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.21.0...v4.22.0)
 
-**Implemented enhancements:**
-
-- Feature: ruby-lsp addon [\#175](https://github.com/drwl/annotaterb/issues/175)
-- Mounting ActionCable leads to weird annotation [\#161](https://github.com/drwl/annotaterb/issues/161)
-
 **Fixed bugs:**
 
 - Yardoc formatting for comments on database attributes [\#162](https://github.com/drwl/annotaterb/issues/162)
@@ -18,6 +13,8 @@
 - New `ignore_multi_database_name` option seems to be non-functional [\#303](https://github.com/drwl/annotaterb/issues/303)
 - Changing sort options does not change annotations [\#294](https://github.com/drwl/annotaterb/issues/294)
 - CLI script for annotaterb not installed or runnable [\#290](https://github.com/drwl/annotaterb/issues/290)
+- Feature: ruby-lsp addon [\#175](https://github.com/drwl/annotaterb/issues/175)
+- Mounting ActionCable leads to weird annotation [\#161](https://github.com/drwl/annotaterb/issues/161)
 
 **Merged pull requests:**
 
