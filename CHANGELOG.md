@@ -25,7 +25,7 @@
 - Run CI on CRuby 4.0 [\#308](https://github.com/drwl/annotaterb/pull/308) ([viralpraxis](https://github.com/viralpraxis))
 - Generate changelog for v4.21.0 [\#307](https://github.com/drwl/annotaterb/pull/307) ([drwl](https://github.com/drwl))
 - fix NoMethodError when using nested\_position with fixture files [\#298](https://github.com/drwl/annotaterb/pull/298) ([OdenTakashi](https://github.com/OdenTakashi))
-- fix: Respect configured sort [\#295](https://github.com/drwl/annotaterb/pull/295) ([patrickarnett](https://github.com/patrickarnett))
+**- fix: Respect configured sort [\#295](https://github.com/drwl/annotaterb/pull/295) ([patrickarnett](https://github.com/patrickarnett))** (Maintainer note: this could result in annotations shifting depending on configuration, please create an issue if it is a breaking change)
 - Use `#lease_connection` if available [\#292](https://github.com/drwl/annotaterb/pull/292) ([viralpraxis](https://github.com/viralpraxis))
 - refactor: simplify primary key check logic \(no functional changes\) [\#285](https://github.com/drwl/annotaterb/pull/285) ([OdenTakashi](https://github.com/OdenTakashi))
 - Honor skip\_on\_db\_migrate config option when runnig migrate tasks [\#274](https://github.com/drwl/annotaterb/pull/274) ([martinechtner](https://github.com/martinechtner))
