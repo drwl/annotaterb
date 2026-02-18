@@ -198,7 +198,8 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
               "id" => ["not null"],
               "cyrillic" => ["not null"],
               "japanese" => ["not null"],
-              "arabic" => ["not null"]
+              "arabic" => ["not null"],
+              "value" => ["not null"]
             }
           )
         end
@@ -259,6 +260,21 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
           context "when position of column comment is set to `rightmost_column`" do
             let(:position_of_column_comment) { :rightmost_column }
             let(:expected_result) { "#  arabic              :text(20)         not null     لغة" }
+            it { is_expected.to eq(expected_result) }
+          end
+        end
+
+        context "with column comment containing a currency symbol" do
+          let(:column) { mock_column("value", :integer, comment: "amount(€)") }
+          let(:expected_result) { "#  value(amount(€))    :integer          not null" }
+
+          it "returns the column annotation" do
+            is_expected.to eq(expected_result)
+          end
+
+          context "when position of column comment is set to `rightmost_column`" do
+            let(:position_of_column_comment) { :rightmost_column }
+            let(:expected_result) { "#  value               :integer          not null     amount(€)" }
             it { is_expected.to eq(expected_result) }
           end
         end
