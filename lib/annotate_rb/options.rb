@@ -51,6 +51,7 @@ module AnnotateRb
       show_indexes: true, # ModelAnnotator
       show_indexes_include: false, # ModelAnnotator
       show_virtual_columns: false, # ModelAnnotator
+      load_columns_from_schema: false, # ModelAnnotator
       simple_indexes: false, # ModelAnnotator
       sort: false, # ModelAnnotator
       timestamp: false, # RouteAnnotator
@@ -120,6 +121,7 @@ module AnnotateRb
       :ignore_model_sub_dir,
       :ignore_unknown_models,
       :include_version,
+      :load_columns_from_schema,
       :show_check_constraints,
       :show_complete_foreign_keys,
       :show_foreign_keys,

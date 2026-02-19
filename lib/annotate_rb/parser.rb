@@ -274,6 +274,11 @@ module AnnotateRb
         "Place annotations directly above nested classes or modules instead of at the top of the file.") do
         @options[:nested_position] = true
       end
+
+      option_parser.on("--load-columns-from-schema",
+        "Load columns from schema to avoid ActiveRecord ignored/only column configuration") do
+        @options[:load_columns_from_schema] = true
+      end
     end
 
     def add_route_options_to_parser(option_parser)
