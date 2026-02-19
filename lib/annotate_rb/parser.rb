@@ -376,6 +376,12 @@ module AnnotateRb
         @options[:additional_file_patterns] = additional_file_patterns
       end
 
+      option_parser.on("--only-file-patterns path1,path2,path3",
+        Array,
+        "If given, restrict annotated models to listed patterns, separated by commas (e.g. `*session*.rb,*login*.rb`)") do |only_file_patterns|
+        @options[:only_file_patterns] = only_file_patterns
+      end
+
       option_parser.on("-d",
         "--delete",
         "Remove annotations from all model files or the routes.rb file") do
