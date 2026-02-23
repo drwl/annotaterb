@@ -78,7 +78,6 @@ module AnnotateRb
       ignore_columns: nil, # ModelAnnotator
       ignore_multi_database_name: false, # ModelAnnotator
       ignore_routes: nil, # RouteAnnotator
-      ignore_unknown_models: false, # ModelAnnotator
       models: true, # Core
       routes: false, # Core
       skip_on_db_migrate: false, # Core
@@ -144,7 +143,6 @@ module AnnotateRb
       :timestamp_columns,
       :ignore_columns,
       :ignore_routes,
-      :ignore_unknown_models,
       :ignore_multi_database_name,
       :models,
       :routes,
