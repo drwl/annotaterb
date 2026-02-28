@@ -117,6 +117,100 @@ RSpec.describe AnnotateRb::ModelAnnotator::IndexAnnotation::AnnotationBuilder do
       end
     end
 
+    context "index has a comment" do
+      let(:options) { ::AnnotateRb::Options.new({show_indexes: true, show_indexes_comments: true}) }
+
+      let(:indexes) do
+        [
+          mock_index("index_rails_02e851e3b7", columns: ["id"]),
+          mock_index("index_rails_02e851e3b8",
+            columns: %w[foreign_thing_id],
+            comment: "This is a comment")
+        ]
+      end
+
+      let(:expected_default) do
+        <<~EOS.strip
+          #
+          # Indexes
+          #
+          #  index_rails_02e851e3b7  (id)
+          #  index_rails_02e851e3b8  (foreign_thing_id) COMMENT This is a comment
+        EOS
+      end
+
+      let(:expected_markdown) do
+        <<~EOS.strip
+          #
+          # ### Indexes
+          #
+          # * `index_rails_02e851e3b7`:
+          #     * **`id`**
+          # * `index_rails_02e851e3b8` (_comment_ This is a comment):
+          #     * **`foreign_thing_id`**
+        EOS
+      end
+
+      it "includes the comment in default format" do
+        expect(default_format).to eq(expected_default)
+      end
+
+      it "includes the comment in markdown format" do
+        expect(markdown_format).to eq(expected_markdown)
+      end
+    end
+
+    context "index has a comment but show_indexes_comments is false" do
+      let(:options) { ::AnnotateRb::Options.new({show_indexes: true, show_indexes_comments: false}) }
+
+      let(:indexes) do
+        [
+          mock_index("index_rails_02e851e3b8",
+            columns: %w[foreign_thing_id],
+            comment: "This is a comment")
+        ]
+      end
+
+      let(:expected_result) do
+        <<~EOS.strip
+          #
+          # Indexes
+          #
+          #  index_rails_02e851e3b8  (foreign_thing_id)
+        EOS
+      end
+
+      it "does not include the comment" do
+        expect(default_format).to eq(expected_result)
+      end
+    end
+
+    context "index has a comment and is unique" do
+      let(:options) { ::AnnotateRb::Options.new({show_indexes: true, show_indexes_comments: true}) }
+
+      let(:indexes) do
+        [
+          mock_index("index_rails_02e851e3b7",
+            columns: %w[attested_by_employee_id subject_id subject_type],
+            unique: true,
+            comment: "My explanatory comment")
+        ]
+      end
+
+      let(:expected_result) do
+        <<~EOS.strip
+          #
+          # Indexes
+          #
+          #  index_rails_02e851e3b7  (attested_by_employee_id,subject_id,subject_type) UNIQUE COMMENT My explanatory comment
+        EOS
+      end
+
+      it "shows both UNIQUE and COMMENT" do
+        expect(default_format).to eq(expected_result)
+      end
+    end
+
     context "index includes has a string form" do
       let(:indexes) do
         [

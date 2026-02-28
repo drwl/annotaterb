@@ -24,7 +24,8 @@ module AnnotateTestHelpers
       nulls_not_distinct: params[:nulls_not_distinct] || false,
       orders: params[:orders] || {},
       where: params[:where],
-      using: params[:using])
+      using: params[:using],
+      comment: params[:comment])
   end
 
   def mock_foreign_key(name, from_column, to_table, to_column = "id", constraints = {})
