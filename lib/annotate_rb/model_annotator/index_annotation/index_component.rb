@@ -45,16 +45,27 @@ module AnnotateRb
             end
           end
 
+          comment_info = ""
+          if options[:show_indexes_comments]
+            value = index.try(:comment).try(:to_s)
+            comment_info = if value.present?
+              " COMMENT #{value}"
+            else
+              ""
+            end
+          end
+
           # standard:disable Lint/FormatParameterMismatch
           sprintf(
-            "#  %-#{max_size}.#{max_size}s %s%s%s%s%s%s",
+            "#  %-#{max_size}.#{max_size}s %s%s%s%s%s%s%s",
             index.name,
             "(#{columns_info.join(",")})",
             include_info,
             unique_info,
             nulls_not_distinct_info,
             where_info,
-            using_info
+            using_info,
+            comment_info
           ).rstrip
           # standard:enable Lint/FormatParameterMismatch
         end
@@ -92,13 +103,24 @@ module AnnotateRb
             end
           end
 
+          comment_info = ""
+          if options[:show_indexes_comments]
+            value = index.try(:comment).try(:to_s)
+            comment_info = if value.present?
+              " _comment_ #{value}"
+            else
+              ""
+            end
+          end
+
           details = sprintf(
-            "%s%s%s%s%s",
+            "%s%s%s%s%s%s",
             include_info,
             unique_info,
             nulls_not_distinct_info,
             where_info,
-            using_info
+            using_info,
+            comment_info
           ).strip
           details = " (#{details})" unless details.blank?
 

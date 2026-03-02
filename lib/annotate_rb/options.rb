@@ -49,6 +49,7 @@ module AnnotateRb
       show_check_constraints: false, # ModelAnnotator
       show_foreign_keys: true, # ModelAnnotator
       show_indexes: true, # ModelAnnotator
+      show_indexes_comments: false, # ModelAnnotator
       show_indexes_include: false, # ModelAnnotator
       show_virtual_columns: false, # ModelAnnotator
       simple_indexes: false, # ModelAnnotator
@@ -124,6 +125,7 @@ module AnnotateRb
       :show_complete_foreign_keys,
       :show_foreign_keys,
       :show_indexes,
+      :show_indexes_comments,
       :show_indexes_include,
       :simple_indexes,
       :sort,
