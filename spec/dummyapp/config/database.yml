@@ -51,7 +51,7 @@
     <% if ENV['MULTI_DB_TEST'] == 'true' %>
     secondary:
       <<: *default
-      database: secondary_annotaterb_development
+      database: db/secondary_development.sqlite3
       migrations_paths: db/secondary_migrate
     <% end %>
 <% end %>
