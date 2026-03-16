@@ -359,6 +359,16 @@ module AnnotateRb # rubocop:disable Metrics/ModuleLength
       end
     end
 
+    %w[--load-columns-from-schema].each do |option|
+      describe option do
+        let(:args) { [option] }
+
+        it "sets load_columns_from_schema to true" do
+          expect(result).to include(load_columns_from_schema: true)
+        end
+      end
+    end
+
     %w[-R --require].each do |option|
       describe option do
         let(:option) { "require" }
