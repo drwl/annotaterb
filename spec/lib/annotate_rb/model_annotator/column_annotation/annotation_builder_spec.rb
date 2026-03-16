@@ -566,6 +566,20 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::AnnotationBuilder d
           is_expected.to eq(expected_result)
         end
 
+        context "when the comment includes a percent sign" do
+          let(:column) { mock_column("id", :integer, comment: "100% complete") }
+          let(:expected_result) do
+            <<~COLUMN.strip
+              # @!attribute id(100% complete)
+              #   @return [Integer]
+            COLUMN
+          end
+
+          it "returns the column annotation" do
+            is_expected.to eq(expected_result)
+          end
+        end
+
         context "when position of column comment is set to `rightmost_column`" do
           let(:position_of_column_comment) { :rightmost_column }
           it {

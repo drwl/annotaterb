@@ -42,7 +42,7 @@ module AnnotateRb
 
         def to_yard
           res = ""
-          res += sprintf("# @!attribute #{name}") + "\n"
+          res += "# @!attribute #{name}\n"
 
           ruby_class = if @column.respond_to?(:array) && @column.array
             "Array<#{map_col_type_to_ruby_classes(type)}>"
@@ -50,7 +50,7 @@ module AnnotateRb
             map_col_type_to_ruby_classes(type)
           end
 
-          res += sprintf("#   @return [#{ruby_class}]")
+          res += "#   @return [#{ruby_class}]"
 
           res
         end
