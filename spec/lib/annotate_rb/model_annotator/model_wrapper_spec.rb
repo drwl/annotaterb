@@ -100,6 +100,63 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelWrapper do
     end
   end
 
+  describe "#enum_types" do
+    subject { described_class.new(klass, options).enum_types }
+
+    let(:options) { AnnotateRb::Options.new }
+    let(:id_column) { mock_column("id", :integer) }
+    let(:status_column) { mock_column("status", :enum, sql_type: "order_status") }
+
+    context "when connection supports enum_types" do
+      let(:klass) do
+        connection = mock_connection([], [], [], enum_types: [
+          ["order_status", ["pending", "shipped", "delivered"]]
+        ])
+        mock_class_with_custom_connection(:orders, :id, [id_column, status_column], connection)
+      end
+
+      it "returns the enum types" do
+        is_expected.to eq([["order_status", ["pending", "shipped", "delivered"]]])
+      end
+    end
+
+    context "when connection returns enum values as comma-separated strings" do
+      let(:klass) do
+        connection = mock_connection([], [], [], enum_types: [
+          ["order_status", "pending,shipped,delivered"]
+        ])
+        mock_class_with_custom_connection(:orders, :id, [id_column, status_column], connection)
+      end
+
+      it "normalizes values to arrays" do
+        is_expected.to eq([["order_status", ["pending", "shipped", "delivered"]]])
+      end
+    end
+
+    context "when connection does not support enum_types" do
+      let(:klass) do
+        mock_class(:orders, :id, [id_column, status_column])
+      end
+
+      it "returns an empty array" do
+        is_expected.to eq([])
+      end
+    end
+
+    context "when enum_types raises ActiveRecord::StatementInvalid" do
+      let(:klass) do
+        connection = mock_connection([], [], [])
+        allow(connection).to receive(:respond_to?).with(:enum_types).and_return(true)
+        allow(connection).to receive(:enum_types).and_raise(ActiveRecord::StatementInvalid, "not supported")
+        mock_class_with_custom_connection(:orders, :id, [id_column, status_column], connection)
+      end
+
+      it "returns an empty array" do
+        is_expected.to eq([])
+      end
+    end
+  end
+
   describe "#retrieve_indexes_from_table" do
     subject { described_class.new(*args).retrieve_indexes_from_table }
     let(:args) { [klass, options] }

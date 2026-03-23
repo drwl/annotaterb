@@ -219,6 +219,23 @@ module AnnotateRb
         ]
       end
 
+      def enum_types
+        @enum_types ||=
+          if connection.respond_to?(:enum_types)
+            begin
+              # enum values may be a String or an Array depending on the Rails version.
+              # See: https://github.com/rails/rails/pull/54141
+              connection.enum_types.map do |name, values|
+                [name, values.is_a?(Array) ? values : values.to_s.split(",")]
+              end
+            rescue ActiveRecord::StatementInvalid
+              []
+            end
+          else
+            []
+          end
+      end
+
       def migration_version
         return 0 unless @options[:include_version]
 
