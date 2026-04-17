@@ -84,6 +84,13 @@ module AnnotateRb
             end
           end
 
+          if column_type == "enum" && @options[:show_enums]
+            enum_type_name = @column.sql_type
+            if enum_type_name.present? && enum_type_name != "enum"
+              attrs << "enum_type: #{enum_type_name}"
+            end
+          end
+
           # Check if the column is a virtual column and print the function
           if @options[:show_virtual_columns] && @column.virtual?
             # Any whitespace in the function gets reduced to a single space

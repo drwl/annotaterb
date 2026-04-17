@@ -97,6 +97,108 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::AnnotationBuilder do
       end
     end
 
+    context "integration test with enums" do
+      let(:klass) do
+        primary_key = :id
+        columns = [
+          mock_column("id", :integer),
+          mock_column("status", :enum, sql_type: "order_status"),
+          mock_column("name", :string)
+        ]
+        indexes = [
+          mock_index("index_rails_02e851e3b7", columns: ["id"])
+        ]
+        foreign_keys = []
+        check_constraints = []
+        enum_types = [
+          ["order_status", ["pending", "shipped", "delivered"]],
+          ["unused_enum", ["a", "b"]]
+        ]
+
+        custom_connection = mock_connection(indexes, foreign_keys, check_constraints, enum_types: enum_types)
+        mock_class_with_custom_connection(:orders, primary_key, columns, custom_connection)
+      end
+
+      let(:options) do
+        AnnotateRb::Options.new({
+          show_indexes: true,
+          show_enums: true
+        })
+      end
+
+      let(:expected_result) do
+        <<~EOS
+          # == Schema Information
+          #
+          # Table name: orders
+          #
+          #  id     :integer          not null, primary key
+          #  status :enum             not null, enum_type: order_status
+          #  name   :string           not null
+          #
+          # Indexes
+          #
+          #  index_rails_02e851e3b7  (id)
+          #
+          # Enums
+          #
+          #  order_status  pending, shipped, delivered
+          #
+        EOS
+      end
+
+      it "includes enum annotation in the output" do
+        is_expected.to eq expected_result
+      end
+    end
+
+    context "integration test with enums in markdown format" do
+      let(:klass) do
+        primary_key = :id
+        columns = [
+          mock_column("id", :integer),
+          mock_column("status", :enum, sql_type: "order_status")
+        ]
+        enum_types = [
+          ["order_status", ["pending", "shipped", "delivered"]]
+        ]
+
+        custom_connection = mock_connection([], [], [], enum_types: enum_types)
+        mock_class_with_custom_connection(:orders, primary_key, columns, custom_connection)
+      end
+
+      let(:options) do
+        AnnotateRb::Options.new({
+          format_markdown: true,
+          show_enums: true
+        })
+      end
+
+      let(:expected_result) do
+        <<~EOS
+          # ## Schema Information
+          #
+          # Table name: `orders`
+          #
+          # ### Columns
+          #
+          # Name          | Type               | Attributes
+          # ------------- | ------------------ | ---------------------------
+          # **`id`**      | `integer`          | `not null, primary key`
+          # **`status`**  | `enum`             | `not null, enum_type: order_status`
+          #
+          # ### Enums
+          #
+          # * `order_status`: `pending, shipped, delivered`
+          #
+        EOS
+      end
+
+      it "includes enum annotation in markdown format" do
+        is_expected.to eq expected_result
+      end
+    end
+
     context "with primary key and using globalize gem" do
       let :options do
         AnnotateRb::Options.new({})
