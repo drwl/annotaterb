@@ -67,6 +67,14 @@ RSpec.describe AnnotateRb::Options do
       end
     end
 
+    context 'when default value of "load_columns_from_schema" is not set' do
+      let(:key) { :load_columns_from_schema }
+
+      it "returns false" do
+        expect(subject[key]).to eq(false)
+      end
+    end
+
     context 'when default value of "show_complete_foreign_keys" is set' do
       let(:key) { :show_complete_foreign_keys }
       let(:options) { {key => true} }
