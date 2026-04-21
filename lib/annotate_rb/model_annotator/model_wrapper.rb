@@ -229,7 +229,14 @@ module AnnotateRb
 
         if @options.get_state(cache_key).nil?
           migration_version = begin
-            connection.migration_context.current_version
+            # Rails 7.1+ moved migration_context from ConnectionAdapter to ConnectionPool.
+            # ConnectionAdapter#migration_context was removed in Rails 7.2.
+            # See: https://github.com/rails/rails/pull/51162
+            if connection.pool.respond_to?(:migration_context)
+              connection.pool.migration_context.current_version
+            else
+              connection.migration_context.current_version
+            end
           rescue
             0
           end
