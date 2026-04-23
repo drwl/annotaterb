@@ -68,6 +68,18 @@ RSpec.describe "ActiveRecord migration rake task hooks" do
           Rake.application.top_level
         end
       end
+
+      describe "programmatic invocation (no top-level task)" do
+        it "should still annotate model files" do
+          # Simulate programmatic invocation from application code — e.g. Rails'
+          # in-browser "Run pending migrations" button, which calls
+          # Rake::Task["db:migrate"].invoke directly, bypassing Rake's CLI argv parser.
+          Rake.application.instance_variable_set(:@top_level_tasks, [])
+
+          expect(AnnotateRb::Runner).to receive(:run_after_migration)
+          expect { Rake::Task["db:migrate"].invoke }.not_to raise_error
+        end
+      end
     end
 
     context "when skip_on_db_migrate is enabled" do
