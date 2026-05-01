@@ -15,5 +15,8 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
-class TestDefault < ApplicationRecord
+class TestDefaultShowSerializer
+  def initialize(test_default)
+    @test_default = test_default
+  end
 end
