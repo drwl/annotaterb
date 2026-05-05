@@ -18,12 +18,25 @@ module AnnotateRb
         def update
           return "" if !@parsed_file.has_annotations?
 
-          new_annotation = wrapped_content(@new_annotations)
+          new_annotation = indent(wrapped_content(@new_annotations), existing_indentation)
 
           _content = @file_content.sub(@parsed_file.annotations) { new_annotation }
         end
 
         private
+
+        # Returns the leading whitespace of the existing annotation block so
+        # nested-position annotations keep their indentation across re-runs.
+        def existing_indentation
+          first_line = @parsed_file.annotations.lines.first
+          first_line&.match(/\A([ \t]*)/)&.[](1) || ""
+        end
+
+        def indent(content, indentation)
+          return content if indentation.empty?
+
+          content.lines.map { |line| (line == "\n") ? line : "#{indentation}#{line}" }.join
+        end
 
         def wrapped_content(content)
           wrapper_open = if @options[:wrapper_open]
