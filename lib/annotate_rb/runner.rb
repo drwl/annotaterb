@@ -31,13 +31,13 @@ module AnnotateRb
     end
 
     def run(args, config_file_options: nil)
-      config_file_options ||= ConfigLoader.load_config
       parser = Parser.new(args, {})
 
       parsed_options = parser.parse
       remaining_args = parser.remaining_args
 
       AnnotateRb::ConfigFinder.config_path = parsed_options[:config_path] if parsed_options[:config_path]
+      config_file_options = ConfigLoader.load_config if config_file_options.nil?
       options = config_file_options.merge(parsed_options)
 
       @options = Options.from(options, {working_args: remaining_args})
