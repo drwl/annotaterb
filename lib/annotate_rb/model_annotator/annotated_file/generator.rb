@@ -5,7 +5,7 @@ module AnnotateRb
     module AnnotatedFile
       # Generates the file with fresh annotations
       class Generator
-        def initialize(file_content, new_annotations, annotation_position, parser_klass, parsed_file, options)
+        def initialize(file_content, new_annotations, annotation_position, parser_klass, parsed_file, options, model_class_name: nil)
           @annotation_position = annotation_position
           @options = options
 
@@ -16,6 +16,7 @@ module AnnotateRb
 
           @parser = parser_klass
           @parsed_file = parsed_file
+          @model_class_name = model_class_name
         end
 
         # @return [String] Returns the annotated file content to be written back to a file
@@ -60,7 +61,7 @@ module AnnotateRb
         end
 
         def determine_annotation_position(parsed)
-          FileParser::AnnotationTarget.find(parsed, @options) || [nil, 0]
+          FileParser::AnnotationTarget.find(parsed, @options, model_class_name: @model_class_name) || [nil, 0]
         end
 
         # Formats annotations with appropriate indentation for consistent code structure.

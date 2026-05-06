@@ -6,12 +6,13 @@ module AnnotateRb
       class ParsedFile
         SKIP_ANNOTATION_STRING = "# -*- SkipSchemaAnnotations"
 
-        def initialize(file_content, new_annotations, parser_klass, options)
+        def initialize(file_content, new_annotations, parser_klass, options, model_class_name: nil)
           @file_content = file_content
           @file_lines = @file_content.lines
           @new_annotations = new_annotations
           @parser_klass = parser_klass
           @options = options
+          @model_class_name = model_class_name
         end
 
         def parse
@@ -64,7 +65,7 @@ module AnnotateRb
           annotation_position = nil
 
           if has_annotations
-            target = AnnotationTarget.find(@file_parser, @options)
+            target = AnnotationTarget.find(@file_parser, @options, model_class_name: @model_class_name)
             _const, line_number = target if target
 
             if line_number

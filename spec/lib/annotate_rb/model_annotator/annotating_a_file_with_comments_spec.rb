@@ -6,12 +6,13 @@ RSpec.describe "Annotating a file with comments" do
 
   shared_examples "annotates the file" do
     it "writes the expected annotations to the file" do
-      AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)
+      AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options, model_class_name: model_class_name)
       expect(File.read(@model_file_name)).to eq(expected_file_content)
     end
   end
 
   let(:options) { AnnotateRb::Options.from({}) }
+  let(:model_class_name) { nil }
   let(:schema_info) do
     <<~SCHEMA
       # == Schema Information
@@ -1739,6 +1740,63 @@ RSpec.describe "Annotating a file with comments" do
           #
 
           class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      include_examples "annotates the file"
+    end
+  end
+
+  context "when annotating a model with inner class declarations and nested_position" do
+    let(:options) do
+      AnnotateRb::Options.from({nested_position: true, force: true})
+    end
+
+    context "with an inner error class declared inside the body" do
+      let(:model_class_name) { "User" }
+
+      let(:starting_file_content) do
+        <<~FILE
+          # frozen_string_literal: true
+
+          module Outer
+            module Inner
+              class User < ApplicationRecord
+                include SomeMixin
+
+                class ProcessingError < StandardError; end
+
+                def call
+                  raise ProcessingError
+                end
+              end
+            end
+          end
+        FILE
+      end
+      let(:expected_file_content) do
+        <<~FILE
+          # frozen_string_literal: true
+
+          module Outer
+            module Inner
+              # == Schema Information
+              #
+              # Table name: users
+              #
+              #  id                     :bigint           not null, primary key
+              #
+              class User < ApplicationRecord
+                include SomeMixin
+
+                class ProcessingError < StandardError; end
+
+                def call
+                  raise ProcessingError
+                end
+              end
+            end
           end
         FILE
       end
