@@ -59,17 +59,8 @@ module AnnotateRb
           content_with_annotations_written_before.join
         end
 
-        # Determines where to place the annotation based on the nested_position option.
-        # When nested_position is enabled, finds the most deeply nested class declaration
-        # to place annotations directly above nested classes instead of at the file top.
         def determine_annotation_position(parsed)
-          # Handle empty files where no classes/modules are found
-          return [nil, 0] if parsed.starts.empty?
-
-          return parsed.starts.first unless @options[:nested_position] && parsed.respond_to?(:type_map)
-
-          class_entries = parsed.starts.select { |name, _line| parsed.type_map[name] == :class }
-          class_entries.last || parsed.starts.first
+          FileParser::AnnotationTarget.find(parsed, @options) || [nil, 0]
         end
 
         # Formats annotations with appropriate indentation for consistent code structure.

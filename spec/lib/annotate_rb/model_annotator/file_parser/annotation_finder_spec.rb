@@ -338,6 +338,113 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::AnnotationFinder do
       include_examples "finds and extracts the annotation"
     end
 
+    context "with a multi-paragraph user documentation comment between annotation and class" do
+      let(:content) do
+        <<~FILE
+          # frozen_string_literal: true
+
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          # First paragraph of user documentation.
+          #
+          # Second paragraph of user documentation.
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:annotation_start) { 2 }
+      let(:annotation_end) { 7 }
+      let(:annotation) do
+        <<~ANNOTATION
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+        ANNOTATION
+      end
+
+      include_examples "finds and extracts the annotation"
+    end
+
+    context "with a user documentation comment containing a tabular-looking row" do
+      let(:content) do
+        <<~FILE
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          # Indexes
+          #
+          #  index_users_on_email  (email) UNIQUE
+          #
+          # Below is a freeform note from the developer.
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:annotation_start) { 0 }
+      let(:annotation_end) { 9 }
+      let(:annotation) do
+        <<~ANNOTATION
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          # Indexes
+          #
+          #  index_users_on_email  (email) UNIQUE
+          #
+        ANNOTATION
+      end
+
+      include_examples "finds and extracts the annotation"
+    end
+
+    context "with an annotation that ends without the canonical trailing # separator" do
+      let(:content) do
+        <<~FILE
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          # Foreign Keys
+          #
+          #  fk_rails_...  (parent_id => parents.id)
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:annotation_start) { 0 }
+      let(:annotation_end) { 8 }
+      let(:annotation) do
+        <<~ANNOTATION
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          # Foreign Keys
+          #
+          #  fk_rails_...  (parent_id => parents.id)
+        ANNOTATION
+      end
+
+      include_examples "finds and extracts the annotation"
+    end
+
     context "with a yml file without annotations" do
       subject { described_class.new(content, wrapper_open, wrapper_close, yml_parser) }
 
