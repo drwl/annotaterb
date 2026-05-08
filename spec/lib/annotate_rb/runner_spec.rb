@@ -69,6 +69,30 @@ RSpec.describe AnnotateRb::Runner do
     end
   end
 
+  describe "custom config path", :isolated_environment do
+    let(:command_double) { instance_double(AnnotateRb::Commands::AnnotateModels) }
+
+    before do
+      File.write(".annotaterb.yml", "show_indexes: false\n")
+      File.write("custom_annotaterb.yml", "show_indexes: true\n")
+
+      allow(AnnotateRb::Commands::AnnotateModels).to receive(:new).and_return(command_double)
+      allow(command_double).to receive(:call)
+    end
+
+    after do
+      AnnotateRb::ConfigFinder.config_path = nil
+    end
+
+    it "loads the config file specified by --config-path" do
+      runner.run(["models", "--config-path", "custom_annotaterb.yml"])
+
+      expect(command_double).to have_received(:call) do |options|
+        expect(options[:show_indexes]).to be(true)
+      end
+    end
+  end
+
   describe "Annotating routes" do
     let(:args) { ["routes"] }
     let(:command_double) { instance_double(AnnotateRb::Commands::AnnotateRoutes) }

@@ -343,5 +343,69 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Updater do
         is_expected.to eq(expected_content)
       end
     end
+
+    context "when existing annotation is indented inside a nested module" do
+      let(:file_content) do
+        <<~FILE
+          # frozen_string_literal: true
+
+          module Blog
+            class Post
+              # == Schema Information
+              #
+              # Table name: blog_comments
+              #
+              #  id      :bigint           not null, primary key
+              #  body    :text             not null
+              #  post_id :bigint           not null
+              #
+              class Comment < ApplicationRecord
+              end
+            end
+          end
+        FILE
+      end
+      let(:new_annotations) do
+        <<~ANNOTATIONS
+          # == Schema Information
+          #
+          # Table name: blog_comments
+          #
+          #  id          :bigint           not null, primary key
+          #  body        :text             not null
+          #  post_id     :bigint           not null
+          #  approved_at :datetime
+          #
+        ANNOTATIONS
+      end
+
+      let(:options) { AnnotateRb::Options.new({position_in_class: "before"}) }
+
+      let(:expected_content) do
+        <<~CONTENT
+          # frozen_string_literal: true
+
+          module Blog
+            class Post
+              # == Schema Information
+              #
+              # Table name: blog_comments
+              #
+              #  id          :bigint           not null, primary key
+              #  body        :text             not null
+              #  post_id     :bigint           not null
+              #  approved_at :datetime
+              #
+              class Comment < ApplicationRecord
+              end
+            end
+          end
+        CONTENT
+      end
+
+      it "preserves the leading indentation of every annotation line" do
+        is_expected.to eq(expected_content)
+      end
+    end
   end
 end

@@ -292,5 +292,63 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotationDiffGenerator do
         expect(subject.changed?).to eq(true)
       end
     end
+
+    context "when existing annotations are indented (nested-position style)" do
+      let(:file_content) do
+        <<~FILE
+          # frozen_string_literal: true
+
+          module Blog
+            class Post
+              # == Schema Information
+              #
+              # Table name: blog_comments
+              #
+              #  id      :bigint           not null, primary key
+              #  body    :text             not null
+              #  post_id :bigint           not null
+              #
+              class Comment < ApplicationRecord
+              end
+            end
+          end
+        FILE
+      end
+      let(:annotation_block) do
+        <<~ANNOTATION
+          # == Schema Information
+          #
+          # Table name: blog_comments
+          #
+          #  id      :bigint           not null, primary key
+          #  body    :text             not null
+          #  post_id :bigint           not null
+          #
+        ANNOTATION
+      end
+
+      let(:current_columns) do
+        [
+          "# Table name: blog_comments",
+          "#  id      :bigint           not null, primary key",
+          "#  body    :text             not null",
+          "#  post_id :bigint           not null"
+        ]
+      end
+      let(:new_columns) do
+        [
+          "# Table name: blog_comments",
+          "#  id      :bigint           not null, primary key",
+          "#  body    :text             not null",
+          "#  post_id :bigint           not null"
+        ]
+      end
+
+      it "matches the indented annotation against the new annotation block" do
+        test_columns_match_expected
+
+        expect(subject.changed?).to eq(false)
+      end
+    end
   end
 end

@@ -33,6 +33,9 @@ module AnnotateRb
             warn "Unable to process #{@file}: #{e.message}"
             warn "\t#{e.backtrace.join("\n\t")}" if @options[:trace]
           end
+        rescue ActiveRecord::ConnectionNotEstablished,
+          ActiveRecord::NoDatabaseError => e
+          abort "AnnotateRb: Database connection error - #{e.message}"
         rescue => e
           warn "Unable to process #{@file}: #{e.message}"
           warn "\t#{e.backtrace.join("\n\t")}" if @options[:trace]

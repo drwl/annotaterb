@@ -4,6 +4,7 @@ module AnnotateRb
   module ModelAnnotator
     module FileParser
       autoload :AnnotationFinder, "annotate_rb/model_annotator/file_parser/annotation_finder"
+      autoload :AnnotationTarget, "annotate_rb/model_annotator/file_parser/annotation_target"
       autoload :CustomParser, "annotate_rb/model_annotator/file_parser/custom_parser"
       autoload :ParsedFile, "annotate_rb/model_annotator/file_parser/parsed_file"
       autoload :ParsedFileResult, "annotate_rb/model_annotator/file_parser/parsed_file_result"
