@@ -8,6 +8,20 @@ module AnnotateRb
         COMPAT_PREFIX_MD = "## Schema Info"
         DEFAULT_ANNOTATION_ENDING = "#"
 
+        SCHEMA_HEADER_PREFIXES = [
+          COMPAT_PREFIX,
+          COMPAT_PREFIX_MD,
+          "Table name:",
+          "Database name:",
+          "Schema version:"
+        ].freeze
+
+        SCHEMA_HEADER_EXACT = [
+          IndexAnnotation::Annotation::HEADER_TEXT,
+          ForeignKeyAnnotation::Annotation::HEADER_TEXT,
+          CheckConstraintAnnotation::Annotation::HEADER_TEXT
+        ].freeze
+
         class MalformedAnnotation < StandardError; end
 
         class NoAnnotationFound < StandardError; end
@@ -70,10 +84,7 @@ module AnnotateRb
               end
             end
           else
-            # Walk back until we find the end of the annotation comment block
-            while ending > start && comments[ending].first != DEFAULT_ANNOTATION_ENDING
-              ending -= 1
-            end
+            ending = walk_forward_through_schema(comments, start, ending)
           end
 
           # We want .last because we want the line indexes
@@ -94,6 +105,30 @@ module AnnotateRb
         # Returns true if annotations are detected in the file content
         def annotated?
           @annotation_start && @annotation_end
+        end
+
+        private
+
+        def walk_forward_through_schema(comments, start, block_end)
+          ending = start
+          while ending < block_end
+            break unless schema_like?(comments[ending + 1].first)
+            ending += 1
+          end
+          ending
+        end
+
+        # Tabular rows have ≥2 leading spaces after `#`; prose has at most one.
+        def schema_like?(comment)
+          return true if comment == DEFAULT_ANNOTATION_ENDING
+
+          text = comment.sub(/\A#\s?/, "")
+          return false if text.empty?
+
+          return true if SCHEMA_HEADER_PREFIXES.any? { |p| text.start_with?(p) }
+          return true if SCHEMA_HEADER_EXACT.include?(text)
+
+          comment.match?(/\A#\s{2,}\S/)
         end
       end
     end

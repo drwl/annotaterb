@@ -28,8 +28,13 @@ migration_tasks.each do |task|
   next unless Rake::Task.task_defined?(task)
   next if config[:skip_on_db_migrate]
 
-  Rake::Task[task].enhance do # This block is ran after `task` completes
-    task_name = Rake.application.top_level_tasks.last # The name of the task that was run, e.g. "db:migrate"
+  Rake::Task[task].enhance do |current_task| # This block is ran after `task` completes
+    # Prefer the top-level task (the one invoked from the CLI, e.g. "db:migrate") so that
+    # when sub-tasks chain (e.g. db:migrate:redo invokes db:rollback then db:migrate), we
+    # defer the annotation run to after everything completes. Fall back to the currently
+    # enhanced task when there is no top-level task (e.g. when the task is invoked
+    # programmatically from application code rather than from the Rake CLI).
+    task_name = Rake.application.top_level_tasks.last || current_task.name
 
     Rake::Task[task_name].enhance do
       ::AnnotateRb::Runner.run_after_migration

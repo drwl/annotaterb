@@ -64,10 +64,8 @@ module AnnotateRb
           annotation_position = nil
 
           if has_annotations
-            const_declaration = @file_parser.starts.first
-
-            # If the file does not have any class or module declaration then const_declaration can be nil
-            _const, line_number = const_declaration
+            target = AnnotationTarget.find(@file_parser, @options)
+            _const, line_number = target if target
 
             if line_number
               annotation_position = if @finder.annotation_start < line_number
