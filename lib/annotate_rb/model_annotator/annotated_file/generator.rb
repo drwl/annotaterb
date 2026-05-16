@@ -36,7 +36,7 @@ module AnnotateRb
           # We need to get class start and class end depending on the position
           parsed = @parser.parse(content_without_annotations)
 
-          _content = if %w[after bottom].include?(annotation_write_position)
+          _content = if Parser::AFTER_POSITIONS.include?(annotation_write_position)
             content_annotated_after(parsed, content_without_annotations)
           else
             content_annotated_before(parsed, content_without_annotations, annotation_write_position)
@@ -46,9 +46,13 @@ module AnnotateRb
         private
 
         def content_annotated_before(parsed, content_without_annotations, write_position)
-          same_write_position = @parsed_file.has_annotations? && @parsed_file.annotation_position.to_s == write_position
+          same_write_position = same_side?(write_position)
 
           _constant_name, line_number_before = determine_annotation_position(parsed)
+
+          if Parser::DOC_AWARE_POSITIONS.include?(write_position)
+            line_number_before = class_doc_start_line(content_without_annotations.lines, line_number_before)
+          end
 
           content_with_annotations_written_before = []
           content_with_annotations_written_before << content_without_annotations.lines[0...line_number_before]
@@ -58,6 +62,32 @@ module AnnotateRb
           content_with_annotations_written_before << content_without_annotations.lines[line_number_before..]
 
           content_with_annotations_written_before.join
+        end
+
+        def same_side?(write_position)
+          return false unless @parsed_file.has_annotations?
+
+          new_side = Parser::AFTER_POSITIONS.include?(write_position) ? :after : :before
+          @parsed_file.annotation_position == new_side
+        end
+
+        # Magic comments are excluded so annotations slot between them and
+        # the class doc rather than being treated as part of the doc.
+        def class_doc_start_line(content_lines, line_number_before)
+          doc_start = line_number_before
+          cursor = line_number_before - 1
+
+          while cursor >= 0
+            line = content_lines[cursor]
+            break if line.match?(/\A\s*\z/)
+            break unless line.match?(/\A\s*#/)
+            break if FileParser::MagicComment.match?(line)
+
+            doc_start = cursor
+            cursor -= 1
+          end
+
+          doc_start
         end
 
         def determine_annotation_position(parsed)

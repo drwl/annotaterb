@@ -6,6 +6,7 @@ module AnnotateRb
       autoload :AnnotationFinder, "annotate_rb/model_annotator/file_parser/annotation_finder"
       autoload :AnnotationTarget, "annotate_rb/model_annotator/file_parser/annotation_target"
       autoload :CustomParser, "annotate_rb/model_annotator/file_parser/custom_parser"
+      autoload :MagicComment, "annotate_rb/model_annotator/file_parser/magic_comment"
       autoload :ParsedFile, "annotate_rb/model_annotator/file_parser/parsed_file"
       autoload :ParsedFileResult, "annotate_rb/model_annotator/file_parser/parsed_file_result"
       autoload :YmlParser, "annotate_rb/model_annotator/file_parser/yml_parser"

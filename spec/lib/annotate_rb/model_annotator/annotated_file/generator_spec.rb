@@ -739,6 +739,226 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
       end
     end
 
+    context 'when position is "before_doc"' do
+      let(:options) { AnnotateRb::Options.new({position_in_class: "before_doc"}) }
+
+      context "when class has no documentation comment" do
+        let(:file_content) do
+          <<~FILE
+            class User < ApplicationRecord
+            end
+          FILE
+        end
+
+        let(:expected_content) do
+          <<~CONTENT
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+            class User < ApplicationRecord
+            end
+          CONTENT
+        end
+
+        it "places annotation directly before the class (same as before)" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context "when class has a documentation comment" do
+        let(:file_content) do
+          <<~FILE
+            # My doc about User
+            class User < ApplicationRecord
+            end
+          FILE
+        end
+
+        let(:expected_content) do
+          <<~CONTENT
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+            # My doc about User
+            class User < ApplicationRecord
+            end
+          CONTENT
+        end
+
+        it "places annotation above the class doc, leaving the doc adjacent to the class" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context "when class has a multi-line documentation comment" do
+        let(:file_content) do
+          <<~FILE
+            # First doc line
+            # Second doc line
+            # Third doc line
+            class User < ApplicationRecord
+            end
+          FILE
+        end
+
+        let(:expected_content) do
+          <<~CONTENT
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+            # First doc line
+            # Second doc line
+            # Third doc line
+            class User < ApplicationRecord
+            end
+          CONTENT
+        end
+
+        it "preserves the entire contiguous comment block above the class" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context "when class has a magic comment but no class doc" do
+        let(:file_content) do
+          <<~FILE
+            # frozen_string_literal: true
+            class User < ApplicationRecord
+            end
+          FILE
+        end
+
+        let(:expected_content) do
+          <<~CONTENT
+            # frozen_string_literal: true
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+            class User < ApplicationRecord
+            end
+          CONTENT
+        end
+
+        it "treats magic comments as non-doc and inserts annotation between them and the class" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context "when class has a magic comment and a class doc adjacent to each other" do
+        let(:file_content) do
+          <<~FILE
+            # frozen_string_literal: true
+            # My doc about User
+            class User < ApplicationRecord
+            end
+          FILE
+        end
+
+        let(:expected_content) do
+          <<~CONTENT
+            # frozen_string_literal: true
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+            # My doc about User
+            class User < ApplicationRecord
+            end
+          CONTENT
+        end
+
+        it "inserts annotation between magic comment and class doc" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context "when there is an unrelated comment block separated from the class by a blank line" do
+        let(:file_content) do
+          <<~FILE
+            # Top-level note
+
+            # My doc about User
+            class User < ApplicationRecord
+            end
+          FILE
+        end
+
+        let(:expected_content) do
+          <<~CONTENT
+            # Top-level note
+
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id                     :bigint           not null, primary key
+            #
+            # My doc about User
+            class User < ApplicationRecord
+            end
+          CONTENT
+        end
+
+        it "treats blank-line separated comments as not class doc" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context "with nested_position and a class doc above the nested class" do
+        let(:options) do
+          AnnotateRb::Options.new({position_in_class: "before_doc", nested_position: true})
+        end
+
+        let(:file_content) do
+          <<~FILE
+            # frozen_string_literal: true
+
+            module Collapsed
+              # Doc about TestModel
+              class TestModel < ApplicationRecord
+              end
+            end
+          FILE
+        end
+
+        let(:expected_content) do
+          <<~CONTENT
+            # frozen_string_literal: true
+
+            module Collapsed
+              # == Schema Information
+              #
+              # Table name: users
+              #
+              #  id                     :bigint           not null, primary key
+              #
+              # Doc about TestModel
+              class TestModel < ApplicationRecord
+              end
+            end
+          CONTENT
+        end
+
+        it "preserves the doc adjacent to the nested class" do
+          is_expected.to eq(expected_content)
+        end
+      end
+    end
+
     context "when file is empty" do
       let(:file_content) { "" }
       let(:new_annotations) do

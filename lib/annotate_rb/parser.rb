@@ -22,7 +22,9 @@ module AnnotateRb
       exit: false
     }.freeze
 
-    ANNOTATION_POSITIONS = %w[before top after bottom].freeze
+    ANNOTATION_POSITIONS = %w[before top after bottom before_doc].freeze
+    AFTER_POSITIONS = %w[after bottom].freeze
+    DOC_AWARE_POSITIONS = %w[before_doc].freeze
     FILE_TYPE_POSITIONS = %w[position_in_class position_in_factory position_in_fixture position_in_test position_in_routes position_in_serializer].freeze
     EXCLUSION_LIST = %w[tests fixtures factories serializers].freeze
     FORMAT_TYPES = %w[bare rdoc yard markdown].freeze
@@ -297,9 +299,9 @@ module AnnotateRb
       has_set_position = {}
 
       option_parser.on("-p",
-        "--position [before|top|after|bottom]",
+        "--position [before|top|after|bottom|before_doc]",
         ANNOTATION_POSITIONS,
-        "Place the annotations at the top (before) or the bottom (after) of the model/test/fixture/factory/route/serializer file(s)") do |position|
+        "Place the annotations at the top (before), bottom (after), or above the class documentation (before_doc) of the model/test/fixture/factory/route/serializer file(s)") do |position|
         @options[:position] = position
 
         FILE_TYPE_POSITIONS.each do |key|
@@ -308,9 +310,9 @@ module AnnotateRb
       end
 
       option_parser.on("--pc",
-        "--position-in-class [before|top|after|bottom]",
+        "--position-in-class [before|top|after|bottom|before_doc]",
         ANNOTATION_POSITIONS,
-        "Place the annotations at the top (before) or the bottom (after) of the model file") do |position_in_class|
+        "Place the annotations at the top (before), bottom (after), or above the class documentation (before_doc) of the model file") do |position_in_class|
         @options[:position_in_class] = position_in_class
         has_set_position["position_in_class"] = true
       end

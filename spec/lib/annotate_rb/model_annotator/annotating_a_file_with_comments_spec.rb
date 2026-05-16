@@ -1748,6 +1748,141 @@ RSpec.describe "Annotating a file with comments" do
     end
   end
 
+  context "when annotating with position_in_class: before_doc" do
+    let(:options) { AnnotateRb::Options.from({position_in_class: "before_doc"}) }
+
+    context "with a class doc directly above the class" do
+      let(:starting_file_content) do
+        <<~FILE
+          # My doc about User
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:expected_file_content) do
+        <<~FILE
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          # My doc about User
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      include_examples "annotates the file"
+    end
+
+    context "with a magic comment and a class doc" do
+      let(:starting_file_content) do
+        <<~FILE
+          # frozen_string_literal: true
+
+          # My doc about User
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:expected_file_content) do
+        <<~FILE
+          # frozen_string_literal: true
+
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          # My doc about User
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      include_examples "annotates the file"
+    end
+
+    context "when re-running on a file already annotated with before_doc" do
+      let(:schema_info) do
+        <<~SCHEMA
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #  boolean                :boolean          default(FALSE)
+          #
+        SCHEMA
+      end
+
+      let(:starting_file_content) do
+        <<~FILE
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          # My doc about User
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:expected_file_content) do
+        <<~FILE
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #  boolean                :boolean          default(FALSE)
+          #
+          # My doc about User
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      include_examples "annotates the file"
+    end
+
+    context "when migrating an existing 'before' annotation to 'before_doc' with --force" do
+      let(:options) { AnnotateRb::Options.from({position_in_class: "before_doc", force: true}) }
+
+      let(:starting_file_content) do
+        <<~FILE
+          # My doc about User
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:expected_file_content) do
+        <<~FILE
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id                     :bigint           not null, primary key
+          #
+          # My doc about User
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      include_examples "annotates the file"
+    end
+  end
+
   context "when annotating a model with inner class declarations and nested_position" do
     let(:options) do
       AnnotateRb::Options.from({nested_position: true, force: true})
