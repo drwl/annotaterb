@@ -78,6 +78,32 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::CustomParser do
       end
     end
 
+    context "when class is namespaced in a module with a doc comment inside the module" do
+      let(:input) do
+        <<~FILE
+          # frozen_string_literal: true
+
+          module Collapsed
+            # Doc about TestModel
+            class TestModel < ApplicationRecord
+            end
+          end
+        FILE
+      end
+      let(:expected_comments) do
+        [
+          ["# frozen_string_literal: true", 0],
+          ["# Doc about TestModel", 3]
+        ]
+      end
+      let(:expected_starts) { [["Collapsed", 2], ["TestModel", 4]] }
+      let(:expected_ends) { [["TestModel", 5], ["Collapsed", 6]] }
+
+      it "parses the module start at the correct line number" do
+        check_it_parses_correctly
+      end
+    end
+
     context "when class is namespaced in a module with comments" do
       let(:input) do
         <<~FILE

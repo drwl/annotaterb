@@ -50,16 +50,23 @@ module AnnotateRb
           }
         end
 
+        def on_const(const)
+          @_last_const_lineno = lineno
+          super
+        end
+
         def on_const_ref(const)
-          add_event(__method__, const, lineno)
-          @block_starts << [const, lineno]
+          declaration_lineno = @_last_const_lineno || lineno
+          add_event(__method__, const, declaration_lineno)
+          @block_starts << [const, declaration_lineno]
           super
         end
 
         # Used for `class Foo::User`
         def on_const_path_ref(_left, const)
-          add_event(__method__, const, lineno)
-          @block_starts << [const, lineno]
+          declaration_lineno = @_last_const_lineno || lineno
+          add_event(__method__, const, declaration_lineno)
+          @block_starts << [const, declaration_lineno]
           super
         end
 
