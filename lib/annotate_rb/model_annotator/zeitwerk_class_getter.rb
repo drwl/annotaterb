@@ -49,7 +49,7 @@ module AnnotateRb
 
         # once we have the filepath_relative_to_root_dir, we need to see if it
         # falls within one of our Zeitwerk "collapsed" paths.
-        if loader.collapse.any? { |path| path.include?(root_dir) && file.include?(path.split(root_dir)[1]) }
+        if loader.collapse.any? { |path| path.include?(root_dir) && @file.include?(path.split(root_dir)[1]) }
           # if the file is within a collapsed path, we then need to, for each
           # collapsed path, remove the root dir
           collapsed = loader.collapse.map { |path| path.split(root_dir)[1].sub(/^\//, "") }.to_set
