@@ -7,6 +7,11 @@ if [ -z "${1:-}" ]; then
   exit 1
 fi
 
+if [ -z "${GITHUB_TOKEN:-}" ]; then
+  echo "Error: GITHUB_TOKEN is not set"
+  exit 1
+fi
+
 VERSION=$1
 BRANCH="drwl/release-$VERSION"
 
@@ -15,14 +20,16 @@ git pull origin main
 git checkout -b "$BRANCH"
 
 echo "$VERSION" > VERSION
-git add VERSION
-git commit -m "Bump version to v$VERSION"
+github_changelog_generator -u drwl -p annotaterb --token "$GITHUB_TOKEN"
+git add VERSION CHANGELOG.md
+git commit -m "Release v$VERSION"
 git push -u origin HEAD
 
 gh pr create \
-  --title "Bump version to v$VERSION" \
+  --title "Release v$VERSION" \
   --body "Manually doing releases until an automated solution is put in place." \
   --base main
 
 echo ""
-echo "Once the PR is merged, run: ./scripts/publish.sh $VERSION"
+echo "Once the PR is merged:"
+echo "  git checkout main && git pull && bundle exec rake release"
