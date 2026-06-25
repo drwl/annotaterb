@@ -16,10 +16,14 @@ module AnnotateRb
           model_dirs = options[:model_dir].flat_map { |model_dir| Dir[model_dir] }
           model_dirs.each do |dir|
             Dir.chdir(dir) do
+              only_files = options[:only_file_patterns]&.map { |pattern| Dir.glob(pattern) }&.flatten
               list = if options[:ignore_model_sub_dir]
-                Dir["*.rb"].map { |f| [dir, f] }
+                Dir["*.rb"]
+                  .select { |f| only_files.nil? || only_files.include?(f) }
+                  .map { |f| [dir, f] }
               else
                 Dir["**/*.rb"]
+                  .select { |f| only_files.nil? || only_files.include?(f) }
                   .reject { |f| f["concerns/"] }
                   .map { |f| [dir, f] }
               end
