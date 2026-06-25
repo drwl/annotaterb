@@ -45,7 +45,7 @@ module AnnotateRb
               annotation_start = @finder.annotation_start
               annotation_end = @finder.annotation_end
 
-              if @file_lines[annotation_start - 1]&.strip&.empty?
+              if annotation_start > 0 && @file_lines[annotation_start - 1]&.strip&.empty?
                 annotation_start -= 1
                 has_leading_whitespace = true
               end
