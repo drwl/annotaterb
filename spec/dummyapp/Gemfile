@@ -10,7 +10,11 @@ when 'mysql2'
 when 'pg'
   gem 'pg', '>= 1.5', '< 2'
 when 'sqlite3'
-  gem 'sqlite3', '>= 1.6', '< 2'
+  if ENV.fetch("RAILS_VERSION", "~> 7.1.0")[/(\d+)\./, 1].to_i >= 8
+    gem 'sqlite3', '>= 2.1'
+  else
+    gem 'sqlite3', '>= 1.6', '< 2'
+  end
 else
   raise 'The environment variable DATABASE_ADAPTER must be one of mysql2, pg, or sqlite3'
 end
