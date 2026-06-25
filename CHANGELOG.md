@@ -1,8 +1,66 @@
 # Changelog
 
+## [v4.23.0](https://github.com/drwl/annotaterb/tree/v4.23.0) (2026-06-25)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.22.0...v4.23.0)
+
+**Implemented enhancements:**
+
+- \[Request\] Support for multiple serializers for one model [\#329](https://github.com/drwl/annotaterb/issues/329)
+- Support COMMENT on an INDEX [\#258](https://github.com/drwl/annotaterb/issues/258)
+
+**Fixed bugs:**
+
+- Re-running annotaterb strips indentation from nested \(indented\) schema annotations [\#332](https://github.com/drwl/annotaterb/issues/332)
+- Setting all sort options to `false` sometimes doesn't respect migration/DB order [\#237](https://github.com/drwl/annotaterb/issues/237)
+
+**Closed issues:**
+
+- mistake post please delete this [\#314](https://github.com/drwl/annotaterb/issues/314)
+- Removal of final empty comment line after foreign keys results in duplicate `fk_rails_...` line [\#297](https://github.com/drwl/annotaterb/issues/297)
+- Default settings does not indent correctly inside a module [\#271](https://github.com/drwl/annotaterb/issues/271)
+- Top does not do what I think it should?  And annotator fails to indent. [\#202](https://github.com/drwl/annotaterb/issues/202)
+- annotaterb is moving my class doc [\#201](https://github.com/drwl/annotaterb/issues/201)
+
+**Merged pull requests:**
+
+- Bump version to v4.23.0 [\#347](https://github.com/drwl/annotaterb/pull/347) ([drwl](https://github.com/drwl))
+- Bump actions/checkout from 6 to 7 [\#346](https://github.com/drwl/annotaterb/pull/346) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Fix duplicate annotations when a file ends with a trailing blank line [\#342](https://github.com/drwl/annotaterb/pull/342) ([OdenTakashi](https://github.com/OdenTakashi))
+- Fix update\_config for non-default config locations [\#341](https://github.com/drwl/annotaterb/pull/341) ([OdenTakashi](https://github.com/OdenTakashi))
+- Fix NameError in ZeitwerkClassGetter for collapsed Zeitwerk paths [\#339](https://github.com/drwl/annotaterb/pull/339) ([KaiyuanMa](https://github.com/KaiyuanMa))
+- Fix annotation inserted inside module when doc comment is present [\#338](https://github.com/drwl/annotaterb/pull/338) ([OdenTakashi](https://github.com/OdenTakashi))
+-   Add `position_in_class: after_doc` to keep class doc adjacent to class [\#337](https://github.com/drwl/annotaterb/pull/337) ([yamat47](https://github.com/yamat47))
+- Fix annotation placement above inner class declarations under `nested_position` [\#336](https://github.com/drwl/annotaterb/pull/336) ([yamat47](https://github.com/yamat47))
+- Drop Ruby \< 3.3 from CI matrix [\#335](https://github.com/drwl/annotaterb/pull/335) ([drwl](https://github.com/drwl))
+- Fix annotation placement in nested files and around trailing user comments [\#334](https://github.com/drwl/annotaterb/pull/334) ([yamat47](https://github.com/yamat47))
+- Preserve indentation when re-running annotaterb on nested-position annotations. [\#333](https://github.com/drwl/annotaterb/pull/333) ([yamat47](https://github.com/yamat47))
+- Respect `--config-path` during config loading [\#331](https://github.com/drwl/annotaterb/pull/331) ([OdenTakashi](https://github.com/OdenTakashi))
+- Fall back to current task when no top-level task is set [\#328](https://github.com/drwl/annotaterb/pull/328) ([jordan-brough](https://github.com/jordan-brough))
+- Fix --show-migration option not working on Rails 7.2+. [\#327](https://github.com/drwl/annotaterb/pull/327) ([OdenTakashi](https://github.com/OdenTakashi))
+- Exit with non-zero code when database is not accessible [\#326](https://github.com/drwl/annotaterb/pull/326) ([OdenTakashi](https://github.com/OdenTakashi))
+- fix potential ReDoS in route annotator regex [\#325](https://github.com/drwl/annotaterb/pull/325) ([OdenTakashi](https://github.com/OdenTakashi))
+- Support opt-in display of PostgreSQL enum types in annotations [\#324](https://github.com/drwl/annotaterb/pull/324) ([OdenTakashi](https://github.com/OdenTakashi))
+- Fix error when column comments contain `%` [\#322](https://github.com/drwl/annotaterb/pull/322) ([willnet](https://github.com/willnet))
+- Add unit tests for AnnotateRb::Helper [\#321](https://github.com/drwl/annotaterb/pull/321) ([OdenTakashi](https://github.com/OdenTakashi))
+- Migrate issue templates to folder-based format [\#320](https://github.com/drwl/annotaterb/pull/320) ([OdenTakashi](https://github.com/OdenTakashi))
+- Add opt-in show\_indexes\_comments option to display index comments [\#319](https://github.com/drwl/annotaterb/pull/319) ([olleolleolle](https://github.com/olleolleolle))
+- Only connect SecondaryRecord to secondary DB when MULTI\_DB\_TEST is set [\#318](https://github.com/drwl/annotaterb/pull/318) ([OdenTakashi](https://github.com/OdenTakashi))
+- Correct secondary database setup in dummy app [\#317](https://github.com/drwl/annotaterb/pull/317) ([OdenTakashi](https://github.com/OdenTakashi))
+- Remove duplicate ignore\_unknown\_models option definition [\#316](https://github.com/drwl/annotaterb/pull/316) ([OdenTakashi](https://github.com/OdenTakashi))
+- Fix column annotation alignment for CJK and fullwidth characters [\#315](https://github.com/drwl/annotaterb/pull/315) ([SergeyGildenshtern](https://github.com/SergeyGildenshtern))
+- Added command example for applying annotations to README [\#313](https://github.com/drwl/annotaterb/pull/313) ([zackerms](https://github.com/zackerms))
+- Generate changelog for v4.22.0 [\#311](https://github.com/drwl/annotaterb/pull/311) ([drwl](https://github.com/drwl))
+- Add opt-in support for automatically annotating routes after migration tasks [\#293](https://github.com/drwl/annotaterb/pull/293) ([OdenTakashi](https://github.com/OdenTakashi))
+
 ## [v4.22.0](https://github.com/drwl/annotaterb/tree/v4.22.0) (2026-02-12)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.21.0...v4.22.0)
+
+**Implemented enhancements:**
+
+- Feature: ruby-lsp addon [\#175](https://github.com/drwl/annotaterb/issues/175)
+- Mounting ActionCable leads to weird annotation [\#161](https://github.com/drwl/annotaterb/issues/161)
 
 **Fixed bugs:**
 
@@ -13,8 +71,6 @@
 - New `ignore_multi_database_name` option seems to be non-functional [\#303](https://github.com/drwl/annotaterb/issues/303)
 - Changing sort options does not change annotations [\#294](https://github.com/drwl/annotaterb/issues/294)
 - CLI script for annotaterb not installed or runnable [\#290](https://github.com/drwl/annotaterb/issues/290)
-- Feature: ruby-lsp addon [\#175](https://github.com/drwl/annotaterb/issues/175)
-- Mounting ActionCable leads to weird annotation [\#161](https://github.com/drwl/annotaterb/issues/161)
 
 **Merged pull requests:**
 
@@ -22,7 +78,7 @@
 - Run CI on CRuby 4.0 [\#308](https://github.com/drwl/annotaterb/pull/308) ([viralpraxis](https://github.com/viralpraxis))
 - Generate changelog for v4.21.0 [\#307](https://github.com/drwl/annotaterb/pull/307) ([drwl](https://github.com/drwl))
 - fix NoMethodError when using nested\_position with fixture files [\#298](https://github.com/drwl/annotaterb/pull/298) ([OdenTakashi](https://github.com/OdenTakashi))
-- fix: Respect configured sort [\#295](https://github.com/drwl/annotaterb/pull/295) ([patrickarnett](https://github.com/patrickarnett)) **(Maintainer note: this could result in annotations shifting depending on configuration, please create an issue if it is a breaking change)**
+- fix: Respect configured sort [\#295](https://github.com/drwl/annotaterb/pull/295) ([patrickarnett](https://github.com/patrickarnett))
 - Use `#lease_connection` if available [\#292](https://github.com/drwl/annotaterb/pull/292) ([viralpraxis](https://github.com/viralpraxis))
 - refactor: simplify primary key check logic \(no functional changes\) [\#285](https://github.com/drwl/annotaterb/pull/285) ([OdenTakashi](https://github.com/OdenTakashi))
 - Honor skip\_on\_db\_migrate config option when runnig migrate tasks [\#274](https://github.com/drwl/annotaterb/pull/274) ([martinechtner](https://github.com/martinechtner))
