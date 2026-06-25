@@ -42,6 +42,7 @@ jobs:
       matrix:
         adapter: [ 'mysql2', 'pg', 'sqlite3' ]
         ruby: ['3.3', '3.4', '4.0']
+        rails: ['~> 7.1.0', '~> 7.2.0', '~> 8.0.0', '~> 8.1.0']
 
     steps:
       - name: Checkout
@@ -68,19 +69,22 @@ jobs:
         run: bundle config set path 'vendor/bundle'
         working-directory: spec/dummyapp
 
-      - name: Install dummyapp dependencies (${{ matrix.adapter }})
+      - name: Install dummyapp dependencies (${{ matrix.adapter }}, Rails ${{ matrix.rails }})
         run: bundle install
         working-directory: spec/dummyapp
         env:
           DATABASE_ADAPTER: ${{ matrix.adapter }}
+          RAILS_VERSION: ${{ matrix.rails }}
 
-      - name: Run dummyapp migrations (${{ matrix.adapter }})
+      - name: Run dummyapp migrations (${{ matrix.adapter }}, Rails ${{ matrix.rails }})
         run: bin/rails db:create
         working-directory: spec/dummyapp
         env:
           DATABASE_ADAPTER: ${{ matrix.adapter }}
+          RAILS_VERSION: ${{ matrix.rails }}
 
-      - name: Run Integration tests (${{ matrix.adapter }})
+      - name: Run Integration tests (${{ matrix.adapter }}, Rails ${{ matrix.rails }})
         run: bundle exec rake spec:integration
         env:
           DATABASE_ADAPTER: ${{ matrix.adapter }}
+          RAILS_VERSION: ${{ matrix.rails }}
