@@ -9,8 +9,14 @@ module SpecHelper
       read(name).join("\n")
     end
 
+    def rails_template_set
+      requirement = ENV.fetch("RAILS_VERSION", "~> 7.1.0")
+      major = requirement[/(\d+)\./, 1].to_i
+      (major >= 8) ? "rails8" : "pre8"
+    end
+
     def models_template_dir
-      File.join(::Aruba.config.root_directory, "spec/templates/#{ENV["DATABASE_ADAPTER"]}")
+      File.join(::Aruba.config.root_directory, "spec/templates/#{rails_template_set}/#{ENV["DATABASE_ADAPTER"]}")
     end
 
     def migrations_template_dir
