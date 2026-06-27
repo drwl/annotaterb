@@ -345,7 +345,6 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
         <<~FILE
           # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-          <% 1.upto(100) do |i| %>
           # == Schema Information
           #
           # Table name: users
@@ -354,6 +353,7 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
           #  name([sensitivity: medium]) :string(50)       not null
           #  email                       :string
           #
+          <% 1.upto(100) do |i| %>
           user_<%= i %>:
             name: User <%= i %>
             email: user_<%= i %>@example.com

@@ -43,10 +43,15 @@ module AnnotateRb
           begin
             parser.parse(@input)
           rescue Psych::SyntaxError => _e
-            # "Dynamic fixtures with ERB" exist in Rails, and will cause Psych.parser to error
-            # This is a hacky solution to get around this and still have it parse
-            erb_yml = ERB.new(@input).result
-            parser.parse(erb_yml)
+            # "Dynamic fixtures with ERB" exist in Rails and cause Psych.parser to error.
+            #
+            # We deliberately do not evaluate the ERB and read line numbers off the
+            # result: evaluating runs arbitrary code, and the line numbers from the
+            # evaluated output do not map back to the original file (ERB tags spanning
+            # multiple lines shift the offsets), which would place annotations inside
+            # an ERB tag. Instead we derive the content bounds straight from the
+            # original lines so annotations land around the ERB body.
+            return record_erb_positions
           end
 
           stream = parser.handler.root
@@ -67,6 +72,29 @@ module AnnotateRb
             @starts << [nil, stream.end_line]
             @ends << [nil, stream.end_line]
           end
+        end
+
+        # Locates the content bounds of an ERB fixture directly from the original
+        # lines, treating the ERB/YAML body as the doc. The start is the first
+        # non-blank, non-comment line so annotations are written above the ERB
+        # block (and after any leading comments), never inside a tag.
+        def record_erb_positions
+          lines = @input.split($/)
+          content_start = lines.index { |line| content_line?(line) }
+
+          if content_start.nil?
+            @starts << [nil, 0]
+            @ends << [nil, 0]
+          else
+            content_end = lines.rindex { |line| content_line?(line) }
+            @starts << [nil, content_start]
+            @ends << [nil, content_end + 1]
+          end
+        end
+
+        def content_line?(line)
+          stripped = line.strip
+          !stripped.empty? && !stripped.start_with?("#")
         end
       end
     end

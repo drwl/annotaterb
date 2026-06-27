@@ -127,10 +127,35 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::YmlParser do
         ["# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html", 0]
       ]
     end
-    let(:expected_starts) { [[nil, 3]] }
-    let(:expected_ends) { [[nil, 404]] }
+    # Content bounds are taken from the original file (not the evaluated ERB),
+    # so the annotation is placed around the ERB body instead of inside a tag.
+    let(:expected_starts) { [[nil, 2]] }
+    let(:expected_ends) { [[nil, 7]] }
 
     it "parses without errors" do
+      check_it_parses_correctly
+    end
+  end
+
+  context "with a yml file that starts with a multi-line erb block" do
+    let(:input) do
+      <<~FILE
+        <%
+          total = 2
+        %>
+        <% total.times do |i| %>
+        user_<%= i %>:
+          name: User <%= i %>
+        <% end %>
+      FILE
+    end
+    let(:expected_comments) { [] }
+    # Start must be line 0 (the opening `<%`) so the annotation is written
+    # above the ERB block, not inside it.
+    let(:expected_starts) { [[nil, 0]] }
+    let(:expected_ends) { [[nil, 7]] }
+
+    it "parses without inserting into the erb block" do
       check_it_parses_correctly
     end
   end
