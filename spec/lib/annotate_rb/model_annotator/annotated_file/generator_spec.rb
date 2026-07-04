@@ -1113,5 +1113,93 @@ RSpec.describe AnnotateRb::ModelAnnotator::AnnotatedFile::Generator do
         end
       end
     end
+
+    context "with an erb fixture file" do
+      let(:annotation_position) { :position_in_fixture }
+      let(:parser_klass) { AnnotateRb::ModelAnnotator::FileToParserMapper.map("users.yml") }
+      let(:new_annotations) do
+        <<~ANNOTATIONS
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  id   :integer          not null, primary key
+          #  name :string
+          #
+        ANNOTATIONS
+      end
+
+      context "when the file starts with a multi-line erb block" do
+        let(:options) { AnnotateRb::Options.new({position_in_fixture: "before_doc"}) }
+        let(:file_content) do
+          <<~FILE
+            <%
+              total = 2
+            %>
+            <% total.times do |i| %>
+            user_<%= i %>:
+              name: User <%= i %>
+            <% end %>
+          FILE
+        end
+        let(:expected_content) do
+          <<~CONTENT
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id   :integer          not null, primary key
+            #  name :string
+            #
+            <%
+              total = 2
+            %>
+            <% total.times do |i| %>
+            user_<%= i %>:
+              name: User <%= i %>
+            <% end %>
+          CONTENT
+        end
+
+        it "writes the annotation above the erb block, not inside it" do
+          is_expected.to eq(expected_content)
+        end
+      end
+
+      context "when the erb block is preceded by a comment" do
+        let(:options) { AnnotateRb::Options.new({position_in_fixture: "before_doc"}) }
+        let(:file_content) do
+          <<~FILE
+            # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+            <% 1.upto(3) do |i| %>
+            user_<%= i %>:
+              name: User <%= i %>
+            <% end %>
+          FILE
+        end
+        let(:expected_content) do
+          <<~CONTENT
+            # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+            # == Schema Information
+            #
+            # Table name: users
+            #
+            #  id   :integer          not null, primary key
+            #  name :string
+            #
+            <% 1.upto(3) do |i| %>
+            user_<%= i %>:
+              name: User <%= i %>
+            <% end %>
+          CONTENT
+        end
+
+        it "writes the annotation above the erb block, not inside the loop" do
+          is_expected.to eq(expected_content)
+        end
+      end
+    end
   end
 end
