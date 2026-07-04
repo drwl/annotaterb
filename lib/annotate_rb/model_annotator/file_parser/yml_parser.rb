@@ -51,6 +51,11 @@ module AnnotateRb
             # multiple lines shift the offsets), which would place annotations inside
             # an ERB tag. Instead we derive the content bounds straight from the
             # original lines so annotations land around the ERB body.
+            #
+            # Only fall back for actual ERB fixtures. Genuinely malformed YAML
+            # (no ERB tags) should keep surfacing the parse error rather than
+            # being silently annotated.
+            raise unless erb_fixture?
             return record_erb_positions
           end
 
@@ -95,6 +100,12 @@ module AnnotateRb
         def content_line?(line)
           stripped = line.strip
           !stripped.empty? && !stripped.start_with?("#")
+        end
+
+        # True when the input contains an ERB tag, i.e. it is a dynamic fixture
+        # rather than plain (possibly malformed) YAML.
+        def erb_fixture?
+          @input.match?(/<%.*?%>/m)
         end
       end
     end

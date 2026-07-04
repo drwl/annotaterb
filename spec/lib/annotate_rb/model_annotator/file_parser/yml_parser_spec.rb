@@ -160,6 +160,18 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::YmlParser do
     end
   end
 
+  context "with malformed yaml that is not an erb fixture" do
+    let(:input) do
+      <<~FILE
+        user_one: [
+      FILE
+    end
+
+    it "re-raises the parse error instead of silently annotating" do
+      expect { described_class.parse(input) }.to raise_error(Psych::SyntaxError)
+    end
+  end
+
   context "with an empty yml file" do
     let(:input) do
       <<~FILE
