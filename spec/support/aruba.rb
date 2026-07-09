@@ -18,6 +18,14 @@ module SpecHelper
     end
 
     def model_template(name)
+      # Rails 8 changed TimeWithZone#inspect to ISO 8601 (https://github.com/rails/rails/pull/52371),
+      # so datetime defaults in schema comments differ from Rails 7.2. spec/templates/rails8/
+      # holds those overrides; if we drop Rails 7.2 from the CI matrix, this branch can go away.
+      if ENV.fetch("RAILS_VERSION", "~> 7.2.0")[/(\d+)\./, 1].to_i >= 8
+        rails8_path = File.join(::Aruba.config.root_directory, "spec/templates/rails8/#{ENV["DATABASE_ADAPTER"]}", name)
+        return rails8_path if File.exist?(rails8_path)
+      end
+
       File.join(models_template_dir, name)
     end
 
