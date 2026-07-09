@@ -1939,4 +1939,58 @@ RSpec.describe "Annotating a file with comments" do
       include_examples "annotates the file"
     end
   end
+
+  context "when re-running with format_markdown: true on an already-annotated file" do
+    let(:options) { AnnotateRb::Options.from({format_markdown: true, force: true}) }
+
+    let(:schema_info) do
+      <<~SCHEMA
+        # ## Schema Information
+        #
+        # Table name: `users`
+        #
+        # ### Columns
+        #
+        # Name       | Type            | Attributes
+        # ---------- | --------------- | ---------------------------
+        # **`id`**   | `integer`       | `not null, primary key`
+        # **`name`** | `string(255)`   |
+        #
+        # ### Indexes
+        #
+        # * `index_users_on_name`:
+        #     * **`name`**
+        #
+      SCHEMA
+    end
+
+    let(:starting_file_content) do
+      <<~FILE
+        # frozen_string_literal: true
+        # ## Schema Information
+        #
+        # Table name: `users`
+        #
+        # ### Columns
+        #
+        # Name       | Type            | Attributes
+        # ---------- | --------------- | ---------------------------
+        # **`id`**   | `integer`       | `not null, primary key`
+        # **`name`** | `string(255)`   |
+        #
+        # ### Indexes
+        #
+        # * `index_users_on_name`:
+        #     * **`name`**
+        #
+
+        class User < ApplicationRecord
+        end
+      FILE
+    end
+
+    let(:expected_file_content) { starting_file_content }
+
+    include_examples "annotates the file"
+  end
 end
