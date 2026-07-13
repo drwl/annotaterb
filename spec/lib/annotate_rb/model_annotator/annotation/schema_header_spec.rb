@@ -34,6 +34,24 @@ RSpec.describe AnnotateRb::ModelAnnotator::Annotation::SchemaHeader do
       end
 
       it { is_expected.to eq(expected_header) }
+
+      context "with `ignore_database_name: true`" do
+        let :options do
+          AnnotateRb::Options.new({ignore_database_name: true})
+        end
+
+        let(:expected_header) do
+          <<~HEADER.strip
+            #
+            # Table name: users
+            #
+          HEADER
+        end
+
+        it "returns the header without the database name" do
+          is_expected.to eq(expected_header)
+        end
+      end
     end
 
     context "with `with_comment: true`" do

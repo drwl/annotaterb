@@ -222,6 +222,11 @@ module AnnotateRb
         @options[:ignore_unknown_models] = true
       end
 
+      option_parser.on("--ignore-database-name",
+        "don't include the database name in the annotation") do
+        @options[:ignore_database_name] = true
+      end
+
       option_parser.on("-I",
         "--ignore-columns REGEX",
         "don't annotate columns that match a given REGEX (i.e., `annotate -I '^(id|updated_at|created_at)'`") do |regex|
