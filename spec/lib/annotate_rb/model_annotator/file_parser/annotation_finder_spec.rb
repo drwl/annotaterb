@@ -445,6 +445,140 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileParser::AnnotationFinder do
       include_examples "finds and extracts the annotation"
     end
 
+    context "with a markdown-formatted annotation (format_markdown: true)" do
+      let(:content) do
+        <<~FILE
+          # ## Schema Information
+          #
+          # Table name: `users`
+          #
+          # ### Columns
+          #
+          # Name       | Type            | Attributes
+          # ---------- | --------------- | ---------------------------
+          # **`id`**   | `integer`       | `not null, primary key`
+          # **`name`** | `string(255)`   |
+          #
+          # ### Indexes
+          #
+          # * `index_users_on_name`:
+          #     * **`name`**
+          #
+          # ### Foreign Keys
+          #
+          # * `users_on_accounts`:
+          #     * **`account_id => accounts.id`**
+          #
+
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:annotation_start) { 0 }
+      let(:annotation_end) { 20 }
+      let(:annotation) do
+        <<~ANNOTATION
+          # ## Schema Information
+          #
+          # Table name: `users`
+          #
+          # ### Columns
+          #
+          # Name       | Type            | Attributes
+          # ---------- | --------------- | ---------------------------
+          # **`id`**   | `integer`       | `not null, primary key`
+          # **`name`** | `string(255)`   |
+          #
+          # ### Indexes
+          #
+          # * `index_users_on_name`:
+          #     * **`name`**
+          #
+          # ### Foreign Keys
+          #
+          # * `users_on_accounts`:
+          #     * **`account_id => accounts.id`**
+          #
+        ANNOTATION
+      end
+
+      include_examples "finds and extracts the annotation"
+    end
+
+    context "with a markdown-formatted annotation followed by a user comment containing a single \"|\"" do
+      let(:content) do
+        <<~FILE
+          # ## Schema Information
+          #
+          # Table name: `users`
+          #
+          # ### Columns
+          #
+          # Name     | Type      | Attributes
+          # -------- | --------- | ---------------------------
+          # **`id`** | `integer` | `not null, primary key`
+          #
+          # See docs: foo | bar
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:annotation_start) { 0 }
+      let(:annotation_end) { 9 }
+      let(:annotation) do
+        <<~ANNOTATION
+          # ## Schema Information
+          #
+          # Table name: `users`
+          #
+          # ### Columns
+          #
+          # Name     | Type      | Attributes
+          # -------- | --------- | ---------------------------
+          # **`id`** | `integer` | `not null, primary key`
+          #
+        ANNOTATION
+      end
+
+      include_examples "finds and extracts the annotation"
+    end
+
+    context "with a markdown-formatted annotation followed by a user comment starting with \"* \"" do
+      let(:content) do
+        <<~FILE
+          # ## Schema Information
+          #
+          # Table name: `users`
+          #
+          # ### Indexes
+          #
+          # * `index_users_on_name`:
+          #     * **`name`**
+          #
+          # * Remember to reindex nightly
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+      let(:annotation_start) { 0 }
+      let(:annotation_end) { 8 }
+      let(:annotation) do
+        <<~ANNOTATION
+          # ## Schema Information
+          #
+          # Table name: `users`
+          #
+          # ### Indexes
+          #
+          # * `index_users_on_name`:
+          #     * **`name`**
+          #
+        ANNOTATION
+      end
+
+      include_examples "finds and extracts the annotation"
+    end
+
     context "with a yml file without annotations" do
       subject { described_class.new(content, wrapper_open, wrapper_close, yml_parser) }
 

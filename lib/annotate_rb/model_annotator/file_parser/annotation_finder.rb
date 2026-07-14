@@ -19,8 +19,16 @@ module AnnotateRb
         SCHEMA_HEADER_EXACT = [
           IndexAnnotation::Annotation::HEADER_TEXT,
           ForeignKeyAnnotation::Annotation::HEADER_TEXT,
-          CheckConstraintAnnotation::Annotation::HEADER_TEXT
+          CheckConstraintAnnotation::Annotation::HEADER_TEXT,
+          EnumAnnotation::Annotation::HEADER_TEXT
         ].freeze
+
+        # `format_markdown: true` renders each of the section headers above as
+        # "### <name>" instead of "<name>", so SCHEMA_HEADER_EXACT can't match it directly.
+        # There's no HEADER_TEXT constant for the columns table itself,
+        # so "Columns" is listed explicitly here.
+        MARKDOWN_HEADER_PREFIX = "### "
+        MARKDOWN_SECTION_HEADERS = (SCHEMA_HEADER_EXACT + ["Columns"]).freeze
 
         class MalformedAnnotation < StandardError; end
 
@@ -118,7 +126,18 @@ module AnnotateRb
           ending
         end
 
-        # Tabular rows have ≥2 leading spaces after `#`; prose has at most one.
+        # A line is part of the schema block if it matches one of the known
+        # header prefixes/exact texts, or if it looks like a tabular/list row
+        # of the annotation body:
+        #
+        # - Default/plain format: rows have >= 2 leading spaces after `#`
+        #   (e.g. "#  id  :integer  not null"); prose has at most one.
+        # - Markdown format (`format_markdown: true`) instead uses a single
+        #   leading space after `#` for everything, so it needs its own
+        #   detection: "### <name>" section headers (matched against
+        #   MARKDOWN_SECTION_HEADERS with the prefix stripped), "|"-delimited
+        #   table rows (header/divider/data), and "* `...`" bulleted list
+        #   items for indexes/foreign keys/enums.
         def schema_like?(comment)
           return true if comment == DEFAULT_ANNOTATION_ENDING
 
@@ -127,6 +146,21 @@ module AnnotateRb
 
           return true if SCHEMA_HEADER_PREFIXES.any? { |p| text.start_with?(p) }
           return true if SCHEMA_HEADER_EXACT.include?(text)
+
+          # Markdown section headers, e.g. "### Columns", "### Indexes".
+          if text.start_with?(MARKDOWN_HEADER_PREFIX)
+            return MARKDOWN_SECTION_HEADERS.include?(text.delete_prefix(MARKDOWN_HEADER_PREFIX))
+          end
+
+          # Requires at least two | separators to identify Markdown tables.
+          # This prevents normal user comments containing a single | from being mistaken for a table.
+          return true if text.count("|") >= 2
+
+          # Markdown bulleted list items used for foreign keys/indexes/enums,
+          # e.g. "* `index_name`:" or the nested "    * **`column`**". The
+          # backtick right after the bullet marker distinguishes these from
+          # an unrelated user comment that starts with a plain "* ".
+          return true if text.match?(/\A\s*\*\s+\*{0,2}`/)
 
           comment.match?(/\A#\s{2,}\S/)
         end
