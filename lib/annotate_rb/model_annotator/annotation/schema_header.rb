@@ -49,7 +49,7 @@ module AnnotateRb
           [
             Components::BlankCommentLine.new,
             TableName.new(name),
-            (DatabaseName.new(database_name) if database_name),
+            (DatabaseName.new(database_name) if show_database_name?),
             Components::BlankCommentLine.new
           ].compact
         end
@@ -66,6 +66,10 @@ module AnnotateRb
 
         def display_table_comments?
           @options[:with_comment] && @options[:with_table_comments]
+        end
+
+        def show_database_name?
+          database_name && !@options[:ignore_database_name]
         end
 
         def name
