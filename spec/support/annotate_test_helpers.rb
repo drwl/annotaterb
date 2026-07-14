@@ -39,12 +39,16 @@ module AnnotateTestHelpers
   end
 
   def mock_connection(indexes = [], foreign_keys = [], check_constraints = [], options = {})
+    identity_type = double("IdentityCastType")
+    allow(identity_type).to receive(:deserialize) { |v| v }
+
     double_options = {
       indexes: indexes,
       check_constraints: check_constraints,
       foreign_keys: foreign_keys,
       supports_foreign_keys?: true,
-      supports_check_constraints?: true
+      supports_check_constraints?: true,
+      lookup_cast_type_from_column: identity_type
     }.merge(options)
 
     double("Conn", double_options)
@@ -67,7 +71,7 @@ module AnnotateTestHelpers
       primary_key: primary_key,
       column_names: columns.map { |col| col.name.to_s },
       columns: columns,
-      column_defaults: columns.map { |col| [col.name, col.default] }.to_h,
+      columns_hash: columns.each_with_object({}) { |col, hash| hash[col.name.to_s] = col },
       table_name_prefix: ""
     }
 
@@ -82,7 +86,7 @@ module AnnotateTestHelpers
       primary_key: primary_key,
       column_names: columns.map { |col| col.name.to_s },
       columns: columns,
-      column_defaults: columns.map { |col| [col.name, col.default] }.to_h,
+      columns_hash: columns.each_with_object({}) { |col, hash| hash[col.name.to_s] = col },
       table_name_prefix: ""
     }
 
@@ -94,6 +98,7 @@ module AnnotateTestHelpers
       limit: nil,
       null: false,
       default: nil,
+      default_function: nil,
       sql_type: type
     }
 

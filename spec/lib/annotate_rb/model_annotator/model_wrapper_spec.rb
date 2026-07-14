@@ -27,6 +27,45 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelWrapper do
     end
   end
 
+  describe "#column_defaults" do
+    subject { described_class.new(klass, AnnotateRb::Options.new).column_defaults }
+
+    let(:klass) do
+      mock_class(:users, :id, [id_column, count_column, name_column])
+    end
+    let(:id_column) { mock_column("id", :integer) }
+    let(:count_column) { mock_column("count", :integer, default: 0) }
+    let(:name_column) { mock_column("name", :string, default: "guest") }
+
+    it "returns schema defaults from columns_hash" do
+      is_expected.to eq("id" => nil, "count" => 0, "name" => "guest")
+    end
+
+    context "when the model overrides defaults via `attribute :foo, default: X`" do
+      before do
+        # `Model#column_defaults` is affected by attribute overrides. We ignore it
+        # and rely on `columns_hash` so annotations reflect the DB schema instead.
+        allow(klass).to receive(:column_defaults).and_return(
+          "id" => nil, "count" => 999, "name" => "overridden"
+        )
+      end
+
+      it "still returns the DB schema defaults, not the attribute overrides" do
+        is_expected.to eq("id" => nil, "count" => 0, "name" => "guest")
+      end
+    end
+
+    context "when a column has a default function" do
+      let(:name_column) do
+        mock_column("name", :string, default: "gen_random_uuid()", default_function: "gen_random_uuid()")
+      end
+
+      it "returns nil for that column" do
+        expect(subject["name"]).to be_nil
+      end
+    end
+  end
+
   describe "#max_schema_info_width" do
     subject { described_class.new(*args).max_schema_info_width }
 

@@ -68,8 +68,13 @@ module AnnotateRb
           connection.table_comment(@klass.table_name).present?
       end
 
+      # Returns the DB schema defaults (not affected by `attribute :foo, default: X`).
       def column_defaults
-        @klass.column_defaults
+        @column_defaults ||= @klass.columns_hash.transform_values do |column|
+          next nil if column.default.nil? || column.default_function
+          type = cast_type_for(column)
+          type.deserialize(column.default)
+        end
       end
 
       # Add columns managed by the globalize gem if this gem is being used.
@@ -262,6 +267,21 @@ module AnnotateRb
         end
 
         @options.get_state(cache_key)
+      end
+
+      private
+
+      # Rails post-8.1 exposes `Column#cast_type` directly; Rails 8.1 introduced
+      # the transitional `Column#fetch_cast_type(connection)`; older versions
+      # required `connection.lookup_cast_type_from_column(column)`.
+      def cast_type_for(column)
+        if column.respond_to?(:cast_type)
+          column.cast_type
+        elsif column.respond_to?(:fetch_cast_type)
+          column.fetch_cast_type(connection)
+        else
+          connection.lookup_cast_type_from_column(column)
+        end
       end
     end
   end
