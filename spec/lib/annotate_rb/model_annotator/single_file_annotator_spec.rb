@@ -97,6 +97,50 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
     end
 
+    describe "annotating a file with existing Markdown annotations" do
+      let(:options) { AnnotateRb::Options.new({format_markdown: true}) }
+      let(:schema_info) do
+        <<~SCHEMA
+          # ## Schema Information
+          #
+          # Table name: `users`
+          #
+          # ### Columns
+          #
+          # Name     | Type               | Attributes
+          # -------- | ------------------ | ---------------------------
+          # **`id`** | `bigint`           | `not null, primary key`
+          #
+        SCHEMA
+      end
+      let(:starting_file_content) do
+        <<~FILE
+          # ## Schema Information
+          #
+          # Table name: `users`
+          #
+          # ### Columns
+          #
+          # Name     | Type               | Attributes
+          # -------- | ------------------ | ---------------------------
+          # **`id`** | `bigint`           | `not null, primary key`
+          #
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      before do
+        @model_dir = Dir.mktmpdir("annotaterb")
+        (@model_file_name, _file_content) = write_model("user.rb", starting_file_content)
+      end
+
+      it "leaves the existing annotations unchanged" do
+        expect(AnnotateRb::ModelAnnotator::SingleFileAnnotator.call(@model_file_name, schema_info, :position_in_class, options)).to be(false)
+        expect(File.read(@model_file_name)).to eq(starting_file_content)
+      end
+    end
+
     describe 'annotating a file with existing annotations (position: after) using position: "before" and force: false' do
       let(:options) { AnnotateRb::Options.new({position_in_class: "before", force: false}) }
       let(:schema_info) do
