@@ -72,6 +72,7 @@ module AnnotateTestHelpers
       column_names: columns.map { |col| col.name.to_s },
       columns: columns,
       columns_hash: columns.each_with_object({}) { |col, hash| hash[col.name.to_s] = col },
+      column_defaults: columns.map { |col| [col.name, col.default] }.to_h,
       table_name_prefix: ""
     }
 
@@ -87,6 +88,7 @@ module AnnotateTestHelpers
       column_names: columns.map { |col| col.name.to_s },
       columns: columns,
       columns_hash: columns.each_with_object({}) { |col, hash| hash[col.name.to_s] = col },
+      column_defaults: columns.map { |col| [col.name, col.default] }.to_h,
       table_name_prefix: ""
     }
 

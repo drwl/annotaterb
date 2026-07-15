@@ -37,20 +37,20 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelWrapper do
     let(:count_column) { mock_column("count", :integer, default: 0) }
     let(:name_column) { mock_column("name", :string, default: "guest") }
 
-    it "returns schema defaults from columns_hash" do
+    it "returns defaults matching the DB schema" do
       is_expected.to eq("id" => nil, "count" => 0, "name" => "guest")
     end
 
     context "when the model overrides defaults via `attribute :foo, default: X`" do
       before do
-        # `Model#column_defaults` is affected by attribute overrides. We ignore it
-        # and rely on `columns_hash` so annotations reflect the DB schema instead.
+        # `Model#column_defaults` is affected by attribute overrides. We detect
+        # the mismatch against the schema and fall back to the DB schema value.
         allow(klass).to receive(:column_defaults).and_return(
           "id" => nil, "count" => 999, "name" => "overridden"
         )
       end
 
-      it "still returns the DB schema defaults, not the attribute overrides" do
+      it "returns the DB schema defaults, not the attribute overrides" do
         is_expected.to eq("id" => nil, "count" => 0, "name" => "guest")
       end
     end
@@ -58,6 +58,14 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelWrapper do
     context "when a column has a default function" do
       let(:name_column) do
         mock_column("name", :string, default: "gen_random_uuid()", default_function: "gen_random_uuid()")
+      end
+
+      before do
+        # Rails would populate `column_defaults` with `nil` for default_function
+        # columns; simulate that so schema comparison succeeds.
+        allow(klass).to receive(:column_defaults).and_return(
+          "id" => nil, "count" => 0, "name" => nil
+        )
       end
 
       it "returns nil for that column" do
