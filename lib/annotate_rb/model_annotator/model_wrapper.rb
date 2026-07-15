@@ -68,8 +68,20 @@ module AnnotateRb
           connection.table_comment(@klass.table_name).present?
       end
 
+      # Returns column defaults for annotations.
+      #
+      # `Model#column_defaults` reflects `attribute :foo, default: X` overrides,
+      # which would incorrectly show the Ruby-side default in annotations
+      # instead of the DB schema default. To preserve model-level decorations
+      # such as `TimeZoneConverter` on datetime columns, we start from
+      # `column_defaults` and only substitute the DB schema value when a
+      # difference indicates an attribute-level override.
       def column_defaults
-        @klass.column_defaults
+        @column_defaults ||= @klass.column_defaults.each_with_object({}) do |(name, value), result|
+          column = @klass.columns_hash[name]
+          schema_value = schema_default_for(column)
+          result[name] = (value == schema_value) ? value : schema_value
+        end
       end
 
       # Add columns managed by the globalize gem if this gem is being used.
@@ -262,6 +274,26 @@ module AnnotateRb
         end
 
         @options.get_state(cache_key)
+      end
+
+      private
+
+      def schema_default_for(column)
+        return nil if column.nil? || column.default.nil? || column.default_function
+        cast_type_for(column).deserialize(column.default)
+      end
+
+      # Rails post-8.1 exposes `Column#cast_type` directly; Rails 8.1 introduced
+      # the transitional `Column#fetch_cast_type(connection)`; older versions
+      # required `connection.lookup_cast_type_from_column(column)`.
+      def cast_type_for(column)
+        if column.respond_to?(:cast_type)
+          column.cast_type
+        elsif column.respond_to?(:fetch_cast_type)
+          column.fetch_cast_type(connection)
+        else
+          connection.lookup_cast_type_from_column(column)
+        end
       end
     end
   end
