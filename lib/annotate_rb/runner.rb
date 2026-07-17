@@ -46,8 +46,6 @@ module AnnotateRb
       raise "Didn't specify a command" unless @options[:command]
 
       @options[:command].call(@options)
-
-      # TODO
     end
   end
 end
