@@ -23,8 +23,7 @@ module AnnotateRb
             columns = Array(unique_constraint.column)
             details = "(#{columns.join(", ")})"
             if unique_constraint.deferrable
-              initially = (unique_constraint.deferrable == true) ? "IMMEDIATE" : unique_constraint.deferrable.to_s.upcase
-              details += " DEFERRABLE INITIALLY #{initially}"
+              details += " DEFERRABLE INITIALLY #{unique_constraint.deferrable.to_s.upcase}"
             end
 
             UniqueConstraintComponent.new(unique_constraint.name, details, max_size)

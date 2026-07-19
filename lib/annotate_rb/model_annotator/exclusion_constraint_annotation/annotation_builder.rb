@@ -24,8 +24,7 @@ module AnnotateRb
             details += " USING #{exclusion_constraint.using}" if exclusion_constraint.using
             details += " WHERE (#{exclusion_constraint.where})" if exclusion_constraint.where
             if exclusion_constraint.deferrable
-              initially = (exclusion_constraint.deferrable == true) ? "IMMEDIATE" : exclusion_constraint.deferrable.to_s.upcase
-              details += " DEFERRABLE INITIALLY #{initially}"
+              details += " DEFERRABLE INITIALLY #{exclusion_constraint.deferrable.to_s.upcase}"
             end
 
             ExclusionConstraintComponent.new(exclusion_constraint.name, details, max_size)
