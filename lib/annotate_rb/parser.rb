@@ -207,6 +207,16 @@ module AnnotateRb
         @options[:show_check_constraints] = true
       end
 
+      option_parser.on("--show-unique-constraints",
+        "List the table's unique constraints in the annotation") do
+        @options[:show_unique_constraints] = true
+      end
+
+      option_parser.on("--show-exclusion-constraints",
+        "List the table's exclusion constraints in the annotation") do
+        @options[:show_exclusion_constraints] = true
+      end
+
       option_parser.on("--hide-limit-column-types VALUES",
         "don't show limit for given column types, separated by commas (i.e., `integer,boolean,text`)") do |values|
         @options[:hide_limit_column_types] = values.to_s
