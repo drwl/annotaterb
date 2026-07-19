@@ -35,7 +35,8 @@ module AnnotateTestHelpers
       to_table: to_table,
       primary_key: to_column,
       on_delete: constraints[:on_delete],
-      on_update: constraints[:on_update])
+      on_update: constraints[:on_update],
+      deferrable: constraints[:deferrable])
   end
 
   def mock_connection(indexes = [], foreign_keys = [], check_constraints = [], options = {})
