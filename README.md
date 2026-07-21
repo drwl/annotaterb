@@ -237,6 +237,122 @@ Annotaterb reads first the configuration file, if it exists, passes its content 
 
 For further details visit the [section in the migration guide](MIGRATION_GUIDE.md#automatic-annotations-after-running-database-migration-commands).
 
+### Configuration options
+
+Keys use snake_case and match the gem defaults in `AnnotateRb::Options`. CLI flags override values from the config file.
+
+#### Position
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `position` | `before` | Fallback position for all `position_in_*` options. One of `before`, `top`, `after`, `bottom`, `before_doc`. |
+| `position_in_class` | `before` | Position in model files. `before_doc` keeps class documentation adjacent to the class. |
+| `position_in_factory` | `before` | Position in FactoryBot factory files. |
+| `position_in_fixture` | `before` | Position in fixture files. |
+| `position_in_test` | `before` | Position in test/spec files. |
+| `position_in_routes` | `before` | Position in `config/routes.rb`. |
+| `position_in_serializer` | `before` | Position in serializer files. |
+| `position_in_additional_file_patterns` | `before` | Position in files matched by `additional_file_patterns`. |
+| `nested_position` | `false` | Place annotations directly above nested classes/modules instead of at the top of the file. |
+
+#### Schema annotation content
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `show_foreign_keys` | `true` | List foreign key constraints. |
+| `show_complete_foreign_keys` | `false` | Use complete foreign key names. |
+| `show_indexes` | `true` | List table indexes. |
+| `show_indexes_comments` | `false` | Include index comments. |
+| `show_indexes_include` | `false` | Include `INCLUDE` columns on indexes. |
+| `simple_indexes` | `false` | Concat related indexes onto each column line. |
+| `show_check_constraints` | `false` | List check constraints. |
+| `show_enums` | `false` | Show PostgreSQL enum types. |
+| `show_virtual_columns` | `false` | Show virtual/generated columns. |
+| `include_version` | `false` | Include the migration version number. |
+| `with_comment` | `true` | Include database comments (fallback for column/table comment flags). |
+| `with_column_comments` | `true` | Include column comments. |
+| `with_table_comments` | `true` | Include table comments. |
+| `position_of_column_comment` | `with_name` | Column comment placement: `with_name` or `rightmost_column`. |
+| `hide_default_column_types` | `""` | Comma-separated column types that omit defaults (e.g. `json,jsonb,hstore`). |
+| `hide_limit_column_types` | `""` | Comma-separated column types that omit limits (e.g. `integer,boolean,text`). |
+| `ignore_columns` | `null` | Regex of column names to skip. |
+| `ignore_database_name` | `false` | Omit the database name from annotations. |
+| `ignore_multi_database_name` | `false` | Omit the database name in multi-database setups. |
+| `timestamp_columns` | `[created_at, updated_at]` | Column names treated as timestamps for classified sorting. |
+| `classes_default_to_s` | `[]` | Class names whose default values are rendered with `to_s`. |
+
+#### Sorting and format
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `sort` | `false` | Sort columns alphabetically. |
+| `classified_sort` | `true` | Sort as id → other columns → timestamps → associations. |
+| `grouped_polymorphic` | `false` | Group polymorphic associations when using `classified_sort`. |
+| `format_markdown` | `false` | Render annotations as Markdown. |
+| `format_rdoc` | `false` | Render annotations as RDoc. |
+| `format_yard` | `false` | Render annotations as YARD. |
+
+#### What to annotate / exclude
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `active_admin` | `false` | Annotate ActiveAdmin models. |
+| `exclude_controllers` | `true` | Skip controller files. |
+| `exclude_factories` | `false` | Skip factory files. |
+| `exclude_fixtures` | `false` | Skip fixture files. |
+| `exclude_helpers` | `true` | Skip helper files. |
+| `exclude_scaffolds` | `true` | Skip scaffold files. |
+| `exclude_serializers` | `false` | Skip serializer files. |
+| `exclude_sti_subclasses` | `false` | Skip STI subclasses. |
+| `exclude_tests` | `false` | Skip test/spec files. Can also be an array of symbols. |
+| `ignore_model_sub_dir` | `false` | Ignore subdirectories under `model_dir`. |
+| `ignore_unknown_models` | `false` | Suppress warnings for bad model files. |
+
+#### Paths
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `model_dir` | `[app/models]` | Directories containing models. |
+| `root_dir` | `[""]` | Root directories for multi-project layouts. |
+| `additional_file_patterns` | `[]` | Extra paths/globs to annotate (supports `%MODEL_NAME%`). |
+| `require` | `[]` | Extra files to require before loading models. |
+
+#### Routes
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `ignore_routes` | `null` | Regex of routes to skip. |
+| `timestamp` | `false` | Include a timestamp in route annotations. |
+| `auto_annotate_routes_after_migrate` | `false` | Also annotate routes after DB migrate tasks. |
+
+#### Wrappers and behavior
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `wrapper` | `null` | Text used for both opening and closing wrappers. |
+| `wrapper_open` | `null` | Opening wrapper text (falls back to `wrapper`). |
+| `wrapper_close` | `null` | Closing wrapper text (falls back to `wrapper`). |
+| `force` | `false` | Rewrite annotations even when unchanged. |
+| `frozen` | `false` | Exit non-zero if annotations would change. |
+| `skip_on_db_migrate` | `false` | Skip automatic annotation after DB migrate tasks. |
+| `debug` | `false` | Print resolved options for debugging. |
+| `trace` | `false` | Print full stack traces when annotation fails. |
+
+Example:
+
+```yml
+# .annotaterb.yml
+position: after
+show_foreign_keys: true
+show_indexes: true
+show_enums: true
+classified_sort: true
+model_dir:
+  - app/models
+  - app/models/concerns
+skip_on_db_migrate: false
+```
+
 ### Preserving class documentation comments
 
 By default, when `position_in_class` is `before` (or `top`), AnnotateRb places the schema annotation immediately before the class declaration line. Any human-written documentation comment that was directly above the class is therefore pushed above the annotation.
