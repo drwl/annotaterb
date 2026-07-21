@@ -203,5 +203,21 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotationRemover do
         expect(file_content_after_removal).to eq expected_result
       end
     end
+
+    context "when the file has a malformed annotation" do
+      let(:file_content) do
+        <<~EOS
+          # == Schema Info
+          class Foo < ActiveRecord::Base
+          end
+        EOS
+      end
+
+      it "returns false without raising" do
+        expect {
+          expect(described_class.call(path, AnnotateRb::Options.new({}))).to be(false)
+        }.to output(/Unable to process/).to_stderr
+      end
+    end
   end
 end

@@ -475,5 +475,22 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
         expect(File.read(@model_file_name)).to eq(expected_file_content)
       end
     end
+
+    context "when the file has a malformed annotation" do
+      before do
+        @model_dir = Dir.mktmpdir("annotaterb")
+        (@model_file_name, _file_content) = write_model("user.rb", <<~FILE)
+          # == Schema Info
+          class User < ApplicationRecord
+          end
+        FILE
+      end
+
+      it "returns false without raising" do
+        expect {
+          expect(described_class.call(@model_file_name, "", :position_in_class, AnnotateRb::Options.new({}))).to be(false)
+        }.to output(/Unable to process/).to_stderr
+      end
+    end
   end
 end
