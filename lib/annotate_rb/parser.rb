@@ -239,7 +239,7 @@ module AnnotateRb
       end
 
       option_parser.on("--without-comment",
-        "include database comments in model annotations") do
+        "exclude database comments in model annotations") do
         @options[:with_comment] = false
       end
 
