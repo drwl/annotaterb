@@ -122,6 +122,34 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
       it { expect(default_format).to eq(expected_output) }
     end
 
+    context "with a deferrable foreign key" do
+      let(:foreign_keys) do
+        [
+          mock_foreign_key("fk_rails_immediate",
+            "immediate_thing_id",
+            "immediate_things",
+            "id",
+            deferrable: :immediate),
+          mock_foreign_key("fk_rails_deferred",
+            "deferred_thing_id",
+            "deferred_things",
+            "id",
+            deferrable: :deferred)
+        ]
+      end
+      let(:expected_output) do
+        <<~OUTPUT.strip
+          #
+          # Foreign Keys
+          #
+          #  fk_rails_deferred   (deferred_thing_id => deferred_things.id) DEFERRABLE INITIALLY DEFERRED
+          #  fk_rails_immediate  (immediate_thing_id => immediate_things.id) DEFERRABLE INITIALLY IMMEDIATE
+        OUTPUT
+      end
+
+      it { expect(default_format).to eq(expected_output) }
+    end
+
     context "with a composite foreign key" do
       let(:foreign_keys) do
         [

@@ -32,6 +32,12 @@ module AnnotateRb
             constraints_info = ""
             constraints_info += "ON DELETE => #{foreign_key.on_delete} " if foreign_key.on_delete
             constraints_info += "ON UPDATE => #{foreign_key.on_update} " if foreign_key.on_update
+            if foreign_key.respond_to?(:deferrable) && foreign_key.deferrable
+              # Rails 7.0's extract_foreign_key_deferrable returns `true` for the initially-immediate case;
+              # 7.1+ normalized this to `:immediate`. Map `true` back to IMMEDIATE so we don't emit "INITIALLY TRUE".
+              initially = (foreign_key.deferrable == true) ? "IMMEDIATE" : foreign_key.deferrable.to_s.upcase
+              constraints_info += "DEFERRABLE INITIALLY #{initially} "
+            end
             constraints_info.strip
           end
         end
