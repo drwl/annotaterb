@@ -260,6 +260,51 @@ RSpec.describe AnnotateRb::ModelAnnotator::IndexAnnotation::AnnotationBuilder do
       end
     end
 
+    context "when indexes back a unique or exclusion constraint" do
+      let(:indexes) do
+        [
+          mock_index("plain_index", columns: ["id"]),
+          mock_index("unique_email", columns: ["email"], unique: true),
+          mock_index("no_overlap", columns: ["room_id", "during"], using: "gist")
+        ]
+      end
+      let(:unique_constraints) { [mock_unique_constraint("unique_email", ["email"])] }
+      let(:exclusion_constraints) { [mock_exclusion_constraint("no_overlap", "room_id WITH =, during WITH &&", using: :gist)] }
+
+      let(:model) do
+        connection = mock_connection(indexes, [], [],
+          unique_constraints: unique_constraints,
+          exclusion_constraints: exclusion_constraints)
+
+        klass = mock_class_with_custom_connection(:reservations, nil, [], connection)
+        ::AnnotateRb::ModelAnnotator::ModelWrapper.new(klass, options)
+      end
+
+      let(:expected_result) do
+        <<~EOS.strip
+          #
+          # Indexes
+          #
+          #  plain_index  (id)
+        EOS
+      end
+
+      it "excludes the constraint-backed indexes from the Indexes section" do
+        expect(default_format).to eq(expected_result)
+      end
+
+      context "when only constraint-backed indexes exist" do
+        let(:indexes) do
+          [
+            mock_index("unique_email", columns: ["email"], unique: true),
+            mock_index("no_overlap", columns: ["room_id", "during"], using: "gist")
+          ]
+        end
+
+        it { is_expected.to be_a(AnnotateRb::ModelAnnotator::Components::NilComponent) }
+      end
+    end
+
     describe "#to_yard" do
       let(:indexes) do
         [mock_index("index_rails_02e851e3b7", columns: ["id"])]

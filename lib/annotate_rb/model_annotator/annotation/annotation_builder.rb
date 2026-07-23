@@ -27,6 +27,8 @@ module AnnotateRb
               IndexAnnotation::AnnotationBuilder.new(@model, @options).build,
               ForeignKeyAnnotation::AnnotationBuilder.new(@model, @options).build,
               CheckConstraintAnnotation::AnnotationBuilder.new(@model, @options).build,
+              UniqueConstraintAnnotation::AnnotationBuilder.new(@model, @options).build,
+              ExclusionConstraintAnnotation::AnnotationBuilder.new(@model, @options).build,
               EnumAnnotation::AnnotationBuilder.new(@model, @options).build,
               SchemaFooter.new
             ]
