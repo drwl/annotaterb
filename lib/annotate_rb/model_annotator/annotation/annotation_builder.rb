@@ -27,6 +27,8 @@ module AnnotateRb
               IndexAnnotation::AnnotationBuilder.new(@model, @options).build,
               ForeignKeyAnnotation::AnnotationBuilder.new(@model, @options).build,
               CheckConstraintAnnotation::AnnotationBuilder.new(@model, @options).build,
+              UniqueConstraintAnnotation::AnnotationBuilder.new(@model, @options).build,
+              ExclusionConstraintAnnotation::AnnotationBuilder.new(@model, @options).build,
               EnumAnnotation::AnnotationBuilder.new(@model, @options).build,
               SchemaFooter.new
             ]
@@ -65,7 +67,7 @@ module AnnotateRb
           table_name = @model.table_name
           table_comment = @model.connection.try(:table_comment, @model.table_name)
           max_size = @model.max_schema_info_width
-          database_name = @model.database_name if multi_db_environment?
+          database_name = @model.database_name if show_database_name?
 
           _annotation = Annotation.new(@options,
             version: version, table_name: table_name, table_comment: table_comment,
@@ -73,6 +75,11 @@ module AnnotateRb
         end
 
         private
+
+        # TODO: Consolidate ignore_database_name and ignore_multi_database_name; they serve the same purpose
+        def show_database_name?
+          !@options[:ignore_database_name] && multi_db_environment?
+        end
 
         def multi_db_environment?
           return false if @options[:ignore_multi_database_name]

@@ -20,6 +20,8 @@ module AnnotateRb
           IndexAnnotation::Annotation::HEADER_TEXT,
           ForeignKeyAnnotation::Annotation::HEADER_TEXT,
           CheckConstraintAnnotation::Annotation::HEADER_TEXT,
+          UniqueConstraintAnnotation::Annotation::HEADER_TEXT,
+          ExclusionConstraintAnnotation::Annotation::HEADER_TEXT,
           EnumAnnotation::Annotation::HEADER_TEXT
         ].freeze
 

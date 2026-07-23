@@ -47,8 +47,12 @@ module AnnotateTestHelpers
       indexes: indexes,
       check_constraints: check_constraints,
       foreign_keys: foreign_keys,
+      unique_constraints: [],
+      exclusion_constraints: [],
       supports_foreign_keys?: true,
       supports_check_constraints?: true,
+      supports_unique_constraints?: true,
+      supports_exclusion_constraints?: true,
       lookup_cast_type_from_column: identity_type
     }.merge(options)
 
@@ -118,5 +122,21 @@ module AnnotateTestHelpers
       name: name,
       expression: expression,
       validated?: validated)
+  end
+
+  def mock_unique_constraint(name, column, deferrable: false)
+    double("UniqueConstraintDefinition",
+      name: name,
+      column: column,
+      deferrable: deferrable)
+  end
+
+  def mock_exclusion_constraint(name, expression, using: nil, where: nil, deferrable: false)
+    double("ExclusionConstraintDefinition",
+      name: name,
+      expression: expression,
+      using: using,
+      where: where,
+      deferrable: deferrable)
   end
 end
