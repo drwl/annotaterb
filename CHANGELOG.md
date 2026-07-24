@@ -1,5 +1,46 @@
 # Changelog
 
+## [v4.24.0](https://github.com/drwl/annotaterb/tree/v4.24.0) (2026-07-24)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.23.0...v4.24.0)
+
+**Implemented enhancements:**
+
+- Annotate postgres enums [\#309](https://github.com/drwl/annotaterb/issues/309)
+- `--frozen` option returns a zero error code when database is inaccessible [\#240](https://github.com/drwl/annotaterb/issues/240)
+- Add support for printing enum types [\#176](https://github.com/drwl/annotaterb/issues/176)
+
+**Fixed bugs:**
+
+- Annotation placement for namespaced models is inconsistent — anchor shifts with file shape \(doc comment presence\) [\#366](https://github.com/drwl/annotaterb/issues/366)
+- Fixture files that start with \<% \(erb\) insert doc inside the erb block [\#345](https://github.com/drwl/annotaterb/issues/345)
+- Schema information inserted every run into some fixture files. [\#344](https://github.com/drwl/annotaterb/issues/344)
+
+**Closed issues:**
+
+- Routes are not annotated after migration tasks [\#251](https://github.com/drwl/annotaterb/issues/251)
+
+**Merged pull requests:**
+
+- Bump version to v4.24.0 [\#371](https://github.com/drwl/annotaterb/pull/371) ([drwl](https://github.com/drwl))
+- Revert "Release v4.24.0" [\#370](https://github.com/drwl/annotaterb/pull/370) ([drwl](https://github.com/drwl))
+- Show DEFERRABLE INITIALLY on foreign keys [\#365](https://github.com/drwl/annotaterb/pull/365) ([kamipo](https://github.com/kamipo))
+- Annotate PostgreSQL unique and exclusion constraints [\#364](https://github.com/drwl/annotaterb/pull/364) ([kamipo](https://github.com/kamipo))
+- Fix `--without-comment` help text to say exclude [\#363](https://github.com/drwl/annotaterb/pull/363) ([OdenTakashi](https://github.com/OdenTakashi))
+- Fix NoMethodError when handling malformed annotations [\#362](https://github.com/drwl/annotaterb/pull/362) ([OdenTakashi](https://github.com/OdenTakashi))
+- Remove empty TODO comment from Runner [\#361](https://github.com/drwl/annotaterb/pull/361) ([OdenTakashi](https://github.com/OdenTakashi))
+- Move ignore\_database\_name check into AnnotationBuilder [\#360](https://github.com/drwl/annotaterb/pull/360) ([OdenTakashi](https://github.com/OdenTakashi))
+- Add YAML configuration option reference to the README. [\#359](https://github.com/drwl/annotaterb/pull/359) ([OdenTakashi](https://github.com/OdenTakashi))
+- Respect DB column defaults over `attribute :foo, default: X` overrides [\#358](https://github.com/drwl/annotaterb/pull/358) ([kamipo](https://github.com/kamipo))
+- added :ignore\_database\_name option [\#357](https://github.com/drwl/annotaterb/pull/357) ([HoneyryderChuck](https://github.com/HoneyryderChuck))
+- Add Markdown annotation idempotency test [\#356](https://github.com/drwl/annotaterb/pull/356) ([aouxwoux](https://github.com/aouxwoux))
+- Fix schema\_like? to recognize markdown-formatted annotation rows [\#354](https://github.com/drwl/annotaterb/pull/354) ([nashirox](https://github.com/nashirox))
+- Keep fixture annotations out of ERB blocks \(\#345\) [\#353](https://github.com/drwl/annotaterb/pull/353) ([Halvanhelv](https://github.com/Halvanhelv))
+- Stop tracking generated secondary DB artifacts in dummyapp [\#352](https://github.com/drwl/annotaterb/pull/352) ([OdenTakashi](https://github.com/OdenTakashi))
+- Add Rails version matrix to CI [\#351](https://github.com/drwl/annotaterb/pull/351) ([OdenTakashi](https://github.com/OdenTakashi))
+- Create release script [\#349](https://github.com/drwl/annotaterb/pull/349) ([drwl](https://github.com/drwl))
+- Generate changelog for v4.23.0 [\#348](https://github.com/drwl/annotaterb/pull/348) ([drwl](https://github.com/drwl))
+
 ## [v4.23.0](https://github.com/drwl/annotaterb/tree/v4.23.0) (2026-06-25)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.22.0...v4.23.0)
