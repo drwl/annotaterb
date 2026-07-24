@@ -48,7 +48,7 @@ module AnnotateRb
         model_instruction = SingleFileRemoveAnnotationInstruction.new(file, @options)
         instructions << model_instruction
 
-        related_files = RelatedFilesListBuilder.new(file, model_name, table_name, @options).build
+        related_files = RelatedFilesListBuilder.new(file, model_name, table_name, @options, for_removal: true).build
         related_file_instructions = related_files.map do |f, _position_key|
           _instruction = SingleFileRemoveAnnotationInstruction.new(f, @options)
         end
