@@ -441,5 +441,48 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
         expect(subject).to eq([[relative_file_path, position_key]])
       end
     end
+
+    context "when models in different root directories share a file basename", :isolated_environment do
+      let(:options) do
+        AnnotateRb::Options.new(**include_nothing_options.merge(
+          {
+            exclude_tests: false,
+            root_dir: ["", "packs/*"],
+            additional_file_patterns: ["packs/*/test/models/%MODEL_NAME_WITHOUT_NS%_test.rb"]
+          }
+        ))
+      end
+
+      let(:root_test_file) { "test/models/address_test.rb" }
+      let(:pack_test_file) { "packs/contacts/test/models/address_test.rb" }
+
+      before do
+        FileUtils.mkdir_p("test/models")
+        FileUtils.touch(root_test_file)
+
+        FileUtils.mkdir_p("packs/contacts/test/models")
+        FileUtils.touch(pack_test_file)
+      end
+
+      context "when the model is in the project root" do
+        let(:file) { "app/models/address.rb" }
+        let(:model_name) { "address" }
+        let(:table_name) { "addresses" }
+
+        it "returns only the test file in the project root" do
+          expect(subject).to eq([[root_test_file, :position_in_test]])
+        end
+      end
+
+      context "when the model is in a pack" do
+        let(:file) { "packs/contacts/app/public/models/address.rb" }
+        let(:model_name) { "contacts/address" }
+        let(:table_name) { "contact_addresses" }
+
+        it "returns only the test file in its own pack" do
+          expect(subject).to eq([[pack_test_file, :position_in_additional_file_patterns]])
+        end
+      end
+    end
   end
 end

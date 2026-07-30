@@ -88,8 +88,33 @@ module AnnotateRb
 
         patterns
           .map { |f| FileNameResolver.call(f, @model_name, @table_name) }
-          .map { |f| Dir.glob(f) }
-          .flatten
+          .flat_map { |f| Dir.glob(f) }
+          .select { |f| owning_root_dir(f) == model_root_dir }
+      end
+
+      def model_root_dir
+        return @model_root_dir if defined?(@model_root_dir)
+
+        @model_root_dir = owning_root_dir(@file)
+      end
+
+      # Patterns are expanded for every `root_dir` and resolved by model name alone, so models sharing a
+      #   file basename across root directories (e.g. packwerk packs) glob the same related files. Root
+      #   directories can be nested, so a file belongs to the most specific one containing it, and only
+      #   models from that same root directory may annotate it. Returns nil for the project root.
+      def owning_root_dir(file)
+        expanded_file = File.expand_path(file)
+
+        expanded_root_dirs
+          .select { |dir| expanded_file.start_with?("#{dir}/") }
+          .max_by(&:length)
+      end
+
+      def expanded_root_dirs
+        @expanded_root_dirs ||= Array(@options[:root_dir])
+          .reject { |root_dir| root_dir.to_s.empty? }
+          .flat_map { |root_dir| Dir.glob(root_dir) }
+          .map { |root_dir| File.expand_path(root_dir) }
       end
 
       def add_related_test_files
