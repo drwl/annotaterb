@@ -7,7 +7,7 @@
 **Implemented enhancements:**
 
 - Annotate postgres enums [\#309](https://github.com/drwl/annotaterb/issues/309)
-- `--frozen` option returns a zero error code when database is inaccessible [\#240](https://github.com/drwl/annotaterb/issues/240)
+- `--frozen` option returns a non-zero error code when database is inaccessible [\#240](https://github.com/drwl/annotaterb/issues/240)
 - Add support for printing enum types [\#176](https://github.com/drwl/annotaterb/issues/176)
 
 **Fixed bugs:**
