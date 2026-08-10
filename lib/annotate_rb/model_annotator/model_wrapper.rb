@@ -79,7 +79,11 @@ module AnnotateRb
       def column_defaults
         @column_defaults ||= @klass.column_defaults.each_with_object({}) do |(name, value), result|
           column = @klass.columns_hash[name]
-          result[name] = attribute_default_overridden?(name, column) ? schema_default_for(column) : value
+          result[name] = if attribute_default_overridden?(name, column)
+            schema_default_for(column)
+          else
+            enum_default(name, column, value)
+          end
         end
       end
 
@@ -285,6 +289,23 @@ module AnnotateRb
         return false if column.nil?
 
         @klass._default_attributes[name].value_before_type_cast != column.default
+      end
+
+      # An enum attribute type casts the raw DB default into its label, which is
+      # what `column_defaults` reports and what annotations have historically
+      # shown. `enum_default_format` picks between that label, the raw value,
+      # and both.
+      def enum_default(name, column, label)
+        return label unless @klass.defined_enums.key?(name)
+
+        raw = schema_default_for(column)
+        return label if raw == label
+
+        case @options[:enum_default_format]
+        when :raw then raw
+        when :both then ColumnAnnotation::EnumDefault.new(raw, label)
+        else label
+        end
       end
 
       def schema_default_for(column)

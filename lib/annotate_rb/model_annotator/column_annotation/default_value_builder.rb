@@ -37,6 +37,7 @@ module AnnotateRb
           when Float, Integer then value.to_s
           # BigDecimals need to be output in a non-normalized form and quoted.
           when BigDecimal then value.to_s("F")
+          when EnumDefault then "#{quote(value.raw)}: #{quote(value.label)}"
           when String then value.inspect
           else
             value.inspect

@@ -79,6 +79,7 @@ module AnnotateTestHelpers
       columns_hash: columns.each_with_object({}) { |col, hash| hash[col.name.to_s] = col },
       column_defaults: columns.map { |col| [col.name, col.default] }.to_h,
       _default_attributes: mock_default_attributes(columns),
+      defined_enums: {},
       table_name_prefix: ""
     }
 
@@ -96,6 +97,7 @@ module AnnotateTestHelpers
       columns_hash: columns.each_with_object({}) { |col, hash| hash[col.name.to_s] = col },
       column_defaults: columns.map { |col| [col.name, col.default] }.to_h,
       _default_attributes: mock_default_attributes(columns),
+      defined_enums: {},
       table_name_prefix: ""
     }
 
