@@ -78,6 +78,7 @@ module AnnotateTestHelpers
       columns: columns,
       columns_hash: columns.each_with_object({}) { |col, hash| hash[col.name.to_s] = col },
       column_defaults: columns.map { |col| [col.name, col.default] }.to_h,
+      _default_attributes: mock_default_attributes(columns),
       table_name_prefix: ""
     }
 
@@ -94,10 +95,19 @@ module AnnotateTestHelpers
       columns: columns,
       columns_hash: columns.each_with_object({}) { |col, hash| hash[col.name.to_s] = col },
       column_defaults: columns.map { |col| [col.name, col.default] }.to_h,
+      _default_attributes: mock_default_attributes(columns),
       table_name_prefix: ""
     }
 
     double("An ActiveRecord class", options)
+  end
+
+  # Mimics `Model._default_attributes`, where each attribute knows the raw
+  # default read from the DB column before any type casting.
+  def mock_default_attributes(columns)
+    columns.each_with_object({}) do |col, hash|
+      hash[col.name.to_s] = double("Attribute", value_before_type_cast: col.default)
+    end
   end
 
   def mock_column(name, type, options = {})
