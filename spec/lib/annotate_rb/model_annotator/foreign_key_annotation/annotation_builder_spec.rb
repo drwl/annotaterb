@@ -99,6 +99,28 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
       end
     end
 
+    context "with unnamed foreign keys including a composite one" do
+      # SQLite reports every foreign key without a name, so formatted_name falls
+      # back to the columns; the composite key's Array must not crash the sort.
+      let(:foreign_keys) do
+        [
+          mock_foreign_key(nil, "student_id", "students"),
+          mock_foreign_key(nil, ["delivery_on", "menu_id"], "meal_options", ["delivery_on", "menu_id"])
+        ]
+      end
+      let(:expected_output) do
+        <<~OUTPUT.strip
+          #
+          # Foreign Keys
+          #
+          #  [delivery_on, menu_id]  ([delivery_on, menu_id] => meal_options[delivery_on, menu_id])
+          #  student_id              (student_id => students.id)
+        OUTPUT
+      end
+
+      it { expect(default_format).to eq(expected_output) }
+    end
+
     context "with a foreign key with options" do
       let(:foreign_keys) do
         [
