@@ -223,5 +223,23 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
         expect(rdoc_format).to eq(expected_output)
       end
     end
+
+    context "with unnamed foreign keys including a composite one" do
+      # On SQLite every foreign key is unnamed, and a composite foreign key
+      # reports its column as an Array. formatted_name must stringify it so the
+      # sort in #build does not compare an Array against a String and raise.
+      let(:foreign_keys) do
+        [
+          mock_foreign_key(nil, "student_id", "students"),
+          mock_foreign_key(nil, ["delivery_on", "menu_id"], "menus", ["delivery_on", "menu_id"])
+        ]
+      end
+
+      it "does not raise and renders both foreign keys" do
+        expect { subject }.not_to raise_error
+        expect(default_format).to include("student_id")
+        expect(default_format).to include("[delivery_on, menu_id]")
+      end
+    end
   end
 end
