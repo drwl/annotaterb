@@ -68,7 +68,7 @@ This will copy a rake task into your Rails project's `lib/tasks` directory that 
 $ bin/rails db:migrate
 # ...
 # Annotating models
-# Annotated (1): app/models/task.rb
+# Annotated (1): app/models/user.rb
 ```
 
 To skip the automatic annotation that happens after a db task, pass the environment variable `ANNOTATERB_SKIP_ON_DB_TASKS=1` before your command.
