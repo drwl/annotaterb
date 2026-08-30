@@ -31,7 +31,7 @@ module AnnotateRb
         def parse_comments
           # Adds 0-indexed line numbers
           @input.split($/).each_with_index do |line, line_no|
-            if line.strip.starts_with?("#")
+            if line.strip.start_with?("#")
               @comments << [line, line_no]
             end
           end
