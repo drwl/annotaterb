@@ -16,7 +16,9 @@ module AnnotateRb
           end
 
           model_path = file.gsub(/\.rb$/, "")
-          options[:model_dir].each { |dir| model_path = model_path.gsub(/^#{dir}/, "").gsub(/^\//, "") }
+          model_dirs = options[:model_dir].flat_map { |dir| Dir[dir] }
+          model_dirs.each { |dir| model_path = model_path.delete_prefix(File.join(dir, "")) }
+          model_path = model_path.delete_prefix(File::SEPARATOR)
 
           begin
             get_loaded_model(model_path, file) || raise(BadModelFileError.new)
