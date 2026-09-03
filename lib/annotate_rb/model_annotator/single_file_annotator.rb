@@ -23,6 +23,8 @@ module AnnotateRb
         #
         def call(file_name, annotation, annotation_position, options, model_class_name: nil)
           return false unless File.exist?(file_name)
+
+          validate_annotation!(annotation)
           old_content = File.read(file_name)
 
           parser_klass = FileToParserMapper.map(file_name)
@@ -51,6 +53,16 @@ module AnnotateRb
           File.open(file_name, "wb") { |f| f.puts updated_file_content }
 
           true
+        end
+
+        private
+
+        def validate_annotation!(annotation)
+          comment_only = annotation.to_s.split(/\r\n?|\n/, -1).all? do |line|
+            line.match?(/\A[ \t]*(?:#.*)?\z/)
+          end
+
+          raise ArgumentError, "annotation contains non-comment content" unless comment_only
         end
       end
     end
