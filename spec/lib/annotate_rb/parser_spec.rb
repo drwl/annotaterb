@@ -56,13 +56,14 @@ module AnnotateRb # rubocop:disable Metrics/ModuleLength
       end
     end
 
-    %w[--additional-file-patterns].each do |option|
+    %w[--additional-file-patterns --only-file-patterns].each do |option|
       describe option do
+        parameter = option.sub("--", "").tr("-", "_").to_sym
         let(:args) { [option, paths] }
         let(:paths) { "foo/bar,baz" }
 
-        it "sets array of paths to :additional_file_patterns" do
-          expect(result).to include(additional_file_patterns: ["foo/bar", "baz"])
+        it "sets array of paths to :#{parameter}" do
+          expect(result).to include(parameter => ["foo/bar", "baz"])
         end
       end
     end
