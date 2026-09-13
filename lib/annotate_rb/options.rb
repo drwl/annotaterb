@@ -84,7 +84,6 @@ module AnnotateRb
       ignore_multi_database_name: false, # ModelAnnotator
       ignore_routes: nil, # RouteAnnotator
       models: true, # Core
-      routes: false, # Core
       skip_on_db_migrate: false, # Core
       auto_annotate_routes_after_migrate: false, # Core
       target_action: :do_annotations, # Core; Possible values: :do_annotations, :remove_annotations
@@ -155,7 +154,6 @@ module AnnotateRb
       :ignore_routes,
       :ignore_multi_database_name,
       :models,
-      :routes,
       :skip_on_db_migrate,
       :auto_annotate_routes_after_migrate,
       :target_action,
