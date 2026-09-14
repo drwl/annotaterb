@@ -23,6 +23,7 @@ module AnnotateTestHelpers
       unique: params[:unique] || false,
       nulls_not_distinct: params[:nulls_not_distinct] || false,
       orders: params[:orders] || {},
+      opclasses: params[:opclasses] || {},
       where: params[:where],
       using: params[:using],
       comment: params[:comment])

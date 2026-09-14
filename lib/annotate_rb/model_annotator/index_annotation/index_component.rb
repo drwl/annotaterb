@@ -136,12 +136,22 @@ module AnnotateRb
 
         def columns_info
           Array(index.columns).map do |col|
-            if index.try(:orders) && index.orders[col.to_s]
-              "#{col} #{index.orders[col.to_s].upcase}"
-            else
-              col.to_s.gsub("\r", '\r').gsub("\n", '\n')
-            end
+            column = col.to_s.gsub("\r", '\r').gsub("\n", '\n')
+            opclass = column_option(:opclasses, col)
+            order = column_option(:orders, col)
+
+            [column, opclass, order&.upcase].compact.join(" ")
           end
+        end
+
+        # ActiveRecord condenses per column index options (`opclasses`, `orders`)
+        # into a single value when every column shares the same one, so the
+        # option can either be a Hash keyed by column or a bare value.
+        def column_option(option, col)
+          value = index.try(option)
+          value = value[col.to_s] if value.is_a?(Hash)
+
+          value.presence&.to_s
         end
       end
     end
