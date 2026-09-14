@@ -22,16 +22,17 @@ The schema comment looks like this:
 ```ruby
 # == Schema Information
 #
-# Table name: tasks
+# Table name: users
 #
-#  id         :integer          not null, primary key
-#  content    :string
-#  count      :integer
-#  status     :boolean
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id            :integer          not null, primary key
+#  name          :string
+#  email         :string
+#  sign_in_count :integer          default(0), not null
+#  admin         :boolean          default(FALSE), not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
-class Task < ApplicationRecord
+class User < ApplicationRecord
   ...
 ```
 
