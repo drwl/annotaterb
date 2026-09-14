@@ -13,7 +13,7 @@ module AnnotateRb
 
         def formatted_name
           @formatted_name ||= if foreign_key.name.blank?
-            foreign_key.column
+            stringified_columns
           else
             @options[:show_complete_foreign_keys] ? foreign_key.name : foreign_key.name.gsub(/(?<=^fk_rails_)[0-9a-f]{10}$/, "...")
           end
