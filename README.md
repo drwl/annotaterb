@@ -22,16 +22,17 @@ The schema comment looks like this:
 ```ruby
 # == Schema Information
 #
-# Table name: tasks
+# Table name: users
 #
-#  id         :integer          not null, primary key
-#  content    :string
-#  count      :integer
-#  status     :boolean
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id            :integer          not null, primary key
+#  name          :string
+#  email         :string
+#  sign_in_count :integer          default(0), not null
+#  admin         :boolean          default(FALSE), not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
-class Task < ApplicationRecord
+class User < ApplicationRecord
   ...
 ```
 
@@ -68,7 +69,7 @@ This will copy a rake task into your Rails project's `lib/tasks` directory that 
 $ bin/rails db:migrate
 # ...
 # Annotating models
-# Annotated (1): app/models/task.rb
+# Annotated (1): app/models/user.rb
 ```
 
 To skip the automatic annotation that happens after a db task, pass the environment variable `ANNOTATERB_SKIP_ON_DB_TASKS=1` before your command.
