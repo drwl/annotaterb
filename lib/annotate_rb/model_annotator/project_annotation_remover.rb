@@ -43,7 +43,9 @@ module AnnotateRb
 
         klass.reset_column_information
         model_name = klass.name.underscore
-        table_name = klass.table_name
+        # Match annotation behavior so a secondary model with a duplicate table
+        # name cannot remove annotations from the primary database's fixture.
+        table_name = klass.table_name if klass.connection_specification_name == ActiveRecord::Base.name
 
         model_instruction = SingleFileRemoveAnnotationInstruction.new(file, @options)
         instructions << model_instruction
