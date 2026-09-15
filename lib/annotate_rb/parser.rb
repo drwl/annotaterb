@@ -268,6 +268,11 @@ module AnnotateRb
         @options[:position_of_column_comment] = value.to_sym
       end
 
+      option_parser.on("--enum-default-format [label|raw|both]",
+        "set how defaults of enum backed columns are shown") do |value|
+        @options[:enum_default_format] = value.to_sym
+      end
+
       option_parser.on("--with-table-comments",
         "include table comments in model annotations") do
         @options[:with_table_comments] = true

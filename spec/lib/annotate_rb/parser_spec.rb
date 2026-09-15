@@ -610,6 +610,15 @@ module AnnotateRb # rubocop:disable Metrics/ModuleLength
       end
     end
 
+    describe "--enum-default-format" do
+      let(:option) { "--enum-default-format" }
+      let(:args) { [option, "both"] }
+
+      it "sets enum_default_format to the symbolized value" do
+        expect(result).to include(enum_default_format: :both)
+      end
+    end
+
     describe "--nested-position" do
       let(:option) { "--nested-position" }
       let(:args) { [option] }
