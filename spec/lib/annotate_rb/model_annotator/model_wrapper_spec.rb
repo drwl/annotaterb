@@ -43,15 +43,70 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelWrapper do
 
     context "when the model overrides defaults via `attribute :foo, default: X`" do
       before do
-        # `Model#column_defaults` is affected by attribute overrides. We detect
-        # the mismatch against the schema and fall back to the DB schema value.
+        # An attribute override replaces both the cast value and the raw
+        # default, so we detect the mismatch and fall back to the schema value.
         allow(klass).to receive(:column_defaults).and_return(
           "id" => nil, "count" => 999, "name" => "overridden"
+        )
+        allow(klass).to receive(:_default_attributes).and_return(
+          "id" => double("Attribute", value_before_type_cast: nil),
+          "count" => double("Attribute", value_before_type_cast: 999),
+          "name" => double("Attribute", value_before_type_cast: "overridden")
         )
       end
 
       it "returns the DB schema defaults, not the attribute overrides" do
         is_expected.to eq("id" => nil, "count" => 0, "name" => "guest")
+      end
+    end
+
+    context "when a column is backed by an enum" do
+      subject { described_class.new(klass, AnnotateRb::Options.from(options)).column_defaults }
+
+      let(:options) { {} }
+      let(:klass) do
+        mock_class(:users, :id, [id_column, count_column, name_column, status_column])
+      end
+      let(:status_column) { mock_column("status", :integer, default: 0) }
+
+      before do
+        # The enum attribute type casts the raw DB default `0` into its label.
+        # The raw default is untouched, so this is not an attribute override.
+        allow(klass).to receive(:column_defaults).and_return(
+          "id" => nil, "count" => 0, "name" => "guest", "status" => "idnow"
+        )
+        allow(klass).to receive(:defined_enums).and_return("status" => {"idnow" => 0})
+      end
+
+      it "returns the enum label, not the raw integer" do
+        expect(subject["status"]).to eq("idnow")
+      end
+
+      context "with options[:enum_default_format] set to `raw`" do
+        let(:options) { {enum_default_format: :raw} }
+
+        it "returns the raw value" do
+          expect(subject["status"]).to eq(0)
+        end
+      end
+
+      context "with options[:enum_default_format] set to `both`" do
+        let(:options) { {enum_default_format: :both} }
+
+        it "returns the raw value and the label" do
+          expect(subject["status"]).to eq(
+            AnnotateRb::ModelAnnotator::ColumnAnnotation::EnumDefault.new(0, "idnow")
+          )
+        end
+      end
+
+      context "when the enum is backed by strings" do
+        let(:options) { {enum_default_format: :both} }
+        let(:status_column) { mock_column("status", :string, default: "idnow") }
+
+        it "returns the label, since the raw value is the same" do
+          expect(subject["status"]).to eq("idnow")
+        end
       end
     end
 

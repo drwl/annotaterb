@@ -159,6 +159,8 @@ Annotate model options:
         --without-column-comments    exclude column comments in model annotations
         --position-of-column-comment [with_name|rightmost_column]
                                      set the position, in the annotation block, of the column comment
+        --enum-default-format [label|raw|both]
+                                     set how defaults of enum backed columns are shown
         --with-table-comments        include table comments in model annotations
         --without-table-comments     exclude table comments in model annotations
         --classes-default-to-s class Custom classes to be represented with `to_s`, may be used multiple times
@@ -268,6 +270,7 @@ Keys use snake_case and match the gem defaults in `AnnotateRb::Options`. CLI fla
 | `simple_indexes` | `false` | Concat related indexes onto each column line. |
 | `show_check_constraints` | `false` | List check constraints. |
 | `show_enums` | `false` | Show PostgreSQL enum types. |
+| `enum_default_format` | `label` | Default shown for enum backed columns: `label` (`default("idnow")`), `raw` (`default(0)`) or `both` (`default(0: "idnow")`). |
 | `show_virtual_columns` | `false` | Show virtual/generated columns. |
 | `include_version` | `false` | Include the migration version number. |
 | `with_comment` | `true` | Include database comments (fallback for column/table comment flags). |

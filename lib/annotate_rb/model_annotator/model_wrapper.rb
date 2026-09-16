@@ -73,14 +73,17 @@ module AnnotateRb
       # `Model#column_defaults` reflects `attribute :foo, default: X` overrides,
       # which would incorrectly show the Ruby-side default in annotations
       # instead of the DB schema default. To preserve model-level decorations
-      # such as `TimeZoneConverter` on datetime columns, we start from
-      # `column_defaults` and only substitute the DB schema value when a
-      # difference indicates an attribute-level override.
+      # such as enum labels or `TimeZoneConverter` on datetime columns, we start
+      # from `column_defaults` and only substitute the DB schema value for
+      # attributes whose raw default was replaced.
       def column_defaults
         @column_defaults ||= @klass.column_defaults.each_with_object({}) do |(name, value), result|
           column = @klass.columns_hash[name]
-          schema_value = schema_default_for(column)
-          result[name] = (value == schema_value) ? value : schema_value
+          result[name] = if attribute_default_overridden?(name, column)
+            schema_default_for(column)
+          else
+            enum_default(name, column, value)
+          end
         end
       end
 
@@ -277,6 +280,33 @@ module AnnotateRb
       end
 
       private
+
+      # `attribute :foo, default: X` replaces the raw default Rails read from
+      # the DB column, so comparing the two raw values detects the override.
+      # Comparing cast values instead would misreport decorated attribute types
+      # (an enum casts the DB default `0` into its label) as overrides.
+      def attribute_default_overridden?(name, column)
+        return false if column.nil?
+
+        @klass._default_attributes[name].value_before_type_cast != column.default
+      end
+
+      # An enum attribute type casts the raw DB default into its label, which is
+      # what `column_defaults` reports and what annotations have historically
+      # shown. `enum_default_format` picks between that label, the raw value,
+      # and both.
+      def enum_default(name, column, label)
+        return label unless @klass.defined_enums.key?(name)
+
+        raw = schema_default_for(column)
+        return label if raw == label
+
+        case @options[:enum_default_format]
+        when :raw then raw
+        when :both then ColumnAnnotation::EnumDefault.new(raw, label)
+        else label
+        end
+      end
 
       def schema_default_for(column)
         return nil if column.nil? || column.default.nil? || column.default_function

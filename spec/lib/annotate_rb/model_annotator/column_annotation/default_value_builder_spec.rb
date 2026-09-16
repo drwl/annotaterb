@@ -35,6 +35,12 @@ RSpec.describe AnnotateRb::ModelAnnotator::ColumnAnnotation::DefaultValueBuilder
       it { is_expected.to eq("42") }
     end
 
+    context "when value is an EnumDefault" do
+      let(:value) { AnnotateRb::ModelAnnotator::ColumnAnnotation::EnumDefault.new(0, "idnow") }
+
+      it { is_expected.to eq("0: \"idnow\"") }
+    end
+
     context "when value is an Decimal" do
       let(:value) { 1.2 }
 

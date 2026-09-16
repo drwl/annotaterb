@@ -63,7 +63,8 @@ module AnnotateRb
       with_comment: true, # ModelAnnotator
       with_column_comments: nil, # ModelAnnotator
       with_table_comments: nil, # ModelAnnotator
-      position_of_column_comment: :with_name # ModelAnnotator
+      position_of_column_comment: :with_name, # ModelAnnotator
+      enum_default_format: :label # ModelAnnotator
     }.freeze
 
     OTHER_OPTIONS = {
@@ -141,7 +142,8 @@ module AnnotateRb
       :with_comment,
       :with_column_comments,
       :with_table_comments,
-      :position_of_column_comment
+      :position_of_column_comment,
+      :enum_default_format
     ].freeze
 
     OTHER_OPTION_KEYS = [
@@ -224,6 +226,7 @@ module AnnotateRb
       @options[:with_column_comments] = @options[:with_comment] if @options[:with_column_comments].nil?
       @options[:with_table_comments] = @options[:with_comment] if @options[:with_table_comments].nil?
       @options[:position_of_column_comment] = @options[:position_of_column_comment].to_sym
+      @options[:enum_default_format] = @options[:enum_default_format].to_sym
 
       self
     end
