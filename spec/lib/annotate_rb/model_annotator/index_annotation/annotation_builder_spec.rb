@@ -67,6 +67,103 @@ RSpec.describe AnnotateRb::ModelAnnotator::IndexAnnotation::AnnotationBuilder do
       end
     end
 
+    context "index has the same order for every column" do
+      let(:indexes) do
+        [
+          mock_index("index_rails_02e851e3b8",
+            columns: %w[firstname surname],
+            orders: :desc)
+        ]
+      end
+
+      let(:expected_result) do
+        <<~EOS.strip
+          #
+          # Indexes
+          #
+          #  index_rails_02e851e3b8  (firstname DESC,surname DESC)
+        EOS
+      end
+
+      it "matches the expected result" do
+        expect(default_format).to eq(expected_result)
+      end
+    end
+
+    context "index includes an operator class" do
+      let(:indexes) do
+        [
+          mock_index("index_rails_02e851e3b7", columns: ["id"]),
+          mock_index("index_rails_02e851e3b8",
+            columns: %w[firstname surname],
+            opclasses: {"surname" => :text_pattern_ops}),
+          mock_index("index_rails_02e851e3b9",
+            columns: %w[firstname surname],
+            opclasses: {"firstname" => :text_pattern_ops, "surname" => :text_pattern_ops},
+            orders: {"surname" => :desc})
+        ]
+      end
+
+      let(:expected_default) do
+        <<~EOS.strip
+          #
+          # Indexes
+          #
+          #  index_rails_02e851e3b7  (id)
+          #  index_rails_02e851e3b8  (firstname,surname text_pattern_ops)
+          #  index_rails_02e851e3b9  (firstname text_pattern_ops,surname text_pattern_ops DESC)
+        EOS
+      end
+
+      let(:expected_markdown) do
+        <<~EOS.strip
+          #
+          # ### Indexes
+          #
+          # * `index_rails_02e851e3b7`:
+          #     * **`id`**
+          # * `index_rails_02e851e3b8`:
+          #     * **`firstname`**
+          #     * **`surname text_pattern_ops`**
+          # * `index_rails_02e851e3b9`:
+          #     * **`firstname text_pattern_ops`**
+          #     * **`surname text_pattern_ops DESC`**
+        EOS
+      end
+
+      it "includes the operator class in default format" do
+        expect(default_format).to eq(expected_default)
+      end
+
+      it "includes the operator class in markdown format" do
+        expect(markdown_format).to eq(expected_markdown)
+      end
+    end
+
+    context "index has the same operator class for every column" do
+      let(:indexes) do
+        [
+          mock_index("index_rails_02e851e3b8",
+            columns: %w[name],
+            opclasses: :gist_trgm_ops,
+            using: "gist")
+        ]
+      end
+
+      let(:expected_result) do
+        <<~EOS.strip
+          #
+          # Indexes
+          #
+          #  index_rails_02e851e3b8  (name gist_trgm_ops) USING gist
+        EOS
+      end
+
+      it "matches the expected result" do
+        expect(default_format).to eq(expected_result)
+      end
+    end
+
     context "index includes a where clause" do
       let(:indexes) do
         [
