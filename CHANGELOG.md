@@ -1,5 +1,37 @@
 # Changelog
 
+## [v4.25.0](https://github.com/drwl/annotaterb/tree/v4.25.0) (2026-09-17)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.24.0...v4.25.0)
+
+**Fixed bugs:**
+
+- Missing unique indexes in annotations [\#390](https://github.com/drwl/annotaterb/issues/390)
+- Related files are matched globally by unqualified model name, so models with the same basename in different packs overwrite   each other's annotations \(breaks --frozen\) [\#367](https://github.com/drwl/annotaterb/issues/367)
+- When `format_markdown: true`, annotations get written duplicated into models that already have annotations. [\#355](https://github.com/drwl/annotaterb/issues/355)
+
+**Closed issues:**
+
+- Foreign-key annotation crashes with ArgumentError when unnamed FKs mix with a composite FK [\#377](https://github.com/drwl/annotaterb/issues/377)
+- 4.24.0: enum-backed integer columns annotate raw default\(0\) instead of default\("label"\) [\#373](https://github.com/drwl/annotaterb/issues/373)
+
+**Merged pull requests:**
+
+- Release v4.25.0 [\#395](https://github.com/drwl/annotaterb/pull/395) ([drwl](https://github.com/drwl))
+- Bump github/codeql-action from 4.37.9 to 4.38.0 [\#394](https://github.com/drwl/annotaterb/pull/394) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Remove unused `routes` option [\#393](https://github.com/drwl/annotaterb/pull/393) ([OdenTakashi](https://github.com/OdenTakashi))
+- Bump github/codeql-action from 4.37.4 to 4.37.9 [\#389](https://github.com/drwl/annotaterb/pull/389) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Use native prefix predicate in YAML parser [\#387](https://github.com/drwl/annotaterb/pull/387) ([OskarEichler](https://github.com/OskarEichler))
+- Fix multi-database annotation removal fixture targeting [\#386](https://github.com/drwl/annotaterb/pull/386) ([OskarEichler](https://github.com/OskarEichler))
+- Update annotated model in README [\#385](https://github.com/drwl/annotaterb/pull/385) ([koeda-ta](https://github.com/koeda-ta))
+- Show index operator classes in annotations [\#382](https://github.com/drwl/annotaterb/pull/382) ([kamipo](https://github.com/kamipo))
+- Fix enum-backed integer columns annotations [\#380](https://github.com/drwl/annotaterb/pull/380) ([dmke](https://github.com/dmke))
+- Fix ArgumentError sorting unnamed foreign keys when one is composite [\#378](https://github.com/drwl/annotaterb/pull/378) ([6temes](https://github.com/6temes))
+- Bump github/codeql-action from 4 to 4.37.4 [\#376](https://github.com/drwl/annotaterb/pull/376) ([dependabot[bot]](https://github.com/apps/dependabot))
+- docs: fix mistake in changelog [\#375](https://github.com/drwl/annotaterb/pull/375) ([G-Rath](https://github.com/G-Rath))
+- Stop same-named models in different packs from annotating each others related files by matching on owning root\_dir. [\#374](https://github.com/drwl/annotaterb/pull/374) ([OdenTakashi](https://github.com/OdenTakashi))
+- Generate changelog for v4.24.0 [\#372](https://github.com/drwl/annotaterb/pull/372) ([drwl](https://github.com/drwl))
+
 ## [v4.24.0](https://github.com/drwl/annotaterb/tree/v4.24.0) (2026-07-24)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.23.0...v4.24.0)
@@ -7,7 +39,7 @@
 **Implemented enhancements:**
 
 - Annotate postgres enums [\#309](https://github.com/drwl/annotaterb/issues/309)
-- `--frozen` option returns a non-zero error code when database is inaccessible [\#240](https://github.com/drwl/annotaterb/issues/240)
+- `--frozen` option returns a zero error code when database is inaccessible [\#240](https://github.com/drwl/annotaterb/issues/240)
 - Add support for printing enum types [\#176](https://github.com/drwl/annotaterb/issues/176)
 
 **Fixed bugs:**
