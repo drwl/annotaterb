@@ -476,6 +476,40 @@ RSpec.describe AnnotateRb::ModelAnnotator::SingleFileAnnotator do
       end
     end
 
+    context "when the annotation contains a non-comment line" do
+      let(:options) { AnnotateRb::Options.new({}) }
+      let(:starting_file_content) do
+        <<~FILE
+          class User < ActiveRecord::Base
+          end
+        FILE
+      end
+      let(:schema_info) do
+        <<~SCHEMA
+          # == Schema Information
+          #
+          # Table name: users
+          #
+          #  trusted_name  (price > 0)
+          raise 'generated-code-marker'
+          #
+        SCHEMA
+      end
+
+      before do
+        @model_dir = Dir.mktmpdir("annotaterb")
+        (@model_file_name, _file_content) = write_model("user.rb", starting_file_content)
+      end
+
+      it "raises an error and leaves the file unchanged" do
+        expect {
+          described_class.call(@model_file_name, schema_info, :position_in_class, options)
+        }.to raise_error(ArgumentError, "annotation contains non-comment content")
+
+        expect(File.read(@model_file_name)).to eq(starting_file_content)
+      end
+    end
+
     context "when the file has a malformed annotation" do
       before do
         @model_dir = Dir.mktmpdir("annotaterb")
