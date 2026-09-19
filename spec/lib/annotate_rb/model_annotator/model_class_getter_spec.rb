@@ -319,4 +319,38 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelClassGetter do
       end
     end
   end
+
+  describe ".call when model_dir is a glob pattern" do
+    let(:options) { AnnotateRb::Options.new({model_dir: ["packs/*/app/models"]}) }
+    let(:filename) { File.join("packs", "foo", "app", "models", "bar", "globbed_packs_foo.rb") }
+
+    around do |example|
+      Dir.mktmpdir do |dir|
+        Dir.chdir(dir) do
+          FileUtils.mkdir_p(File.dirname(filename))
+          File.write(filename, <<~EOS)
+            module Bar
+              class GlobbedPacksFoo < ActiveRecord::Base
+              end
+            end
+          EOS
+
+          example.run
+        end
+      end
+    end
+
+    it "looks up the class using the path relative to the expanded model directory" do
+      lookup_paths = []
+      allow(described_class).to receive(:get_loaded_model_by_path).and_wrap_original do |original, path|
+        lookup_paths << path
+        original.call(path)
+      end
+
+      klass = described_class.call(filename, options)
+
+      expect(lookup_paths.first).to eq("bar/globbed_packs_foo")
+      expect(klass.name).to eq("Bar::GlobbedPacksFoo")
+    end
+  end
 end
