@@ -27,6 +27,11 @@ module AnnotateRb
             end
           end
 
+          if options[:ignore_filename_regexp]
+            regexp = Regexp.new(options[:ignore_filename_regexp])
+            model_files.reject! { |_, file| File.basename(file).match?(regexp) }
+          end
+
           if model_files.empty?
             warn "No models found in directory '#{options[:model_dir].join("', '")}'."
             warn "Either specify models on the command line, or use the --model-dir option."
