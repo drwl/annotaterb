@@ -10,27 +10,33 @@ module AnnotateRb
       # Valid options when `:exclude_tests` is an Array, note that symbols are expected
       EXCLUDE_TEST_OPTIONS = %i[model controller serializer request routing].freeze
 
-      def initialize(file, model_name, table_name, options)
+      def initialize(file, model_name, table_name, options, for_removal: false)
         @file = file
         @model_name = model_name
         @table_name = table_name
         @options = options
+        # When removing annotations we want to reach every related file the gem
+        # could have annotated, regardless of the current `exclude_*` settings.
+        # Those options control where annotations are *added*; excluding a file
+        # type should not strand an annotation that was written before the
+        # exclusion was configured. See ProjectAnnotationRemover.
+        @for_removal = for_removal
       end
 
       def build
         @list = []
 
-        add_related_test_files if !exclude_model_test_files?
-        add_related_fixture_files if !@options[:exclude_fixtures]
-        add_related_factory_files if !@options[:exclude_factories]
-        add_related_serializer_files if !@options[:exclude_serializers]
-        add_related_serializer_test_files if !exclude_serializer_tests?
-        add_related_controller_test_files if !exclude_controller_tests?
-        add_related_request_spec_files if !exclude_request_specs?
-        add_related_routing_spec_files if !exclude_routing_specs?
-        add_related_controller_files if !@options[:exclude_controllers]
-        add_related_helper_files if !@options[:exclude_helpers]
-        add_related_admin_files if @options[:active_admin]
+        add_related_test_files if @for_removal || !exclude_model_test_files?
+        add_related_fixture_files if @for_removal || !@options[:exclude_fixtures]
+        add_related_factory_files if @for_removal || !@options[:exclude_factories]
+        add_related_serializer_files if @for_removal || !@options[:exclude_serializers]
+        add_related_serializer_test_files if @for_removal || !exclude_serializer_tests?
+        add_related_controller_test_files if @for_removal || !exclude_controller_tests?
+        add_related_request_spec_files if @for_removal || !exclude_request_specs?
+        add_related_routing_spec_files if @for_removal || !exclude_routing_specs?
+        add_related_controller_files if @for_removal || !@options[:exclude_controllers]
+        add_related_helper_files if @for_removal || !@options[:exclude_helpers]
+        add_related_admin_files if @for_removal || @options[:active_admin]
         add_additional_file_patterns if @options[:additional_file_patterns].present?
 
         @list.uniq
