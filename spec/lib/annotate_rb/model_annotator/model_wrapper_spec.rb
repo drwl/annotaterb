@@ -110,6 +110,46 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelWrapper do
       end
     end
 
+    context "when a column is backed by enumerize" do
+      subject { described_class.new(klass, AnnotateRb::Options.from(options)).column_defaults }
+
+      let(:options) { {} }
+      let(:klass) do
+        mock_class(:users, :id, [id_column, count_column, name_column, category_column])
+      end
+      let(:category_column) { mock_column("category", :integer, default: 0) }
+      let(:enumerize_default) { nil }
+
+      before do
+        allow(klass).to receive(:column_defaults).and_return(
+          "id" => nil, "count" => 0, "name" => "guest", "category" => enumerize_default
+        )
+        allow(klass).to receive(:enumerized_attributes).and_return(
+          "category" => double("Enumerize::Attribute")
+        )
+      end
+
+      it "returns the raw DB default when it is not an enumerize value" do
+        expect(subject["category"]).to eq(0)
+      end
+
+      context "when the DB default is an enumerize value" do
+        let(:enumerize_default) { "none" }
+
+        it "returns the enumerize label" do
+          expect(subject["category"]).to eq("none")
+        end
+
+        context "with options[:enum_default_format] set to `raw`" do
+          let(:options) { {enum_default_format: :raw} }
+
+          it "returns the raw value" do
+            expect(subject["category"]).to eq(0)
+          end
+        end
+      end
+    end
+
     context "when a column has a default function" do
       let(:name_column) do
         mock_column("name", :string, default: "gen_random_uuid()", default_function: "gen_random_uuid()")
