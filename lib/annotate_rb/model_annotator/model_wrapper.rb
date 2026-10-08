@@ -48,7 +48,12 @@ module AnnotateRb
 
       # Returns the unmodified model columns
       def raw_columns
-        @raw_columns ||= @klass.columns
+        @raw_columns ||= if @options[:load_columns_from_schema]
+          @klass.load_schema
+          @klass.schema_cache.columns_hash(@klass.table_name).values.freeze
+        else
+          @klass.columns
+        end
       end
 
       def primary_key
