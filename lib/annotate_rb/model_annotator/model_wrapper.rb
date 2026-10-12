@@ -296,9 +296,10 @@ module AnnotateRb
       # shown. `enum_default_format` picks between that label, the raw value,
       # and both.
       def enum_default(name, column, label)
-        return label unless @klass.defined_enums.key?(name)
+        return label unless enum_attribute?(name)
 
         raw = schema_default_for(column)
+        return raw if label.nil?
         return label if raw == label
 
         case @options[:enum_default_format]
@@ -306,6 +307,11 @@ module AnnotateRb
         when :both then ColumnAnnotation::EnumDefault.new(raw, label)
         else label
         end
+      end
+
+      def enum_attribute?(name)
+        @klass.defined_enums.key?(name) ||
+          (@klass.respond_to?(:enumerized_attributes) && @klass.enumerized_attributes[name])
       end
 
       def schema_default_for(column)
