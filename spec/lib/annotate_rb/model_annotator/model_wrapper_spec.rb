@@ -108,6 +108,33 @@ RSpec.describe AnnotateRb::ModelAnnotator::ModelWrapper do
           expect(subject["status"]).to eq("idnow")
         end
       end
+
+      context "when the enum declares a Rails-side default" do
+        # `enum :status, {"idnow" => 0}, default: :idnow` registers an attribute
+        # default, so the raw default is the label rather than the DB value. The
+        # DB schema default is unchanged, so the annotation should still show the
+        # label.
+        before do
+          allow(klass).to receive(:_default_attributes).and_return(
+            "id" => double("Attribute", value_before_type_cast: nil),
+            "count" => double("Attribute", value_before_type_cast: 0),
+            "name" => double("Attribute", value_before_type_cast: "guest"),
+            "status" => double("Attribute", value_before_type_cast: :idnow)
+          )
+        end
+
+        it "returns the enum label, not the raw integer" do
+          expect(subject["status"]).to eq("idnow")
+        end
+
+        context "with options[:enum_default_format] set to `raw`" do
+          let(:options) { {enum_default_format: :raw} }
+
+          it "returns the raw value" do
+            expect(subject["status"]).to eq(0)
+          end
+        end
+      end
     end
 
     context "when a column is backed by enumerize" do
