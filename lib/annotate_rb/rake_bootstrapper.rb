@@ -13,6 +13,12 @@ module AnnotateRb
         rescue
           nil
         end
+
+        # Tenanted models from activerecord-tenanted can't reach their database
+        # without a current tenant. The gem defines `db:tenant` to set its default
+        # tenant (ARTENANT, or the default tenant in local environments), the same
+        # way it does for the Rails console.
+        Rake::Task["db:tenant"].invoke if Rake::Task.task_defined?("db:tenant")
       end
     end
   end
