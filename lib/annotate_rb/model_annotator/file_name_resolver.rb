@@ -13,7 +13,7 @@ module AnnotateRb
             .gsub("%MODEL_NAME%", model_name)
             .gsub("%MODEL_NAME_WITHOUT_NS%", model_name_without_namespace)
             .gsub("%PLURALIZED_MODEL_NAME%", model_name.pluralize)
-            .gsub("%TABLE_NAME%", table_name || model_name.pluralize)
+            .gsub("%TABLE_NAME%", table_name&.to_s || model_name.pluralize)
         end
       end
     end
