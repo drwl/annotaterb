@@ -80,7 +80,7 @@ module AnnotateRb
         @column_defaults ||= @klass.column_defaults.each_with_object({}) do |(name, value), result|
           column = @klass.columns_hash[name]
           result[name] = if attribute_default_overridden?(name, column)
-            schema_default_for(column)
+            schema_default_with_enum_label(name, column)
           else
             enum_default(name, column, value)
           end
@@ -307,6 +307,22 @@ module AnnotateRb
         when :both then ColumnAnnotation::EnumDefault.new(raw, label)
         else label
         end
+      end
+
+      # `enum :status, {...}, default: :shipped` sets a Ruby-side default without
+      # changing the schema default, so it lands in the override path. Map the
+      # schema value back to its label so the column annotates like any other
+      # enum column.
+      def schema_default_with_enum_label(name, column)
+        raw = schema_default_for(column)
+        label = enum_label_for(name, raw)
+        return raw if label.nil?
+
+        enum_default(name, column, label)
+      end
+
+      def enum_label_for(name, raw)
+        @klass.defined_enums[name]&.key(raw)
       end
 
       def enum_attribute?(name)
