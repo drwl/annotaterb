@@ -41,6 +41,16 @@ RSpec.describe AnnotateRb::ModelAnnotator::FileNameResolver do
       end
     end
 
+    context "When table_name is a Symbol (e.g. self.table_name = :example_models)" do
+      let(:model_name) { "example_model" }
+      let(:table_name) { :example_models }
+      let(:filename_template) { "test/fixtures/%TABLE_NAME%.yml" }
+
+      it "returns the fixture path for a model" do
+        is_expected.to eq "test/fixtures/example_models.yml"
+      end
+    end
+
     context 'When model_name is "parent/child" and table_name is "parent_children"' do
       let(:model_name) { "parent/child" }
       let(:table_name) { "parent_children" }
