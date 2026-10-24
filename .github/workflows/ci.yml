@@ -53,6 +53,10 @@ jobs:
         ruby: ['3.3', '3.4', '4.0']
         rails: ['~> 7.2.0', '~> 8.0.0', '~> 8.1.0']
 
+    env:
+      DATABASE_ADAPTER: ${{ matrix.adapter }}
+      RAILS_VERSION: ${{ matrix.rails }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -78,22 +82,19 @@ jobs:
         run: bundle config set path 'vendor/bundle'
         working-directory: spec/dummyapp
 
+      - name: Cache dummyapp dependencies
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: spec/dummyapp/vendor/bundle
+          key: dummyapp-${{ runner.os }}-ruby${{ matrix.ruby }}-${{ matrix.adapter }}-rails${{ matrix.rails }}-${{ hashFiles('spec/dummyapp/Gemfile', 'annotaterb.gemspec') }}
+
       - name: Install dummyapp dependencies (${{ matrix.adapter }}, Rails ${{ matrix.rails }})
         run: bundle install
         working-directory: spec/dummyapp
-        env:
-          DATABASE_ADAPTER: ${{ matrix.adapter }}
-          RAILS_VERSION: ${{ matrix.rails }}
 
       - name: Run dummyapp migrations (${{ matrix.adapter }}, Rails ${{ matrix.rails }})
         run: bin/rails db:create
         working-directory: spec/dummyapp
-        env:
-          DATABASE_ADAPTER: ${{ matrix.adapter }}
-          RAILS_VERSION: ${{ matrix.rails }}
 
       - name: Run Integration tests (${{ matrix.adapter }}, Rails ${{ matrix.rails }})
         run: bundle exec rake spec:integration
-        env:
-          DATABASE_ADAPTER: ${{ matrix.adapter }}
-          RAILS_VERSION: ${{ matrix.rails }}
