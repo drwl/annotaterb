@@ -17,4 +17,5 @@
 #  updated_at :datetime         not null
 #
 class TestDefault < ApplicationRecord
+  self.ignored_columns = ["ignored_column"]
 end

@@ -484,5 +484,34 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
         end
       end
     end
+
+    context "when an additional file pattern points outside every root directory", :isolated_environment do
+      let(:options) do
+        AnnotateRb::Options.new(**include_nothing_options.merge(
+          {
+            root_dir: ["", "packs/core", "packs/pack1"],
+            additional_file_patterns: ["app/serializers/%MODEL_NAME%.rb"]
+          }
+        ))
+      end
+
+      let(:file) { "packs/core/app/models/address.rb" }
+      let(:model_name) { "address" }
+      let(:table_name) { "addresses" }
+      let(:serializer_file) { "app/serializers/address.rb" }
+
+      before do
+        FileUtils.mkdir_p("packs/core/app/models")
+        FileUtils.touch(file)
+        FileUtils.mkdir_p("packs/pack1")
+
+        FileUtils.mkdir_p("app/serializers")
+        FileUtils.touch(serializer_file)
+      end
+
+      it "returns the project root file" do
+        expect(subject).to eq([[serializer_file, :position_in_additional_file_patterns]])
+      end
+    end
   end
 end
