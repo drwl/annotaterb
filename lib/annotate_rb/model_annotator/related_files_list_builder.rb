@@ -89,7 +89,17 @@ module AnnotateRb
         patterns
           .map { |f| FileNameResolver.call(f, @model_name, @table_name) }
           .flat_map { |f| Dir.glob(f) }
-          .select { |f| owning_root_dir(f) == model_root_dir }
+          .select { |f| related_file_owned_by_model_root?(f, pattern_type) }
+      end
+
+      # Additional file patterns are written by the user as explicit project paths, so a match outside
+      #   every `root_dir` (e.g. `app/serializers/%MODEL_NAME%.rb` for a model living in a pack) belongs
+      #   to the project and is still related. Matches inside another root directory remain excluded.
+      def related_file_owned_by_model_root?(file, pattern_type)
+        owner = owning_root_dir(file)
+        return true if owner == model_root_dir
+
+        owner.nil? && pattern_type.to_s == "additional_file_patterns"
       end
 
       def model_root_dir
