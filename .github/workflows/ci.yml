@@ -43,6 +43,19 @@ jobs:
       - name: Run Unit tests
         run: bundle exec rake spec:unit
 
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@824c0e29fdfc7d689c191c27acc969d2d04b7dd8 # v1
+        with:
+          ruby-version: '4.0'
+          bundler-cache: true
+
       - name: Run Standard linter
         run: bundle exec standardrb
 
