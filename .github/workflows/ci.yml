@@ -11,6 +11,8 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
+  workflow_dispatch:
+
 permissions:
   contents: read
 
@@ -44,14 +46,40 @@ jobs:
       - name: Run Standard linter
         run: bundle exec standardrb
 
+  # Pull requests and pushes run a reduced integration matrix: the newest Ruby against every Rails
+  # version, plus the oldest Ruby against the oldest and newest Rails. Scheduled and manual runs
+  # cover the full adapter x Ruby x Rails matrix.
+  integration-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      include: ${{ steps.matrix.outputs.include }}
+
+    steps:
+      - name: Build matrix
+        id: matrix
+        env:
+          FULL: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+        run: |
+          adapters='["mysql2", "pg", "sqlite3"]'
+          if [ "$FULL" = "true" ]; then
+            combos='[["3.3", "~> 7.2.0"], ["3.3", "~> 8.0.0"], ["3.3", "~> 8.1.0"],
+                     ["3.4", "~> 7.2.0"], ["3.4", "~> 8.0.0"], ["3.4", "~> 8.1.0"],
+                     ["4.0", "~> 7.2.0"], ["4.0", "~> 8.0.0"], ["4.0", "~> 8.1.0"]]'
+          else
+            combos='[["3.3", "~> 7.2.0"], ["3.3", "~> 8.1.0"],
+                     ["4.0", "~> 7.2.0"], ["4.0", "~> 8.0.0"], ["4.0", "~> 8.1.0"]]'
+          fi
+          include=$(jq -cn --argjson adapters "$adapters" --argjson combos "$combos" \
+            '[$adapters[] as $a | $combos[] | {adapter: $a, ruby: .[0], rails: .[1]}]')
+          echo "include=$include" >> "$GITHUB_OUTPUT"
+
   integration:
+    needs: integration-matrix
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        adapter: [ 'mysql2', 'pg', 'sqlite3' ]
-        ruby: ['3.3', '3.4', '4.0']
-        rails: ['~> 7.2.0', '~> 8.0.0', '~> 8.1.0']
+        include: ${{ fromJSON(needs.integration-matrix.outputs.include) }}
 
     env:
       DATABASE_ADAPTER: ${{ matrix.adapter }}
