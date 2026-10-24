@@ -57,6 +57,32 @@ jobs:
       DATABASE_ADAPTER: ${{ matrix.adapter }}
       RAILS_VERSION: ${{ matrix.rails }}
 
+    # An empty image skips the service, so only the adapter under test gets a database container.
+    services:
+      mysql:
+        image: ${{ matrix.adapter == 'mysql2' && 'mysql:8.4' || '' }}
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
+      postgres:
+        image: ${{ matrix.adapter == 'pg' && 'postgres:17' || '' }}
+        env:
+          POSTGRES_PASSWORD: root
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd=pg_isready
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -66,17 +92,6 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-
-      - name: Start MySQL
-        if: ${{ matrix.adapter == 'mysql2' }}
-        run: sudo systemctl start mysql.service
-
-      - name: Start and setup Postgres
-        if: ${{ matrix.adapter == 'pg' }}
-        run: |
-          sudo systemctl start postgresql.service
-          sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'root'"
-      #          https://github.com/actions/runner-images/issues/7678
 
       - name: Configure Bundler
         run: bundle config set path 'vendor/bundle'
