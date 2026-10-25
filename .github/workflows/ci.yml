@@ -11,8 +11,16 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
+  workflow_dispatch:
+
 permissions:
   contents: read
+
+# Cancel superseded runs on PRs and branches. Runs on main are never cancelled, and event_name keeps
+# the nightly schedule run in its own group so a push to main can't cancel it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   test:
@@ -35,17 +43,86 @@ jobs:
       - name: Run Unit tests
         run: bundle exec rake spec:unit
 
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@824c0e29fdfc7d689c191c27acc969d2d04b7dd8 # v1
+        with:
+          ruby-version: '4.0'
+          bundler-cache: true
+
       - name: Run Standard linter
         run: bundle exec standardrb
 
+  # Pull requests and pushes run a reduced integration matrix: the newest Ruby against every Rails
+  # version, plus the oldest Ruby against the oldest and newest Rails. Scheduled and manual runs
+  # cover the full adapter x Ruby x Rails matrix.
+  integration-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      include: ${{ steps.matrix.outputs.include }}
+
+    steps:
+      - name: Build matrix
+        id: matrix
+        env:
+          FULL: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+        run: |
+          adapters='["mysql2", "pg", "sqlite3"]'
+          if [ "$FULL" = "true" ]; then
+            combos='[["3.3", "~> 7.2.0"], ["3.3", "~> 8.0.0"], ["3.3", "~> 8.1.0"],
+                     ["3.4", "~> 7.2.0"], ["3.4", "~> 8.0.0"], ["3.4", "~> 8.1.0"],
+                     ["4.0", "~> 7.2.0"], ["4.0", "~> 8.0.0"], ["4.0", "~> 8.1.0"]]'
+          else
+            combos='[["3.3", "~> 7.2.0"], ["3.3", "~> 8.1.0"],
+                     ["4.0", "~> 7.2.0"], ["4.0", "~> 8.0.0"], ["4.0", "~> 8.1.0"]]'
+          fi
+          include=$(jq -cn --argjson adapters "$adapters" --argjson combos "$combos" \
+            '[$adapters[] as $a | $combos[] | {adapter: $a, ruby: .[0], rails: .[1]}]')
+          echo "include=$include" >> "$GITHUB_OUTPUT"
+
   integration:
+    needs: integration-matrix
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        adapter: [ 'mysql2', 'pg', 'sqlite3' ]
-        ruby: ['3.3', '3.4', '4.0']
-        rails: ['~> 7.2.0', '~> 8.0.0', '~> 8.1.0']
+        include: ${{ fromJSON(needs.integration-matrix.outputs.include) }}
+
+    env:
+      DATABASE_ADAPTER: ${{ matrix.adapter }}
+      RAILS_VERSION: ${{ matrix.rails }}
+
+    # An empty image skips the service, so only the adapter under test gets a database container.
+    services:
+      mysql:
+        image: ${{ matrix.adapter == 'mysql2' && 'mysql:8.4' || '' }}
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
+      postgres:
+        image: ${{ matrix.adapter == 'pg' && 'postgres:17' || '' }}
+        env:
+          POSTGRES_PASSWORD: root
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd=pg_isready
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
 
     steps:
       - name: Checkout
@@ -57,37 +134,23 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
 
-      - name: Start MySQL
-        if: ${{ matrix.adapter == 'mysql2' }}
-        run: sudo systemctl start mysql.service
-
-      - name: Start and setup Postgres
-        if: ${{ matrix.adapter == 'pg' }}
-        run: |
-          sudo systemctl start postgresql.service
-          sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'root'"
-      #          https://github.com/actions/runner-images/issues/7678
-
       - name: Configure Bundler
         run: bundle config set path 'vendor/bundle'
         working-directory: spec/dummyapp
 
+      - name: Cache dummyapp dependencies
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: spec/dummyapp/vendor/bundle
+          key: dummyapp-${{ runner.os }}-ruby${{ matrix.ruby }}-${{ matrix.adapter }}-rails${{ matrix.rails }}-${{ hashFiles('spec/dummyapp/Gemfile', 'annotaterb.gemspec') }}
+
       - name: Install dummyapp dependencies (${{ matrix.adapter }}, Rails ${{ matrix.rails }})
         run: bundle install
         working-directory: spec/dummyapp
-        env:
-          DATABASE_ADAPTER: ${{ matrix.adapter }}
-          RAILS_VERSION: ${{ matrix.rails }}
 
       - name: Run dummyapp migrations (${{ matrix.adapter }}, Rails ${{ matrix.rails }})
         run: bin/rails db:create
         working-directory: spec/dummyapp
-        env:
-          DATABASE_ADAPTER: ${{ matrix.adapter }}
-          RAILS_VERSION: ${{ matrix.rails }}
 
       - name: Run Integration tests (${{ matrix.adapter }}, Rails ${{ matrix.rails }})
         run: bundle exec rake spec:integration
-        env:
-          DATABASE_ADAPTER: ${{ matrix.adapter }}
-          RAILS_VERSION: ${{ matrix.rails }}
