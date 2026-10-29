@@ -1,5 +1,50 @@
 # Changelog
 
+## [v4.26.0](https://github.com/drwl/annotaterb/tree/v4.26.0) (2026-10-29)
+
+[Full Changelog](https://github.com/drwl/annotaterb/compare/v4.25.0...v4.26.0)
+
+**Implemented enhancements:**
+
+- Fix missing annotation for Active Record ignored columns [\#286](https://github.com/drwl/annotaterb/issues/286)
+- Compatibility with `activerecord-tenanted` [\#276](https://github.com/drwl/annotaterb/issues/276)
+
+**Fixed bugs:**
+
+- additional\_file\_patterns no longer matches files outside empty root\_dir [\#406](https://github.com/drwl/annotaterb/issues/406)
+- `v4.25.0`: Incorrect `default(NULL)` annotation for `enumerize`-backed columns when DB default is not in enum values [\#402](https://github.com/drwl/annotaterb/issues/402)
+
+**Closed issues:**
+
+- `v4.25.0`: enum columns declared with a Rails-side `default:` still annotate the raw value instead of the label [\#408](https://github.com/drwl/annotaterb/issues/408)
+
+**Merged pull requests:**
+
+- Release v4.26.0 [\#419](https://github.com/drwl/annotaterb/pull/419) ([drwl](https://github.com/drwl))
+- Bump ruby/setup-ruby from 1.331.0 to 1.335.0 [\#418](https://github.com/drwl/annotaterb/pull/418) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump the codeql-action group with 2 updates [\#417](https://github.com/drwl/annotaterb/pull/417) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Optimize CI runs [\#416](https://github.com/drwl/annotaterb/pull/416) ([drwl](https://github.com/drwl))
+- Bump ruby/setup-ruby from 1.329.0 to 1.331.0 [\#415](https://github.com/drwl/annotaterb/pull/415) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump the codeql-action group with 2 updates [\#414](https://github.com/drwl/annotaterb/pull/414) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[FIX\] Set default tenant for activerecord-tenanted models [\#413](https://github.com/drwl/annotaterb/pull/413) ([Bat0oo](https://github.com/Bat0oo))
+- Bump ruby/setup-ruby from 1.327.0 to 1.329.0 [\#412](https://github.com/drwl/annotaterb/pull/412) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump the codeql-action group with 2 updates [\#411](https://github.com/drwl/annotaterb/pull/411) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Fix TypeError when model table\_name is a Symbol [\#410](https://github.com/drwl/annotaterb/pull/410) ([braindeaf](https://github.com/braindeaf))
+- Annotate enum columns declared with a Rails-side default using their label [\#409](https://github.com/drwl/annotaterb/pull/409) ([xanagi](https://github.com/xanagi))
+- Keep project-root matches for additional\_file\_patterns [\#407](https://github.com/drwl/annotaterb/pull/407) ([Shaisolaris](https://github.com/Shaisolaris))
+- Fix enumerize-backed column default annotations [\#405](https://github.com/drwl/annotaterb/pull/405) ([OdenTakashi](https://github.com/OdenTakashi))
+- Bump ruby/setup-ruby from 1.325.0 to 1.327.0 [\#404](https://github.com/drwl/annotaterb/pull/404) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump the codeql-action group with 2 updates [\#403](https://github.com/drwl/annotaterb/pull/403) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump ruby/setup-ruby from 1.324.0 to 1.325.0 [\#401](https://github.com/drwl/annotaterb/pull/401) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Group `codeql-action` updates in the Dependabot config. [\#400](https://github.com/drwl/annotaterb/pull/400) ([OdenTakashi](https://github.com/OdenTakashi))
+- Bump github/codeql-action/analyze from 4.38.0 to 4.38.1 [\#399](https://github.com/drwl/annotaterb/pull/399) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump ruby/setup-ruby from 1.321.0 to 1.324.0 [\#398](https://github.com/drwl/annotaterb/pull/398) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generate changelog for v4.25.0 [\#396](https://github.com/drwl/annotaterb/pull/396) ([drwl](https://github.com/drwl))
+- \[LOW\] Pin workflow actions and restrict CI permissions [\#392](https://github.com/drwl/annotaterb/pull/392) ([OskarEichler](https://github.com/OskarEichler))
+- \[MEDIUM\] Reject executable lines in generated annotations [\#391](https://github.com/drwl/annotaterb/pull/391) ([OskarEichler](https://github.com/OskarEichler))
+- Resolve globbed model directories before class lookup [\#388](https://github.com/drwl/annotaterb/pull/388) ([OskarEichler](https://github.com/OskarEichler))
+- Load columns from schema to avoid AR ignored/only column configuration [\#287](https://github.com/drwl/annotaterb/pull/287) ([bensheldon](https://github.com/bensheldon))
+
 ## [v4.25.0](https://github.com/drwl/annotaterb/tree/v4.25.0) (2026-09-17)
 
 [Full Changelog](https://github.com/drwl/annotaterb/compare/v4.24.0...v4.25.0)
