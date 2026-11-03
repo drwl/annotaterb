@@ -270,6 +270,8 @@ Keys use snake_case and match the gem defaults in `AnnotateRb::Options`. CLI fla
 | `show_indexes_include` | `false` | Include `INCLUDE` columns on indexes. |
 | `simple_indexes` | `false` | Concat related indexes onto each column line. |
 | `show_check_constraints` | `false` | List check constraints. |
+| `show_unique_constraints` | `false` | List unique constraints. |
+| `show_exclusion_constraints` | `false` | List exclusion constraints. |
 | `show_enums` | `false` | Show PostgreSQL enum types. |
 | `enum_default_format` | `label` | Default shown for enum backed columns: `label` (`default("idnow")`), `raw` (`default(0)`) or `both` (`default(0: "idnow")`). |
 | `show_virtual_columns` | `false` | Show virtual/generated columns. |
