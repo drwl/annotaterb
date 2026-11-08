@@ -172,11 +172,79 @@ RSpec.describe AnnotateRb::ModelAnnotator::ForeignKeyAnnotation::AnnotationBuild
       it { expect(default_format).to eq(expected_output) }
     end
 
+    context "with a validated and a not validated foreign key" do
+      let(:foreign_keys) do
+        [
+          mock_foreign_key("fk_rails_validated",
+            "validated_thing_id",
+            "validated_things",
+            "id",
+            validated: true),
+          mock_foreign_key("fk_rails_not_valid",
+            "not_valid_thing_id",
+            "not_valid_things",
+            "id",
+            on_delete: :cascade,
+            validated: false)
+        ]
+      end
+      let(:expected_output) do
+        <<~OUTPUT.strip
+          #
+          # Foreign Keys
+          #
+          #  fk_rails_not_valid  (not_valid_thing_id => not_valid_things.id) ON DELETE => cascade NOT VALID
+          #  fk_rails_validated  (validated_thing_id => validated_things.id)
+        OUTPUT
+      end
+
+      it { expect(default_format).to eq(expected_output) }
+
+      context "in markdown format" do
+        let(:expected_output) do
+          <<~OUTPUT.strip
+            #
+            # ### Foreign Keys
+            #
+            # * `fk_rails_not_valid` (_ON DELETE => cascade NOT VALID_):
+            #     * **`not_valid_thing_id => not_valid_things.id`**
+            # * `fk_rails_validated`:
+            #     * **`validated_thing_id => validated_things.id`**
+          OUTPUT
+        end
+
+        it { expect(markdown_format).to eq(expected_output) }
+      end
+
+      context "when the not validated foreign key is also deferrable" do
+        let(:foreign_keys) do
+          [
+            mock_foreign_key("fk_rails_not_valid",
+              "not_valid_thing_id",
+              "not_valid_things",
+              "id",
+              deferrable: :deferred,
+              validated: false)
+          ]
+        end
+        let(:expected_output) do
+          <<~OUTPUT.strip
+            #
+            # Foreign Keys
+            #
+            #  fk_rails_not_valid  (not_valid_thing_id => not_valid_things.id) DEFERRABLE INITIALLY DEFERRED NOT VALID
+          OUTPUT
+        end
+
+        it { expect(default_format).to eq(expected_output) }
+      end
+    end
+
     context "with a composite foreign key" do
       let(:foreign_keys) do
         [
           mock_foreign_key("fk_rails_cf2568e89e", "foreign_thing_id", "foreign_things"),
-          mock_foreign_key("custom_fk_name", ["tenant_id", "customer_id"], "customers", ["tenant_id", "id"])
+          mock_foreign_key("custom_fk_name", %w[tenant_id customer_id], "customers", %w[tenant_id id])
         ]
       end
       let(:expected_output) do
