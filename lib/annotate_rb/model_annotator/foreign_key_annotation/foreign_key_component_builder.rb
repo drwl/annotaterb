@@ -38,6 +38,9 @@ module AnnotateRb
               initially = (foreign_key.deferrable == true) ? "IMMEDIATE" : foreign_key.deferrable.to_s.upcase
               constraints_info += "DEFERRABLE INITIALLY #{initially} "
             end
+            # Only PostgreSQL reports unvalidated foreign keys (added with `validate: false`);
+            # other adapters always return validated ones.
+            constraints_info += "NOT VALID " unless foreign_key.validated?
             constraints_info.strip
           end
         end
