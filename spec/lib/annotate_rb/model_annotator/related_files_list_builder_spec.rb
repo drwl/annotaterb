@@ -76,6 +76,41 @@ RSpec.describe AnnotateRb::ModelAnnotator::RelatedFilesListBuilder do
       it { is_expected.to be_empty }
     end
 
+    context "when building for removal with every related type excluded", :isolated_environment do
+      # `exclude_*` controls where annotations are *added*. When removing, we must
+      # still reach those files, otherwise annotations written before a file type
+      # was excluded are stranded and `--delete` can never clean them up.
+      subject { described_class.new(file, model_name, table_name, options, for_removal: true).build }
+
+      let(:options) { AnnotateRb::Options.new(**include_nothing_options) }
+      let(:model_name) { "test_default" }
+
+      before do
+        FileUtils.mkdir_p("spec/models")
+        FileUtils.touch("spec/models/test_default_spec.rb")
+
+        FileUtils.mkdir_p("spec/fixtures")
+        FileUtils.touch("spec/fixtures/test_defaults.yml")
+
+        FileUtils.mkdir_p("spec/factories")
+        FileUtils.touch("spec/factories/test_default_factory.rb")
+
+        FileUtils.mkdir_p("app/helpers")
+        FileUtils.touch("app/helpers/test_defaults_helper.rb")
+      end
+
+      it "still lists the related files so their annotations can be removed" do
+        files = subject.map(&:first)
+
+        expect(files).to include(
+          "spec/models/test_default_spec.rb",
+          "spec/fixtures/test_defaults.yml",
+          "spec/factories/test_default_factory.rb",
+          "app/helpers/test_defaults_helper.rb"
+        )
+      end
+    end
+
     context "when including model tests", :isolated_environment do
       let(:options) { AnnotateRb::Options.new(**include_nothing_options.merge({exclude_tests: exclude_tests_option})) }
       let(:exclude_tests_option) { false }
